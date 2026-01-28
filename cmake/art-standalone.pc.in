@@ -1,0 +1,9 @@
+prefix=@PREFIX@
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: art-standalone
+Description: Android Runtime standalone
+Version: 0.0.0
+Libs: -L${libdir}/art -lart -landroidfw -lartbase -ldexfile -lbase -llog -lziparchive
+Cflags: -I${includedir}
