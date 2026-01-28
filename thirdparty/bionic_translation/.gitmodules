@@ -1,0 +1,3 @@
+[submodule "tests/CtsBionicTestCases"]
+	path = tests/CtsBionicTestCases
+	url = https://gitlab.com/android_translation_layer/ctsbionictestcases.git

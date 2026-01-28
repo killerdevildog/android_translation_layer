@@ -1,0 +1,3 @@
+AOSP's fork of bouncycastle is basically just a stripped down version of the original.
+
+We could use the upstream version, but that would increase the jar size from 0.6 MB to 2.4 MB. Since ATL is probably the only consumer of the dexed bouncycastle jar, we decided to stick to the stripped down version.

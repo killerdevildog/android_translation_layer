@@ -1,0 +1,2 @@
+https://code.google.com/archive/p/jarjar/issues/64 makes the official jarjar not work
+on Java 8 classes. It was replaced with https://github.com/tvoli/jarjar-forkfork.git.

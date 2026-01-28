@@ -1,0 +1,79 @@
+trigger_job:
+  rules:
+    - if: ($CI_PIPELINE_SOURCE != 'merge_request_event') && ($CI_COMMIT_BRANCH == 'master')
+  variables:
+    # the build script assumes it's run from a MR context
+    CI_MERGE_REQUEST_TARGET_BRANCH_NAME: master
+    CI_MERGE_REQUEST_PROJECT_URL: ${CI_SERVER_URL}/android_translation_layer/aports
+    # for artifact archive name
+    UPSTREAM_COMMIT: $CI_COMMIT_SHA
+  trigger:
+    project: android_translation_layer/aports
+    branch: atl-nightlies-bionic_translation
+
+.test_job:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  artifacts:
+    when: always
+    paths:
+      - ${CI_PROJECT_DIR}/build
+  interruptible: true
+
+# use alpine to test on musl
+.test_job-musl:
+  extends: .test_job
+  script:
+    - apk add meson gcc musl-dev g++ pc:egl pc:libelf pc:libbsd pc:libunwind bubblewrap tzdata
+    - cd ${CI_PROJECT_DIR} && meson setup build && meson test -C build
+  image:
+    name: alpine:edge
+
+test_job-musl-x86_64:
+  extends: .test_job-musl
+  tags:
+    - saas-linux-small-amd64
+
+test_job-musl-x86:
+  extends: .test_job-musl
+  image:
+    entrypoint: ["linux32", "sh", "-c"]
+    docker:
+      platform: linux/i386
+  tags:
+    - saas-linux-small-amd64
+
+test_job-musl-aarch64:
+  extends: .test_job-musl
+  tags:
+    - saas-linux-small-arm64
+
+# use debian to test on glibc
+.test_job-glibc:
+  extends: .test_job
+  script:
+    - apt update
+    - apt install -y meson pkg-config build-essential libegl-dev libelf-dev libbsd-dev libunwind-dev bubblewrap tzdata
+    - cd ${CI_PROJECT_DIR} && meson setup build && meson test -C build
+  image:
+    name: debian:sid
+
+test_job-glibc-x86_64:
+  extends: .test_job-glibc
+  tags:
+    - saas-linux-small-amd64
+
+test_job-glibc-x86:
+  extends: .test_job-glibc
+  image:
+    docker:
+      platform: linux/i386
+  tags:
+    - saas-linux-small-amd64
+
+test_job-glibc-aarch64:
+  extends: .test_job-glibc
+  tags:
+    - saas-linux-small-arm64

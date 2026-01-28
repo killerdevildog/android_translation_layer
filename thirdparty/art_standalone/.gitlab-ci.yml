@@ -1,0 +1,12 @@
+trigger_job:
+  rules:
+    - if: ($CI_PIPELINE_SOURCE != "merge_request_event") && ($CI_COMMIT_BRANCH == 'master')
+  variables:
+    # the build script assumes it's run from a MR context
+    CI_MERGE_REQUEST_TARGET_BRANCH_NAME: master
+    CI_MERGE_REQUEST_PROJECT_URL: ${CI_SERVER_URL}/android_translation_layer/aports
+    # for artifact archive name
+    UPSTREAM_COMMIT: $CI_COMMIT_SHA
+  trigger:
+    project: android_translation_layer/aports
+    branch: atl-nightlies

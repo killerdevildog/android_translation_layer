@@ -1,0 +1,207 @@
+//
+// Copyright (C) 2017 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "art_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    default_applicable_licenses: ["art_license"],
+}
+
+cc_defaults {
+    name: "libnativebridge-test-case-defaults",
+    defaults: [
+        "art_defaults",
+        "art_test_common_defaults",
+    ],
+    host_supported: true,
+    // TODO(mast): Split up art_gtest_defaults so that it can be used for the
+    // following without pulling in lots of libs.
+    target: {
+        linux: {
+            cflags: [
+                // gtest issue
+                "-Wno-used-but-marked-unused",
+                "-Wno-deprecated",
+                "-Wno-missing-noreturn",
+            ],
+        },
+    },
+    header_libs: [
+        "jni_headers",
+        "libnativebridge-headers",
+    ],
+    cppflags: ["-fvisibility=protected"],
+}
+
+cc_test_library {
+    name: "libnativebridge-test-case",
+    srcs: ["NativeBridgeTestCase.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+}
+
+cc_test_library {
+    name: "libnativebridge2-test-case",
+    srcs: ["NativeBridgeTestCase2.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+}
+
+cc_test_library {
+    name: "libnativebridge3-test-case",
+    srcs: ["NativeBridgeTestCase3.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+}
+
+cc_test_library {
+    name: "libnativebridge6-test-case",
+    srcs: ["NativeBridgeTestCase6.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+    shared_libs: [
+        "libnativebridge6prezygotefork",
+    ],
+}
+
+cc_test_library {
+    name: "libnativebridge7-test-case",
+    srcs: ["NativeBridgeTestCase7.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+    shared_libs: [
+        "libnativebridge7criticalnative",
+    ],
+}
+
+// A helper library to produce test-case side effect of PreZygoteForkNativeBridge.
+cc_test_library {
+    name: "libnativebridge6prezygotefork",
+    srcs: ["NativeBridge6PreZygoteFork_lib.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+}
+
+cc_test_library {
+    name: "libnativebridge7criticalnative",
+    srcs: ["NativeBridge7CriticalNative_lib.cpp"],
+    defaults: ["libnativebridge-test-case-defaults"],
+}
+
+cc_test {
+    name: "libnativebridge-tests",
+    defaults: [
+        "art_defaults",
+        "art_standalone_test_defaults",
+    ],
+
+    isolated: true,
+
+    srcs: [
+        "NativeBridgeTest.cpp",
+        "NativeBridgeApi.c",
+        "CodeCacheCreate_test.cpp",
+        "CodeCacheExists_test.cpp",
+        "CodeCacheStatFail_test.cpp",
+        "CompleteFlow_test.cpp",
+        "InvalidCharsNativeBridge_test.cpp",
+        "NativeBridge2Signal_test.cpp",
+        "NativeBridgeVersion_test.cpp",
+        "NeedsNativeBridge_test.cpp",
+        "PreInitializeNativeBridge_test.cpp",
+        "PreInitializeNativeBridgeFail2_test.cpp",
+        "ReSetupNativeBridge_test.cpp",
+        "UnavailableNativeBridge_test.cpp",
+        "ValidNameNativeBridge_test.cpp",
+        "NativeBridge3UnloadLibrary_test.cpp",
+        "NativeBridge3GetError_test.cpp",
+        "NativeBridge3IsPathSupported_test.cpp",
+        "NativeBridge3CreateNamespace_test.cpp",
+        "NativeBridge3LoadLibraryExt_test.cpp",
+        "NativeBridge6PreZygoteFork_test.cpp",
+        "NativeBridge7CriticalNative_test.cpp",
+    ],
+
+    static_libs: [
+        "libbase",
+        "libnativebridge",
+    ],
+    shared_libs: [
+        "liblog",
+        "libnativebridge6prezygotefork",
+        "libnativebridge7criticalnative",
+    ],
+    data_libs: [
+        "libnativebridge6prezygotefork",
+        "libnativebridge7criticalnative",
+
+        // These are dlopen'd by libnativebridge, not libnativebridge-tests, but
+        // the former is statically linked into the latter, so the linker will
+        // find them next to the test binary.
+        "libnativebridge-test-case",
+        "libnativebridge2-test-case",
+        "libnativebridge3-test-case",
+        "libnativebridge6-test-case",
+        "libnativebridge7-test-case",
+    ],
+
+    target: {
+        linux: {
+            cflags: [
+                // gtest issue
+                "-Wno-used-but-marked-unused",
+                "-Wno-deprecated",
+                "-Wno-missing-noreturn",
+            ],
+        },
+        android: {
+            shared_libs: ["libdl_android"], // libnativebridge dependency
+        },
+    },
+
+    test_suites: [
+        "general-tests",
+    ],
+}
+
+// Very basic tests in CTS/MCTS to verify backed-by API coverage of the exported
+// API in libnativebridge.map.txt.
+cc_test {
+    name: "art_libnativebridge_cts_tests",
+    defaults: ["art_standalone_test_defaults"],
+    shared_libs: ["libnativebridge"],
+    static_libs: ["libbase"],
+    srcs: ["libnativebridge_api_test.cpp"],
+    test_config_template: ":art-gtests-target-standalone-cts-template",
+    test_suites: [
+        "cts",
+        "general-tests",
+        "mts-art",
+        "mcts-art",
+    ],
+}
+
+cc_test {
+    name: "libnativebridge-lazy-tests",
+    defaults: ["art_standalone_test_defaults"],
+    static_libs: [
+        "libbase",
+    ],
+    shared_libs: ["libnativebridge_lazy"],
+    data_libs: ["libnativebridge_lazy"],
+    srcs: ["libnativebridge_api_test.cpp"],
+    test_suites: [
+        "general-tests",
+        "mts-art",
+    ],
+}

@@ -1,0 +1,5 @@
+`libc/`, `linker/`, `phthread_wrapper/` and `wrapper/` originate from https://github.com/Cloudef/android2gnulinux, and have some modifications to better work for our purposes and to compile on musl / on 64bit systems
+
+`libstdc++_standalone/` contains sources for android's libstdc++ copied out from bionic tag 4d974e29d58ab7400c56d21b592af26eafbe8b37 (current master at the time), patched up slightly to compile on Linux without requiring other parts of glibc
+android's libstdc++.so is the bare minimum stdc++ implementation that google could have gotten away with back when they first added c++ support to android, and linking against it is now depracated and won't be allowed for new apps at some point.
+while it's very likely that everything implemented by this library is already implemented by some other library on your system, it would seem that random crashes occur if those implementations are used by android apps linked against libstdc++
