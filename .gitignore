@@ -7,9 +7,6 @@ builddir/
 .idea/
 *.iml
 
-# Third-party dependencies (built from source)
-thirdparty/
-
 # Compiled objects
 *.o
 *.so

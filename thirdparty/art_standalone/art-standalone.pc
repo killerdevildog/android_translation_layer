@@ -1,0 +1,10 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: art-standalone
+Description: Android ART runtime (standalone build, minimal ATL deps)
+Version: 0.0.0
+Libs: -L${libdir}/art -lart -lnativebridge -landroidfw
+Cflags: -I${includedir} -I${includedir}/androidfw

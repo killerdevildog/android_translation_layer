@@ -4,7 +4,7 @@
 
 **Upstream**: https://gitlab.com/android_translation_layer/android_translation_layer
 
-This fork is actively maintained and patch requests are welcome.
+This fork includes a unified CMake build system that bundles all dependencies.
 
 ---
 
@@ -13,22 +13,71 @@ A translation layer that allows running Android apps on a Linux system
 ![Angry Birds 3.2.0, Worms 2 Armageddon, and Gravity Defied running side by side by side](https://gitlab.com/android_translation_layer/android_translation_layer/-/raw/master/screenshot.png)
 ![Oculus Quest version of BeatSaber running on an aarch64 laptop](https://gitlab.com/android_translation_layer/android_translation_layer/-/raw/master/screenshot_2.png)
 
-### Build
-see [build documentation](https://gitlab.com/android_translation_layer/android_translation_layer/-/blob/master/doc/Build.md)
+## Quick Start
 
-### Run in builddir
+### Prerequisites
+
 ```sh
-cd builddir
+# Ubuntu/Debian
+sudo apt install build-essential cmake meson ninja-build pkg-config \
+    libgtk-4-dev libvulkan-dev libopenxr-dev libwayland-dev \
+    libportal-dev libsqlite3-dev libavcodec-dev libdrm-dev \
+    libgudev-1.0-dev libswscale-dev libwebkitgtk-6.0-dev \
+    libfontconfig-dev openjdk-21-jdk ant aapt autoconf libtool
 ```
-For an example of a full game working that can be distributed along this:
+
+### Build
+
+The unified CMake build system handles building all dependencies in the correct order:
+**wolfSSL → libunwind → bionic_translation → art_standalone → android_translation_layer**
+
 ```sh
-RUN_FROM_BUILDDIR= LD_LIBRARY_PATH=./ ./android-translation-layer /path/to/test_apks/org.happysanta.gd_29.apk -l org/happysanta/gd/GDActivity
+# Configure and build
+cmake -B build
+cmake --build build
+
+# This will take several minutes on first build
 ```
-Or for a sample app using OpenGL from native code to do it's rendering:
+
+Build artifacts will be in:
+- `build/` - CMake build directory
+- `build/install/` - Installation prefix with all libraries
+- `build/atl_build/` - Android Translation Layer build output
+
+For upstream build documentation, see [Build.md](https://gitlab.com/android_translation_layer/android_translation_layer/-/blob/master/doc/Build.md)
+
+### Run an APK
+
+Use the provided convenience script:
+
 ```sh
-RUN_FROM_BUILDDIR= LD_LIBRARY_PATH=./ ./android-translation-layer path/to/test_apks/gles3jni.apk -l com/android/gles3jni/GLES3JNIActivity
+# Run Hello World APK
+./run-atl.sh test_apks/HelloWorld.apk
+
+# Run with a specific activity
+./run-atl.sh /path/to/app.apk -l com/example/MainActivity
 ```
-Note: the test apks are available at https://gitlab.com/android_translation_layer/atl_test_apks.
+
+Or run manually from the build directory:
+
+```sh
+cd build/atl_build
+LD_LIBRARY_PATH="../install/lib:." ./android-translation-layer /path/to/app.apk --sdk-int=28
+```
+
+### Test APKs
+
+Download test APKs from: https://gitlab.com/android_translation_layer/atl_test_apks
+
+Example with Gravity Defied:
+```sh
+./run-atl.sh test_apks/org.happysanta.gd_29.apk -l org/happysanta/gd/GDActivity
+```
+
+Example with OpenGL native rendering:
+```sh
+./run-atl.sh test_apks/gles3jni.apk -l com/android/gles3jni/GLES3JNIActivity
+```
 
 ### Run after installation
 ```sh
