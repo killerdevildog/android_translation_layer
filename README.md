@@ -1,3 +1,13 @@
+# Mirror Repository
+
+**This is a mirror of the original project hosted on GitLab.**
+
+**Upstream**: https://gitlab.com/android_translation_layer/android_translation_layer
+
+This fork is actively maintained and patch requests are welcome.
+
+---
+
 A translation layer that allows running Android apps on a Linux system
 
 ![Angry Birds 3.2.0, Worms 2 Armageddon, and Gravity Defied running side by side by side](https://gitlab.com/android_translation_layer/android_translation_layer/-/raw/master/screenshot.png)
