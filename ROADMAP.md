@@ -5,21 +5,87 @@ The goal is to make ATL easier to build, run, and extend while maintaining coher
 
 ---
 
-## Phase 1: Unified Build System ✅ (Completed)
+## Phase 1: Build System Wrapper (Current State - Workaround)
 
-### Goals
-- [x] Bundle all dependencies in `thirdparty/` folder
-- [x] Create unified CMake build orchestrator
-- [x] Build order: wolfSSL → libunwind → bionic_translation → art_standalone → ATL
-- [x] Single command build: `cmake -B build && cmake --build build`
-- [x] Generate proper pkg-config files for dependency resolution
+### What We Have Now
+A CMake orchestrator that wraps multiple different build systems:
+- **wolfSSL**: Autotools (./configure && make)
+- **libunwind**: CMake (native)
+- **bionic_translation**: Meson
+- **art_standalone**: Custom Makefile
+- **android_translation_layer**: Meson
 
-### Current State
-All thirdparty dependencies are now bundled and build automatically with CMake.
+### Current Limitations
+- ⚠️ Not a true unified build - just shell command wrappers
+- ⚠️ ExternalProject_Add with hardcoded commands
+- ⚠️ Fragile dependency on system tools (autoconf, meson, ninja)
+- ⚠️ No proper CMake target exports between components
+- ⚠️ Rebuilds don't always detect changes correctly
+
+### What Works
+- [x] Single command initiates build: `cmake -B build && cmake --build build`
+- [x] Dependencies bundled in `thirdparty/`
+- [x] Build order enforced: wolfSSL → libunwind → bionic_translation → art_standalone → ATL
+- [x] pkg-config files generated for dependency resolution
 
 ---
 
-## Phase 2: Simplified Runtime (In Progress)
+## Phase 2: True Unified CMake Build System (Priority: HIGH)
+
+### Goals
+Convert ALL components to build natively with CMake - no shell wrappers, no Meson, no autotools.
+
+### 2.1 wolfSSL → CMake Native
+- [ ] Use wolfSSL's built-in CMakeLists.txt
+- [ ] Configure options: `WOLFSSL_TLS13`, `WOLFSSL_OPENSSLEXTRA`, etc.
+- [ ] Export `wolfssl::wolfssl` CMake target
+- [ ] Remove autotools dependency
+
+### 2.2 libunwind → CMake Native  
+- [x] Already uses CMake natively ✅
+- [ ] Improve integration with `add_subdirectory()` instead of ExternalProject
+- [ ] Export `unwind::unwind` CMake target
+
+### 2.3 bionic_translation → CMake Port
+- [ ] Port Meson build to CMakeLists.txt
+- [ ] Handle C/assembly source compilation
+- [ ] Export `bionic::translation` CMake target
+- [ ] Remove Meson dependency for this component
+
+### 2.4 art_standalone → CMake Port
+- [ ] Port Makefile build to CMakeLists.txt
+- [ ] Handle Java compilation with CMake's `UseJava` module
+- [ ] Integrate dex compilation (d8/dx)
+- [ ] Export `art::standalone` CMake target
+- [ ] Remove Make dependency for this component
+
+### 2.5 android_translation_layer → CMake Port
+- [ ] Port Meson build to CMakeLists.txt
+- [ ] Handle Java + JNI compilation
+- [ ] GResource compilation for assets
+- [ ] GTK4 integration via `find_package(PkgConfig)` + `pkg_check_modules`
+- [ ] Export `atl::runtime` CMake target
+
+### 2.6 Unified Build Result
+- [ ] Single CMakeLists.txt at root
+- [ ] All components use `add_subdirectory()`
+- [ ] Proper CMake target dependencies (no ExternalProject)
+- [ ] Incremental rebuilds work correctly
+- [ ] `cmake --install` works for all components
+
+### Success Criteria
+```cmake
+# This should be all that's needed:
+cmake -B build
+cmake --build build
+cmake --install build
+```
+
+No autotools, no Meson, no Make - pure CMake.
+
+---
+
+## Phase 3: Simplified Runtime
 
 ### Goals
 - [ ] **Eliminate wrapper scripts** - `atl ./app.apk` should just work
@@ -29,55 +95,21 @@ All thirdparty dependencies are now bundled and build automatically with CMake.
 
 ### Tasks
 
-#### 2.1 Runtime Library Resolution
+#### 3.1 Runtime Library Resolution
 - [ ] Embed RPATH in binaries during build
 - [ ] Use `$ORIGIN` relative paths for portable builds
 - [ ] Alternative: Create launcher binary that sets up environment before exec
 
-#### 2.2 Installation Target
+#### 3.2 Installation Target
 - [ ] Add CMake install rules for all components
 - [ ] Install to `/usr/local/` by default (configurable with `CMAKE_INSTALL_PREFIX`)
 - [ ] Install libraries to `lib/atl/` subdirectory
 - [ ] Create `/usr/local/bin/atl` launcher script/binary
 
-#### 2.3 Configuration
+#### 3.3 Configuration
 - [ ] Support `~/.config/atl/config` for user preferences
 - [ ] Auto-detect SDK version from APK's `AndroidManifest.xml`
 - [ ] Default to sensible SDK version (28+) without requiring `--sdk-int`
-
----
-
-## Phase 3: CMake-Native Thirdparty Builds
-
-### Goals
-Convert all thirdparty dependencies to build natively with CMake (no shell commands).
-
-### Tasks
-
-#### 3.1 wolfSSL
-- [ ] Use wolfSSL's native CMake build system
-- [ ] Configure with proper options for ATL requirements
-- [ ] Export targets for downstream consumption
-
-#### 3.2 libunwind  
-- [ ] Use libunwind's CMakeLists.txt directly
-- [ ] Configure for local (non-ptrace) unwinding only
-- [ ] Static library preferred for portability
-
-#### 3.3 bionic_translation
-- [ ] Create CMake wrapper around Meson build
-- [ ] Or: Port bionic_translation build to pure CMake
-- [ ] Proper target export with include directories
-
-#### 3.4 art_standalone
-- [ ] Create CMake wrapper around existing Makefile
-- [ ] Or: Port art_standalone build to pure CMake  
-- [ ] Handle Java compilation with CMake's Java support
-
-#### 3.5 android_translation_layer
-- [ ] Create CMake wrapper around Meson build
-- [ ] Or: Port ATL build to pure CMake
-- [ ] Unified single CMakeLists.txt for entire project
 
 ---
 
@@ -205,15 +237,15 @@ Expand platform compatibility beyond x86_64 Linux.
 
 ## Priority Matrix
 
-| Phase | Priority | Effort | Impact |
-|-------|----------|--------|--------|
-| Phase 1: Unified Build | ✅ Done | - | High |
-| Phase 2: Simplified Runtime | High | Medium | High |
-| Phase 3: CMake-Native Builds | Medium | High | Medium |
-| Phase 4: Advanced App Support | High | Very High | Very High |
-| Phase 5: Developer Experience | Medium | Medium | Medium |
-| Phase 6: Upstream Coherence | Ongoing | Low | Medium |
-| Phase 7: Platform Support | Low | High | Medium |
+| Phase | Priority | Effort | Impact | Status |
+|-------|----------|--------|--------|--------|
+| Phase 1: Build Wrapper | - | - | Medium | ⚠️ Workaround |
+| Phase 2: True CMake Build | **Critical** | Very High | Very High | Not Started |
+| Phase 3: Simplified Runtime | High | Medium | High | Not Started |
+| Phase 4: Advanced App Support | High | Very High | Very High | Not Started |
+| Phase 5: Developer Experience | Medium | Medium | Medium | Not Started |
+| Phase 6: Upstream Coherence | Ongoing | Low | Medium | Ongoing |
+| Phase 7: Platform Support | Low | High | Medium | Not Started |
 
 ---
 
@@ -252,22 +284,32 @@ Priority areas for contributions:
 
 ## Version Goals
 
-### v1.0 - Stable Build
-- Unified CMake build ✅
+### v0.1 - Current State (Workaround Build)
+- Build orchestrator wrapping multiple build systems ⚠️
 - Bundled dependencies ✅
-- Basic app support ✅
+- Basic app support (Hello World works) ✅
+- Requires wrapper script to run ⚠️
+
+### v1.0 - True Unified Build
+- Pure CMake build for all components
+- No autotools, Meson, or Make dependencies
+- `cmake -B build && cmake --build build` - that's it
+- Proper incremental rebuilds
 
 ### v1.1 - Simple Runtime
-- No wrapper scripts needed
-- System installation support
-- Auto SDK detection
+- No wrapper scripts needed: `atl ./app.apk`
+- System installation support: `cmake --install build`
+- Auto SDK detection from APK manifest
+- RPATH-based library resolution
 
 ### v1.2 - Enhanced Compatibility
 - RecyclerView support
 - Improved fragment handling
 - Better notification support
+- More Material Design widgets
 
 ### v2.0 - Production Ready
 - Comprehensive API coverage
 - ARM64 support
-- Distribution packages
+- Distribution packages (.deb, .rpm, Flatpak)
+- Stable API for app developers
