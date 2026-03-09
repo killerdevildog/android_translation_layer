@@ -12,6 +12,7 @@ JNIEXPORT void JNICALL Java_android_app_AlertDialog_nativeSetMessage(JNIEnv *env
 	GtkWidget *content_area = gtk_window_get_child(dialog);
 	GtkWidget *label = gtk_label_new(nativeMessage);
 	gtk_label_set_wrap(GTK_LABEL(label), TRUE);
+	gtk_label_set_max_width_chars(GTK_LABEL(label), 50);
 	gtk_box_append(GTK_BOX(content_area), label);
 	(*env)->ReleaseStringUTFChars(env, message, nativeMessage);
 }
