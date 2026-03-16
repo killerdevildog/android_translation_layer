@@ -1382,7 +1382,17 @@ public final class MotionEvent extends InputEvent {
 	int[] ids;
 	float[] coords;
 
+	/* probably don't need multitouch handling for this...? */
+	float scroll_dx;
+	float scroll_dy;
+
 	private MotionEvent() {
+	}
+
+	public MotionEvent(int source, int action, long eventTime, float x, float y, float raw_x, float raw_y, float scroll_dx, float scroll_dy) {
+		this(source, action, eventTime, new int[] {0}, new float[] {x, y, raw_x, raw_y});
+		this.scroll_dx = scroll_dx;
+		this.scroll_dy = scroll_dy;
 	}
 
 	public MotionEvent(int source, int action, long eventTime, float x, float y, float raw_x, float raw_y) {
@@ -1976,9 +1986,9 @@ public final class MotionEvent extends InputEvent {
 	 */
 	public final float getAxisValue(int axis) {
 		if (axis == AXIS_HSCROLL)
-			return coords[0 + X_OFFSET];
+			return scroll_dx;
 		else if (axis == AXIS_VSCROLL)
-			return coords[0 + Y_OFFSET];
+			return scroll_dy;
 		return nativeGetAxisValue(mNativePtr, axis, 0, HISTORY_CURRENT);
 	}
 

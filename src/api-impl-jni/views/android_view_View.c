@@ -256,7 +256,6 @@ static gboolean on_pointer_event(GtkEventControllerLegacy *event_controller, Gdk
 	return ret;
 }
 
-
 static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *event, gpointer user_data)
 {
 	GdkEventType event_type = gdk_event_get_event_type(event);
@@ -296,17 +295,48 @@ static void on_click(GtkGestureClick *gesture, int n_press, double x, double y, 
 
 #define MAGIC_SCROLL_FACTOR 32
 
-static gboolean scroll_cb(GtkEventControllerScroll *self, gdouble dx, gdouble dy, jobject this)
+/* Gtk4 for whatever reason doesn't report cursor position for GtkEventControllerScroll, thankfully
+ * it's not too annoying to get it ourselves */
+gboolean hacky_get_cursor_position(GtkWidget *widget, double *x, double *y)
 {
+	GdkSeat *seat;
+	GdkSurface *surface;
+	GdkDevice *device_pointer;
+
+	seat = gdk_display_get_default_seat(gtk_widget_get_display(widget));
+
+	device_pointer = gdk_seat_get_pointer(seat);
+	surface = gtk_native_get_surface(gtk_widget_get_native(widget));
+
+	return gdk_surface_get_device_position(surface,
+	                                       device_pointer,
+	                                       x, y, NULL);
+}
+
+static gboolean scroll_cb(GtkEventControllerScroll *controller, gdouble dx, gdouble dy, jobject this)
+{
+	double x;
+	double y;
+	double raw_x;
+	double raw_y;
+
 	JNIEnv *env = get_jni_env();
-	GdkScrollUnit scroll_unit = gtk_event_controller_scroll_get_unit(self);
-	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(self)));
+	GdkScrollUnit scroll_unit = gtk_event_controller_scroll_get_unit(controller);
+	GdkEvent *event = gtk_event_controller_get_current_event(GTK_EVENT_CONTROLLER(controller));
+	GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(controller));
+	WrapperWidget *wrapper = WRAPPER_WIDGET(widget);
+	hacky_get_cursor_position(widget, &raw_x, &raw_y);
+	x = raw_x, y = raw_y;
+	transform_coords_to_widget_relative(widget, &x, &y);
 
 	if (scroll_unit == GDK_SCROLL_UNIT_SURFACE) {
 		dx /= MAGIC_SCROLL_FACTOR;
 		dy /= MAGIC_SCROLL_FACTOR;
 	}
-	jobject motion_event = (*env)->NewObject(env, handle_cache.motion_event.class, handle_cache.motion_event.constructor_single, SOURCE_CLASS_POINTER, ACTION_SCROLL, 0, dx, -dy, 0.f, 0.f);
+	jobject motion_event = (*env)->NewObject(env, handle_cache.motion_event.class,
+	                                         handle_cache.motion_event.constructor_scroll,
+	                                         SOURCE_CLASS_POINTER, ACTION_SCROLL,
+	                                         gdk_event_get_time(event), x, y, raw_x, raw_y, dx, -dy);
 
 	gboolean ret = (*env)->CallBooleanMethod(env, this, handle_cache.view.dispatchGenericMotionEvent, motion_event);
 	if ((*env)->ExceptionCheck(env))

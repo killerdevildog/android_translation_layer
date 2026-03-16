@@ -36,6 +36,7 @@ struct handle_cache {
 		jclass class;
 		jmethodID constructor;
 		jmethodID constructor_single;
+		jmethodID constructor_scroll;
 	} motion_event;
 	struct {
 		jclass class;

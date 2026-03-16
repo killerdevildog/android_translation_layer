@@ -38,6 +38,7 @@ void set_up_handle_cache(JNIEnv *env)
 	handle_cache.motion_event.class = _REF((*env)->FindClass(env, "android/view/MotionEvent"));
 	handle_cache.motion_event.constructor = _METHOD(handle_cache.motion_event.class, "<init>", "(IIJ[I[F)V");
 	handle_cache.motion_event.constructor_single = _METHOD(handle_cache.motion_event.class, "<init>", "(IIJFFFF)V");
+	handle_cache.motion_event.constructor_scroll = _METHOD(handle_cache.motion_event.class, "<init>", "(IIJFFFFFF)V");
 
 	handle_cache.sensor_event.class = _REF((*env)->FindClass(env, "android/hardware/SensorEvent"));
 	handle_cache.sensor_event.constructor = _METHOD(handle_cache.sensor_event.class, "<init>", "([FLandroid/hardware/Sensor;)V");
