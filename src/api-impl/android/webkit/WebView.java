@@ -100,6 +100,16 @@ public class WebView extends ViewGroup {
 
 	public static void setWebContentsDebuggingEnabled(boolean enabled) {}
 
+	public void clearFormData() {}
+
+	public void clearHistory() {}
+
+	public void clearMatches() {}
+
+	public void clearSslPreferences() {}
+
+	public void clearCache(boolean includeDiskFiles) {}
+
 	// directly accessed by androidx WebViewGlueCommunicator to get ClassLoader
 	private static Object getFactory() {
 		return new Object();

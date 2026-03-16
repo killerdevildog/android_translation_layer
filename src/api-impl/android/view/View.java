@@ -2534,4 +2534,6 @@ public class View implements Drawable.Callback {
 			return false;
 		}
 	}
+
+	public void destroyDrawingCache() {}
 }

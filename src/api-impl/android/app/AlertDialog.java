@@ -3,6 +3,7 @@ package android.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.Button;
 
 public class AlertDialog extends Dialog implements DialogInterface {
 
@@ -25,6 +26,10 @@ public class AlertDialog extends Dialog implements DialogInterface {
 
 	public void setButton(int whichButton, CharSequence text, OnClickListener listener) {
 		nativeSetButton(nativePtr, whichButton, String.valueOf(text), listener);
+	}
+
+	public Button getButton(int whichButton) {
+		return new Button(super.getContext());
 	}
 
 	public void setView(View view) {

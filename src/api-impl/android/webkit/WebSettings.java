@@ -72,4 +72,8 @@ public class WebSettings {
 	public void setAllowUniversalAccessFromFileURLs(boolean allow) {}
 
 	public void setGeolocationDatabasePath(String path) {}
+
+	public void setSaveFormData(boolean save) {}
+
+	public void setAllowContentAccess(boolean allow) {}
 }

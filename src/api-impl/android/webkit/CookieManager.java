@@ -24,6 +24,10 @@ public class CookieManager {
 
 	public void removeExpiredCookie() {}
 
+	public void removeAllCookie() {}
+
+	public void removeSessionCookie() {}
+
 	public void flush() {}
 
 	public String getCookie(String url) {
@@ -31,6 +35,8 @@ public class CookieManager {
 	}
 
 	public void setCookie(String url, String value) {}
+
+	public void setAcceptCookie(boolean accept) {}
 
 	public boolean acceptThirdPartyCookies(WebView webview) {
 		return false;
