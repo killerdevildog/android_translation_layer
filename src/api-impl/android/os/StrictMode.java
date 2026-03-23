@@ -22,6 +22,7 @@ public final class StrictMode {
 	}
 
 	public static final class ThreadPolicy {
+		public static final ThreadPolicy LAX;
 		final int mask;
 		final OnThreadViolationListener listener;
 		final Executor callbackExecutor;
@@ -91,6 +92,9 @@ public final class StrictMode {
 			public Builder permitUnbufferedIo() {
 				return this;
 			}
+		}
+		static {
+			LAX = (new Builder()).build();
 		}
 	}
 	public static final class VmPolicy {
