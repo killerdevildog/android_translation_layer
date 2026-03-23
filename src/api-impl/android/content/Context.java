@@ -263,6 +263,10 @@ public abstract class Context {
 		return data_dir;
 	}
 
+	public File getDataDir() {
+		return getDataDirFile();
+	}
+
 	public File getFilesDir() {
 		if (files_dir == null) {
 			files_dir = new File(getDataDirFile(), "files");
@@ -785,6 +789,15 @@ public abstract class Context {
 	}
 
 	public abstract Context createDeviceProtectedStorageContext();
+
+	public boolean moveSharedPreferencesFrom(Context sourceContext, String name) {
+		File sourceFile = sourceContext.getSharedPrefsFile(name);
+		if (!sourceFile.exists()) {
+			return true;
+		}
+		deleteSharedPreferences(name);
+		return sourceFile.renameTo(getSharedPrefsFile(name));
+	}
 
 	public boolean deleteSharedPreferences(String name) {
 		getSharedPrefsFile(name).delete();
