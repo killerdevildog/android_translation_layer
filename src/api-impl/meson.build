@@ -115,6 +115,7 @@ srcs = [
 	'android/content/IntentFilter.java',
 	'android/content/IntentSender.java',
 	'android/content/Loader.java',
+	'android/content/MutableContextWrapper.java',
 	'android/content/OperationApplicationException.java',
 	'android/content/RestrictionsManager.java',
 	'android/content/SearchRecentSuggestionsProvider.java',
