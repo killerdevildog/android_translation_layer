@@ -36,6 +36,17 @@ static void surface_view_widget_size_allocate(GtkWidget *widget, int width, int 
 static void surface_view_widget_snapshot(GtkWidget *widget, GdkSnapshot *snapshot)
 {
 	SurfaceViewWidget *surface_view_widget = SURFACE_VIEW_WIDGET(widget);
+#if (GTK_MAJOR_VERSION >= 4 && GTK_MINOR_VERSION >= 22)
+	if (getenv("ATL_DIRECT_EGL")) {
+		graphene_rect_t bounds = GRAPHENE_RECT_INIT(0, 0, gtk_widget_get_width(widget), gtk_widget_get_height(widget));
+		/* the exact color doesn't really matter with GSK_PORTER_DUFF_CLEAR */
+		GskRenderNode *hole = gsk_color_node_new(&(GdkRGBA){0, 0, 0, 0}, &bounds);
+		GskRenderNode *mask = gsk_color_node_new(&(GdkRGBA){1, 1, 1, 1}, &bounds);
+		GskRenderNode *holepunch = gsk_composite_node_new(hole, mask, GSK_PORTER_DUFF_CLEAR);
+		gtk_snapshot_append_node(snapshot, holepunch);
+		return;
+	}
+#endif
 	if (surface_view_widget->texture) {
 		graphene_rect_t bounds = GRAPHENE_RECT_INIT(0, 0, gtk_widget_get_width(widget), gtk_widget_get_height(widget));
 		if (surface_view_widget->needs_flip) {

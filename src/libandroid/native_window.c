@@ -317,6 +317,11 @@ ANativeWindow *ANativeWindow_fromSurface(JNIEnv *env, jobject surface)
 		wl_subsurface_set_desync(subsurface);
 		wl_subsurface_set_position(subsurface, pos.x, pos.y);
 
+#if (GTK_MAJOR_VERSION >= 4 && GTK_MINOR_VERSION >= 22)
+		/* in Gtk 4.22+ we are able to do hole punching */
+		wl_subsurface_place_below(subsurface, toplevel_surface);
+#endif
+
 		struct wl_region *empty_region = wl_compositor_create_region(wl_compositor);
 		wl_surface_set_input_region(wayland_surface, empty_region);
 		wl_region_destroy(empty_region);
