@@ -101,7 +101,7 @@ public class Build {
 	 */
 	public static final String SERIAL = getString("ro.serialno");
 
-	public static final String[] SUPPORTED_ABIS = {CPU_ABI, CPU_ABI2};
+	public static final String[] SUPPORTED_ABIS = getString("ro.product.cpu.abilist").split(",");
 
 	/**
 	 * Various version strings.
