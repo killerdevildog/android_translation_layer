@@ -83,6 +83,7 @@ public class MediaSession {
 
 	public void setRatingType(int ratingType) {}
 
+	public void setQueueTitle(CharSequence title) {}
 	protected native void nativeSetState(int state, long actions, long position, long updateTime, String title, String subTitle, String artUrl);
 	protected native void nativeSetCallback(Callback callback);
 }

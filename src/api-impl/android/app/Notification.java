@@ -193,6 +193,8 @@ public class Notification implements Parcelable {
 
 		public Builder setTicker(CharSequence tickerText) { return this; }
 
+		public Builder addExtras(Bundle bundle) { return this; }
+
 		public Notification build() {
 			return notification;
 		}

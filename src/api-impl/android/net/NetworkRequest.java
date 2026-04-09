@@ -7,5 +7,9 @@ public class NetworkRequest {
 		public NetworkRequest build() {
 			return new NetworkRequest();
 		}
+
+		public Builder addCapability(int capability) {
+			return this;
+		}
 	}
 }
