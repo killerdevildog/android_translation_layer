@@ -9,10 +9,10 @@ extern "C" {
 #endif
 /*
  * Class:     android_net_ConnectivityManager
- * Method:    registerNetworkCallback
+ * Method:    nativeRegisterNetworkCallback
  * Signature: (Landroid/net/NetworkRequest;Landroid/net/ConnectivityManager/NetworkCallback;)V
  */
-JNIEXPORT void JNICALL Java_android_net_ConnectivityManager_registerNetworkCallback
+JNIEXPORT void JNICALL Java_android_net_ConnectivityManager_nativeRegisterNetworkCallback
   (JNIEnv *, jobject, jobject, jobject);
 
 /*

@@ -31,7 +31,7 @@ public class NetworkInfo {
 	}
 
 	public boolean isConnectedOrConnecting() {
-		return false;
+		return state == State.CONNECTED || state == State.CONNECTING;
 	}
 
 	public int getSubtype() {
@@ -51,7 +51,7 @@ public class NetworkInfo {
 	}
 
 	public boolean isAvailable() {
-		return false;
+		return state == State.CONNECTED || state == State.CONNECTING || state == State.DISCONNECTED;
 	}
 
 	public DetailedState getDetailedState() {

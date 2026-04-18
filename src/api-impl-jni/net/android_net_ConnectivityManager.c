@@ -29,7 +29,7 @@ static void on_network_changed(GNetworkMonitor *self, gboolean network_available
 		(*env)->ExceptionDescribe(env);
 }
 
-JNIEXPORT void JNICALL Java_android_net_ConnectivityManager_registerNetworkCallback(JNIEnv *env, jobject this, jobject request, jobject callback)
+JNIEXPORT void JNICALL Java_android_net_ConnectivityManager_nativeRegisterNetworkCallback(JNIEnv *env, jobject this, jobject request, jobject callback)
 {
 	g_signal_connect(g_network_monitor_get_default(), "network-changed", G_CALLBACK(on_network_changed), _REF(callback));
 }

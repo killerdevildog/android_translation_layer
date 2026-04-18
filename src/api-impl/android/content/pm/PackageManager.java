@@ -1862,6 +1862,11 @@ public class PackageManager {
 			case "android.permission.WRITE_EXTERNAL_STORAGE":
 			case "android.permission.READ_EXTERNAL_STORAGE":
 			case "com.google.android.c2dm.permission.SEND":
+			case "android.permission.INTERNET":
+			case "android.permission.ACCESS_NETWORK_STATE":
+			case "android.permission.ACCESS_WIFI_STATE":
+			case "android.permission.CHANGE_NETWORK_STATE":
+			case "android.permission.CHANGE_WIFI_STATE":
 				return PERMISSION_GRANTED;
 			// only tell the app that it can access location if it *actually* can
 			// (until we find apps that refuse to launch without being lied to anyway)

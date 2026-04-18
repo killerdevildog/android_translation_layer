@@ -56,6 +56,8 @@ public class StaticLayout extends Layout {
 
 		public Builder setJustificationMode(int mode) { return this; }
 
+		public Builder setUseLineSpacingFromFallbacks(boolean useLineSpacingFromFallbacks) { return this; }
+
 		public StaticLayout build() { return layout; }
 	}
 }

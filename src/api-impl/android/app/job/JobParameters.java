@@ -1,5 +1,6 @@
 package android.app.job;
 
+import android.net.Network;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
@@ -24,5 +25,9 @@ public class JobParameters implements Parcelable {
 
 	public String[] getTriggeredContentAuthorities() {
 		return new String[0];
+	}
+
+	public Network getNetwork() {
+		return null;
 	}
 }

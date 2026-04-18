@@ -19,7 +19,14 @@ public class ConnectivityManager {
 		return new NetworkInfo(nativeGetNetworkAvailable());
 	}
 
-	public native void registerNetworkCallback(NetworkRequest request, NetworkCallback callback);
+	public void registerNetworkCallback(NetworkRequest request, NetworkCallback callback) {
+		nativeRegisterNetworkCallback(request, callback);
+		if (nativeGetNetworkAvailable()) {
+			callback.onAvailable(new Network());
+		}
+	}
+
+	protected native void nativeRegisterNetworkCallback(NetworkRequest request, NetworkCallback callback);
 
 	public void unregisterNetworkCallback(NetworkCallback callback) {}
 
@@ -40,12 +47,21 @@ public class ConnectivityManager {
 	}
 
 	public NetworkCapabilities getNetworkCapabilities(Network network) {
-		return null;
+		if (!nativeGetNetworkAvailable())
+			return null;
+		return new NetworkCapabilities();
 	}
 
-	public void registerDefaultNetworkCallback(NetworkCallback cb, Handler hdl) {}
+	public void registerDefaultNetworkCallback(NetworkCallback cb, Handler hdl) {
+		registerDefaultNetworkCallback(cb);
+	}
 
-	public void registerDefaultNetworkCallback(NetworkCallback cb) {}
+	public void registerDefaultNetworkCallback(NetworkCallback cb) {
+		nativeRegisterNetworkCallback(null, cb);
+		if (nativeGetNetworkAvailable()) {
+			cb.onAvailable(new Network());
+		}
+	}
 
 	public ProxyInfo getDefaultProxy() { return null; }
 }

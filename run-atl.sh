@@ -6,11 +6,18 @@ BUILD_DIR="$ATL_DIR/build"
 
 export PATH="$BUILD_DIR/bin:$PATH"
 export LD_LIBRARY_PATH="$BUILD_DIR/lib:$BUILD_DIR/lib/art:$BUILD_DIR/bionic_build:$BUILD_DIR/atl_build:$LD_LIBRARY_PATH"
+export RUN_FROM_BUILDDIR=1
 
-# Create natives directory if needed
-mkdir -p "$BUILD_DIR/lib/java/dex/android_translation_layer/natives"
+# Resolve APK path before cd'ing into the build dir, so relative paths passed
+# on the command line still work.
+args=()
+for arg in "$@"; do
+	if [[ -f "$arg" ]]; then
+		args+=("$(realpath "$arg")")
+	else
+		args+=("$arg")
+	fi
+done
 
-# Copy libtranslation_layer_main.so to natives directory
-cp -f "$BUILD_DIR/atl_build/libtranslation_layer_main.so" "$BUILD_DIR/lib/java/dex/android_translation_layer/natives/"
-
-exec "$BUILD_DIR/atl_build/android-translation-layer" --sdk-int=28 "$@"
+cd "$BUILD_DIR/atl_build"
+exec ./android-translation-layer --sdk-int=28 "${args[@]}"
