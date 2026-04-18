@@ -343,7 +343,8 @@ static void open(GtkApplication *app, GFile **files, gint nfiles, const gchar *h
 	Dl_info libart_so_dl_info;
 	// JNI_CreateJavaVM chosen arbitrarily, what matters is that it's a symbol exported by by libart.so
 	// TODO: we shouldn't necessarily count on art being installed in the same prefix as we are
-	dladdr(JNI_CreateJavaVM, &libart_so_dl_info);
+	void *_JNI_CreateJavaVM = dlsym(RTLD_NEXT, "JNI_CreateJavaVM");
+	dladdr(_JNI_CreateJavaVM, &libart_so_dl_info);
 	// make sure we didn't get NULL
 	if (libart_so_dl_info.dli_fname) {
 		// it's simpler if we can modify the string, so strdup it
