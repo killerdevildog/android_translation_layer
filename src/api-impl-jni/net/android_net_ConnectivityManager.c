@@ -15,7 +15,7 @@ JNIEXPORT jboolean JNICALL Java_android_net_ConnectivityManager_nativeGetNetwork
 	return g_network_monitor_get_network_available(g_network_monitor_get_default());
 }
 
-static void on_network_changed(GNetworkMonitor* self, gboolean network_available, jobject callback)
+static void on_network_changed(GNetworkMonitor *self, gboolean network_available, jobject callback)
 {
 	JNIEnv *env = get_jni_env();
 	jmethodID method;

@@ -76,94 +76,94 @@ struct AInputEvent {
 typedef void AInputQueue;
 
 struct ALooper;
-typedef int (*Looper_callbackFunc)(int fd, int events, void* data);
+typedef int (*Looper_callbackFunc)(int fd, int events, void *data);
 
-float AMotionEvent_getAxisValue(const struct AInputEvent* motion_event, int32_t axis, size_t pointer_index)
+float AMotionEvent_getAxisValue(const struct AInputEvent *motion_event, int32_t axis, size_t pointer_index)
 {
 	return -1; // no clue what to do here
 }
 
-size_t AMotionEvent_getPointerCount(const struct AInputEvent* motion_event)
+size_t AMotionEvent_getPointerCount(const struct AInputEvent *motion_event)
 {
 	return 1; // FIXME
 }
 
-int32_t AInputEvent_getType(const struct AInputEvent* event)
+int32_t AInputEvent_getType(const struct AInputEvent *event)
 {
-	if(event) {
+	if (event) {
 		return AINPUT_EVENT_TYPE_MOTION; // FIXME
 	} else {
 		return -1;
 	}
 }
 
-int32_t AInputEvent_getSource(const struct AInputEvent* event)
+int32_t AInputEvent_getSource(const struct AInputEvent *event)
 {
-	if(event) {
+	if (event) {
 		return AINPUT_SOURCE_TOUCHSCREEN; // FIXME
 	} else {
 		return -1;
 	}
 }
 
-int32_t AMotionEvent_getAction(const struct AInputEvent* motion_event)
+int32_t AMotionEvent_getAction(const struct AInputEvent *motion_event)
 {
-	if(motion_event) {
+	if (motion_event) {
 		return motion_event->action;
 	} else {
 		return -1;
 	}
 }
 
-int32_t AMotionEvent_getPointerId(const struct AInputEvent* motion_event, size_t pointer_index)
+int32_t AMotionEvent_getPointerId(const struct AInputEvent *motion_event, size_t pointer_index)
 {
-	if(motion_event) {
+	if (motion_event) {
 		return 1; // FIXME
 	} else {
 		return -1; // 0?
 	}
 }
 
-float AMotionEvent_getX(const struct AInputEvent* motion_event, size_t pointer_index)
+float AMotionEvent_getX(const struct AInputEvent *motion_event, size_t pointer_index)
 {
-	if(motion_event) {
+	if (motion_event) {
 		return motion_event->x;
 	} else {
 		return -1;
 	}
 }
 
-float AMotionEvent_getY(const struct AInputEvent* motion_event, size_t pointer_index)
+float AMotionEvent_getY(const struct AInputEvent *motion_event, size_t pointer_index)
 {
-	if(motion_event) {
+	if (motion_event) {
 		return motion_event->y;
 	} else {
 		return -1;
 	}
 }
 
-void AInputQueue_detachLooper(AInputQueue* queue)
+void AInputQueue_detachLooper(AInputQueue *queue)
 {
 	return;
 }
 
 struct android_poll_source {
-    // The identifier of this source.  May be LOOPER_ID_MAIN or
-    // LOOPER_ID_INPUT.
-    int32_t id;
+	// The identifier of this source.  May be LOOPER_ID_MAIN or
+	// LOOPER_ID_INPUT.
+	int32_t id;
 
-    // The android_app this ident is associated with.
-    struct android_app* app;
+	// The android_app this ident is associated with.
+	struct android_app *app;
 
-    // Function to call to perform the standard processing of data from
-    // this source.
-    void (*process)(struct android_app* app, struct android_poll_source* source);
+	// Function to call to perform the standard processing of data from
+	// this source.
+	void (*process)(struct android_app *app, struct android_poll_source *source);
 };
 
 // TODO: malloc on getEvent and free on finishEvent? malloc isn't very fast though, and events can in principle be pretty frequent
 struct AInputEvent fixme_ugly_current_event;
 
-static inline void make_touch_event(GdkEvent* event, GtkEventControllerLegacy* event_controller, struct AInputEvent *ainput_event)
+static inline void make_touch_event(GdkEvent *event, GtkEventControllerLegacy *event_controller, struct AInputEvent *ainput_event)
 {
 	GtkWidget *window = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(event_controller));
 	GtkWidget *child;
@@ -174,7 +174,7 @@ static inline void make_touch_event(GdkEvent* event, GtkEventControllerLegacy* e
 	// apps expect it to start at the top left of the area where child widgets get placed, so that
 	// the top left of the window is the same as the top left of a single widget filling the entire window
 	// while it's quite hacky, the following should realistically work for most if not all cases
-	if((child = gtk_window_get_child(GTK_WINDOW(window)))) {
+	if ((child = gtk_window_get_child(GTK_WINDOW(window)))) {
 		int ret;
 		graphene_point_t p;
 		ret = gtk_widget_compute_point(window, child, &GRAPHENE_POINT_INIT(ainput_event->x, ainput_event->y), &p);
@@ -184,7 +184,7 @@ static inline void make_touch_event(GdkEvent* event, GtkEventControllerLegacy* e
 		ainput_event->y = p.y;
 	}
 
-	switch(gdk_event_get_event_type(event)) {
+	switch (gdk_event_get_event_type(event)) {
 		case GDK_BUTTON_PRESS:
 		case GDK_TOUCH_BEGIN:
 			ainput_event->action = AMOTION_EVENT_ACTION_DOWN;
@@ -203,12 +203,12 @@ static inline void make_touch_event(GdkEvent* event, GtkEventControllerLegacy* e
 	}
 }
 
-static gboolean on_event(GtkEventControllerLegacy* self, GdkEvent* event, int input_queue_pipe_fd)
+static gboolean on_event(GtkEventControllerLegacy *self, GdkEvent *event, int input_queue_pipe_fd)
 {
 	struct AInputEvent ainput_event;
 
 	// TODO: this doesn't work for multitouch
-	switch(gdk_event_get_event_type(event)) {
+	switch (gdk_event_get_event_type(event)) {
 		// mouse click/move (currently we convert these to touch events)
 		case GDK_BUTTON_PRESS:
 		case GDK_BUTTON_RELEASE:
@@ -234,7 +234,7 @@ struct input_queue {
 	GtkEventController *controller;
 };
 
-void AInputQueue_attachLooper(struct input_queue* queue, struct ALooper* looper, int ident, Looper_callbackFunc callback, void* data)
+void AInputQueue_attachLooper(struct input_queue *queue, struct ALooper *looper, int ident, Looper_callbackFunc callback, void *data)
 {
 	struct android_poll_source *poll_source = (struct android_poll_source *)data;
 	//printf("AInputQueue_attachLooper called: queue: %p, looper: %p, ident: %d, callback %p, data: %p, process_func: %p\n", queue, looper, ident, callback, poll_source, poll_source ? poll_source->process : 0);
@@ -246,14 +246,14 @@ void AInputQueue_attachLooper(struct input_queue* queue, struct ALooper* looper,
 		return;
 	}
 	fcntl(input_queue_pipe[0], F_SETFL, O_NONBLOCK);
-	ALooper_addFd(looper, input_queue_pipe[0], ident, (1 << 0)/*? ALOOPER_EVENT_INPUT*/, callback, data);
+	ALooper_addFd(looper, input_queue_pipe[0], ident, (1 << 0) /*? ALOOPER_EVENT_INPUT*/, callback, data);
 	g_signal_connect(queue->controller, "event", G_CALLBACK(on_event), GINT_TO_POINTER(input_queue_pipe[1]));
 	queue->fd = input_queue_pipe[0];
 }
 
-int32_t AInputQueue_getEvent(struct input_queue *queue, struct AInputEvent** outEvent)
+int32_t AInputQueue_getEvent(struct input_queue *queue, struct AInputEvent **outEvent)
 {
-	if(read(queue->fd, &fixme_ugly_current_event, sizeof(struct AInputEvent)) == sizeof(struct AInputEvent)) {
+	if (read(queue->fd, &fixme_ugly_current_event, sizeof(struct AInputEvent)) == sizeof(struct AInputEvent)) {
 		*outEvent = &fixme_ugly_current_event;
 		return 0;
 	} else {
@@ -261,12 +261,12 @@ int32_t AInputQueue_getEvent(struct input_queue *queue, struct AInputEvent** out
 	}
 }
 
-int32_t AInputQueue_preDispatchEvent(AInputQueue* queue, struct AInputEvent* event)
+int32_t AInputQueue_preDispatchEvent(AInputQueue *queue, struct AInputEvent *event)
 {
 	return 0; // we don't want to claim the event for ourselves, let the app process it
 }
 
-void AInputQueue_finishEvent(AInputQueue* queue, struct AInputEvent* event, int handled)
+void AInputQueue_finishEvent(AInputQueue *queue, struct AInputEvent *event, int handled)
 {
 	// should we do something here?
 }

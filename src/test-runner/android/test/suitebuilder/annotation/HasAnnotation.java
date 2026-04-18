@@ -16,10 +16,9 @@
 
 package android.test.suitebuilder.annotation;
 
-import com.android.internal.util.Predicates;
-import com.android.internal.util.Predicate;
 import android.test.suitebuilder.TestMethod;
-
+import com.android.internal.util.Predicate;
+import com.android.internal.util.Predicates;
 import java.lang.annotation.Annotation;
 
 /**
@@ -30,15 +29,15 @@ import java.lang.annotation.Annotation;
  */
 public class HasAnnotation implements Predicate<TestMethod> {
 
-    private Predicate<TestMethod> hasMethodOrClassAnnotation;
+	private Predicate<TestMethod> hasMethodOrClassAnnotation;
 
-    public HasAnnotation(Class<? extends Annotation> annotationClass) {
-        this.hasMethodOrClassAnnotation = Predicates.or(
-                new HasMethodAnnotation(annotationClass),
-                new HasClassAnnotation(annotationClass));
-    }
+	public HasAnnotation(Class<? extends Annotation> annotationClass) {
+		this.hasMethodOrClassAnnotation = Predicates.or(
+		    new HasMethodAnnotation(annotationClass),
+		    new HasClassAnnotation(annotationClass));
+	}
 
-    public boolean apply(TestMethod testMethod) {
-        return hasMethodOrClassAnnotation.apply(testMethod);
-    }
+	public boolean apply(TestMethod testMethod) {
+		return hasMethodOrClassAnnotation.apply(testMethod);
+	}
 }

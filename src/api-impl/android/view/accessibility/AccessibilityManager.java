@@ -9,9 +9,9 @@ public class AccessibilityManager {
 
 	public interface TouchExplorationStateChangeListener {}
 
-	public boolean isTouchExplorationEnabled() {return false;}
+	public boolean isTouchExplorationEnabled() { return false; }
 
-	public boolean isEnabled() {return false;}
+	public boolean isEnabled() { return false; }
 
 	public List getEnabledAccessibilityServiceList(int feedbackTypeFlags) {
 		return new ArrayList<>();
@@ -32,5 +32,4 @@ public class AccessibilityManager {
 	public boolean removeTouchExplorationStateChangeListener(TouchExplorationStateChangeListener listener) {
 		return false;
 	}
-
 }

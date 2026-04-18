@@ -33,14 +33,14 @@ import android.app.Activity;
  */
 @Deprecated
 public abstract class SingleLaunchActivityTestCase<T extends Activity>
-        extends InstrumentationTestCase {
+    extends InstrumentationTestCase {
 
-    String mPackage;
-    Class<T> mActivityClass;
-    private static int sTestCaseCounter = 0;
-    private static boolean sActivityLaunchedFlag = false;
+	String mPackage;
+	Class<T> mActivityClass;
+	private static int sTestCaseCounter = 0;
+	private static boolean sActivityLaunchedFlag = false;
 
-    /**
+	/**
      * <b>NOTE:</b> The parameter <i>pkg</i> must refer to the package identifier of the
      * package hosting the activity to be launched, which is specified in the AndroidManifest.xml
      * file.  This is not necessarily the same as the java package name.
@@ -48,44 +48,44 @@ public abstract class SingleLaunchActivityTestCase<T extends Activity>
      * @param pkg The package hosting the activity to be launched.
      * @param activityClass The activity to test.
      */
-    public SingleLaunchActivityTestCase(String pkg, Class<T> activityClass) {
-        mPackage = pkg;
-        mActivityClass = activityClass;
-        sTestCaseCounter ++;
-    }
+	public SingleLaunchActivityTestCase(String pkg, Class<T> activityClass) {
+		mPackage = pkg;
+		mActivityClass = activityClass;
+		sTestCaseCounter++;
+	}
 
-    /**
+	/**
      * The activity that will be set up for use in each test method.
      */
-    private static Activity sActivity;
+	private static Activity sActivity;
 
-    public T getActivity() {
-        return (T) sActivity;
-    }
+	public T getActivity() {
+		return (T)sActivity;
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        // If it is the first test case, launch the activity.
-        if (!sActivityLaunchedFlag) {
-            // by default, not in touch mode
-            getInstrumentation().setInTouchMode(false);
-            sActivity = launchActivity(mPackage, mActivityClass, null);
-            sActivityLaunchedFlag = true;
-        }
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		// If it is the first test case, launch the activity.
+		if (!sActivityLaunchedFlag) {
+			// by default, not in touch mode
+			getInstrumentation().setInTouchMode(false);
+			sActivity = launchActivity(mPackage, mActivityClass, null);
+			sActivityLaunchedFlag = true;
+		}
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        // If it is the last test case, call finish on the activity.
-        sTestCaseCounter --;
-        if (sTestCaseCounter == 0) {
-            sActivity.finish();
-        }
-        super.tearDown();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		// If it is the last test case, call finish on the activity.
+		sTestCaseCounter--;
+		if (sTestCaseCounter == 0) {
+			sActivity.finish();
+		}
+		super.tearDown();
+	}
 
-    public void testActivityTestCaseSetUpProperly() throws Exception {
-        assertNotNull("activity should be launched successfully", sActivity);
-    }
+	public void testActivityTestCaseSetUpProperly() throws Exception {
+		assertNotNull("activity should be launched successfully", sActivity);
+	}
 }

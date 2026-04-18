@@ -1,11 +1,11 @@
 package android.app;
 
-import android.os.Bundle;
-import android.content.res.Configuration;
 import android.R;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageParser;
+import android.content.res.Configuration;
+import android.os.Bundle;
 
 public class Application extends ContextWrapper {
 	public long native_window;
@@ -35,8 +35,8 @@ public class Application extends ContextWrapper {
 
 	String get_supported_mime_types() {
 		String mimeTypes = "";
-		for (PackageParser.Activity activity: pkg.activities) {
-			for (PackageParser.IntentInfo intent: activity.intents) {
+		for (PackageParser.Activity activity : pkg.activities) {
+			for (PackageParser.IntentInfo intent : activity.intents) {
 				for (int i = 0; i < intent.countDataSchemes(); i++) {
 					String scheme = intent.getDataScheme(i);
 					// ignore http and https, as there is no way to only handle specific hosts in a .desktop file
@@ -100,7 +100,7 @@ public class Application extends ContextWrapper {
 	}
 	public void onTrimMemory(int level) {
 	}
-/*	public void registerComponentCallbacks(ComponentCallbacks callback) {
+	/*public void registerComponentCallbacks(ComponentCallbacks callback) {
 	}
 	public void unregisterComponentCallbacks(ComponentCallbacks callback) {
 	}*/

@@ -28,3 +28,8 @@
 .ATL-text-align-right > * {
 	text-align: right;
 }
+
+.ATL-no-background {
+	background-color: rgba(0,0,0,0);
+	background-image: none;
+}

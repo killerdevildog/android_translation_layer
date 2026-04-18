@@ -20,4 +20,6 @@ public interface ViewParent {
 	public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed);
 
 	public void onStopNestedScroll(View target);
+
+	public void onDescendantInvalidated(View child, View target);
 }

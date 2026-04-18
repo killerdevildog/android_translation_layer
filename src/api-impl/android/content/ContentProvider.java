@@ -1,9 +1,5 @@
 package android.content;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.atl.ATLMediaContentProvider;
 import android.content.pm.PackageParser;
 import android.content.pm.ProviderInfo;
@@ -11,6 +7,9 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class ContentProvider {
 
@@ -19,7 +18,7 @@ public abstract class ContentProvider {
 	static void createContentProviders() {
 		for (PackageParser.Provider provider_parsed : Context.pkg.providers) {
 			String process_name = provider_parsed.info.processName;
-			if(process_name != null && process_name.contains(":")) {
+			if (process_name != null && process_name.contains(":")) {
 				/* NOTE: even if it doesn't contain `:`, if it's not null we probably
 				 * need to check what it's requesting; `:` means it wants us to spawn
 				 * a new process, which we currently don't support */
@@ -34,12 +33,14 @@ public abstract class ContentProvider {
 				provider.attachInfo(Context.this_application, provider_parsed.info);
 				provider.onCreate();
 				providers.put(provider_parsed.info.authority, provider);
-			} catch(Exception e) { e.printStackTrace(); }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		providers.put("media", new ATLMediaContentProvider());
 	}
 
-	public boolean onCreate() {return false;}
+	public boolean onCreate() { return false; }
 
 	public Context getContext() {
 		return Context.this_application;
@@ -64,4 +65,7 @@ public abstract class ContentProvider {
 
 	public void attachInfo(Context context, ProviderInfo provider) {}
 
+	public String getCallingPackage() {
+		return Context.pkg.packageName;
+	}
 }

@@ -79,7 +79,7 @@ public class Xml {
 	 * handler.
 	 */
 	public static void parse(InputStream in, Encoding encoding,
-				 ContentHandler contentHandler) throws IOException, SAXException {
+	                         ContentHandler contentHandler) throws IOException, SAXException {
 		XMLReader reader = new ExpatReader();
 		reader.setContentHandler(contentHandler);
 		InputSource source = new InputSource(in);
@@ -178,7 +178,7 @@ public class Xml {
 	 */
 	public static AttributeSet asAttributeSet(XmlPullParser parser) {
 		return (parser instanceof AttributeSet)
-		    ? (AttributeSet)parser
-		    : new XmlPullAttributes(parser);
+		         ? (AttributeSet)parser
+		         : new XmlPullAttributes(parser);
 	}
 }

@@ -27,7 +27,7 @@ public class PathPermission extends PatternMatcher {
 	private final String mWritePermission;
 
 	public PathPermission(String pattern, int type, String readPermission,
-			      String writePermission) {
+	                      String writePermission) {
 		super(pattern, type);
 		mReadPermission = readPermission;
 		mWritePermission = writePermission;

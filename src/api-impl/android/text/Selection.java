@@ -35,7 +35,7 @@ public class Selection {
 	 */
 	public static final int getSelectionStart(CharSequence text) {
 		if (text instanceof Spanned)
-			return ((Spanned) text).getSpanStart(SELECTION_START);
+			return ((Spanned)text).getSpanStart(SELECTION_START);
 		else
 			return -1;
 	}
@@ -46,7 +46,7 @@ public class Selection {
 	 */
 	public static final int getSelectionEnd(CharSequence text) {
 		if (text instanceof Spanned)
-			return ((Spanned) text).getSpanStart(SELECTION_END);
+			return ((Spanned)text).getSpanStart(SELECTION_END);
 		else
 			return -1;
 	}
@@ -69,9 +69,9 @@ public class Selection {
 		int oend = getSelectionEnd(text);
 		if (ostart != start || oend != stop) {
 			text.setSpan(SELECTION_START, start, start,
-						 Spanned.SPAN_POINT_POINT|Spanned.SPAN_INTERMEDIATE);
+			             Spanned.SPAN_POINT_POINT | Spanned.SPAN_INTERMEDIATE);
 			text.setSpan(SELECTION_END, stop, stop,
-						 Spanned.SPAN_POINT_POINT);
+			             Spanned.SPAN_POINT_POINT);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class Selection {
 
 	/** {@hide} */
 	public static boolean moveToPreceding(
-			Spannable text, PositionIterator iter, boolean extendSelection) {
+	    Spannable text, PositionIterator iter, boolean extendSelection) {
 		final int offset = iter.preceding(getSelectionEnd(text));
 		if (offset != PositionIterator.DONE) {
 			if (extendSelection) {
@@ -128,7 +128,7 @@ public class Selection {
 
 	/** {@hide} */
 	public static boolean moveToFollowing(
-			Spannable text, PositionIterator iter, boolean extendSelection) {
+	    Spannable text, PositionIterator iter, boolean extendSelection) {
 		final int offset = iter.following(getSelectionEnd(text));
 		if (offset != PositionIterator.DONE) {
 			if (extendSelection) {
@@ -140,8 +140,8 @@ public class Selection {
 		return true;
 	}
 
-	private static final class START implements NoCopySpan { }
-	private static final class END implements NoCopySpan { }
+	private static final class START implements NoCopySpan {}
+	private static final class END implements NoCopySpan {}
 
 	/*
 	 * Public constants

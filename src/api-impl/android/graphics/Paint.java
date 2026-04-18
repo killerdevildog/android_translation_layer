@@ -3,21 +3,21 @@ package android.graphics;
 import java.util.Locale;
 
 public class Paint {
-	public static final int ANTI_ALIAS_FLAG           = (1 << 0);
-	public static final int FILTER_BITMAP_FLAG        = (1 << 1);
-	public static final int DITHER_FLAG               = (1 << 2);
-	public static final int UNDERLINE_TEXT_FLAG       = (1 << 3);
-	public static final int STRIKE_THRU_TEXT_FLAG     = (1 << 4);
-	public static final int FAKE_BOLD_TEXT_FLAG       = (1 << 5);
-	public static final int LINEAR_TEXT_FLAG          = (1 << 6);
-	public static final int SUBPIXEL_TEXT_FLAG        = (1 << 7);
-	public static final int DEV_KERN_TEXT_FLAG        = (1 << 8);
-	public static final int LCD_RENDER_TEXT_FLAG      = (1 << 9);
+	public static final int ANTI_ALIAS_FLAG = (1 << 0);
+	public static final int FILTER_BITMAP_FLAG = (1 << 1);
+	public static final int DITHER_FLAG = (1 << 2);
+	public static final int UNDERLINE_TEXT_FLAG = (1 << 3);
+	public static final int STRIKE_THRU_TEXT_FLAG = (1 << 4);
+	public static final int FAKE_BOLD_TEXT_FLAG = (1 << 5);
+	public static final int LINEAR_TEXT_FLAG = (1 << 6);
+	public static final int SUBPIXEL_TEXT_FLAG = (1 << 7);
+	public static final int DEV_KERN_TEXT_FLAG = (1 << 8);
+	public static final int LCD_RENDER_TEXT_FLAG = (1 << 9);
 	public static final int EMBEDDED_BITMAP_TEXT_FLAG = (1 << 10);
-	public static final int AUTO_HINTING_TEXT_FLAG    = (1 << 11);
-	public static final int VERTICAL_TEXT_FLAG        = (1 << 12);
+	public static final int AUTO_HINTING_TEXT_FLAG = (1 << 11);
+	public static final int VERTICAL_TEXT_FLAG = (1 << 12);
 
-	public long paint;   // native paint
+	public long paint; // native paint
 	private Xfermode xfermode;
 	private Shader shader;
 	private Align align = Align.CENTER;
@@ -27,7 +27,7 @@ public class Paint {
 		paint = native_create();
 	}
 
-	public Paint (int flags) {
+	public Paint(int flags) {
 		this();
 		setFlags(flags);
 	}
@@ -59,6 +59,10 @@ public class Paint {
 	public void setAntiAlias(boolean aa) {
 	}
 
+	public boolean setFontVariationSettings(String fvs) {
+		return true;
+	}
+
 	public void setStrokeWidth(float width) {
 		native_set_stroke_width(paint, width);
 	}
@@ -85,7 +89,7 @@ public class Paint {
 	public void setFilterBitmap(boolean filter) {}
 
 	public void setFlags(int flags) {
-		if((flags & ANTI_ALIAS_FLAG) != 0)
+		if ((flags & ANTI_ALIAS_FLAG) != 0)
 			setAntiAlias(true);
 	}
 
@@ -99,7 +103,7 @@ public class Paint {
 
 	public float measureText(char[] text, int index, int count) { return 10; }
 	public float measureText(String text, int start, int end) {
-		return (end-start)*getTextSize()*.6f;
+		return (end - start) * getTextSize() * .6f;
 	}
 	public float measureText(String text) {
 		return measureText(text, 0, text.length());
@@ -185,9 +189,7 @@ public class Paint {
 
 		@Override
 		public String toString() {
-			return "FontMetricsInt: top=" + top + " ascent=" + ascent +
-			    " descent=" + descent + " bottom=" + bottom +
-			    " leading=" + leading;
+			return "FontMetricsInt: top=" + top + " ascent=" + ascent + " descent=" + descent + " bottom=" + bottom + " leading=" + leading;
 		}
 	}
 
@@ -243,7 +245,7 @@ public class Paint {
 
 	public BlendMode getBlendMode() {
 		if (this.xfermode instanceof PorterDuffXfermode) {
-			return BlendMode.fromValue(((PorterDuffXfermode) this.xfermode).porterDuffMode);
+			return BlendMode.fromValue(((PorterDuffXfermode)this.xfermode).porterDuffMode);
 		}
 		return null;
 	}
@@ -330,7 +332,6 @@ public class Paint {
 	public boolean hasShadowLayer() {
 		return false;
 	}
-
 
 	public FontMetrics getFontMetrics() {
 		return new FontMetrics();

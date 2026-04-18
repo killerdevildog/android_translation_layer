@@ -21,7 +21,7 @@ import java.lang.reflect.Array;
 
 /* package */ abstract class SpannableStringInternal {
 	/* package */ SpannableStringInternal(CharSequence source,
-					      int start, int end) {
+	                                      int start, int end) {
 		if (start == 0 && end == source.length())
 			mText = source.toString();
 		else
@@ -81,8 +81,7 @@ import java.lang.reflect.Array;
 				if (c != '\n')
 					throw new RuntimeException(
 					    "PARAGRAPH span must start at paragraph boundary"
-					    +
-					    " (" + start + " follows " + c + ")");
+					    + " (" + start + " follows " + c + ")");
 			}
 
 			if (end != 0 && end != length()) {
@@ -91,8 +90,7 @@ import java.lang.reflect.Array;
 				if (c != '\n')
 					throw new RuntimeException(
 					    "PARAGRAPH span must end at paragraph boundary"
-					    +
-					    " (" + end + " follows " + c + ")");
+					    + " (" + end + " follows " + c + ")");
 			}
 		}
 
@@ -150,7 +148,7 @@ import java.lang.reflect.Array;
 
 				System.arraycopy(spans, i + 1, spans, i, c);
 				System.arraycopy(data, (i + 1) * COLUMNS,
-						 data, i * COLUMNS, c * COLUMNS);
+				                 data, i * COLUMNS, c * COLUMNS);
 
 				mSpanCount--;
 
@@ -324,7 +322,7 @@ import java.lang.reflect.Array;
 
 	private void sendSpanChanged(Object what, int s, int e, int st, int en) {
 		SpanWatcher[] recip = getSpans(Math.min(s, st), Math.max(e, en),
-					       SpanWatcher.class);
+		                               SpanWatcher.class);
 		int n = recip.length;
 
 		for (int i = 0; i < n; i++) {
@@ -338,31 +336,25 @@ import java.lang.reflect.Array;
 
 	private void checkRange(final String operation, int start, int end) {
 		if (end < start) {
-			throw new IndexOutOfBoundsException(operation + " " +
-							    region(start, end) +
-							    " has end before start");
+			throw new IndexOutOfBoundsException(operation + " " + region(start, end) + " has end before start");
 		}
 
 		int len = length();
 
 		if (start > len || end > len) {
-			throw new IndexOutOfBoundsException(operation + " " +
-							    region(start, end) +
-							    " ends beyond length " + len);
+			throw new IndexOutOfBoundsException(operation + " " + region(start, end) + " ends beyond length " + len);
 		}
 
 		if (start < 0 || end < 0) {
-			throw new IndexOutOfBoundsException(operation + " " +
-							    region(start, end) +
-							    " starts before 0");
+			throw new IndexOutOfBoundsException(operation + " " + region(start, end) + " starts before 0");
 		}
 	}
 
 	// Same as SpannableStringBuilder
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Spanned &&
-		    toString().equals(o.toString())) {
+		if (o instanceof Spanned
+		    && toString().equals(o.toString())) {
 			Spanned other = (Spanned)o;
 			// Check span data
 			Object[] otherSpans = other.getSpans(0, other.length(), Object.class);
@@ -371,16 +363,16 @@ import java.lang.reflect.Array;
 					Object thisSpan = mSpans[i];
 					Object otherSpan = otherSpans[i];
 					if (thisSpan == this) {
-						if (other != otherSpan ||
-						    getSpanStart(thisSpan) != other.getSpanStart(otherSpan) ||
-						    getSpanEnd(thisSpan) != other.getSpanEnd(otherSpan) ||
-						    getSpanFlags(thisSpan) != other.getSpanFlags(otherSpan)) {
+						if (other != otherSpan
+						    || getSpanStart(thisSpan) != other.getSpanStart(otherSpan)
+						    || getSpanEnd(thisSpan) != other.getSpanEnd(otherSpan)
+						    || getSpanFlags(thisSpan) != other.getSpanFlags(otherSpan)) {
 							return false;
 						}
-					} else if (!thisSpan.equals(otherSpan) ||
-						   getSpanStart(thisSpan) != other.getSpanStart(otherSpan) ||
-						   getSpanEnd(thisSpan) != other.getSpanEnd(otherSpan) ||
-						   getSpanFlags(thisSpan) != other.getSpanFlags(otherSpan)) {
+					} else if (!thisSpan.equals(otherSpan)
+					           || getSpanStart(thisSpan) != other.getSpanStart(otherSpan)
+					           || getSpanEnd(thisSpan) != other.getSpanEnd(otherSpan)
+					           || getSpanFlags(thisSpan) != other.getSpanFlags(otherSpan)) {
 						return false;
 					}
 				}

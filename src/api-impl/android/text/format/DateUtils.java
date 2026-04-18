@@ -1,8 +1,7 @@
 package android.text.format;
 
-import java.util.Date;
-
 import android.content.Context;
+import java.util.Date;
 
 public class DateUtils {
 

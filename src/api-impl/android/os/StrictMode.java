@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 public final class StrictMode {
 	public static void setThreadPolicy(final ThreadPolicy policy) {}
 	public static void setVmPolicy(final VmPolicy policy) {}
+	public static VmPolicy getVmPolicy() { return new VmPolicy.Builder().build(); }
 	public static ThreadPolicy allowThreadDiskWrites() {
 		return new ThreadPolicy();
 	}
@@ -21,14 +22,15 @@ public final class StrictMode {
 	}
 
 	public static final class ThreadPolicy {
+		public static final ThreadPolicy LAX;
 		final int mask;
 		final OnThreadViolationListener listener;
 		final Executor callbackExecutor;
 
 		private ThreadPolicy(int mask, OnThreadViolationListener listener, Executor executor) {
-		    this.mask = mask;
-		    this.listener = listener;
-		    this.callbackExecutor = executor;
+			this.mask = mask;
+			this.listener = listener;
+			this.callbackExecutor = executor;
 		}
 
 		private ThreadPolicy() {
@@ -50,7 +52,7 @@ public final class StrictMode {
 			}
 
 			public Builder(ThreadPolicy policy) {
-				if(policy != null) {
+				if (policy != null) {
 					mask = policy.mask;
 					listener = policy.listener;
 					executor = policy.callbackExecutor;
@@ -61,6 +63,9 @@ public final class StrictMode {
 				return this;
 			}
 			public Builder detectNetwork() {
+				return this;
+			}
+			public Builder permitAll() {
 				return this;
 			}
 			public Builder permitDiskReads() {
@@ -84,9 +89,16 @@ public final class StrictMode {
 			public Builder detectUnbufferedIo() {
 				return this;
 			}
+			public Builder permitUnbufferedIo() {
+				return this;
+			}
+		}
+		static {
+			LAX = (new Builder()).build();
 		}
 	}
 	public static final class VmPolicy {
+		public static final VmPolicy LAX;
 		public static final class Builder {
 			public Builder detectActivityLeaks() {
 				return this;
@@ -113,11 +125,15 @@ public final class StrictMode {
 				return this;
 			}
 			public Builder penaltyDropBox() {
-			return this;
+				return this;
 			}
 			public VmPolicy build() {
 				return new VmPolicy();
 			}
+		}
+
+		static {
+			LAX = (new Builder()).build();
 		}
 	}
 }

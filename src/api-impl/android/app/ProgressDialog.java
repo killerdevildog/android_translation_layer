@@ -14,6 +14,12 @@ public class ProgressDialog extends AlertDialog {
 
 	public void setIndeterminate(boolean indeterminate) {}
 
+	public void setProgressStyle(int style) {}
+
+	public void setProgress(int progress) {}
+
+	public void setMax(int max) {}
+
 	public static ProgressDialog show(Context context, CharSequence title, CharSequence message) {
 		return show(context, title, message, false);
 	}

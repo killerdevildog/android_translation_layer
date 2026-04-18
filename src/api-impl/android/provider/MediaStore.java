@@ -1,18 +1,17 @@
 package android.provider;
 
-import java.io.FileNotFoundException;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import java.io.FileNotFoundException;
 
 public class MediaStore {
-	
+
 	public static class Images {
-		
+
 		public static class Media {
 
 			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/images/media");
@@ -33,7 +32,7 @@ public class MediaStore {
 	}
 
 	public static class Video {
-		
+
 		public static class Media {
 
 			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/video/media");
@@ -42,10 +41,22 @@ public class MediaStore {
 	}
 
 	public static class Audio {
-		
+
 		public static class Media {
 
 			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/audio/media");
+		}
+
+		public static class Artists {
+			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/audio/artists");
+		}
+
+		public static class Albums {
+			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/audio/albums");
+		}
+
+		public static class Genres {
+			public static final Uri EXTERNAL_CONTENT_URI = Uri.parse("content://media/external/audio/genres");
 		}
 	}
 

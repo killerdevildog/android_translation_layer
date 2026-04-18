@@ -35,10 +35,9 @@ public class ConditionVariable {
 	/**
 	 * Create the ConditionVariable in the default closed state.
 	*/
-	public ConditionVariable()
-	{
+	public ConditionVariable() {
 		mCondition = false;
- 	}
+	}
 
 	/**
 	 * Create the ConditionVariable with the given state.
@@ -46,8 +45,7 @@ public class ConditionVariable {
 	* <p>
 	* Pass true for opened and false for closed.
 	*/
-	public ConditionVariable(boolean state)
-	{
+	public ConditionVariable(boolean state) {
 		mCondition = state;
 	}
 
@@ -58,8 +56,7 @@ public class ConditionVariable {
 	* Any threads that later approach block() will not block unless close()
 	* is called.
 	*/
-	public void open()
-	{
+	public void open() {
 		synchronized (this) {
 			boolean old = mCondition;
 			mCondition = true;
@@ -75,8 +72,7 @@ public class ConditionVariable {
 	* <p>
 	* Any threads that call block() will block until someone calls open.
 	*/
-	public void close()
-	{
+	public void close() {
 		synchronized (this) {
 			mCondition = false;
 		}
@@ -88,14 +84,12 @@ public class ConditionVariable {
 	* <p>
 	* If the condition is already opened, return immediately.
 	*/
-	public void block()
-	{
+	public void block() {
 		synchronized (this) {
 			while (!mCondition) {
 				try {
 					this.wait();
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 				}
 			}
 		}
@@ -113,8 +107,7 @@ public class ConditionVariable {
 	* @return true if the condition was opened, false if the call returns
 	* because of the timeout.
 	*/
-	public boolean block(long timeoutMs)
-	{
+	public boolean block(long timeoutMs) {
 		// Object.wait(0) means wait forever, to mimic this, we just
 		// call the other block() method in that case.  It simplifies
 		// this code for the common case.
@@ -124,9 +117,8 @@ public class ConditionVariable {
 				long end = now + timeoutMs;
 				while (!mCondition && now < end) {
 					try {
-						this.wait(end-now);
-					}
-					catch (InterruptedException e) {
+						this.wait(end - now);
+					} catch (InterruptedException e) {
 					}
 					now = SystemClock.elapsedRealtime();
 				}

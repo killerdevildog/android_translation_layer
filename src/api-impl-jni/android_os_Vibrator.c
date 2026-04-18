@@ -17,9 +17,9 @@ char *find_vibrator(void)
 
 	GUdevClient *udev_client = g_udev_client_new(NULL);
 	GList *udev_devices = g_udev_client_query_by_subsystem(udev_client, "input");
-	for(GList *l = udev_devices; l != NULL; l = l->next) {
+	for (GList *l = udev_devices; l != NULL; l = l->next) {
 		GUdevDevice *device = l->data;
-		if(!g_strcmp0(g_udev_device_get_property(device, "FEEDBACKD_TYPE"), "vibra")) {
+		if (!g_strcmp0(g_udev_device_get_property(device, "FEEDBACKD_TYPE"), "vibra")) {
 			device_file = strdup(g_udev_device_get_device_file(device));
 			break;
 		}
@@ -31,24 +31,23 @@ char *find_vibrator(void)
 	return device_file;
 }
 
-JNIEXPORT jint JNICALL Java_android_os_Vibrator_native_1constructor(JNIEnv *env, jobject this) {
+JNIEXPORT jint JNICALL Java_android_os_Vibrator_native_1constructor(JNIEnv *env, jobject this)
+{
 	char *device_file;
 
 	/* if there are multiple instances of Vibrator for some reason, reuse the fd */
 	static int fd = -1;
-	if(fd != -1)
+	if (fd != -1)
 		return fd;
 
 	device_file = find_vibrator();
-	if(!device_file) {
+	if (!device_file) {
 		g_log(NULL, G_LOG_LEVEL_WARNING, "no feedbackd-recognized vibrator found");
 		return -1;
 	}
 
-
-
 	fd = open(device_file, O_RDWR);
-	if(fd < 0) {
+	if (fd < 0) {
 		g_log(NULL, G_LOG_LEVEL_WARNING, "cannot open vibrator device '%s': %m", device_file);
 		free(device_file);
 		return -1;
@@ -62,7 +61,6 @@ JNIEXPORT jint JNICALL Java_android_os_Vibrator_native_1constructor(JNIEnv *env,
 		.value = 0xFFFFUL * 80 / 100,
 	};
 
-
 	if (write(fd, &set_gain, sizeof(set_gain)) < 0) {
 		g_log(NULL, G_LOG_LEVEL_WARNING, "failed to set gain on vibrator: %m");
 	}
@@ -70,16 +68,17 @@ JNIEXPORT jint JNICALL Java_android_os_Vibrator_native_1constructor(JNIEnv *env,
 	return fd;
 }
 
-JNIEXPORT void JNICALL Java_android_os_Vibrator_native_1vibrate(JNIEnv *env, jobject this, jint fd, jlong duration) {
+JNIEXPORT void JNICALL Java_android_os_Vibrator_native_1vibrate(JNIEnv *env, jobject this, jint fd, jlong duration)
+{
 	/* FIXME: not thread-safe */
-	static struct ff_effect effect = { .id = -1 };
+	static struct ff_effect effect = {.id = -1};
 
-	if(effect.id != -1 && effect.replay.length != duration) {
+	if (effect.id != -1 && effect.replay.length != duration) {
 		ioctl(fd, EVIOCRMFF, effect.id);
 		effect.id = -1;
 	}
 
-	if(effect.id == -1) {
+	if (effect.id == -1) {
 		/* arbitrary, could possibly be improved */
 		effect.type = FF_PERIODIC;
 		effect.id = -1;
@@ -108,7 +107,7 @@ JNIEXPORT void JNICALL Java_android_os_Vibrator_native_1vibrate(JNIEnv *env, job
 		.value = 1,
 	};
 
-	if(write(fd, (const void*)&play, sizeof(play)) < 0) {
+	if (write(fd, (const void *)&play, sizeof(play)) < 0) {
 		g_log(NULL, G_LOG_LEVEL_WARNING, "failed to play vibraton: %m");
 	}
 }

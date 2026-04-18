@@ -16,11 +16,10 @@
 
 package android.widget;
 
-import java.util.ArrayList;
-
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
+import java.util.ArrayList;
 
 /**
  * ListAdapter used when a ListView has header views. This ListAdapter
@@ -41,13 +40,13 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 	// Used as a placeholder in case the provided info views are indeed null.
 	// Currently only used by some CTS tests, which may be removed.
 	static final ArrayList<ListView.FixedViewInfo> EMPTY_INFO_LIST =
-		new ArrayList<ListView.FixedViewInfo>();
+	    new ArrayList<ListView.FixedViewInfo>();
 
 	boolean mAreAllFixedViewsSelectable;
 
 	public HeaderViewListAdapter(ArrayList<ListView.FixedViewInfo> headerViewInfos,
-								 ArrayList<ListView.FixedViewInfo> footerViewInfos,
-								 ListAdapter adapter) {
+	                             ArrayList<ListView.FixedViewInfo> footerViewInfos,
+	                             ListAdapter adapter) {
 		mAdapter = adapter;
 
 		if (headerViewInfos == null) {
@@ -63,8 +62,8 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 		}
 
 		mAreAllFixedViewsSelectable =
-				areAllListInfosSelectable(mHeaderViewInfos)
-				&& areAllListInfosSelectable(mFooterViewInfos);
+		    areAllListInfosSelectable(mHeaderViewInfos)
+		    && areAllListInfosSelectable(mFooterViewInfos);
 	}
 
 	public int getHeadersCount() {
@@ -97,8 +96,8 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 				mHeaderViewInfos.remove(i);
 
 				mAreAllFixedViewsSelectable =
-						areAllListInfosSelectable(mHeaderViewInfos)
-						&& areAllListInfosSelectable(mFooterViewInfos);
+				    areAllListInfosSelectable(mHeaderViewInfos)
+				    && areAllListInfosSelectable(mFooterViewInfos);
 
 				return true;
 			}
@@ -114,8 +113,8 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 				mFooterViewInfos.remove(i);
 
 				mAreAllFixedViewsSelectable =
-						areAllListInfosSelectable(mHeaderViewInfos)
-						&& areAllListInfosSelectable(mFooterViewInfos);
+				    areAllListInfosSelectable(mHeaderViewInfos)
+				    && areAllListInfosSelectable(mFooterViewInfos);
 
 				return true;
 			}
@@ -231,7 +230,7 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 
 	public Filter getFilter() {
 		if (mAdapter instanceof Filterable) {
-			return ((Filterable) mAdapter).getFilter();
+			return ((Filterable)mAdapter).getFilter();
 		}
 		return null;
 	}
@@ -257,11 +256,11 @@ public class HeaderViewListAdapter implements ListAdapter, Filterable {
 		return mFooterViewInfos.get(adjPosition - adapterCount).isSelectable;
 	}
 
-    public boolean areAllItemsEnabled() {
-        if (mAdapter != null) {
-            return mAreAllFixedViewsSelectable && mAdapter.areAllItemsEnabled();
-        } else {
-            return true;
-        }
-    }
+	public boolean areAllItemsEnabled() {
+		if (mAdapter != null) {
+			return mAreAllFixedViewsSelectable && mAdapter.areAllItemsEnabled();
+		} else {
+			return true;
+		}
+	}
 }

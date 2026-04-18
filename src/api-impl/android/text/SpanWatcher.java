@@ -38,5 +38,5 @@ public interface SpanWatcher extends NoCopySpan {
 	 * to the new range <code>nstart&hellip;nend</code> of the text.
 	 */
 	public void onSpanChanged(Spannable text, Object what, int ostart, int oend,
-				  int nstart, int nend);
+	                          int nstart, int nend);
 }

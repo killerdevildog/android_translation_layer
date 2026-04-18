@@ -19,7 +19,7 @@ JNIEXPORT jlong JNICALL Java_android_widget_TextView_native_1constructor(JNIEnv 
 {
 	const char *text = attribute_set_get_string(env, attrs, "text", NULL);
 
-//	_SET_OBJ_FIELD(this, "text", "Ljava/lang/String;", _JSTRING(text)); //TODO: sadly this might be needed, but it's not atm
+	//	_SET_OBJ_FIELD(this, "text", "Ljava/lang/String;", _JSTRING(text)); //TODO: sadly this might be needed, but it's not atm
 
 	GtkWidget *wrapper = g_object_ref(wrapper_widget_new());
 	GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -32,7 +32,7 @@ JNIEXPORT jlong JNICALL Java_android_widget_TextView_native_1constructor(JNIEnv 
 	wrapper_widget_set_child(WRAPPER_WIDGET(wrapper), box);
 	wrapper_widget_set_jobject(WRAPPER_WIDGET(wrapper), env, this);
 
-	PangoAttrList* pango_attrs = pango_attr_list_new();
+	PangoAttrList *pango_attrs = pango_attr_list_new();
 	pango_attr_list_insert(pango_attrs, pango_attr_font_features_new("tnum"));
 	gtk_label_set_attributes(GTK_LABEL(label), pango_attrs);
 	pango_attr_list_unref(pango_attrs);
@@ -44,7 +44,7 @@ JNIEXPORT void JNICALL Java_android_widget_TextView_native_1setText(JNIEnv *env,
 {
 	const char *text = charseq ? (*env)->GetStringUTFChars(env, charseq, NULL) : NULL;
 	atl_safe_gtk_label_set_text(box_get_label(env, _PTR(_GET_LONG_FIELD(this, "widget"))), text ?: "");
-	if(text)
+	if (text)
 		(*env)->ReleaseStringUTFChars(env, charseq, text);
 }
 
@@ -53,12 +53,12 @@ JNIEXPORT void JNICALL Java_android_widget_TextView_native_1setText(JNIEnv *env,
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 JNIEXPORT void JNICALL Java_android_widget_TextView_native_1setTextColor(JNIEnv *env, jobject this, jint color)
 {
-	GtkWidget *widget = GTK_WIDGET(box_get_label(env, _PTR(_GET_LONG_FIELD(this, "widget"))));
+	GtkWidget *widget = GTK_WIDGET(_PTR(_GET_LONG_FIELD(this, "widget")));
 
 	GtkStyleContext *style_context = gtk_widget_get_style_context(widget);
 
 	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "color_style_provider");
-	if(old_provider)
+	if (old_provider)
 		gtk_style_context_remove_provider(style_context, GTK_STYLE_PROVIDER(old_provider));
 
 	GtkCssProvider *css_provider = gtk_css_provider_new();
@@ -78,7 +78,7 @@ JNIEXPORT void JNICALL Java_android_widget_TextView_setTextSize(JNIEnv *env, job
 	PangoAttrList *attrs;
 
 	PangoAttrList *old_attrs = gtk_label_get_attributes(label);
-	if(old_attrs)
+	if (old_attrs)
 		attrs = pango_attr_list_copy(old_attrs);
 	else
 		attrs = pango_attr_list_new();
@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_android_widget_TextView_native_1setCompoundDrawables
 	GtkWidget *box = GTK_WIDGET(_PTR(widget_ptr));
 	gtk_orientable_set_orientation(GTK_ORIENTABLE(box), (left || right) ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
 
-	GdkPaintable *paintable = _PTR(left ?: top);  // paintable before text
+	GdkPaintable *paintable = _PTR(left ?: top); // paintable before text
 	GtkWidget *picture = gtk_widget_get_first_child(box);
 	if (GTK_IS_PICTURE(picture)) {
 		gtk_picture_set_paintable(GTK_PICTURE(picture), paintable);
@@ -111,7 +111,7 @@ JNIEXPORT void JNICALL Java_android_widget_TextView_native_1setCompoundDrawables
 		gtk_widget_insert_after(picture, box, NULL);
 	}
 
-	paintable = _PTR(right ?: bottom);  // paintable after text
+	paintable = _PTR(right ?: bottom); // paintable after text
 	picture = gtk_widget_get_last_child(box);
 	if (GTK_IS_PICTURE(picture)) {
 		gtk_picture_set_paintable(GTK_PICTURE(picture), paintable);

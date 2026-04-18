@@ -3,51 +3,56 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-#define DEG2RAD(deg) ((deg) * M_PI / 180)
+#define DEG2RAD(deg)    ((deg) * M_PI / 180)
 
-#define __likely__(x) __builtin_expect(x, 1)
+#define __likely__(x)   __builtin_expect(x, 1)
 #define __unlikely__(x) __builtin_expect(x, 0)
 
-// these macros are a bit hacky, since they deliberately assume that env exists and refers to the JNI env
+/* constants */
+#define KiB 1024
+#define MiB 1024 * KiB
+#define GiB 1024 * MiB
 
-#define _PTR(ptr)((void*)(intptr_t)(ptr))
-#define _INTPTR(ptr)((jlong)(intptr_t)(ptr))
-#define _REF(obj)((*env)->NewGlobalRef(env, obj))
-#define _UNREF(obj)((*env)->DeleteGlobalRef(env, obj))
-#define _WEAK_REF(obj)((*env)->NewWeakGlobalRef(env, obj))
-#define _WEAK_UNREF(obj)((*env)->DeleteWeakGlobalRef(env, obj))
-#define _CLASS(object) ((*env)->GetObjectClass(env, object))
-#define _SUPER(object) ((*env)->GetSuperclass(env, object))
-#define _METHOD(class, method, attrs) ((*env)->GetMethodID(env, class, method, attrs))
-#define _STATIC_METHOD(class, method, attrs) ((*env)->GetStaticMethodID(env, class, method, attrs))
-#define _JSTRING(cstring) ((*env)->NewStringUTF(env, cstring))
-#define _CSTRING(jstring) ((*env)->GetStringUTFChars(env, jstring, NULL))
-#define _FIELD_ID(class, field, type) ((*env)->GetFieldID(env, class , field, type))
-#define _STATIC_FIELD_ID(class, field, type) ((*env)->GetStaticFieldID(env, class , field, type))
-#define _SET_OBJ_FIELD(object, field, type, value) ((*env)->SetObjectField(env, object, _FIELD_ID(_CLASS(object), field, type), value))
-#define _GET_OBJ_FIELD(object, field, type) ((*env)->GetObjectField(env, object, _FIELD_ID(_CLASS(object), field, type)))
-#define _SET_LONG_FIELD(object, field, value) ((*env)->SetLongField(env, object, _FIELD_ID(_CLASS(object), field, "J"), value))
-#define _GET_LONG_FIELD(object, field) ((*env)->GetLongField(env, object, _FIELD_ID(_CLASS(object), field, "J")))
-#define _SET_INT_FIELD(object, field, value) ((*env)->SetIntField(env, object, _FIELD_ID(_CLASS(object), field, "I"), value))
-#define _GET_INT_FIELD(object, field) ((*env)->GetIntField(env, object, _FIELD_ID(_CLASS(object), field, "I")))
-#define _SET_BOOL_FIELD(object, field, value) ((*env)->SetBooleanField(env, object, _FIELD_ID(_CLASS(object), field, "Z"), value))
-#define _GET_BOOL_FIELD(object, field) ((*env)->GetBooleanField(env, object, _FIELD_ID(_CLASS(object), field, "Z")))
-#define _GET_FLOAT_FIELD(object, field) ((*env)->GetFloatField(env, object, _FIELD_ID(_CLASS(object), field, "F")))
-#define _SET_FLOAT_FIELD(object, field, value) ((*env)->SetFloatField(env, object, _FIELD_ID(_CLASS(object), field, "F"), value))
-#define _SET_STATIC_INT_FIELD(class, field, value) ((*env)->SetStaticIntField(env, class, _STATIC_FIELD_ID(class, field, "I"), value))
-#define _SET_STATIC_BOOL_FIELD(class, field, value) ((*env)->SetStaticBooleanField(env, class, _STATIC_FIELD_ID(class, field, "Z"), value))
-#define _SET_STATIC_OBJ_FIELD(class, field, type, value) ((*env)->SetStaticObjectField(env, class, _STATIC_FIELD_ID(class, field, type), value))
-#define _GET_STATIC_OBJ_FIELD(class, field, type) ((*env)->GetStaticObjectField(env, class, _STATIC_FIELD_ID(class, field, type)))
-#define _GET_BYTE_ARRAY_ELEMENTS(b_array) ((*env)->GetByteArrayElements(env, b_array, NULL))
+/* these macros are a bit hacky, since they deliberately assume that env exists and refers to the JNI env */
+
+#define _PTR(ptr)                                         ((void *)(intptr_t)(ptr))
+#define _INTPTR(ptr)                                      ((jlong)(intptr_t)(ptr))
+#define _REF(obj)                                         ((*env)->NewGlobalRef(env, obj))
+#define _UNREF(obj)                                       ((*env)->DeleteGlobalRef(env, obj))
+#define _WEAK_REF(obj)                                    ((*env)->NewWeakGlobalRef(env, obj))
+#define _WEAK_UNREF(obj)                                  ((*env)->DeleteWeakGlobalRef(env, obj))
+#define _CLASS(object)                                    ((*env)->GetObjectClass(env, object))
+#define _SUPER(object)                                    ((*env)->GetSuperclass(env, object))
+#define _METHOD(class, method, attrs)                     ((*env)->GetMethodID(env, class, method, attrs))
+#define _STATIC_METHOD(class, method, attrs)              ((*env)->GetStaticMethodID(env, class, method, attrs))
+#define _JSTRING(cstring)                                 ((*env)->NewStringUTF(env, cstring))
+#define _CSTRING(jstring)                                 ((*env)->GetStringUTFChars(env, jstring, NULL))
+#define _FIELD_ID(class, field, type)                     ((*env)->GetFieldID(env, class, field, type))
+#define _STATIC_FIELD_ID(class, field, type)              ((*env)->GetStaticFieldID(env, class, field, type))
+#define _SET_OBJ_FIELD(object, field, type, value)        ((*env)->SetObjectField(env, object, _FIELD_ID(_CLASS(object), field, type), value))
+#define _GET_OBJ_FIELD(object, field, type)               ((*env)->GetObjectField(env, object, _FIELD_ID(_CLASS(object), field, type)))
+#define _SET_LONG_FIELD(object, field, value)             ((*env)->SetLongField(env, object, _FIELD_ID(_CLASS(object), field, "J"), value))
+#define _GET_LONG_FIELD(object, field)                    ((*env)->GetLongField(env, object, _FIELD_ID(_CLASS(object), field, "J")))
+#define _SET_INT_FIELD(object, field, value)              ((*env)->SetIntField(env, object, _FIELD_ID(_CLASS(object), field, "I"), value))
+#define _GET_INT_FIELD(object, field)                     ((*env)->GetIntField(env, object, _FIELD_ID(_CLASS(object), field, "I")))
+#define _SET_BOOL_FIELD(object, field, value)             ((*env)->SetBooleanField(env, object, _FIELD_ID(_CLASS(object), field, "Z"), value))
+#define _GET_BOOL_FIELD(object, field)                    ((*env)->GetBooleanField(env, object, _FIELD_ID(_CLASS(object), field, "Z")))
+#define _GET_FLOAT_FIELD(object, field)                   ((*env)->GetFloatField(env, object, _FIELD_ID(_CLASS(object), field, "F")))
+#define _SET_FLOAT_FIELD(object, field, value)            ((*env)->SetFloatField(env, object, _FIELD_ID(_CLASS(object), field, "F"), value))
+#define _SET_STATIC_INT_FIELD(class, field, value)        ((*env)->SetStaticIntField(env, class, _STATIC_FIELD_ID(class, field, "I"), value))
+#define _SET_STATIC_BOOL_FIELD(class, field, value)       ((*env)->SetStaticBooleanField(env, class, _STATIC_FIELD_ID(class, field, "Z"), value))
+#define _SET_STATIC_OBJ_FIELD(class, field, type, value)  ((*env)->SetStaticObjectField(env, class, _STATIC_FIELD_ID(class, field, type), value))
+#define _GET_STATIC_OBJ_FIELD(class, field, type)         ((*env)->GetStaticObjectField(env, class, _STATIC_FIELD_ID(class, field, type)))
+#define _GET_BYTE_ARRAY_ELEMENTS(b_array)                 ((*env)->GetByteArrayElements(env, b_array, NULL))
 #define _RELEASE_BYTE_ARRAY_ELEMENTS(b_array, buffer_ptr) ((*env)->ReleaseByteArrayElements(env, b_array, buffer_ptr, 0))
 
-// token pasting with macro expansion
+/* token pasting with macro expansion */
 
-#define __JOIN(x, y) x ## y
-#define JOIN(x, y) __JOIN(x, y)
+#define __JOIN(x, y)   x##y
+#define JOIN(x, y)     __JOIN(x, y)
 #define JOIN3(x, y, z) JOIN(JOIN(x, y), z)
 
-// define enum member value to a value from autogenerated header
+/* define enum member value to a value from autogenerated header */
 
 #define JAVA_ENUM(name) \
 	name = JOIN3(JAVA_ENUM_CLASS, _, name)

@@ -18,7 +18,6 @@ package android.test;
 
 import android.app.Activity;
 import android.content.Intent;
-
 import java.lang.reflect.Method;
 
 /**
@@ -45,12 +44,12 @@ import java.lang.reflect.Method;
  */
 @Deprecated
 public abstract class ActivityInstrumentationTestCase2<T extends Activity>
-        extends ActivityTestCase {
-    Class<T> mActivityClass;
-    boolean mInitialTouchMode = false;
-    Intent mActivityIntent = null;
+    extends ActivityTestCase {
+	Class<T> mActivityClass;
+	boolean mInitialTouchMode = false;
+	Intent mActivityIntent = null;
 
-    /**
+	/**
      * Creates an {@link ActivityInstrumentationTestCase2}.
      *
      * @param pkg ignored - no longer in use.
@@ -59,22 +58,22 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity>
      *
      * @deprecated use {@link #ActivityInstrumentationTestCase2(Class)} instead
      */
-    @Deprecated
-    public ActivityInstrumentationTestCase2(String pkg, Class<T> activityClass) {
-        this(activityClass);
-    }
+	@Deprecated
+	public ActivityInstrumentationTestCase2(String pkg, Class<T> activityClass) {
+		this(activityClass);
+	}
 
-    /**
+	/**
      * Creates an {@link ActivityInstrumentationTestCase2}.
      *
      * @param activityClass The activity to test. This must be a class in the instrumentation
      * targetPackage specified in the AndroidManifest.xml
      */
-    public ActivityInstrumentationTestCase2(Class<T> activityClass) {
-        mActivityClass = activityClass;
-    }
+	public ActivityInstrumentationTestCase2(Class<T> activityClass) {
+		mActivityClass = activityClass;
+	}
 
-    /**
+	/**
      * Get the Activity under test, starting it if necessary.
      *
      * For each test method invocation, the Activity will not actually be created until the first
@@ -92,25 +91,25 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity>
      *
      * @return the Activity under test
      */
-    @Override
-    public T getActivity() {
-        Activity a = super.getActivity();
-        if (a == null) {
-            // set initial touch mode
-            getInstrumentation().setInTouchMode(mInitialTouchMode);
-            final String targetPackage = getInstrumentation().getTargetContext().getPackageName();
-            // inject custom intent, if provided
-            if (mActivityIntent == null) {
-                a = launchActivity(targetPackage, mActivityClass, null);
-            } else {
-                a = launchActivityWithIntent(targetPackage, mActivityClass, mActivityIntent);
-            }
-            setActivity(a);
-        }
-        return (T) a;
-    }
+	@Override
+	public T getActivity() {
+		Activity a = super.getActivity();
+		if (a == null) {
+			// set initial touch mode
+			getInstrumentation().setInTouchMode(mInitialTouchMode);
+			final String targetPackage = getInstrumentation().getTargetContext().getPackageName();
+			// inject custom intent, if provided
+			if (mActivityIntent == null) {
+				a = launchActivity(targetPackage, mActivityClass, null);
+			} else {
+				a = launchActivityWithIntent(targetPackage, mActivityClass, mActivityIntent);
+			}
+			setActivity(a);
+		}
+		return (T)a;
+	}
 
-    /**
+	/**
      * Call this method before the first call to {@link #getActivity} to inject a customized Intent
      * into the Activity under test.
      *
@@ -128,11 +127,11 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity>
      *
      * @param i The Intent to start the Activity with, or null to reset to the default Intent.
      */
-    public void setActivityIntent(Intent i) {
-        mActivityIntent = i;
-    }
+	public void setActivityIntent(Intent i) {
+		mActivityIntent = i;
+	}
 
-    /**
+	/**
      * Call this method before the first call to {@link #getActivity} to set the initial touch
      * mode for the Activity under test.
      *
@@ -145,51 +144,50 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity>
      *
      * @param initialTouchMode true if the Activity should be placed into "touch mode" when started
      */
-    public void setActivityInitialTouchMode(boolean initialTouchMode) {
-        mInitialTouchMode = initialTouchMode;
-    }
+	public void setActivityInitialTouchMode(boolean initialTouchMode) {
+		mInitialTouchMode = initialTouchMode;
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        mInitialTouchMode = false;
-        mActivityIntent = null;
-    }
+		mInitialTouchMode = false;
+		mActivityIntent = null;
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        // Finish the Activity off (unless was never launched anyway)
-        Activity a = super.getActivity();
-        if (a != null) {
-            a.finish();
-            setActivity(null);
-        }
+	@Override
+	protected void tearDown() throws Exception {
+		// Finish the Activity off (unless was never launched anyway)
+		Activity a = super.getActivity();
+		if (a != null) {
+			a.finish();
+			setActivity(null);
+		}
 
-        // Scrub out members - protects against memory leaks in the case where someone
-        // creates a non-static inner class (thus referencing the test case) and gives it to
-        // someone else to hold onto
-        scrubClass(ActivityInstrumentationTestCase2.class);
+		// Scrub out members - protects against memory leaks in the case where someone
+		// creates a non-static inner class (thus referencing the test case) and gives it to
+		// someone else to hold onto
+		scrubClass(ActivityInstrumentationTestCase2.class);
 
-        super.tearDown();
-    }
+		super.tearDown();
+	}
 
-    /**
+	/**
      * Runs the current unit test. If the unit test is annotated with
      * {@link android.test.UiThreadTest}, force the Activity to be created before switching to
      * the UI thread.
      */
-    @Override
-    protected void runTest() throws Throwable {
-        try {
-            Method method = getClass().getMethod(getName(), (Class[]) null);
-            if (method.isAnnotationPresent(UiThreadTest.class)) {
-                getActivity();
-            }
-        } catch (Exception e) {
-            // eat the exception here; super.runTest() will catch it again and handle it properly
-        }
-        super.runTest();
-    }
-
+	@Override
+	protected void runTest() throws Throwable {
+		try {
+			Method method = getClass().getMethod(getName(), (Class[])null);
+			if (method.isAnnotationPresent(UiThreadTest.class)) {
+				getActivity();
+			}
+		} catch (Exception e) {
+			// eat the exception here; super.runTest() will catch it again and handle it properly
+		}
+		super.runTest();
+	}
 }

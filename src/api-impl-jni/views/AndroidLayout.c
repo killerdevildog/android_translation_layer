@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 
-#include "../util.h"
 #include "../defines.h"
+#include "../util.h"
 #include "AndroidLayout.h"
 
 static int make_measure_spec(int layout_size, int for_size)
@@ -28,11 +28,11 @@ static void android_layout_measure(GtkLayoutManager *layout_manager, GtkWidget *
 	JNIEnv *env = get_jni_env();
 
 	/* if we're inside a shanpshot, this must be getting called purely to make Gtk call gtk_widget_clear_resize_queued */
-	if(snapshot_in_progress)
+	if (snapshot_in_progress)
 		return;
 
 	// If the parent widget is also an AndroidLayout, the measurement will already have happened in Java
-	if ((layout->width || layout->height) && !ATL_IS_ANDROID_LAYOUT(gtk_widget_get_layout_manager(gtk_widget_get_parent(gtk_widget_get_parent(widget))))) {
+	if (!ATL_IS_ANDROID_LAYOUT(gtk_widget_get_layout_manager(gtk_widget_get_parent(gtk_widget_get_parent(widget))))) {
 		widthMeasureSpec = make_measure_spec(layout->width, orientation == GTK_ORIENTATION_VERTICAL ? for_size : -1);
 		heightMeasureSpec = make_measure_spec(layout->height, orientation == GTK_ORIENTATION_HORIZONTAL ? for_size : -1);
 
@@ -43,7 +43,7 @@ static void android_layout_measure(GtkLayoutManager *layout_manager, GtkWidget *
 			heightMeasureSpec = _GET_INT_FIELD(layout->view, "oldHeightMeasureSpec");
 		if (widthMeasureSpec != -1 && heightMeasureSpec != -1) {
 			(*env)->CallVoidMethod(env, layout->view, handle_cache.view.measure, widthMeasureSpec, heightMeasureSpec);
-			if((*env)->ExceptionCheck(env)) {
+			if ((*env)->ExceptionCheck(env)) {
 				(*env)->ExceptionDescribe(env);
 				(*env)->ExceptionClear(env);
 			}
@@ -53,11 +53,11 @@ static void android_layout_measure(GtkLayoutManager *layout_manager, GtkWidget *
 	if (orientation == GTK_ORIENTATION_HORIZONTAL) {
 		*natural = (*env)->CallIntMethod(env, layout->view, handle_cache.view.getMeasuredWidth);
 		*minimum = heightMeasureSpec && !widthMeasureSpec ? *natural
-				: (*env)->CallIntMethod(env, layout->view, handle_cache.view.getSuggestedMinimumWidth);
+		                                                  : (*env)->CallIntMethod(env, layout->view, handle_cache.view.getSuggestedMinimumWidth);
 	} else if (orientation == GTK_ORIENTATION_VERTICAL) {
 		*natural = (*env)->CallIntMethod(env, layout->view, handle_cache.view.getMeasuredHeight);
 		*minimum = widthMeasureSpec && !heightMeasureSpec ? *natural
-				: (*env)->CallIntMethod(env, layout->view, handle_cache.view.getSuggestedMinimumHeight);
+		                                                  : (*env)->CallIntMethod(env, layout->view, handle_cache.view.getSuggestedMinimumHeight);
 	}
 	if (*natural < *minimum)
 		*natural = *minimum;
@@ -69,7 +69,7 @@ static void android_layout_measure(GtkLayoutManager *layout_manager, GtkWidget *
 static void android_layout_allocate(GtkLayoutManager *layout_manager, GtkWidget *widget, int width, int height, int baseline)
 {
 	/* if we're inside a shanpshot, this must be getting called purely to make Gtk call gtk_widget_clear_resize_queued */
-	if(snapshot_in_progress)
+	if (snapshot_in_progress)
 		return;
 
 	AndroidLayout *layout = ATL_ANDROID_LAYOUT(layout_manager);
@@ -80,7 +80,7 @@ static void android_layout_allocate(GtkLayoutManager *layout_manager, GtkWidget 
 	}
 
 	(*env)->CallVoidMethod(env, layout->view, handle_cache.view.layoutInternal, width, height);
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 }
 
@@ -133,7 +133,8 @@ void android_layout_set_params(AndroidLayout *layout, int width, int height)
 	layout->height = height;
 }
 
-void widget_set_needs_allocation(GtkWidget *widget) {
+void widget_set_needs_allocation(GtkWidget *widget)
+{
 	if (ATL_IS_ANDROID_LAYOUT(gtk_widget_get_layout_manager(widget))) {
 		AndroidLayout *layout = ATL_ANDROID_LAYOUT(gtk_widget_get_layout_manager(widget));
 		if (!layout->needs_allocation && (layout->real_width || layout->real_height))

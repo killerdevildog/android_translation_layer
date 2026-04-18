@@ -33,10 +33,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RepetitiveTest {
-    /**
+	/**
      * Indicates the number of times a test case should be run.
      *
      * @return The total number of iterations, the default is 1.
      */
-    int numIterations() default 1;
+	int numIterations() default 1;
 }

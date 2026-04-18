@@ -450,7 +450,8 @@ public class ActivityInfo extends ComponentInfo {
 	    Configuration.NATIVE_CONFIG_SMALLEST_SCREEN_SIZE,   // SMALLEST SCREEN SIZE
 	    Configuration.NATIVE_CONFIG_DENSITY,                // DENSITY
 	    Configuration.NATIVE_CONFIG_LAYOUTDIR,              // LAYOUT DIRECTION
-	}*/;
+	}*/
+	    ;
 	/**
 	 * @hide
 	 * Convert Java change bits to native.
@@ -475,8 +476,8 @@ public class ActivityInfo extends ComponentInfo {
 	 */
 	public int getRealConfigChanged() {
 		return applicationInfo.targetSdkVersion < android.os.Build.VERSION_CODES.HONEYCOMB_MR2
-		    ? (configChanges | ActivityInfo.CONFIG_SCREEN_SIZE | ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE)
-		    : configChanges;
+		         ? (configChanges | ActivityInfo.CONFIG_SCREEN_SIZE | ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE)
+		         : configChanges;
 	}
 
 	/**

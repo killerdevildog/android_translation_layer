@@ -28,21 +28,19 @@ package android.test;
  * <a href="{@docRoot}tools/testing-support-library/index.html">Android Testing Support Library</a>.
  */
 @Deprecated
-public interface PerformanceTestCase
-{
-    /**
+public interface PerformanceTestCase {
+	/**
      * Callbacks for {@link PerformanceTestCase}.
      */
-    public interface Intermediates
-    {
-        void setInternalIterations(int count);
-        void startTiming(boolean realTime);
-        void addIntermediate(String name);
-        void addIntermediate(String name, long timeInNS);
-        void finishTiming(boolean realTime);
-    }
+	public interface Intermediates {
+		void setInternalIterations(int count);
+		void startTiming(boolean realTime);
+		void addIntermediate(String name);
+		void addIntermediate(String name, long timeInNS);
+		void finishTiming(boolean realTime);
+	}
 
-    /**
+	/**
      * Set up to begin performance tests. The 'intermediates' is a
      * communication channel to send back intermediate performance numbers --
      * if you use it, you will probably want to ensure your test is only
@@ -59,12 +57,12 @@ public interface PerformanceTestCase
      * @return int Maximum number of iterations to run, or 0 to let the caller
      * decide.
      */
-    int startPerformance(Intermediates intermediates);
+	int startPerformance(Intermediates intermediates);
 
-    /**
+	/**
      * This method is used to determine what modes this test case can run in.
      *
      * @return true if this test case can only be run in performance mode.
      */
-    boolean isPerformanceOnly();
+	boolean isPerformanceOnly();
 }

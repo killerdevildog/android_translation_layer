@@ -16,14 +16,13 @@
 
 package android.animation;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
 import android.annotation.Nullable;
 import android.os.SystemClock;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.Choreographer;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * This custom, static handler handles the timing pulse that is shared by all active
@@ -47,11 +46,11 @@ public class AnimationHandler {
 	 * while being processed.
 	 */
 	private final ArrayMap<AnimationFrameCallback, Long> mDelayedCallbackStartTime =
-			new ArrayMap<>();
+	    new ArrayMap<>();
 	private final ArrayList<AnimationFrameCallback> mAnimationCallbacks =
-			new ArrayList<>();
+	    new ArrayList<>();
 	private final ArrayList<AnimationFrameCallback> mCommitCallbacks =
-			new ArrayList<>();
+	    new ArrayList<>();
 	private AnimationFrameCallbackProvider mProvider;
 
 	// Static flag which allows the pausing behavior to be globally disabled/enabled.
@@ -122,7 +121,8 @@ public class AnimationHandler {
 	 * @return the value of 'framework.pause_bg_animations.enabled' system property
 	 */
 	private static boolean isPauseBgAnimationsEnabledInSystemProperties() {
-		if (sOverrideAnimatorPausingSystemProperty) return sAnimatorPausingEnabled;
+		if (sOverrideAnimatorPausingSystemProperty)
+			return sAnimatorPausingEnabled;
 		return true; /*SystemProperties
 				.getBoolean("framework.pause_bg_animations.enabled", true);*/
 	}
@@ -225,16 +225,16 @@ public class AnimationHandler {
 			} else {
 				// Wait before pausing to avoid thrashing animator state for temporary backgrounding
 				Choreographer.getInstance().postFrameCallbackDelayed(mPauser,
-						/*Animator.getBackgroundPauseDelay()*/100);
+				                                                     /*Animator.getBackgroundPauseDelay()*/ 100);
 			}
 		}
 		if (LOCAL_LOGV) {
 			Log.v(TAG, (enable ? "enable" : "disable") + " animators for " + requestor
-					+ " with pauseDelay of " + /*Animator.getBackgroundPauseDelay()*/100);
+			           + " with pauseDelay of " + /*Animator.getBackgroundPauseDelay()*/ 100);
 			for (int i = 0; i < mAnimatorRequestors.size(); ++i) {
 				Log.v(TAG, "animatorRequestors " + i + " = "
-						+ mAnimatorRequestors.get(i) + " with referent "
-						+ mAnimatorRequestors.get(i).get());
+				           + mAnimatorRequestors.get(i) + " with referent "
+				           + mAnimatorRequestors.get(i).get());
 			}
 		}
 	}
@@ -263,7 +263,7 @@ public class AnimationHandler {
 				}
 			}
 		}
-	}};
+	} };
 
 	/**
 	 * By default, the Choreographer is used to provide timing for frame callbacks. A custom
@@ -355,8 +355,8 @@ public class AnimationHandler {
 	}
 
 	private void commitAnimationFrame(AnimationFrameCallback callback, long frameTime) {
-		if (!mDelayedCallbackStartTime.containsKey(callback) &&
-				mCommitCallbacks.contains(callback)) {
+		if (!mDelayedCallbackStartTime.containsKey(callback)
+		    && mCommitCallbacks.contains(callback)) {
 			callback.commitAnimationFrame(frameTime);
 			mCommitCallbacks.remove(callback);
 		}
@@ -409,7 +409,7 @@ public class AnimationHandler {
 				continue;
 			}
 			if (objectAnimator.shouldAutoCancel(cb)) {
-				((Animator) mAnimationCallbacks.get(i)).cancel();
+				((Animator)mAnimationCallbacks.get(i)).cancel();
 			}
 		}
 	}
@@ -450,7 +450,7 @@ public class AnimationHandler {
 
 		@Override
 		public void postCommitCallback(Runnable runnable) {
-			mChoreographer.postCallback(/*Choreographer.CALLBACK_COMMIT*/4, runnable, null);
+			mChoreographer.postCallback(/*Choreographer.CALLBACK_COMMIT*/ 4, runnable, null);
 		}
 
 		@Override

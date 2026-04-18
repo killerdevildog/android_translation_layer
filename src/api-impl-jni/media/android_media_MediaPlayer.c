@@ -41,12 +41,11 @@ JNIEXPORT void JNICALL Java_android_media_MediaPlayer_native_1prepare(JNIEnv *en
 {
 	GtkMediaStream *media_stream = _PTR(media_stream_ptr);
 
-	if(!gtk_media_stream_is_prepared(media_stream)) {
+	if (!gtk_media_stream_is_prepared(media_stream)) {
 		/* HACK: GtkMediaStream doesn't support synchronous initialization */
 		gtk_media_stream_stream_prepared(media_stream, true, true, false, 0);
 	}
 }
-
 
 JNIEXPORT void JNICALL Java_android_media_MediaPlayer_native_1start(JNIEnv *env, jclass this, jlong media_stream_ptr)
 {

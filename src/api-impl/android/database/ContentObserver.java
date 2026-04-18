@@ -131,7 +131,7 @@ public abstract class ContentObserver {
 	 * @param flags Flags indicating details about this change.
 	 */
 	public void onChange(boolean selfChange, Collection<Uri> uris,
-			int flags) {
+	                     int flags) {
 		for (Uri uri : uris) {
 			onChange(selfChange, uri, flags);
 		}
@@ -152,12 +152,12 @@ public abstract class ContentObserver {
 	 * @hide
 	 */
 	public void onChange(boolean selfChange, Collection<Uri> uris,
-			int flags, UserHandle user) {
+	                     int flags, UserHandle user) {
 		onChange(selfChange, uris, user.getIdentifier());
 	}
 	/** @hide */
 	public void onChange(boolean selfChange, Collection<Uri> uris,
-			int flags, int userId) {
+	                     int flags, int userId) {
 		// There are dozens of people relying on the hidden API inside the
 		// system UID, so hard-code the old behavior for all of them; for
 		// everyone else we gate based on a specific change
@@ -166,7 +166,7 @@ public abstract class ContentObserver {
 		//     // Deliver userId through argument to preserve hidden API behavior
 		//     onChange(selfChange, uris, flags, UserHandle.of(userId));
 		// } else {
-			onChange(selfChange, uris, flags);
+		onChange(selfChange, uris, flags);
 		// }
 	}
 	/**
@@ -214,7 +214,7 @@ public abstract class ContentObserver {
 	 * @param flags Flags indicating details about this change.
 	 */
 	public final void dispatchChange(boolean selfChange, Uri uri,
-			int flags) {
+	                                 int flags) {
 		dispatchChange(selfChange, Arrays.asList(uri), flags);
 	}
 	/**
@@ -231,16 +231,16 @@ public abstract class ContentObserver {
 	 * @param flags Flags indicating details about this change.
 	 */
 	public final void dispatchChange(boolean selfChange, Collection<Uri> uris,
-			int flags) {
+	                                 int flags) {
 		dispatchChange(selfChange, uris, flags, UserHandle.getCallingUserId());
 	}
 	/** @hide */
 	public final void dispatchChange(final boolean selfChange, final Collection<Uri> uris,
-			final int flags, final int userId) {
+	                                 final int flags, final int userId) {
 		if (mHandler == null) {
 			onChange(selfChange, uris, flags, userId);
 		} else {
-			mHandler.post(new Runnable(){
+			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
 					onChange(selfChange, uris, flags, userId);

@@ -27,6 +27,8 @@ public class EditText extends TextView {
 	protected native void native_removeTextChangedListener(long widget, TextWatcher watcher);
 	protected native void native_setOnEditorActionListener(long widget, OnEditorActionListener l);
 	protected native void native_setText(long widget, String text);
+	protected native void native_setHint(long widget, CharSequence s);
+	protected native CharSequence native_getHint(long widget); // gtk_entry_set_placeholder_text
 
 	public Editable getText() {
 		return new SpannableStringBuilder(native_getText(widget));
@@ -60,6 +62,16 @@ public class EditText extends TextView {
 
 	@Override
 	public void setCompoundDrawables(Drawable left, Drawable top, Drawable right, Drawable bottom) {}
+
+	@Override
+	public void setHint(CharSequence s) {
+		native_setHint(widget, s == null ? "" : s.toString());
+	}
+
+	@Override
+	public CharSequence getHint() {
+		return native_getHint(widget);
+	}
 
 	public void selectAll() {}
 }

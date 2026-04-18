@@ -37,14 +37,14 @@ import org.xmlpull.v1.XmlSerializer;
  */
 public class FastXmlSerializer implements XmlSerializer {
 	private static final String ESCAPE_TABLE[] = new String[] {
-	    null, null, null, null, null, null, null, null,	   // 0-7
-	    null, null, null, null, null, null, null, null,	   // 8-15
-	    null, null, null, null, null, null, null, null,	   // 16-23
-	    null, null, null, null, null, null, null, null,	   // 24-31
-	    null, null, "&quot;", null, null, null, "&amp;", null, // 32-39
-	    null, null, null, null, null, null, null, null,	   // 40-47
-	    null, null, null, null, null, null, null, null,	   // 48-55
-	    null, null, null, null, "&lt;", null, "&gt;", null,	   // 56-63
+		null, null, null, null, null, null, null, null,        // 0-7
+		null, null, null, null, null, null, null, null,        // 8-15
+		null, null, null, null, null, null, null, null,        // 16-23
+		null, null, null, null, null, null, null, null,        // 24-31
+		null, null, "&quot;", null, null, null, "&amp;", null, // 32-39
+		null, null, null, null, null, null, null, null,        // 40-47
+		null, null, null, null, null, null, null, null,        // 48-55
+		null, null, null, null, "&lt;", null, "&gt;", null     // 56-63
 	};
 
 	private static final int BUFFER_LEN = 8192;
@@ -321,11 +321,11 @@ public class FastXmlSerializer implements XmlSerializer {
 			} catch (IllegalCharsetNameException e) {
 				throw (UnsupportedEncodingException)(new UnsupportedEncodingException(
 									 encoding)
-									 .initCause(e));
+				                                         .initCause(e));
 			} catch (UnsupportedCharsetException e) {
 				throw (UnsupportedEncodingException)(new UnsupportedEncodingException(
 									 encoding)
-									 .initCause(e));
+				                                         .initCause(e));
 			}
 			mOutputStream = os;
 		} else {

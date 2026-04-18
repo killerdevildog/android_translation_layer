@@ -11,21 +11,18 @@ import android.os.Looper;
 import android.os.MessageQueue;
 import android.util.Slog;
 import android.view.KeyEvent;
-
 import dalvik.system.DexClassLoader;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 /* for hacky classloader patching */
 import dalvik.system.DexFile;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Instrumentation {
 	private static final String TAG = "Instrumentation";
@@ -37,7 +34,7 @@ public class Instrumentation {
 		try {
 			String target_package = null;
 			for (PackageParser.Instrumentation instrumentation : Context.pkg.instrumentation) {
-				if(className.equals(instrumentation.className)) {
+				if (className.equals(instrumentation.className)) {
 					target_package = instrumentation.info.targetPackage;
 					break;
 				}
@@ -45,7 +42,7 @@ public class Instrumentation {
 
 			System.out.println("targetPackage: " + target_package);
 
-			String target_path = android.os.Environment.getExternalStorageDirectory()+"/../_installed_apks_/"+target_package+".apk";
+			String target_path = android.os.Environment.getExternalStorageDirectory() + "/../_installed_apks_/" + target_package + ".apk";
 
 			Context.this_application.getAssets().addAssetPath(target_path);
 
@@ -140,7 +137,7 @@ public class Instrumentation {
 	                            String id, Object lastNonConfigurationInstance) throws InstantiationException, IllegalAccessException {
 		Activity activity = (Activity)clazz.newInstance();
 		activity.getWindow().set_native_window(Context.this_application.native_window);
-		Slog.i(TAG, "activity.getWindow().native_window >"+activity.getWindow().native_window+"<");
+		Slog.i(TAG, "activity.getWindow().native_window >" + activity.getWindow().native_window + "<");
 		return activity;
 	}
 
@@ -164,11 +161,7 @@ public class Instrumentation {
 		Slog.i(TAG, "startActivitySync(" + intent + ", " + options + ") called");
 		if (intent.getComponent() != null) {
 			try {
-				Class<? extends Activity> cls = Class.forName(intent.getComponent().getClassName()).asSubclass(Activity.class);
-				Constructor<? extends Activity> constructor = cls.getConstructor();
-				final Activity activity = constructor.newInstance();
-				activity.intent = intent;
-				activity.getWindow().set_native_window(Context.this_application.native_window);
+				final Activity activity = Activity.internalCreateActivity(intent.getComponent().getClassName(), Context.this_application.native_window, intent);
 				runOnMainSync(new Runnable() {
 					@Override
 					public void run() {
@@ -177,12 +170,13 @@ public class Instrumentation {
 				});
 
 				return activity;
-			} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (ReflectiveOperationException e) {
 				/* not sure what to do here */
 			}
 		} /*else if (FILE_CHOOSER_ACTIONS.contains(intent.getAction())) { // not sure what to do here either
 			nativeFileChooser(FILE_CHOOSER_ACTIONS.indexOf(intent.getAction()), intent.getType(), intent.getStringExtra("android.intent.extra.TITLE"), requestCode);
-		} */else {
+		} */
+		else {
 			Slog.i(TAG, "startActivityForResult: intent was not handled.");
 		}
 
@@ -211,11 +205,11 @@ public class Instrumentation {
 			for (String key : sorted(results.keySet())) {
 				System.out.println("INSTRUMENTATION_RESULT: " + key + "=" + results.get(key));
 				/* HACK: no idea why this isn't recognized as an error otherwise */
-				if(((String)results.get(key)).contains("Test run aborted due to unexpected exception"))
+				if (((String)results.get(key)).contains("Test run aborted due to unexpected exception"))
 					need_hack = true;
 			}
 		}
-		if(need_hack) {
+		if (need_hack) {
 			System.out.println("INSTRUMENTATION_STATUS: shortMsg=ugly hack: Test run aborted due to unexpected exception");
 			System.out.println("INSTRUMENTATION_STATUS_CODE: -1");
 		}
@@ -250,7 +244,8 @@ public class Instrumentation {
 				while (!mComplete) {
 					try {
 						wait();
-					} catch (InterruptedException e) {}
+					} catch (InterruptedException e) {
+					}
 				}
 			}
 		}
@@ -325,7 +320,7 @@ public class Instrumentation {
 			Object ret = field.get(obj);
 			field.setAccessible(false);
 			return ret;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -338,7 +333,7 @@ public class Instrumentation {
 			field.setAccessible(true);
 			field.set(obj, value);
 			field.setAccessible(false);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -350,7 +345,7 @@ public class Instrumentation {
 			Object ret = ctor.newInstance(value_array);
 			ctor.setAccessible(false);
 			return ret;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -361,11 +356,11 @@ public class Instrumentation {
 		// get cl.pathList
 		Object pathList = getFieldObject(DexClassLoader.class.getSuperclass(), cl, "pathList");
 		// get pathList.dexElements
-		Object[] dexElements = (Object[]) getFieldObject(pathList.getClass(), pathList, "dexElements");
+		Object[] dexElements = (Object[])getFieldObject(pathList.getClass(), pathList, "dexElements");
 		// Element type
 		Class<?> Element_class = dexElements.getClass().getComponentType();
 		// Create an array to replace the original array
-		Object[] DexElements_new = (Object[]) Array.newInstance(Element_class, dexElements.length + 1);
+		Object[] DexElements_new = (Object[])Array.newInstance(Element_class, dexElements.length + 1);
 		// use this constructor: ElementDexFile.class(DexFile dexFile, File file)
 		Class[] type_array = {DexFile.class, File.class};
 		Object[] value_array = {DexFile.loadDex(apk_path.getCanonicalPath(), null, 0), apk_path};

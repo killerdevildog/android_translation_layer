@@ -39,7 +39,7 @@ public class ImageView extends View {
 		TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ImageView, defStyleAttr, defStyleRes);
 		if (a.hasValue(com.android.internal.R.styleable.ImageView_tint))
 			colorFilter = new PorterDuffColorFilter(a.getColor(com.android.internal.R.styleable.ImageView_tint, 0),
-					PorterDuff.Mode.values()[a.getInt(com.android.internal.R.styleable.ImageView_tintMode, PorterDuff.Mode.SRC_IN.nativeInt)]);
+			                                        PorterDuff.Mode.values()[a.getInt(com.android.internal.R.styleable.ImageView_tintMode, PorterDuff.Mode.SRC_IN.nativeInt)]);
 		drawable = a.getDrawable(com.android.internal.R.styleable.ImageView_src);
 		if (drawable != null) {
 			drawable.setCallback(this);
@@ -58,7 +58,7 @@ public class ImageView extends View {
 			return;
 		}
 		bitmap = BitmapFactory.decodeResource(Context.this_application.getResources(), resid);
-		native_setDrawable(widget, bitmap.getTexture());
+		native_setDrawable(widget, bitmap != null ? bitmap.getTexture() : 0);
 	}
 	public void setAdjustViewBounds(boolean adjustViewBounds) {}
 
@@ -76,7 +76,7 @@ public class ImageView extends View {
 	}
 
 	public void setImageDrawable(Drawable drawable) {
-		if (drawable != null  && colorFilter != null) {
+		if (drawable != null && colorFilter != null) {
 			drawable = drawable.mutate();
 			drawable.setColorFilter(colorFilter);
 		}
@@ -93,8 +93,7 @@ public class ImageView extends View {
 	public void setImageMatrix(Matrix matrix) {}
 
 	public void setImageBitmap(Bitmap bitmap) {
-		if (bitmap != null)
-			native_setDrawable(widget, bitmap.getTexture());
+		native_setDrawable(widget, bitmap != null ? bitmap.getTexture() : 0);
 	}
 
 	/**

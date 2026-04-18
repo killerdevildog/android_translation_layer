@@ -58,11 +58,11 @@ public class MimeTypeMap {
 			}
 			int filenamePos = url.lastIndexOf('/');
 			String filename =
-				0 <= filenamePos ? url.substring(filenamePos + 1) : url;
+			    0 <= filenamePos ? url.substring(filenamePos + 1) : url;
 			// if the filename contains special characters, we don't
 			// consider it valid for our matching purposes:
-			if (filename.length() > 0 &&
-				Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename)) {
+			if (filename.length() > 0
+			    && Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename)) {
 				int dotPos = filename.lastIndexOf('.');
 				if (0 <= dotPos) {
 					return filename.substring(dotPos + 1);
@@ -180,91 +180,91 @@ public class MimeTypeMap {
 			sMimeTypeMap.loadEntry("application/rss+xml", "rss");
 			sMimeTypeMap.loadEntry("application/zip", "zip");
 			sMimeTypeMap.loadEntry("application/vnd.android.package-archive",
-					"apk");
+			                       "apk");
 			sMimeTypeMap.loadEntry("application/vnd.cinderella", "cdy");
 			sMimeTypeMap.loadEntry("application/vnd.ms-pki.stl", "stl");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.database", "odb");
+			    "application/vnd.oasis.opendocument.database", "odb");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.formula", "odf");
+			    "application/vnd.oasis.opendocument.formula", "odf");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.graphics", "odg");
+			    "application/vnd.oasis.opendocument.graphics", "odg");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.graphics-template",
-					"otg");
+			    "application/vnd.oasis.opendocument.graphics-template",
+			    "otg");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.image", "odi");
+			    "application/vnd.oasis.opendocument.image", "odi");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.spreadsheet", "ods");
+			    "application/vnd.oasis.opendocument.spreadsheet", "ods");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.spreadsheet-template",
-					"ots");
+			    "application/vnd.oasis.opendocument.spreadsheet-template",
+			    "ots");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.text", "odt");
+			    "application/vnd.oasis.opendocument.text", "odt");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.text-master", "odm");
+			    "application/vnd.oasis.opendocument.text-master", "odm");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.text-template", "ott");
+			    "application/vnd.oasis.opendocument.text-template", "ott");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.oasis.opendocument.text-web", "oth");
+			    "application/vnd.oasis.opendocument.text-web", "oth");
 			sMimeTypeMap.loadEntry("application/msword", "doc");
 			sMimeTypeMap.loadEntry("application/msword", "dot");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-					"docx");
+			    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			    "docx");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.wordprocessingml.template",
-					"dotx");
+			    "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+			    "dotx");
 			sMimeTypeMap.loadEntry("application/vnd.ms-excel", "xls");
 			sMimeTypeMap.loadEntry("application/vnd.ms-excel", "xlt");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-					"xlsx");
+			    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			    "xlsx");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-					"xltx");
+			    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+			    "xltx");
 			sMimeTypeMap.loadEntry("application/vnd.ms-powerpoint", "ppt");
 			sMimeTypeMap.loadEntry("application/vnd.ms-powerpoint", "pot");
 			sMimeTypeMap.loadEntry("application/vnd.ms-powerpoint", "pps");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-					"pptx");
+			    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+			    "pptx");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.presentationml.template",
-					"potx");
+			    "application/vnd.openxmlformats-officedocument.presentationml.template",
+			    "potx");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.openxmlformats-officedocument.presentationml.slideshow",
-					"ppsx");
+			    "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+			    "ppsx");
 			sMimeTypeMap.loadEntry("application/vnd.rim.cod", "cod");
 			sMimeTypeMap.loadEntry("application/vnd.smaf", "mmf");
 			sMimeTypeMap.loadEntry("application/vnd.stardivision.calc", "sdc");
 			sMimeTypeMap.loadEntry("application/vnd.stardivision.draw", "sda");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.stardivision.impress", "sdd");
+			    "application/vnd.stardivision.impress", "sdd");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.stardivision.impress", "sdp");
+			    "application/vnd.stardivision.impress", "sdp");
 			sMimeTypeMap.loadEntry("application/vnd.stardivision.math", "smf");
 			sMimeTypeMap.loadEntry("application/vnd.stardivision.writer",
-					"sdw");
+			                       "sdw");
 			sMimeTypeMap.loadEntry("application/vnd.stardivision.writer",
-					"vor");
+			                       "vor");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.stardivision.writer-global", "sgl");
+			    "application/vnd.stardivision.writer-global", "sgl");
 			sMimeTypeMap.loadEntry("application/vnd.sun.xml.calc", "sxc");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.sun.xml.calc.template", "stc");
+			    "application/vnd.sun.xml.calc.template", "stc");
 			sMimeTypeMap.loadEntry("application/vnd.sun.xml.draw", "sxd");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.sun.xml.draw.template", "std");
+			    "application/vnd.sun.xml.draw.template", "std");
 			sMimeTypeMap.loadEntry("application/vnd.sun.xml.impress", "sxi");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.sun.xml.impress.template", "sti");
+			    "application/vnd.sun.xml.impress.template", "sti");
 			sMimeTypeMap.loadEntry("application/vnd.sun.xml.math", "sxm");
 			sMimeTypeMap.loadEntry("application/vnd.sun.xml.writer", "sxw");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.sun.xml.writer.global", "sxg");
+			    "application/vnd.sun.xml.writer.global", "sxg");
 			sMimeTypeMap.loadEntry(
-					"application/vnd.sun.xml.writer.template", "stw");
+			    "application/vnd.sun.xml.writer.template", "stw");
 			sMimeTypeMap.loadEntry("application/vnd.visio", "vsd");
 			sMimeTypeMap.loadEntry("application/x-abiword", "abw");
 			sMimeTypeMap.loadEntry("application/x-apple-diskimage", "dmg");
@@ -436,7 +436,7 @@ public class MimeTypeMap {
 			sMimeTypeMap.loadEntry("text/plain", "asc");
 			sMimeTypeMap.loadEntry("text/plain", "text");
 			sMimeTypeMap.loadEntry("text/plain", "diff");
-			sMimeTypeMap.loadEntry("text/plain", "po");     // reserve "pot" for vnd.ms-powerpoint
+			sMimeTypeMap.loadEntry("text/plain", "po"); // reserve "pot" for vnd.ms-powerpoint
 			sMimeTypeMap.loadEntry("text/richtext", "rtx");
 			sMimeTypeMap.loadEntry("text/rtf", "rtf");
 			sMimeTypeMap.loadEntry("text/texmacs", "ts");

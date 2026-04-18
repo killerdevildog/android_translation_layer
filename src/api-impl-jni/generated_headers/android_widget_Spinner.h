@@ -149,6 +149,18 @@ extern "C" {
 #define android_widget_Spinner_PFLAG2_LAYOUT_DIRECTION_RESOLVED 32L
 #undef android_widget_Spinner_PFLAG2_LAYOUT_DIRECTION_RESOLVED_MASK
 #define android_widget_Spinner_PFLAG2_LAYOUT_DIRECTION_RESOLVED_MASK 48L
+#undef android_widget_Spinner_SCROLL_AXIS_NONE
+#define android_widget_Spinner_SCROLL_AXIS_NONE 0L
+#undef android_widget_Spinner_SCROLL_AXIS_HORIZONTAL
+#define android_widget_Spinner_SCROLL_AXIS_HORIZONTAL 1L
+#undef android_widget_Spinner_SCROLL_AXIS_VERTICAL
+#define android_widget_Spinner_SCROLL_AXIS_VERTICAL 2L
+#undef android_widget_Spinner_OVER_SCROLL_ALWAYS
+#define android_widget_Spinner_OVER_SCROLL_ALWAYS 0L
+#undef android_widget_Spinner_OVER_SCROLL_IF_CONTENT_SCROLLS
+#define android_widget_Spinner_OVER_SCROLL_IF_CONTENT_SCROLLS 1L
+#undef android_widget_Spinner_OVER_SCROLL_NEVER
+#define android_widget_Spinner_OVER_SCROLL_NEVER 2L
 #undef android_widget_Spinner_STATUS_BAR_HIDDEN
 #define android_widget_Spinner_STATUS_BAR_HIDDEN 1L
 #undef android_widget_Spinner_STATUS_BAR_VISIBLE
@@ -199,6 +211,36 @@ extern "C" {
 #define android_widget_Spinner_TEXT_DIRECTION_LTR 3L
 #undef android_widget_Spinner_TEXT_DIRECTION_RTL
 #define android_widget_Spinner_TEXT_DIRECTION_RTL 4L
+#undef android_widget_Spinner_FLAG_CLIP_CHILDREN
+#define android_widget_Spinner_FLAG_CLIP_CHILDREN 1L
+#undef android_widget_Spinner_FLAG_INVALIDATE_REQUIRED
+#define android_widget_Spinner_FLAG_INVALIDATE_REQUIRED 4L
+#undef android_widget_Spinner_FLAG_ANIMATION_DONE
+#define android_widget_Spinner_FLAG_ANIMATION_DONE 16L
+#undef android_widget_Spinner_FLAG_OPTIMIZE_INVALIDATE
+#define android_widget_Spinner_FLAG_OPTIMIZE_INVALIDATE 128L
+#undef android_widget_Spinner_FLAG_CLEAR_TRANSFORMATION
+#define android_widget_Spinner_FLAG_CLEAR_TRANSFORMATION 256L
+#undef android_widget_Spinner_FLAG_USE_CHILD_DRAWING_ORDER
+#define android_widget_Spinner_FLAG_USE_CHILD_DRAWING_ORDER 1024L
+#undef android_widget_Spinner_FLAG_SUPPORT_STATIC_TRANSFORMATIONS
+#define android_widget_Spinner_FLAG_SUPPORT_STATIC_TRANSFORMATIONS 2048L
+#undef android_widget_Spinner_FLAG_MASK_FOCUSABILITY
+#define android_widget_Spinner_FLAG_MASK_FOCUSABILITY 393216L
+#undef android_widget_Spinner_FOCUS_BEFORE_DESCENDANTS
+#define android_widget_Spinner_FOCUS_BEFORE_DESCENDANTS 131072L
+#undef android_widget_Spinner_FOCUS_AFTER_DESCENDANTS
+#define android_widget_Spinner_FOCUS_AFTER_DESCENDANTS 262144L
+#undef android_widget_Spinner_FOCUS_BLOCK_DESCENDANTS
+#define android_widget_Spinner_FOCUS_BLOCK_DESCENDANTS 393216L
+#undef android_widget_Spinner_FLAG_DISALLOW_INTERCEPT
+#define android_widget_Spinner_FLAG_DISALLOW_INTERCEPT 524288L
+#undef android_widget_Spinner_FLAG_IS_TRANSITION_GROUP
+#define android_widget_Spinner_FLAG_IS_TRANSITION_GROUP 16777216L
+#undef android_widget_Spinner_FLAG_IS_TRANSITION_GROUP_SET
+#define android_widget_Spinner_FLAG_IS_TRANSITION_GROUP_SET 33554432L
+#undef android_widget_Spinner_FLAG_TOUCHSCREEN_BLOCKS_FOCUS
+#define android_widget_Spinner_FLAG_TOUCHSCREEN_BLOCKS_FOCUS 67108864L
 #undef android_widget_Spinner_ITEM_VIEW_TYPE_IGNORE
 #define android_widget_Spinner_ITEM_VIEW_TYPE_IGNORE -1L
 #undef android_widget_Spinner_ITEM_VIEW_TYPE_HEADER_OR_FOOTER
@@ -228,6 +270,22 @@ JNIEXPORT jlong JNICALL Java_android_widget_Spinner_native_1constructor
  */
 JNIEXPORT void JNICALL Java_android_widget_Spinner_native_1setAdapter
   (JNIEnv *, jobject, jlong, jobject);
+
+/*
+ * Class:     android_widget_Spinner
+ * Method:    native_setBackgroundDrawable
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_android_widget_Spinner_native_1setBackgroundDrawable
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     android_widget_Spinner
+ * Method:    native_setBackgroundColor
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_android_widget_Spinner_native_1setBackgroundColor
+  (JNIEnv *, jobject, jlong, jint);
 
 /*
  * Class:     android_widget_Spinner

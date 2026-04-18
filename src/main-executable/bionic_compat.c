@@ -11,9 +11,10 @@ extern ElfW(Dyn) _DYNAMIC[];
 
 extern struct r_debug *_r_debug_ptr;
 /* this has to be called from the main executable, since that's the only one guaranteed to have the debug section filled in */
-void init__r_debug() {
+void init__r_debug()
+{
 #if defined(_r_debug)
-/* _r_debug is defined by glibc and is declared as extern in link.h*/
+	/* _r_debug is defined by glibc and is declared as extern in link.h*/
 	_r_debug_ptr = &_r_debug;
 #else
 	int i = 0;
@@ -21,14 +22,14 @@ void init__r_debug() {
 
 	do {
 		current = _DYNAMIC[i];
-		if(current.d_tag == DT_DEBUG) {
+		if (current.d_tag == DT_DEBUG) {
 			_r_debug_ptr = (struct r_debug *)current.d_un.d_ptr;
 			break;
 		}
 		i++;
-	} while(current.d_tag != 0);
+	} while (current.d_tag != 0);
 
-	if(!_r_debug_ptr) {
+	if (!_r_debug_ptr) {
 		fprintf(stderr, "error: no DEBUG tag in the dynamic section, treating this as fatal\n");
 		exit(1);
 	}
@@ -45,6 +46,7 @@ void init__r_debug() {
  */
 #if defined(__arm__) || defined(__aarch64__)
 /* this is the **ONLY** thread-local variable in the main executable, which means it has a well-known placement relative to the thread pointer */
+/* clang-format off */
 _Thread_local uintptr_t TLS[] = {
 	/* these are occupied by musl/glibc internal structures */
 	/* (tp - 3) =    0xXXXXXXXXXXXXXXXX */ // TLS_SLOT_STACK_MTE
@@ -158,3 +160,4 @@ _Thread_local uintptr_t TLS[] = {
 	 * };
 	 */
 #endif
+/* clang-format on */

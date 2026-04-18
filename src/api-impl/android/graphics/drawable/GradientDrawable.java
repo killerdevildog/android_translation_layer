@@ -38,13 +38,10 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-
 import com.android.internal.R;
-
+import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 
 /**
  * A Drawable with a color gradient for buttons, backgrounds, etc.
@@ -121,10 +118,10 @@ public class GradientDrawable extends Drawable {
 
 	private final Paint mFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private Rect mPadding;
-	private Paint mStrokePaint;	  // optional, set by the caller
+	private Paint mStrokePaint;       // optional, set by the caller
 	private ColorFilter mColorFilter; // optional, set by the caller
 	private PorterDuffColorFilter mTintFilter;
-	private int mAlpha = 0xFF;	  // modified by the caller
+	private int mAlpha = 0xFF; // modified by the caller
 	private boolean mDither;
 
 	private final Path mPath = new Path();
@@ -458,8 +455,8 @@ public class GradientDrawable extends Drawable {
 		final int currFillAlpha = modulateAlpha(prevFillAlpha);
 		final int currStrokeAlpha = modulateAlpha(prevStrokeAlpha);
 
-		final boolean haveStroke = currStrokeAlpha > 0 && mStrokePaint != null &&
-					   mStrokePaint.getStrokeWidth() > 0;
+		final boolean haveStroke = currStrokeAlpha > 0 && mStrokePaint != null
+		                        && mStrokePaint.getStrokeWidth() > 0;
 		final boolean haveFill = currFillAlpha > 0;
 		final GradientState st = mGradientState;
 		final ColorFilter colorFilter = mColorFilter != null ? mColorFilter : mTintFilter;
@@ -468,8 +465,8 @@ public class GradientDrawable extends Drawable {
 		    fill+stroke. Otherwise we can just draw the stroke (if any) on top
 		    of the fill (if any) without worrying about blending artifacts.
 		 */
-		final boolean useLayer = haveStroke && haveFill && st.mShape != LINE &&
-					 currStrokeAlpha < 255 && (mAlpha < 255 || colorFilter != null);
+		final boolean useLayer = haveStroke && haveFill && st.mShape != LINE
+		                      && currStrokeAlpha < 255 && (mAlpha < 255 || colorFilter != null);
 
 		/*  Drawing with a layer is slower than direct drawing, but it
 		    allows us to apply paint effects like alpha and colorfilter to
@@ -496,20 +493,20 @@ public class GradientDrawable extends Drawable {
 			mFillPaint.setColorFilter(null);
 			mStrokePaint.setColorFilter(null);
 		} else {*/
-			/*  if we're not using a layer, apply the dither/filter to our
+		/*  if we're not using a layer, apply the dither/filter to our
 			    individual paints
 			*/
-			mFillPaint.setAlpha(currFillAlpha);
-			mFillPaint.setDither(mDither);
-			mFillPaint.setColorFilter(colorFilter);
-			if (colorFilter != null && !mGradientState.mHasSolidColor) {
-				mFillPaint.setColor(mAlpha << 24);
-			}
-			if (haveStroke) {
-				mStrokePaint.setAlpha(currStrokeAlpha);
-				mStrokePaint.setDither(mDither);
-				mStrokePaint.setColorFilter(colorFilter);
-			}
+		mFillPaint.setAlpha(currFillAlpha);
+		mFillPaint.setDither(mDither);
+		mFillPaint.setColorFilter(colorFilter);
+		if (colorFilter != null && !mGradientState.mHasSolidColor) {
+			mFillPaint.setColor(mAlpha << 24);
+		}
+		if (haveStroke) {
+			mStrokePaint.setAlpha(currStrokeAlpha);
+			mStrokePaint.setDither(mDither);
+			mStrokePaint.setColorFilter(colorFilter);
+		}
 		/*}*/
 
 		switch (st.mShape) {
@@ -540,8 +537,8 @@ public class GradientDrawable extends Drawable {
 						canvas.drawRoundRect(mRect, rad, rad, mStrokePaint);
 					}
 				} else {
-					if (mFillPaint.getColor() != 0 || colorFilter != null ||
-					    mFillPaint.getShader() != null) {
+					if (mFillPaint.getColor() != 0 || colorFilter != null
+					    || mFillPaint.getShader() != null) {
 						canvas.drawRect(mRect, mFillPaint);
 					}
 					if (haveStroke) {
@@ -573,10 +570,10 @@ public class GradientDrawable extends Drawable {
 		/*if (useLayer) {
 			canvas.restore();
 		} else {*/
-			mFillPaint.setAlpha(prevFillAlpha);
-			if (haveStroke) {
-				mStrokePaint.setAlpha(prevStrokeAlpha);
-			}
+		mFillPaint.setAlpha(prevFillAlpha);
+		if (haveStroke) {
+			mStrokePaint.setAlpha(prevStrokeAlpha);
+		}
 		/*}*/
 	}
 
@@ -738,7 +735,7 @@ public class GradientDrawable extends Drawable {
 			final GradientState st = mGradientState;
 
 			mRect.set(bounds.left + inset, bounds.top + inset,
-				  bounds.right - inset, bounds.bottom - inset);
+			          bounds.right - inset, bounds.bottom - inset);
 
 			final int[] colors = st.mColors;
 			if (colors != null) {
@@ -799,7 +796,7 @@ public class GradientDrawable extends Drawable {
 					}
 
 					mFillPaint.setShader(new LinearGradient(x0, y0, x1, y1,
-										colors, st.mPositions, Shader.TileMode.CLAMP));
+					                                        colors, st.mPositions, Shader.TileMode.CLAMP));
 				} else if (st.mGradient == RADIAL_GRADIENT) {
 					x0 = r.left + (r.right - r.left) * st.mCenterX;
 					y0 = r.top + (r.bottom - r.top) * st.mCenterY;
@@ -807,8 +804,8 @@ public class GradientDrawable extends Drawable {
 					final float level = st.mUseLevel ? (float)getLevel() / 10000.0f : 1.0f;
 
 					mFillPaint.setShader(new RadialGradient(x0, y0,
-										level * st.mGradientRadius, colors, null,
-										Shader.TileMode.CLAMP));
+					                                        level * st.mGradientRadius, colors, null,
+					                                        Shader.TileMode.CLAMP));
 				} else if (st.mGradient == SWEEP_GRADIENT) {
 					/*x0 = r.left + (r.right - r.left) * st.mCenterX;
 					y0 = r.top + (r.bottom - r.top) * st.mCenterY;
@@ -851,13 +848,13 @@ public class GradientDrawable extends Drawable {
 	}
 
 	public void inflate(Resources r, XmlPullParser parser,
-			    AttributeSet attrs, Theme theme)
+	                    AttributeSet attrs, Theme theme)
 	    throws XmlPullParserException, IOException {
 
 		final GradientState st = mGradientState;
 
 		TypedArray a = obtainAttributes(r, theme, attrs,
-						  com.android.internal.R.styleable.GradientDrawable);
+		                                com.android.internal.R.styleable.GradientDrawable);
 
 		// super.inflateWithAttributes(r, parser, a,
 		// 			    com.android.internal.R.styleable.GradientDrawable_visible);
@@ -906,7 +903,7 @@ public class GradientDrawable extends Drawable {
 
 			if (name.equals("size")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.GradientDrawableSize);
+				                     com.android.internal.R.styleable.GradientDrawableSize);
 				int width = a.getDimensionPixelSize(
 				    com.android.internal.R.styleable.GradientDrawableSize_width, -1);
 				int height = a.getDimensionPixelSize(
@@ -915,11 +912,11 @@ public class GradientDrawable extends Drawable {
 				setSize(width, height);
 			} else if (name.equals("gradient")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.GradientDrawableGradient);
+				                     com.android.internal.R.styleable.GradientDrawableGradient);
 				int startColor = a.getColor(
 				    com.android.internal.R.styleable.GradientDrawableGradient_startColor, 0);
 				boolean hasCenterColor = a
-							     .hasValue(com.android.internal.R.styleable.GradientDrawableGradient_centerColor);
+				                             .hasValue(com.android.internal.R.styleable.GradientDrawableGradient_centerColor);
 				int centerColor = a.getColor(
 				    com.android.internal.R.styleable.GradientDrawableGradient_centerColor, 0);
 				int endColor = a.getColor(
@@ -948,7 +945,7 @@ public class GradientDrawable extends Drawable {
 					angle %= 360;
 					if (angle % 45 != 0) {
 						throw new XmlPullParserException(a.getPositionDescription() + "<gradient> tag requires 'angle' attribute to "
-										 + "be a multiple of 45");
+						                                 + "be a multiple of 45");
 					}
 
 					switch (angle) {
@@ -1011,14 +1008,14 @@ public class GradientDrawable extends Drawable {
 
 			} else if (name.equals("solid")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.GradientDrawableSolid);
+				                     com.android.internal.R.styleable.GradientDrawableSolid);
 				int argb = a.getColor(
 				    com.android.internal.R.styleable.GradientDrawableSolid_color, 0);
 				a.recycle();
 				setColor(argb);
 			} else if (name.equals("stroke")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.GradientDrawableStroke);
+				                     com.android.internal.R.styleable.GradientDrawableStroke);
 				int width = a.getDimensionPixelSize(
 				    com.android.internal.R.styleable.GradientDrawableStroke_width, 0);
 				int color = a.getColor(
@@ -1035,7 +1032,7 @@ public class GradientDrawable extends Drawable {
 				a.recycle();
 			} else if (name.equals("corners")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.DrawableCorners);
+				                     com.android.internal.R.styleable.DrawableCorners);
 				int radius = a.getDimensionPixelSize(
 				    com.android.internal.R.styleable.DrawableCorners_radius, 0);
 				setCornerRadius(radius);
@@ -1047,19 +1044,20 @@ public class GradientDrawable extends Drawable {
 				    com.android.internal.R.styleable.DrawableCorners_bottomLeftRadius, radius);
 				int bottomRightRadius = a.getDimensionPixelSize(
 				    com.android.internal.R.styleable.DrawableCorners_bottomRightRadius, radius);
-				if (topLeftRadius != radius || topRightRadius != radius ||
-				    bottomLeftRadius != radius || bottomRightRadius != radius) {
+				if (topLeftRadius != radius || topRightRadius != radius
+				    || bottomLeftRadius != radius || bottomRightRadius != radius) {
 					// The corner radii are specified in clockwise order (see Path.addRoundRect())
 					setCornerRadii(new float[] {
-					    topLeftRadius, topLeftRadius,
-					    topRightRadius, topRightRadius,
-					    bottomRightRadius, bottomRightRadius,
-					    bottomLeftRadius, bottomLeftRadius});
+						topLeftRadius, topLeftRadius,
+						topRightRadius, topRightRadius,
+						bottomRightRadius, bottomRightRadius,
+						bottomLeftRadius, bottomLeftRadius
+					});
 				}
 				a.recycle();
 			} else if (name.equals("padding")) {
 				a = obtainAttributes(r, theme, attrs,
-						       com.android.internal.R.styleable.GradientDrawablePadding);
+				                     com.android.internal.R.styleable.GradientDrawablePadding);
 				mPadding = new Rect(
 				    a.getDimensionPixelOffset(
 					com.android.internal.R.styleable.GradientDrawablePadding_left, 0),

@@ -157,7 +157,7 @@ public class GradientColor extends ComplexColor {
 		}
 
 		mGradientRadius = a.getFloat(R.styleable.GradientColor_gradientRadius,
-					     mGradientRadius);
+		                             mGradientRadius);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class GradientColor extends ComplexColor {
 	 */
 	@NonNull
 	static GradientColor createFromXmlInner(@NonNull Resources r,
-						@NonNull XmlPullParser parser, @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                                        @NonNull XmlPullParser parser, @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		final String name = parser.getName();
 		if (!name.equals("gradient")) {
@@ -226,7 +226,7 @@ public class GradientColor extends ComplexColor {
 	 * Fill in this object based on the contents of an XML "gradient" element.
 	 */
 	private void inflate(@NonNull Resources r, @NonNull XmlPullParser parser,
-			     @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                     @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		final TypedArray a = Resources.obtainAttributes(r, theme, attrs, R.styleable.GradientColor);
 		updateRootElementState(a);
@@ -249,7 +249,7 @@ public class GradientColor extends ComplexColor {
 	 * later as applyItemsAttrsTheme().
 	 */
 	private void inflateChildElements(@NonNull Resources r, @NonNull XmlPullParser parser,
-					  @NonNull AttributeSet attrs, @NonNull Theme theme)
+	                                  @NonNull AttributeSet attrs, @NonNull Theme theme)
 	    throws XmlPullParserException, IOException {
 		final int innerDepth = parser.getDepth() + 1;
 		int type;
@@ -271,7 +271,7 @@ public class GradientColor extends ComplexColor {
 			}
 
 			final TypedArray a = Resources.obtainAttributes(r, theme, attrs,
-									R.styleable.GradientColorItem);
+			                                                R.styleable.GradientColorItem);
 			boolean hasColor = a.hasValue(R.styleable.GradientColorItem_color);
 			boolean hasOffset = a.hasValue(R.styleable.GradientColorItem_offset);
 			if (!hasColor || !hasOffset) {
@@ -330,7 +330,7 @@ public class GradientColor extends ComplexColor {
 		for (int i = 0; i < N; i++) {
 			if (themeAttrsList[i] != null) {
 				final TypedArray a = t.resolveAttributes(themeAttrsList[i],
-									 R.styleable.GradientColorItem);
+				                                         R.styleable.GradientColorItem);
 
 				// Extract the theme attributes, if any, before attempting to
 				// read from the typed array. This prevents a crash if we have
@@ -343,8 +343,7 @@ public class GradientColor extends ComplexColor {
 				mItemColors[i] = a.getColor(R.styleable.GradientColorItem_color, mItemColors[i]);
 				mItemOffsets[i] = a.getFloat(R.styleable.GradientColorItem_offset, mItemOffsets[i]);
 				if (DBG_GRADIENT) {
-					Log.v(TAG, "applyItemsAttrsTheme Colors[i] " + i + " " +
-						       Integer.toHexString(mItemColors[i]));
+					Log.v(TAG, "applyItemsAttrsTheme Colors[i] " + i + " " + Integer.toHexString(mItemColors[i]));
 					Log.v(TAG, "Offsets[i] " + i + " " + mItemOffsets[i]);
 				}
 
@@ -397,11 +396,11 @@ public class GradientColor extends ComplexColor {
 
 		if (mGradientType == GradientDrawable.LINEAR_GRADIENT) {
 			mShader = new LinearGradient(mStartX, mStartY, mEndX, mEndY, tempColors, tempOffsets,
-						     Shader.TileMode.CLAMP);
+			                             Shader.TileMode.CLAMP);
 		} else {
 			if (mGradientType == GradientDrawable.RADIAL_GRADIENT) {
 				mShader = new RadialGradient(mCenterX, mCenterY, mGradientRadius, tempColors,
-							     tempOffsets, Shader.TileMode.CLAMP);
+				                             tempOffsets, Shader.TileMode.CLAMP);
 			} else {
 				mShader = new SweepGradient(mCenterX, mCenterY, tempColors, tempOffsets);
 			}

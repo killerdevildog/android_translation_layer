@@ -41,9 +41,9 @@ public final class CorrectionInfo implements Parcelable {
 	}
 
 	private CorrectionInfo(Parcel source) {
-		mOffset = 0/*source.readInt()*/;
-		mOldText = null/*TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source)*/;
-		mNewText = null/*TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source)*/;
+		mOffset = 0 /*source.readInt()*/;
+		mOldText = null /*TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source)*/;
+		mNewText = null /*TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source)*/;
 	}
 
 	/**

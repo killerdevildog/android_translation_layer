@@ -32,7 +32,7 @@ JNIEXPORT void JNICALL Java_android_widget_SeekBar_native_1setProgress(JNIEnv *e
 	gtk_range_set_value(range, progress);
 }
 
-static void on_change_value(GtkRange* self, GtkScrollType* scroll, gdouble value, jobject listener)
+static void on_change_value(GtkRange *self, GtkScrollType *scroll, gdouble value, jobject listener)
 {
 	JNIEnv *env = get_jni_env();
 	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_widget_get_parent(GTK_WIDGET(self)));

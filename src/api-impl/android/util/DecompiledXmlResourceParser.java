@@ -35,37 +35,37 @@ public class DecompiledXmlResourceParser extends KXmlParser implements Attribute
 	}
 
 	public int getAttributeListValue(String namespace, String attribute,
-					 String[] options, int defaultValue) {
+	                                 String[] options, int defaultValue) {
 		return XmlUtils.convertValueToList(
 		    getAttributeValue(namespace, attribute), options, defaultValue);
 	}
 
 	public boolean getAttributeBooleanValue(String namespace, String attribute,
-						boolean defaultValue) {
+	                                        boolean defaultValue) {
 		return XmlUtils.convertValueToBoolean(
 		    getAttributeValue(namespace, attribute), defaultValue);
 	}
 
 	public int getAttributeResourceValue(String namespace, String attribute,
-					     int defaultValue) {
+	                                     int defaultValue) {
 		return XmlUtils.convertValueToInt(
 		    getAttributeValue(namespace, attribute), defaultValue);
 	}
 
 	public int getAttributeIntValue(String namespace, String attribute,
-					int defaultValue) {
+	                                int defaultValue) {
 		return XmlUtils.convertValueToInt(
 		    getAttributeValue(namespace, attribute), defaultValue);
 	}
 
 	public int getAttributeUnsignedIntValue(String namespace, String attribute,
-						int defaultValue) {
+	                                        int defaultValue) {
 		return XmlUtils.convertValueToUnsignedInt(
 		    getAttributeValue(namespace, attribute), defaultValue);
 	}
 
 	public float getAttributeFloatValue(String namespace, String attribute,
-					    float defaultValue) {
+	                                    float defaultValue) {
 		String s = getAttributeValue(namespace, attribute);
 		if (s != null) {
 			return Float.parseFloat(s);
@@ -74,7 +74,7 @@ public class DecompiledXmlResourceParser extends KXmlParser implements Attribute
 	}
 
 	public int getAttributeListValue(int index,
-					 String[] options, int defaultValue) {
+	                                 String[] options, int defaultValue) {
 		return XmlUtils.convertValueToList(
 		    getAttributeValue(index), options, defaultValue);
 	}

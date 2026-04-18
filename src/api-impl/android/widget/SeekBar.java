@@ -19,6 +19,8 @@ public class SeekBar extends AbsSeekBar {
 	protected native void native_setProgress(long widget, float fraction);
 	protected native int native_getProgress(long widget);
 	protected native void native_setMax(long widget, int max);
+	@Override
+	public void native_setIndeterminate(boolean indeterminate) {}
 
 	@Override
 	public void setMax(int max) {
@@ -30,8 +32,6 @@ public class SeekBar extends AbsSeekBar {
 		this.progress = progress;
 		native_setProgress(widget, progress);
 	}
-	@Override
-	public void setIndeterminate(boolean indeterminate) {}
 
 	public native void setOnSeekBarChangeListener(final OnSeekBarChangeListener l);
 
@@ -47,5 +47,4 @@ public class SeekBar extends AbsSeekBar {
 
 		public void onStopTrackingTouch(SeekBar seekBar);
 	}
-
 }

@@ -23,37 +23,37 @@
 G_BEGIN_DECLS
 
 #ifndef GDK_ARRAY_TYPE_NAME
-#define GDK_ARRAY_TYPE_NAME GdkArray
+	#define GDK_ARRAY_TYPE_NAME GdkArray
 #endif
 
 #ifndef GDK_ARRAY_NAME
-#define GDK_ARRAY_NAME gdk_array
+	#define GDK_ARRAY_NAME gdk_array
 #endif
 
 #ifndef GDK_ARRAY_ELEMENT_TYPE
-#define GDK_ARRAY_ELEMENT_TYPE gpointer
+	#define GDK_ARRAY_ELEMENT_TYPE gpointer
 #endif
 
 #ifdef GDK_ARRAY_PREALLOC
-#if GDK_ARRAY_PREALLOC == 0
-#undef GDK_ARRAY_PREALLOC
-#endif
+	#if GDK_ARRAY_PREALLOC == 0
+		#undef GDK_ARRAY_PREALLOC
+	#endif
 #endif
 
 #ifdef GDK_ARRAY_NULL_TERMINATED
-#define GDK_ARRAY_REAL_SIZE(_size) ((_size) + 1)
-#define GDK_ARRAY_MAX_SIZE	   (G_MAXSIZE / sizeof(_T_) - 1)
+	#define GDK_ARRAY_REAL_SIZE(_size) ((_size) + 1)
+	#define GDK_ARRAY_MAX_SIZE         (G_MAXSIZE / sizeof(_T_) - 1)
 #else
-#define GDK_ARRAY_REAL_SIZE(_size) (_size)
-#define GDK_ARRAY_MAX_SIZE	   (G_MAXSIZE / sizeof(_T_))
+	#define GDK_ARRAY_REAL_SIZE(_size) (_size)
+	#define GDK_ARRAY_MAX_SIZE         (G_MAXSIZE / sizeof(_T_))
 #endif
 
 /* make this readable */
-#define _T_						GDK_ARRAY_ELEMENT_TYPE
-#define GdkArray					GDK_ARRAY_TYPE_NAME
+#define _T_                                             GDK_ARRAY_ELEMENT_TYPE
+#define GdkArray                                        GDK_ARRAY_TYPE_NAME
 #define gdk_array_paste_more(GDK_ARRAY_NAME, func_name) GDK_ARRAY_NAME##_##func_name
-#define gdk_array_paste(GDK_ARRAY_NAME, func_name)	gdk_array_paste_more(GDK_ARRAY_NAME, func_name)
-#define gdk_array(func_name)				gdk_array_paste(GDK_ARRAY_NAME, func_name)
+#define gdk_array_paste(GDK_ARRAY_NAME, func_name)      gdk_array_paste_more(GDK_ARRAY_NAME, func_name)
+#define gdk_array(func_name)                            gdk_array_paste(GDK_ARRAY_NAME, func_name)
 
 typedef struct GdkArray GdkArray;
 
@@ -74,9 +74,9 @@ gdk_array(init)(GdkArray *self)
 	self->start = self->preallocated;
 	self->end = self->start;
 	self->end_allocation = self->start + GDK_ARRAY_PREALLOC;
-#ifdef GDK_ARRAY_NULL_TERMINATED
+	#ifdef GDK_ARRAY_NULL_TERMINATED
 	*self->start = *(_T_[1]){0};
-#endif
+	#endif
 #else
 	self->start = NULL;
 	self->end = NULL;
@@ -98,16 +98,16 @@ gdk_array(get_size)(const GdkArray *self)
 
 static inline void
 gdk_array(free_elements)(_T_ *start,
-			 _T_ *end)
+                         _T_ *end)
 {
 #ifdef GDK_ARRAY_FREE_FUNC
 	_T_ *e;
 	for (e = start; e < end; e++)
-#ifdef GDK_ARRAY_BY_VALUE
+	#ifdef GDK_ARRAY_BY_VALUE
 		GDK_ARRAY_FREE_FUNC(e);
-#else
+	#else
 		GDK_ARRAY_FREE_FUNC(*e);
-#endif
+	#endif
 #endif
 }
 
@@ -162,7 +162,7 @@ gdk_array(get_data)(const GdkArray *self)
 
 G_GNUC_UNUSED static inline _T_ *
 gdk_array(index)(const GdkArray *self,
-		 gsize pos)
+                 gsize pos)
 {
 	return self->start + pos;
 }
@@ -175,7 +175,7 @@ gdk_array(is_empty)(const GdkArray *self)
 
 G_GNUC_UNUSED static inline void
 gdk_array(reserve)(GdkArray *self,
-		   gsize n)
+                   gsize n)
 {
 	gsize new_capacity, size, capacity;
 
@@ -213,15 +213,15 @@ gdk_array(reserve)(GdkArray *self,
 
 G_GNUC_UNUSED static inline void
 gdk_array(splice)(GdkArray *self,
-		  gsize pos,
-		  gsize removed,
-		  gboolean stolen,
+                  gsize pos,
+                  gsize removed,
+                  gboolean stolen,
 #ifdef GDK_ARRAY_BY_VALUE
-		  const _T_ *additions,
+                  const _T_ *additions,
 #else
-		   _T_ *additions,
+                  _T_ *additions,
 #endif
-		  gsize added)
+                  gsize added)
 {
 	gsize size;
 	gsize remaining;
@@ -232,14 +232,14 @@ gdk_array(splice)(GdkArray *self,
 
 	if (!stolen)
 		gdk_array(free_elements)(gdk_array(index)(self, pos),
-					 gdk_array(index)(self, pos + removed));
+		                         gdk_array(index)(self, pos + removed));
 
 	gdk_array(reserve)(self, size - removed + added);
 
 	if (GDK_ARRAY_REAL_SIZE(remaining) && removed != added)
 		memmove(gdk_array(index)(self, pos + added),
-			gdk_array(index)(self, pos + removed),
-			GDK_ARRAY_REAL_SIZE(remaining) * sizeof(_T_));
+		        gdk_array(index)(self, pos + removed),
+		        GDK_ARRAY_REAL_SIZE(remaining) * sizeof(_T_));
 
 	if (added) {
 		if (additions)
@@ -258,7 +258,7 @@ gdk_array(splice)(GdkArray *self,
 
 G_GNUC_UNUSED static void
 gdk_array(set_size)(GdkArray *self,
-		    gsize new_size)
+                    gsize new_size)
 {
 	gsize old_size = gdk_array(get_size)(self);
 	if (new_size > old_size)
@@ -270,34 +270,34 @@ gdk_array(set_size)(GdkArray *self,
 G_GNUC_UNUSED static void
 gdk_array(append)(GdkArray *self,
 #ifdef GDK_ARRAY_BY_VALUE
-		  _T_ *value)
+                  _T_ *value)
 #else
-		   _T_ value)
+                  _T_ value)
 #endif
 {
 	gdk_array(splice)(self,
-			  gdk_array(get_size)(self),
-			  0,
-			  FALSE,
+	                  gdk_array(get_size)(self),
+	                  0,
+	                  FALSE,
 #ifdef GDK_ARRAY_BY_VALUE
-			  value,
+	                  value,
 #else
-			   &value,
+	                  &value,
 #endif
-			  1);
+	                  1);
 }
 
 #ifdef GDK_ARRAY_BY_VALUE
 G_GNUC_UNUSED static _T_ *
 gdk_array(get)(const GdkArray *self,
-	       gsize pos)
+               gsize pos)
 {
 	return gdk_array(index)(self, pos);
 }
 #else
 G_GNUC_UNUSED static _T_
 gdk_array(get)(const GdkArray *self,
-	       gsize pos)
+               gsize pos)
 {
 	return *gdk_array(index)(self, pos);
 }
@@ -305,22 +305,22 @@ gdk_array(get)(const GdkArray *self,
 
 #ifndef GDK_ARRAY_NO_UNDEF
 
-#undef _T_
-#undef GdkArray
-#undef gdk_array_paste_more
-#undef gdk_array_paste
-#undef gdk_array
-#undef GDK_ARRAY_REAL_SIZE
-#undef GDK_ARRAY_MAX_SIZE
+	#undef _T_
+	#undef GdkArray
+	#undef gdk_array_paste_more
+	#undef gdk_array_paste
+	#undef gdk_array
+	#undef GDK_ARRAY_REAL_SIZE
+	#undef GDK_ARRAY_MAX_SIZE
 
-#undef GDK_ARRAY_BY_VALUE
-#undef GDK_ARRAY_ELEMENT_TYPE
-#undef GDK_ARRAY_FREE_FUNC
-#undef GDK_ARRAY_NAME
-#undef GDK_ARRAY_NULL_TERMINATED
-#undef GDK_ARRAY_PREALLOC
-#undef GDK_ARRAY_TYPE_NAME
-#undef GDK_ARRAY_NO_MEMSET
+	#undef GDK_ARRAY_BY_VALUE
+	#undef GDK_ARRAY_ELEMENT_TYPE
+	#undef GDK_ARRAY_FREE_FUNC
+	#undef GDK_ARRAY_NAME
+	#undef GDK_ARRAY_NULL_TERMINATED
+	#undef GDK_ARRAY_PREALLOC
+	#undef GDK_ARRAY_TYPE_NAME
+	#undef GDK_ARRAY_NO_MEMSET
 #endif
 
 G_END_DECLS

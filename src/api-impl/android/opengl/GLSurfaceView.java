@@ -358,7 +358,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		mGLThread.start();
 
 		/* HACK: surfaceCreated can get called before setRenderer (???) */
-		if(hack_surface_created)
+		if (hack_surface_created)
 			mGLThread.surfaceCreated();
 	}
 
@@ -440,9 +440,9 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 	 *
 	 */
 	public void setEGLConfigChooser(int redSize, int greenSize, int blueSize,
-					int alphaSize, int depthSize, int stencilSize) {
+	                                int alphaSize, int depthSize, int stencilSize) {
 		setEGLConfigChooser(new ComponentSizeChooser(redSize, greenSize,
-							     blueSize, alphaSize, depthSize, stencilSize));
+		                                             blueSize, alphaSize, depthSize, stencilSize));
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	boolean hack_surface_created = false;
 	public void surfaceCreated(SurfaceHolder holder) {
-		if(mGLThread != null) {
+		if (mGLThread != null) {
 			mGLThread.surfaceCreated();
 		} else {
 			/* HACK: this can get called before setRenderer (???) */
@@ -798,14 +798,14 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
 		public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig config) {
 			int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, mEGLContextClientVersion,
-					     EGL10.EGL_NONE};
+			                     EGL10.EGL_NONE};
 
 			return egl.eglCreateContext(display, config, EGL10.EGL_NO_CONTEXT,
-						    mEGLContextClientVersion != 0 ? attrib_list : null);
+			                            mEGLContextClientVersion != 0 ? attrib_list : null);
 		}
 
 		public void destroyContext(EGL10 egl, EGLDisplay display,
-					   EGLContext context) {
+		                           EGLContext context) {
 			if (!egl.eglDestroyContext(display, context)) {
 				Log.e("DefaultContextFactory", "display:" + display + " context: " + context);
 				if (LOG_THREADS) {
@@ -827,14 +827,14 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		 *  @return null if the surface cannot be constructed.
 		 */
 		EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display, EGLConfig config,
-					       Object nativeWindow);
+		                               Object nativeWindow);
 		void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface);
 	}
 
 	private static class DefaultWindowSurfaceFactory implements EGLWindowSurfaceFactory {
 
 		public EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display,
-						      EGLConfig config, Object nativeWindow) {
+		                                      EGLConfig config, Object nativeWindow) {
 			EGLSurface result = null;
 			try {
 				result = egl.eglCreateWindowSurface(display, config, nativeWindow, null);
@@ -851,7 +851,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		}
 
 		public void destroySurface(EGL10 egl, EGLDisplay display,
-					   EGLSurface surface) {
+		                           EGLSurface surface) {
 			egl.eglDestroySurface(display, surface);
 		}
 	}
@@ -885,7 +885,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
 			int[] num_config = new int[1];
 			if (!egl.eglChooseConfig(display, mConfigSpec, null, 0,
-						 num_config)) {
+			                         num_config)) {
 				throw new IllegalArgumentException("eglChooseConfig failed");
 			}
 
@@ -898,7 +898,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
 			EGLConfig[] configs = new EGLConfig[numConfigs];
 			if (!egl.eglChooseConfig(display, mConfigSpec, configs, numConfigs,
-						 num_config)) {
+			                         num_config)) {
 				throw new IllegalArgumentException("eglChooseConfig#2 failed");
 			}
 			EGLConfig config = chooseConfig(egl, display, configs);
@@ -909,7 +909,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		}
 
 		abstract EGLConfig chooseConfig(EGL10 egl, EGLDisplay display,
-						EGLConfig[] configs);
+		                                EGLConfig[] configs);
 
 		protected int[] mConfigSpec;
 
@@ -940,15 +940,16 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 	 */
 	private class ComponentSizeChooser extends BaseConfigChooser {
 		public ComponentSizeChooser(int redSize, int greenSize, int blueSize,
-					    int alphaSize, int depthSize, int stencilSize) {
+		                            int alphaSize, int depthSize, int stencilSize) {
 			super(new int[] {
-			    EGL10.EGL_RED_SIZE, redSize,
-			    EGL10.EGL_GREEN_SIZE, greenSize,
-			    EGL10.EGL_BLUE_SIZE, blueSize,
-			    EGL10.EGL_ALPHA_SIZE, alphaSize,
-			    EGL10.EGL_DEPTH_SIZE, depthSize,
-			    EGL10.EGL_STENCIL_SIZE, stencilSize,
-			    EGL10.EGL_NONE});
+				EGL10.EGL_RED_SIZE, redSize,
+				EGL10.EGL_GREEN_SIZE, greenSize,
+				EGL10.EGL_BLUE_SIZE, blueSize,
+				EGL10.EGL_ALPHA_SIZE, alphaSize,
+				EGL10.EGL_DEPTH_SIZE, depthSize,
+				EGL10.EGL_STENCIL_SIZE, stencilSize,
+				EGL10.EGL_NONE
+			});
 			mValue = new int[1];
 			mRedSize = redSize;
 			mGreenSize = greenSize;
@@ -960,21 +961,21 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
 		@Override
 		public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display,
-					      EGLConfig[] configs) {
+		                              EGLConfig[] configs) {
 			for (EGLConfig config : configs) {
 				int d = findConfigAttrib(egl, display, config,
-							 EGL10.EGL_DEPTH_SIZE, 0);
+				                         EGL10.EGL_DEPTH_SIZE, 0);
 				int s = findConfigAttrib(egl, display, config,
-							 EGL10.EGL_STENCIL_SIZE, 0);
+				                         EGL10.EGL_STENCIL_SIZE, 0);
 				if ((d >= mDepthSize) && (s >= mStencilSize)) {
 					int r = findConfigAttrib(egl, display, config,
-								 EGL10.EGL_RED_SIZE, 0);
+					                         EGL10.EGL_RED_SIZE, 0);
 					int g = findConfigAttrib(egl, display, config,
-								 EGL10.EGL_GREEN_SIZE, 0);
+					                         EGL10.EGL_GREEN_SIZE, 0);
 					int b = findConfigAttrib(egl, display, config,
-								 EGL10.EGL_BLUE_SIZE, 0);
+					                         EGL10.EGL_BLUE_SIZE, 0);
 					int a = findConfigAttrib(egl, display, config,
-								 EGL10.EGL_ALPHA_SIZE, 0);
+					                         EGL10.EGL_ALPHA_SIZE, 0);
 					if ((r == mRedSize) && (g == mGreenSize) && (b == mBlueSize) && (a == mAlphaSize)) {
 						return config;
 					}
@@ -984,7 +985,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		}
 
 		private int findConfigAttrib(EGL10 egl, EGLDisplay display,
-					     EGLConfig config, int attribute, int defaultValue) {
+		                             EGLConfig config, int attribute, int defaultValue) {
 
 			if (egl.eglGetConfigAttrib(display, config, attribute, mValue)) {
 				return mValue[0];
@@ -1110,7 +1111,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 			GLSurfaceView view = mGLSurfaceViewWeakRef.get();
 			if (view != null) {
 				mEglSurface = view.mEGLWindowSurfaceFactory.createWindowSurface(mEgl,
-												mEglDisplay, mEglConfig, view.getHolder());
+				                                                                mEglDisplay, mEglConfig, view.getHolder());
 			} else {
 				mEglSurface = null;
 			}
@@ -1189,8 +1190,8 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		private void destroySurfaceImp() {
 			if (mEglSurface != null && mEglSurface != EGL10.EGL_NO_SURFACE) {
 				mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
-						    EGL10.EGL_NO_SURFACE,
-						    EGL10.EGL_NO_CONTEXT);
+				                    EGL10.EGL_NO_SURFACE,
+				                    EGL10.EGL_NO_CONTEXT);
 				GLSurfaceView view = mGLSurfaceViewWeakRef.get();
 				if (view != null) {
 					view.mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
@@ -1233,7 +1234,8 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 		}
 
 		public static String formatEglError(String function, int error) {
-			return function + " failed: " + "FIXME"/*EGLLogWrapper.getErrorString(error)*/;
+			return function + " failed: "
+			     + "FIXME" /*EGLLogWrapper.getErrorString(error)*/;
 		}
 
 		private WeakReference<GLSurfaceView> mGLSurfaceViewWeakRef;
@@ -1476,8 +1478,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 							} else {
 								if (finishDrawingRunnable != null) {
 									Log.w(TAG, "Warning, !readyToDraw() but waiting for "
-										       +
-										       "draw finished! Early reporting draw finished.");
+									           + "draw finished! Early reporting draw finished.");
 									finishDrawingRunnable.run();
 									finishDrawingRunnable = null;
 								}

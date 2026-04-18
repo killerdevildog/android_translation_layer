@@ -19,6 +19,8 @@ public class ClipDescription /*implements Parcelable*/ {
 	public static final int CLASSIFICATION_NOT_PERFORMED = 2;
 	public static final int CLASSIFICATION_COMPLETE = 3;
 
+	public ClipDescription(CharSequence label, String[] mimeTypes) {}
+
 	public int getMimeTypeCount() {
 		return 0;
 	}

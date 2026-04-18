@@ -16,13 +16,6 @@
 
 package android.animation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.os.Looper;
@@ -33,6 +26,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class provides a simple timing engine for running animations
@@ -86,7 +85,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	private static float sDurationScale = 1.0f;
 
 	private static final ArrayList<WeakReference<DurationScaleChangeListener>>
-			sDurationScaleChangeListeners = new ArrayList<>();
+	    sDurationScaleChangeListeners = new ArrayList<>();
 
 	/**
 	 * Internal variables
@@ -139,7 +138,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 
 	// The time interpolator to be used if none is set on the animation
 	private static final TimeInterpolator sDefaultInterpolator =
-			new AccelerateDecelerateInterpolator();
+	    new AccelerateDecelerateInterpolator();
 
 	/**
 	 * Flag to indicate whether this animator is playing in reverse mode, specifically
@@ -262,10 +261,10 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	 */
 	private float mDurationScale = -1f;
 
-    /**
+	/**
      * Animation handler used to schedule updates for this animation.
      */
-    private AnimationHandler mAnimationHandler;
+	private AnimationHandler mAnimationHandler;
 
 	/**
 	 * Public constants
@@ -333,12 +332,12 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	 * @return true if the listener was registered.
 	 */
 	public static boolean registerDurationScaleChangeListener(
-			@NonNull DurationScaleChangeListener listener) {
+	    @NonNull DurationScaleChangeListener listener) {
 		int posToReplace = -1;
 		synchronized (sDurationScaleChangeListeners) {
 			for (int i = 0; i < sDurationScaleChangeListeners.size(); i++) {
 				final WeakReference<DurationScaleChangeListener> ref =
-						sDurationScaleChangeListeners.get(i);
+				    sDurationScaleChangeListeners.get(i);
 				if (ref.get() == null) {
 					if (posToReplace == -1) {
 						posToReplace = i;
@@ -364,11 +363,11 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	 * @return true if the listener was unregistered.
 	 */
 	public static boolean unregisterDurationScaleChangeListener(
-			@NonNull DurationScaleChangeListener listener) {
+	    @NonNull DurationScaleChangeListener listener) {
 		synchronized (sDurationScaleChangeListeners) {
 			WeakReference<DurationScaleChangeListener> listenerRefToRemove = null;
 			for (WeakReference<DurationScaleChangeListener> listenerRef :
-					sDurationScaleChangeListeners) {
+			     sDurationScaleChangeListeners) {
 				if (listenerRef.get() == listener) {
 					listenerRefToRemove = listenerRef;
 					break;
@@ -657,8 +656,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	@Override
 	public ValueAnimator setDuration(long duration) {
 		if (duration < 0) {
-			throw new IllegalArgumentException("Animators cannot have negative duration: " +
-					duration);
+			throw new IllegalArgumentException("Animators cannot have negative duration: " + duration);
 		}
 		mDuration = duration;
 		return this;
@@ -713,7 +711,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	 * @param playTime The time, in milliseconds, to which the animation is advanced or rewound.
 	 */
 	public void setCurrentPlayTime(long playTime) {
-		float fraction = mDuration > 0 ? (float) playTime / mDuration : 1;
+		float fraction = mDuration > 0 ? (float)playTime / mDuration : 1;
 		setCurrentFraction(fraction);
 	}
 
@@ -739,7 +737,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		fraction = clampFraction(fraction);
 		mStartTimeCommitted = true; // do not allow start time to be compensated for jank
 		if (isPulsingInternal()) {
-			long seekTime = (long) (getScaledDuration() * fraction);
+			long seekTime = (long)(getScaledDuration() * fraction);
 			long currentTime = AnimationUtils.currentAnimationTimeMillis();
 			// Only modify the start time when the animation is running. Seek fraction will ensure
 			// non-running animations skip to the correct start time.
@@ -768,7 +766,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		if (fraction == iteration && fraction > 0) {
 			iteration--;
 		}
-		return (int) iteration;
+		return (int)iteration;
 	}
 
 	/**
@@ -805,8 +803,8 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	 * iteration.
 	 */
 	private boolean shouldPlayBackward(int iteration, boolean inReverse) {
-		if (iteration > 0 && mRepeatMode == REVERSE &&
-				(iteration < (mRepeatCount + 1) || mRepeatCount == INFINITE)) {
+		if (iteration > 0 && mRepeatMode == REVERSE
+		    && (iteration < (mRepeatCount + 1) || mRepeatCount == INFINITE)) {
 			// if we were seeked to some other iteration in a reversing animator,
 			// figure out the correct direction to start playing based on the iteration
 			if (inReverse) {
@@ -833,13 +831,13 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 			return 0;
 		}
 		if (mSeekFraction >= 0) {
-			return (long) (mDuration * mSeekFraction);
+			return (long)(mDuration * mSeekFraction);
 		}
 		float durationScale = resolveDurationScale();
 		if (durationScale == 0f) {
 			durationScale = 1f;
 		}
-		return (long) ((AnimationUtils.currentAnimationTimeMillis() - mStartTime) / durationScale);
+		return (long)((AnimationUtils.currentAnimationTimeMillis() - mStartTime) / durationScale);
 	}
 
 	/**
@@ -993,7 +991,6 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		}
 	}
 
-
 	/**
 	 * The time interpolator used in calculating the elapsed fraction of this animation. The
 	 * interpolator determines whether the animation runs with linear or non-linear motion,
@@ -1067,7 +1064,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		if (playBackwards && mSeekFraction != -1 && mSeekFraction != 0) {
 			if (mRepeatCount == INFINITE) {
 				// Calculate the fraction of the current iteration.
-				float fraction = (float) (mSeekFraction - Math.floor(mSeekFraction));
+				float fraction = (float)(mSeekFraction - Math.floor(mSeekFraction));
 				mSeekFraction = 1 - fraction;
 			} else {
 				mSeekFraction = 1 + mRepeatCount - mSeekFraction;
@@ -1160,8 +1157,8 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	@Override
 	public void resume() {
 		if (Looper.myLooper() == null) {
-			throw new AndroidRuntimeException("Animators may only be resumed from the same " +
-					"thread that the animator was started on");
+			throw new AndroidRuntimeException("Animators may only be resumed from the same "
+			                                  + "thread that the animator was started on");
 		}
 		if (mPaused && !mResumed) {
 			mResumed = true;
@@ -1251,7 +1248,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		mReversing = false;
 		if (Trace.isTagEnabled(Trace.TRACE_TAG_VIEW)) {
 			Trace.asyncTraceEnd(Trace.TRACE_TAG_VIEW, getNameForTrace(),
-					System.identityHashCode(this));
+			                    System.identityHashCode(this));
 		}
 	}
 
@@ -1262,7 +1259,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	private void startAnimation() {
 		if (Trace.isTagEnabled(Trace.TRACE_TAG_VIEW)) {
 			Trace.asyncTraceBegin(Trace.TRACE_TAG_VIEW, getNameForTrace(),
-					System.identityHashCode(this));
+			                      System.identityHashCode(this));
 		}
 
 		mAnimationEndRequested = false;
@@ -1327,12 +1324,11 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		boolean done = false;
 		if (mRunning) {
 			final long scaledDuration = getScaledDuration();
-			final float fraction = scaledDuration > 0 ?
-					(float)(currentTime - mStartTime) / scaledDuration : 1f;
+			final float fraction = scaledDuration > 0 ? (float)(currentTime - mStartTime) / scaledDuration : 1f;
 			final float lastFraction = mOverallFraction;
-			final boolean newIteration = (int) fraction > (int) lastFraction;
-			final boolean lastIterationFinished = (fraction >= mRepeatCount + 1) &&
-					(mRepeatCount != INFINITE);
+			final boolean newIteration = (int)fraction > (int)lastFraction;
+			final boolean lastIterationFinished = (fraction >= mRepeatCount + 1)
+			                                   && (mRepeatCount != INFINITE);
 			if (scaledDuration == 0) {
 				// 0 duration animator, ignore the repeat count and skip to the end
 				done = true;
@@ -1344,7 +1340,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 			}
 			mOverallFraction = clampFraction(fraction);
 			float currentIterationFraction = getCurrentIterationFraction(
-					mOverallFraction, mReversing);
+			    mOverallFraction, mReversing);
 			animateValue(currentIterationFraction);
 		}
 		return done;
@@ -1370,8 +1366,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		if (lastPlayTime < 0 || (lastPlayTime == 0 && currentPlayTime > 0)) {
 			notifyStartListeners(false);
 		} else if (lastPlayTime > duration
-				|| (lastPlayTime == duration && currentPlayTime < duration)
-		) {
+		           || (lastPlayTime == duration && currentPlayTime < duration)) {
 			notifyStartListeners(true);
 		}
 		if (duration >= 0) {
@@ -1382,8 +1377,8 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 
 		// Check whether repeat callback is needed only when repeat count is non-zero
 		if (mRepeatCount > 0) {
-			int iteration = Math.max(0, (int) (currentPlayTime / mDuration));
-			int lastIteration = Math.max(0, (int) (lastPlayTime / mDuration));
+			int iteration = Math.max(0, (int)(currentPlayTime / mDuration));
+			int lastIteration = Math.max(0, (int)(lastPlayTime / mDuration));
 
 			// Clamp iteration to [0, mRepeatCount]
 			iteration = Math.min(iteration, mRepeatCount);
@@ -1398,7 +1393,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 			throw new IllegalStateException("Can't animate a value outside of the duration");
 		} else {
 			// Find the current fraction:
-			float fraction = Math.max(0, currentPlayTime) / (float) mDuration;
+			float fraction = Math.max(0, currentPlayTime) / (float)mDuration;
 			fraction = getCurrentIterationFraction(fraction, false);
 			animateValue(fraction);
 		}
@@ -1456,8 +1451,8 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 			// First frame. If there is start delay, start delay count down will happen *after* this
 			// frame.
 			mStartTime = mReversing
-					? frameTime
-					: frameTime + (long) (mStartDelay * resolveDurationScale());
+			               ? frameTime
+			               : frameTime + (long)(mStartDelay * resolveDurationScale());
 		}
 
 		// Handle pause/resume
@@ -1491,7 +1486,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 
 		if (mLastFrameTime < 0) {
 			if (mSeekFraction >= 0) {
-				long seekTime = (long) (getScaledDuration() * mSeekFraction);
+				long seekTime = (long)(getScaledDuration() * mSeekFraction);
 				mStartTime = frameTime - seekTime;
 				mSeekFraction = -1;
 			}
@@ -1571,7 +1566,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 	void animateValue(float fraction) {
 		if (TRACE_ANIMATION_FRACTION) {
 			Trace.traceCounter(Trace.TRACE_TAG_VIEW, getNameForTrace() + hashCode(),
-					(int) (fraction * 1000));
+			                   (int)(fraction * 1000));
 		}
 		if (mValues == null) {
 			return;
@@ -1589,7 +1584,7 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 
 	@Override
 	public ValueAnimator clone() {
-		final ValueAnimator anim = (ValueAnimator) super.clone();
+		final ValueAnimator anim = (ValueAnimator)super.clone();
 		if (mUpdateListeners != null) {
 			anim.mUpdateListeners = new ArrayList<AnimatorUpdateListener>(mUpdateListeners);
 		}
@@ -1638,7 +1633,6 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 		 * @param animation The animation which was repeated.
 		 */
 		void onAnimationUpdate(@NonNull ValueAnimator animation);
-
 	}
 
 	/**
@@ -1722,6 +1716,10 @@ public class ValueAnimator extends Animator implements AnimationHandler.Animatio
 
 	public static long getFrameDelay() {
 		return AnimationHandler.getFrameDelay();
+	}
+
+	public static void setFrameDelay(long delay) {
+		AnimationHandler.setFrameDelay(delay);
 	}
 
 	/**

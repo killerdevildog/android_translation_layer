@@ -29,7 +29,7 @@ public class MediaMetadataRetriever {
 
 	public String extractMetadata(int key) {
 		switch (key) {
-			case 9/*METADATA_KEY_DURATION*/:
+			case 9 /*METADATA_KEY_DURATION*/:
 				return String.valueOf(mediaPlayer.getDuration());
 			default:
 				return null;

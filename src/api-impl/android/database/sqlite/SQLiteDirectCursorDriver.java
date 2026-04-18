@@ -33,7 +33,7 @@ public final class SQLiteDirectCursorDriver implements SQLiteCursorDriver {
 	private SQLiteQuery mQuery;
 
 	public SQLiteDirectCursorDriver(SQLiteDatabase db, String sql, String editTable,
-					CancellationSignal cancellationSignal) {
+	                                CancellationSignal cancellationSignal) {
 		mDatabase = db;
 		mEditTable = editTable;
 		mSql = sql;

@@ -19,7 +19,7 @@ public class MediaCodecInfo {
 	}
 
 	public String[] getSupportedTypes() {
-		return new String[] { mime };
+		return new String[] {mime};
 	}
 
 	public CodecCapabilities getCapabilitiesForType(String type) {
@@ -31,12 +31,12 @@ public class MediaCodecInfo {
 		public CodecProfileLevel[] profileLevels;
 
 		public boolean isFeatureSupported(String feature) {
-			System.out.println("CodecCapabilities.isFeatureSupported("+feature+")");
+			System.out.println("CodecCapabilities.isFeatureSupported(" + feature + ")");
 			return false;
 		}
 
 		public boolean isFeatureRequired(String feature) {
-			System.out.println("CodecCapabilities.isFeatureRequired("+feature+")");
+			System.out.println("CodecCapabilities.isFeatureRequired(" + feature + ")");
 			return false;
 		}
 
@@ -51,6 +51,10 @@ public class MediaCodecInfo {
 
 		public boolean isSampleRateSupported(int sampleRate) {
 			return true;
+		}
+
+		public int getMaxInputChannelCount() {
+			return 2;
 		}
 	}
 }

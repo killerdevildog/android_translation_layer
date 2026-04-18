@@ -16,13 +16,12 @@
 
 package android.animation;
 
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
-
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.content.res.ConstantState;
 import android.util.LongArray;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This is the superclass for classes which provide basic support for animations which can be
@@ -399,7 +398,7 @@ public abstract class Animator implements Cloneable {
 	@Override
 	public Animator clone() {
 		try {
-			final Animator anim = (Animator) super.clone();
+			final Animator anim = (Animator)super.clone();
 			if (mListeners != null) {
 				anim.mListeners = new ArrayList<AnimatorListener>(mListeners);
 			}
@@ -410,7 +409,7 @@ public abstract class Animator implements Cloneable {
 			anim.mStartListenersCalled = false;
 			return anim;
 		} catch (CloneNotSupportedException e) {
-		   throw new AssertionError();
+			throw new AssertionError();
 		}
 	}
 
@@ -555,9 +554,8 @@ public abstract class Animator implements Cloneable {
 	 *                  other calls, this is ignored.
 	 */
 	void notifyListeners(
-			AnimatorCaller<AnimatorListener, Animator> notification,
-			boolean isReverse
-	) {
+	    AnimatorCaller<AnimatorListener, Animator> notification,
+	    boolean isReverse) {
 		callOnList(mListeners, notification, this, isReverse);
 	}
 
@@ -599,11 +597,10 @@ public abstract class Animator implements Cloneable {
 	 * @param <A> The Animator type of animator.
 	 */
 	<T, A> void callOnList(
-			ArrayList<T> list,
-			AnimatorCaller<T, A> call,
-			A animator,
-			boolean isReverse
-	) {
+	    ArrayList<T> list,
+	    AnimatorCaller<T, A> call,
+	    A animator,
+	    boolean isReverse) {
 		int size = list == null ? 0 : list.size();
 		if (size > 0) {
 			// Try to reuse mCacheList to store the items of list.
@@ -614,7 +611,7 @@ public abstract class Animator implements Cloneable {
 			list.toArray(array);
 			for (int i = 0; i < size; i++) {
 				//noinspection unchecked
-				T item = (T) array[i];
+				T item = (T)array[i];
 				call.call(item, animator, isReverse);
 				array[i] = null;
 			}
@@ -793,32 +790,32 @@ public abstract class Animator implements Cloneable {
 	interface AnimatorCaller<T, A> {
 		void call(T listener, A animator, boolean isReverse);
 
-		AnimatorCaller<AnimatorListener, Animator> ON_START = new AnimatorCaller<Animator.AnimatorListener,Animator>() {
+		AnimatorCaller<AnimatorListener, Animator> ON_START = new AnimatorCaller<Animator.AnimatorListener, Animator>() {
 			@Override
 			public void call(AnimatorListener listener, Animator animator, boolean isReverse) {
 				listener.onAnimationStart(animator);
 			}
 		};
-		AnimatorCaller<AnimatorListener, Animator> ON_END = new AnimatorCaller<Animator.AnimatorListener,Animator>() {
+		AnimatorCaller<AnimatorListener, Animator> ON_END = new AnimatorCaller<Animator.AnimatorListener, Animator>() {
 			@Override
 			public void call(AnimatorListener listener, Animator animator, boolean isReverse) {
 				listener.onAnimationEnd(animator);
 			}
 		};
 		AnimatorCaller<AnimatorListener, Animator> ON_CANCEL =
-				new AnimatorCaller<AnimatorListener, Animator>() { @Override public void call(AnimatorListener listener, Animator animator, boolean isReverse) { listener.onAnimationCancel(animator); }};
+		    new AnimatorCaller<AnimatorListener, Animator>() { @Override public void call(AnimatorListener listener, Animator animator, boolean isReverse) { listener.onAnimationCancel(animator); } };
 		AnimatorCaller<AnimatorListener, Animator> ON_REPEAT =
-				new AnimatorCaller<AnimatorListener, Animator>() { @Override public void call(AnimatorListener listener, Animator animator, boolean isReverse) { listener.onAnimationRepeat(animator); }};
+		    new AnimatorCaller<AnimatorListener, Animator>() { @Override public void call(AnimatorListener listener, Animator animator, boolean isReverse) { listener.onAnimationRepeat(animator); } };
 		AnimatorCaller<AnimatorPauseListener, Animator> ON_PAUSE =
-				new AnimatorCaller<AnimatorPauseListener, Animator>() { @Override public void call(AnimatorPauseListener listener, Animator animator, boolean isReverse) { listener.onAnimationPause(animator); }};
+		    new AnimatorCaller<AnimatorPauseListener, Animator>() { @Override public void call(AnimatorPauseListener listener, Animator animator, boolean isReverse) { listener.onAnimationPause(animator); } };
 		AnimatorCaller<AnimatorPauseListener, Animator> ON_RESUME =
-				new AnimatorCaller<AnimatorPauseListener, Animator>() { @Override public void call(AnimatorPauseListener listener, Animator animator, boolean isReverse) { listener.onAnimationResume(animator); }};
+		    new AnimatorCaller<AnimatorPauseListener, Animator>() { @Override public void call(AnimatorPauseListener listener, Animator animator, boolean isReverse) { listener.onAnimationResume(animator); } };
 		AnimatorCaller<ValueAnimator.AnimatorUpdateListener, ValueAnimator> ON_UPDATE =
-				new AnimatorCaller<ValueAnimator.AnimatorUpdateListener, ValueAnimator>() {
-					@Override
-					public void call(ValueAnimator.AnimatorUpdateListener listener, ValueAnimator animator, boolean isReverse) {
-						listener.onAnimationUpdate(animator);
-					}
-				};
+		    new AnimatorCaller<ValueAnimator.AnimatorUpdateListener, ValueAnimator>() {
+			    @Override
+			    public void call(ValueAnimator.AnimatorUpdateListener listener, ValueAnimator animator, boolean isReverse) {
+				    listener.onAnimationUpdate(animator);
+			    }
+		    };
 	}
 }

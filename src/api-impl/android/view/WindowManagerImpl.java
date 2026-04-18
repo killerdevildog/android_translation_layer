@@ -1,13 +1,17 @@
 package android.view;
 
+import android.graphics.Rect;
+import android.util.Slog;
+
 public class WindowManagerImpl implements WindowManager, ViewManager {
+
+	private static final String TAG = "WindowManagerImpl";
 
 	private static class WindowViewParent implements ViewParent {
 
 		@Override
 		public android.view.ViewParent getParent() {
-			// TODO Auto-generated method stub
-			throw new UnsupportedOperationException("Unimplemented method 'getParent'");
+			return null;
 		}
 
 		@Override
@@ -63,6 +67,12 @@ public class WindowManagerImpl implements WindowManager, ViewManager {
 			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Unimplemented method 'onStopNestedScroll'");
 		}
+
+		@Override
+		public void onDescendantInvalidated(View child, View target) {
+			// TODO Auto-generated method stub
+			throw new UnsupportedOperationException("Unimplemented method 'onDescendantInvalidated'");
+		}
 	}
 
 	public android.view.Display getDefaultDisplay() {
@@ -71,21 +81,23 @@ public class WindowManagerImpl implements WindowManager, ViewManager {
 
 	@Override
 	public void addView(View view, android.view.ViewGroup.LayoutParams params) {
-		System.out.println("WindowManagerImpl.addView(" + view + ", " + params + ") called");
-		if (params.height == 0)  // FIXME: remove this hack once measurement error with composeUI popups is fixed
-			params.height = 200;
+		Slog.v(TAG, "addView(" + view + ", " + params + ") called");
 		view.setLayoutParams(params);
 		view.parent = new WindowViewParent();
 		view.onAttachedToWindow();
+		Rect displayFrame = new Rect();
+		view.getWindowVisibleDisplayFrame(displayFrame);
+		view.internalSetDefaultMeasureSpec(View.MeasureSpec.AT_MOST | displayFrame.width(), View.MeasureSpec.AT_MOST | displayFrame.height());
 		WindowManager.LayoutParams windowParams = (WindowManager.LayoutParams)params;
 		native_addView(view.widget, windowParams.type, windowParams.x, windowParams.y, params.width, params.height);
 	}
 
 	@Override
 	public void updateViewLayout(View view, android.view.ViewGroup.LayoutParams params) {
-		System.out.println("WindowManagerImpl.updateViewLayout(" + view + ", " + params + ") called");
-		if (params.height == 0)  // FIXME: remove this hack once measurement error with composeUI popups is fixed
-			params.height = 200;
+		Slog.v(TAG, "updateViewLayout(" + view + ", " + params + ") called");
+		Rect displayFrame = new Rect();
+		view.getWindowVisibleDisplayFrame(displayFrame);
+		view.internalSetDefaultMeasureSpec(View.MeasureSpec.AT_MOST | displayFrame.width(), View.MeasureSpec.AT_MOST | displayFrame.height());
 		WindowManager.LayoutParams windowParams = (WindowManager.LayoutParams)params;
 		view.setLayoutParams(params);
 		native_updateViewLayout(view.widget, windowParams.x, windowParams.y, params.width, params.height);

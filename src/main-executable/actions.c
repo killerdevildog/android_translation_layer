@@ -4,7 +4,7 @@
 #include "../api-impl-jni/defines.h"
 #include "../api-impl-jni/util.h"
 
-static void action_start_activity(GSimpleAction *action, GVariant* parameter, gpointer user_data)
+static void action_start_activity(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	JNIEnv *env = get_jni_env();
 
@@ -16,7 +16,7 @@ static void action_start_activity(GSimpleAction *action, GVariant* parameter, gp
 	}
 }
 
-static void action_start_service(GSimpleAction *action, GVariant* parameter, gpointer user_data)
+static void action_start_service(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	JNIEnv *env = get_jni_env();
 
@@ -28,7 +28,7 @@ static void action_start_service(GSimpleAction *action, GVariant* parameter, gpo
 	}
 }
 
-static void action_send_broadcast(GSimpleAction *action, GVariant* parameter, gpointer user_data)
+static void action_send_broadcast(GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	JNIEnv *env = get_jni_env();
 
@@ -41,9 +41,9 @@ static void action_send_broadcast(GSimpleAction *action, GVariant* parameter, gp
 }
 
 const GActionEntry action_entries[] = {
-	{ "startActivity", action_start_activity, INTENT_G_VARIANT_TYPE_STRING},
-	{ "startService",  action_start_service,  INTENT_G_VARIANT_TYPE_STRING},
-	{ "sendBroadcast", action_send_broadcast, INTENT_G_VARIANT_TYPE_STRING},
+	{"startActivity", action_start_activity, INTENT_G_VARIANT_TYPE_STRING},
+	{ "startService",  action_start_service, INTENT_G_VARIANT_TYPE_STRING},
+	{"sendBroadcast", action_send_broadcast, INTENT_G_VARIANT_TYPE_STRING},
 };
 
 const int action_entries_count = ARRAY_SIZE(action_entries);

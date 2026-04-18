@@ -220,8 +220,7 @@ public class Cam {
 		float p1 = 50000.0f / 13.0f * eHue * frame.getNc() * frame.getNcb();
 		float t = p1 * (float)Math.sqrt(a * a + b * b) / (u + 0.305f);
 		float alpha =
-		    (float)Math.pow(t, 0.9) * (float)Math.pow(1.64 - Math.pow(0.29, frame.getN()),
-							      0.73);
+		    (float)Math.pow(t, 0.9) * (float)Math.pow(1.64 - Math.pow(0.29, frame.getN()), 0.73);
 		// CAM16 chroma, colorfulness, saturation
 		float c = alpha * (float)Math.sqrt(j / 100.0);
 		float m = c * frame.getFlRoot();
@@ -298,12 +297,11 @@ public class Cam {
 
 		float t =
 		    (float)Math.pow(alpha / Math.pow(1.64 - Math.pow(0.29, frame.getN()), 0.73),
-				    1.0 / 0.9);
+		                    1.0 / 0.9);
 		float hRad = getHue() * (float)Math.PI / 180.0f;
 
 		float eHue = 0.25f * (float)(Math.cos(hRad + 2.0) + 3.8);
-		float ac = frame.getAw() * (float)Math.pow(getJ() / 100.0,
-							   1.0 / frame.getC() / frame.getZ());
+		float ac = frame.getAw() * (float)Math.pow(getJ() / 100.0, 1.0 / frame.getC() / frame.getZ());
 		float p1 = eHue * (50000.0f / 13.0f) * frame.getNc() * frame.getNcb();
 		float p2 = (ac / frame.getNbb());
 

@@ -5,7 +5,7 @@ import android.content.Context;
 
 public class ATLKeyboardDialog extends Dialog {
 	@Override
-	protected native long nativeInit(boolean is_floating);
+	protected native long nativeInit();
 
 	public ATLKeyboardDialog(Context context) {
 		super(context);

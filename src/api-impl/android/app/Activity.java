@@ -1,6 +1,6 @@
 package android.app;
 
-import android.R;
+import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,8 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageParser;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerImpl;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -55,12 +52,13 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	private CharSequence title = null;
 	List<Fragment> fragments = new ArrayList<>();
 	boolean destroyed = false;
+	private boolean finishing = false;
 
 	public static Activity internalCreateActivity(String className, long native_window, Intent intent) throws ReflectiveOperationException {
 		int theme_res = 0;
 		int label_res = 0;
 		int app_label_res = 0;
-		for (PackageParser.Activity activity: pkg.activities) {
+		for (PackageParser.Activity activity : pkg.activities) {
 			if (className.equals(activity.className)) {
 				label_res = activity.info.labelRes;
 				theme_res = activity.info.getThemeResource();
@@ -70,11 +68,12 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 
 		app_label_res = pkg.applicationInfo.labelRes;
 		theme_res = Resources.selectDefaultTheme(theme_res,
-				Math.min(pkg.applicationInfo.targetSdkVersion, Build.VERSION.SDK_INT));
+		                                         Math.min(pkg.applicationInfo.targetSdkVersion, Build.VERSION.SDK_INT));
 
 		Class<? extends Activity> cls = Class.forName(className).asSubclass(Activity.class);
 		Constructor<? extends Activity> constructor = cls.getConstructor();
 		Activity activity = constructor.newInstance();
+		intent.setComponent(new ComponentName(pkg.packageName, className));
 		activity.intent = intent;
 		activity.attachBaseContext(new ContextImpl(r, pkg.applicationInfo, theme_res));
 		// Setting up a window requires a context.
@@ -98,12 +97,14 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	private static Activity createMainActivity(String className, long native_window, String uriString) throws Exception {
 		Uri uri = uriString != null ? Uri.parse(uriString) : null;
 		if (className == null) {
-			for (PackageParser.Activity activity: pkg.activities) {
+			for (PackageParser.Activity activity : pkg.activities) {
+				if (!activity.info.enabled)
+					continue;
 				boolean done = false;
-				for (PackageParser.IntentInfo intent: activity.intents) {
+				for (PackageParser.IntentInfo intent : activity.intents) {
 					Slog.i(TAG, intent.toString());
-					if ((uri == null && intent.hasCategory("android.intent.category.LAUNCHER") && intent.hasAction("android.intent.action.MAIN")) ||
-					    (uri != null && intent.hasDataScheme(uri.getScheme())                  && intent.hasCategory("android.intent.category.DEFAULT"))) {
+					if ((uri == null && intent.hasCategory("android.intent.category.LAUNCHER") && intent.hasAction("android.intent.action.MAIN")) ||        // NOLINT
+					    (uri != null && intent.hasDataScheme(uri.getScheme())                  && intent.hasCategory("android.intent.category.DEFAULT"))) { // NOLINT
 						className = activity.info.targetActivity != null ? activity.info.targetActivity : activity.className;
 						done = true;
 						break;
@@ -144,7 +145,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	}
 
 	public ComponentName getComponentName() {
-		return null;
+		return intent.getComponent();
 	}
 
 	public Intent getIntent() {
@@ -160,7 +161,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	}
 
 	public boolean isFinishing() {
-		return false; // FIXME
+		return finishing;
 	}
 
 	public final boolean requestWindowFeature(int featureId) {
@@ -192,16 +193,6 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 		for (Fragment fragment : fragments) {
 			fragment.onStart();
 		}
-
-		TypedArray ta = obtainStyledAttributes(new int[] {R.attr.windowBackground});
-		try {
-			Drawable background = ta.getDrawable(0);
-			if (background != null)
-				window.setBackgroundDrawable(background);
-		} catch (Exception e) {
-			Slog.e(TAG, "Error setting window background", e);
-		}
-		ta.recycle();
 
 		return;
 	}
@@ -314,7 +305,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	}
 
 	public final void runOnUiThread(Runnable action) {
-		if(Looper.myLooper() == Looper.getMainLooper()) {
+		if (Looper.myLooper() == Looper.getMainLooper()) {
 			action.run();
 		} else {
 			new Handler(Looper.getMainLooper()).post(action);
@@ -325,9 +316,9 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 
 	// the order must match GtkFileChooserAction enum
 	private static final List<String> FILE_CHOOSER_ACTIONS = Arrays.asList(
-		"android.intent.action.OPEN_DOCUMENT",     // (0) GTK_FILE_CHOOSER_ACTION_OPEN
-		"android.intent.action.CREATE_DOCUMENT",   // (1) GTK_FILE_CHOOSER_ACTION_SAVE
-		"android.intent.action.OPEN_DOCUMENT_TREE" // (2) GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
+	    "android.intent.action.OPEN_DOCUMENT",     // (0) GTK_FILE_CHOOSER_ACTION_OPEN
+	    "android.intent.action.CREATE_DOCUMENT",   // (1) GTK_FILE_CHOOSER_ACTION_SAVE
+	    "android.intent.action.OPEN_DOCUMENT_TREE" // (2) GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
 	);
 
 	// callback from native code
@@ -353,6 +344,8 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 			}
 		} else if (FILE_CHOOSER_ACTIONS.contains(intent.getAction())) {
 			nativeFileChooser(FILE_CHOOSER_ACTIONS.indexOf(intent.getAction()), intent.getType(), intent.getStringExtra("android.intent.extra.TITLE"), requestCode);
+		} else if (Intent.ACTION_GET_CONTENT.equals(intent.getAction())) {
+			nativeFileChooser(0 /*GTK_FILE_CHOOSER_ACTION_OPEN*/, intent.getType(), intent.getStringExtra(Intent.EXTRA_TITLE), requestCode);
 		} else if ("android.intent.action.INSTALL_PACKAGE".equals(intent.getAction())) {
 			try {
 				Process p = new ProcessBuilder("/usr/bin/env", "android-translation-layer", "--install", intent.getData().getPath()).start();
@@ -420,6 +413,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	}
 
 	public void finish() {
+		finishing = true;
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			@Override
 			public void run() {
@@ -443,7 +437,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 		return (LayoutInflater)getSystemService("layout_inflater");
 	}
 
-	public boolean isChangingConfigurations() {return false;}
+	public boolean isChangingConfigurations() { return false; }
 
 	@Override
 	public void onContentChanged() {
@@ -542,11 +536,17 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	}
 
 	public void recreate() {
+		finishing = true;
 		try {
 			/* TODO: check if this is a toplevel activity */
 			Activity activity = internalCreateActivity(this.getClass().getName(), getWindow().native_window, intent);
-			nativeFinish(0);
-			nativeStartActivity(activity);
+			new Handler().post(new Runnable() {
+				@Override
+				public void run() {
+					nativeFinish(0);
+					nativeStartActivity(activity);
+				}
+			});
 		} catch (ReflectiveOperationException e) {
 			Slog.i(TAG, "exception in Activity.recreate, this is kinda sus");
 			e.printStackTrace();
@@ -560,7 +560,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 		if (!cls.startsWith(pkg) || cls.length() <= packageLen || cls.charAt(packageLen) != '.') {
 			return cls;
 		}
-		return cls.substring(packageLen+1);
+		return cls.substring(packageLen + 1);
 	}
 
 	public SharedPreferences getPreferences(int mode) {
@@ -665,5 +665,17 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		return false;
+	}
+
+	public void requestPermissions(String[] permissions, int requestCode) {
+		Slog.w(TAG, "requestPermissions(" + Arrays.toString(permissions) + "): not handled");
+	}
+
+	public boolean shouldShowRequestPermissionRationale(String permission) {
+		return true;
+	}
+
+	public ActionBar getActionBar() {
+		return null;
 	}
 }

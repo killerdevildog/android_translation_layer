@@ -315,7 +315,6 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 		boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id);
 	}
 
-
 	/**
 	 * Register a callback to be invoked when an item in this AdapterView has
 	 * been clicked and held
@@ -367,7 +366,6 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 		 */
 		void onNothingSelected(AdapterView<?> parent);
 	}
-
 
 	/**
 	 * Register a callback to be invoked when an item in this AdapterView has
@@ -434,7 +432,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 	@Override
 	public void addView(View child, LayoutParams params) {
 		throw new UnsupportedOperationException("addView(View, LayoutParams) "
-				+ "is not supported in AdapterView");
+		                                        + "is not supported in AdapterView");
 	}
 
 	/**
@@ -449,7 +447,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 	@Override
 	public void addView(View child, int index, LayoutParams params) {
 		throw new UnsupportedOperationException("addView(View, int, LayoutParams) "
-				+ "is not supported in AdapterView");
+		                                        + "is not supported in AdapterView");
 	}
 
 	/**
@@ -557,7 +555,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 		View listItem = view;
 		try {
 			View v;
-			while ((v = (View) listItem.getParent()) != null && !v.equals(this)) {
+			while ((v = (View)listItem.getParent()) != null && !v.equals(this)) {
 				listItem = v;
 			}
 		} catch (ClassCastException e) {
@@ -705,7 +703,8 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 				this.onLayout(false, getLeft(), getTop(), getRight(), getBottom());
 			}
 		} else {
-			if (mEmptyView != null) mEmptyView.setVisibility(View.GONE);
+			if (mEmptyView != null)
+				mEmptyView.setVisibility(View.GONE);
 			setVisibility(View.VISIBLE);
 		}
 	}
@@ -729,7 +728,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 	@Override
 	public void setOnClickListener(OnClickListener l) {
 		throw new RuntimeException("Don't call setOnClickListener for an AdapterView. "
-				+ "You probably want setOnItemClickListener instead");
+		                           + "You probably want setOnItemClickListener instead");
 	}
 
 	class AdapterDataSetObserver extends DataSetObserver {
@@ -745,7 +744,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 			// Detect the case where a cursor that was previously invalidated has
 			// been repopulated with new data.
 			if (AdapterView.this.getAdapter().hasStableIds() && mInstanceState != null
-					&& mOldItemCount == 0 && mItemCount > 0) {
+			    && mOldItemCount == 0 && mItemCount > 0) {
 				// AdapterView.this.onRestoreInstanceState(mInstanceState);
 				mInstanceState = null;
 			} else {
@@ -841,7 +840,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 		if (selection >= 0) {
 			View v = getSelectedView();
 			mOnItemSelectedListener.onItemSelected(this, v, selection,
-					getAdapter().getItemId(selection));
+			                                       getAdapter().getItemId(selection));
 		} else {
 			mOnItemSelectedListener.onNothingSelected(this);
 		}
@@ -1014,7 +1013,6 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 				// Try going down next time
 				next = true;
 			}
-
 		}
 
 		return INVALID_POSITION;
@@ -1065,7 +1063,7 @@ public abstract class AdapterView<T extends Adapter> extends ViewGroup {
 		if (getChildCount() > 0) {
 			mNeedSync = true;
 			mSyncHeight = mLayoutHeight;
-			if (mSelectedPosition >= 0) {
+			if (mSelectedPosition - mFirstPosition >= 0 && mSelectedPosition - mFirstPosition < getChildCount()) {
 				// Sync the selection state
 				View v = getChildAt(mSelectedPosition - mFirstPosition);
 				mSyncRowId = mNextSelectedRowId;

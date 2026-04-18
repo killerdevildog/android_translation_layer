@@ -16,6 +16,10 @@
 
 package android.net;
 
+import android.annotation.SystemApi;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,11 +34,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.Set;
-
-import android.annotation.SystemApi;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.util.Log;
 
 /**
  * Immutable URI reference. A URI reference includes a URI and a fragment, the
@@ -136,7 +135,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 * The empty URI, equivalent to "".
 	 */
 	public static final Uri EMPTY = new HierarchicalUri(null, Part.NULL,
-			PathPart.EMPTY, Part.NULL, Part.NULL);
+	                                                    PathPart.EMPTY, Part.NULL, Part.NULL);
 
 	/**
 	 * Prevents external subclassing.
@@ -339,7 +338,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			return false;
 		}
 
-		Uri other = (Uri) o;
+		Uri other = (Uri)o;
 
 		return toString().equals(other.toString());
 	}
@@ -385,10 +384,10 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			builder.append(scheme);
 			builder.append(":");
 			if (scheme.equalsIgnoreCase("tel") || scheme.equalsIgnoreCase("sip")
-					|| scheme.equalsIgnoreCase("sms") || scheme.equalsIgnoreCase("smsto")
-					|| scheme.equalsIgnoreCase("mailto") || scheme.equalsIgnoreCase("nfc")) {
+			    || scheme.equalsIgnoreCase("sms") || scheme.equalsIgnoreCase("smsto")
+			    || scheme.equalsIgnoreCase("mailto") || scheme.equalsIgnoreCase("nfc")) {
 				if (ssp != null) {
-					for (int i=0; i<ssp.length(); i++) {
+					for (int i = 0; i < ssp.length(); i++) {
 						char c = ssp.charAt(i);
 						if (c == '-' || c == '@' || c == '.') {
 							builder.append(c);
@@ -405,10 +404,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 				final int port = getPort();
 				final String path = getPath();
 				final String authority = getAuthority();
-				if (authority != null) builder.append("//");
-				if (host != null) builder.append(host);
-				if (port != -1) builder.append(":").append(port);
-				if (authority != null || path != null) builder.append("/...");
+				if (authority != null)
+					builder.append("//");
+				if (host != null)
+					builder.append(host);
+				if (port != -1)
+					builder.append(":").append(port);
+				if (authority != null || path != null)
+					builder.append("/...");
 			}
 		}
 		return builder.toString();
@@ -429,8 +432,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 * Error message presented when a user tries to treat an opaque URI as
 	 * hierarchical.
 	 */
-	private static final String NOT_HIERARCHICAL
-			= "This isn't a hierarchical URI.";
+	private static final String NOT_HIERARCHICAL = "This isn't a hierarchical URI.";
 
 	/** Default encoding. */
 	private static final String DEFAULT_ENCODING = "UTF-8";
@@ -463,7 +465,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		PathPart path = PathPart.fromDecoded(file.getAbsolutePath());
 		return new HierarchicalUri(
-				"file", Part.EMPTY, path, Part.NULL, Part.NULL);
+		    "file", Part.EMPTY, path, Part.NULL, Part.NULL);
 	}
 
 	/**
@@ -490,8 +492,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		/** Finds the first ':'. Returns -1 if none found. */
 		private int findSchemeSeparator() {
 			return cachedSsi == NOT_CALCULATED
-					? cachedSsi = uriString.indexOf(':')
-					: cachedSsi;
+			         ? cachedSsi = uriString.indexOf(':')
+			         : cachedSsi;
 		}
 
 		/** Cached fragment separator index. */
@@ -500,8 +502,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		/** Finds the first '#'. Returns -1 if none found. */
 		private int findFragmentSeparator() {
 			return cachedFsi == NOT_CALCULATED
-					? cachedFsi = uriString.indexOf('#', findSchemeSeparator())
-					: cachedFsi;
+			         ? cachedFsi = uriString.indexOf('#', findSchemeSeparator())
+			         : cachedFsi;
 		}
 
 		public boolean isHierarchical() {
@@ -559,16 +561,15 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 			// Return everything between ssi and fsi.
 			return fsi == NOT_FOUND
-					? uriString.substring(ssi + 1)
-					: uriString.substring(ssi + 1, fsi);
+			         ? uriString.substring(ssi + 1)
+			         : uriString.substring(ssi + 1, fsi);
 		}
 
 		private Part authority;
 
 		private Part getAuthorityPart() {
 			if (authority == null) {
-				String encodedAuthority
-						= parseAuthority(this.uriString, findSchemeSeparator());
+				String encodedAuthority = parseAuthority(this.uriString, findSchemeSeparator());
 				return authority = Part.fromEncoded(encodedAuthority);
 			}
 
@@ -587,8 +588,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		private PathPart getPathPart() {
 			return path == null
-					? path = PathPart.fromEncoded(parsePath())
-					: path;
+			         ? path = PathPart.fromEncoded(parsePath())
+			         : path;
 		}
 
 		public String getPath() {
@@ -632,7 +633,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		private Part getQueryPart() {
 			return query == null
-					? query = Part.fromEncoded(parseQuery()) : query;
+			         ? query = Part.fromEncoded(parseQuery())
+			         : query;
 		}
 
 		public String getEncodedQuery() {
@@ -669,7 +671,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		private Part getFragmentPart() {
 			return fragment == null
-					? fragment = Part.fromEncoded(parseFragment()) : fragment;
+			         ? fragment = Part.fromEncoded(parseFragment())
+			         : fragment;
 		}
 
 		public String getEncodedFragment() {
@@ -702,22 +705,23 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 			// If "//" follows the scheme separator, we have an authority.
 			if (length > ssi + 2
-					&& uriString.charAt(ssi + 1) == '/'
-					&& uriString.charAt(ssi + 2) == '/') {
+			    && uriString.charAt(ssi + 1) == '/'
+			    && uriString.charAt(ssi + 2) == '/') {
 				// We have an authority.
 
 				// Look for the start of the path, query, or fragment, or the
 				// end of the string.
 				int end = ssi + 3;
-				LOOP: while (end < length) {
+			LOOP:
+				while (end < length) {
 					switch (uriString.charAt(end)) {
-						case '/': // Start of path
-						case '\\':// Start of path
-						  // Per http://url.spec.whatwg.org/#host-state, the \ character
-						  // is treated as if it were a / character when encountered in a
-						  // host
-						case '?': // Start of query
-						case '#': // Start of fragment
+						case '/':  // Start of path
+						case '\\': // Start of path
+							   // Per http://url.spec.whatwg.org/#host-state, the \ character
+							   // is treated as if it were a / character when encountered in a
+							   // host
+						case '?':  // Start of query
+						case '#':  // Start of fragment
 							break LOOP;
 					}
 					end++;
@@ -727,7 +731,6 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			} else {
 				return null;
 			}
-
 		}
 
 		/**
@@ -744,20 +747,21 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			// Find start of path.
 			int pathStart;
 			if (length > ssi + 2
-					&& uriString.charAt(ssi + 1) == '/'
-					&& uriString.charAt(ssi + 2) == '/') {
+			    && uriString.charAt(ssi + 1) == '/'
+			    && uriString.charAt(ssi + 2) == '/') {
 				// Skip over authority to path.
 				pathStart = ssi + 3;
-				LOOP: while (pathStart < length) {
+			LOOP:
+				while (pathStart < length) {
 					switch (uriString.charAt(pathStart)) {
-						case '?': // Start of query
-						case '#': // Start of fragment
+						case '?':          // Start of query
+						case '#':          // Start of fragment
 							return ""; // Empty path.
-						case '/': // Start of path!
-						case '\\':// Start of path!
-						  // Per http://url.spec.whatwg.org/#host-state, the \ character
-						  // is treated as if it were a / character when encountered in a
-						  // host
+						case '/':          // Start of path!
+						case '\\':         // Start of path!
+								   // Per http://url.spec.whatwg.org/#host-state, the \ character
+								   // is treated as if it were a / character when encountered in a
+								   // host
 							break LOOP;
 					}
 					pathStart++;
@@ -769,7 +773,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 			// Find end of path.
 			int pathEnd = pathStart;
-			LOOP: while (pathEnd < length) {
+		LOOP:
+			while (pathEnd < length) {
 				switch (uriString.charAt(pathEnd)) {
 					case '?': // Start of query
 					case '#': // Start of fragment
@@ -784,16 +789,16 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		public Builder buildUpon() {
 			if (isHierarchical()) {
 				return new Builder()
-						.scheme(getScheme())
-						.authority(getAuthorityPart())
-						.path(getPathPart())
-						.query(getQueryPart())
-						.fragment(getFragmentPart());
+				    .scheme(getScheme())
+				    .authority(getAuthorityPart())
+				    .path(getPathPart())
+				    .query(getQueryPart())
+				    .fragment(getFragmentPart());
 			} else {
 				return new Builder()
-						.scheme(getScheme())
-						.opaquePart(getSsp())
-						.fragment(getFragmentPart());
+				    .scheme(getScheme())
+				    .opaquePart(getSsp())
+				    .fragment(getFragmentPart());
 			}
 		}
 	}
@@ -815,7 +820,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 * @see Builder if you don't want the ssp and fragment to be encoded
 	 */
 	public static Uri fromParts(String scheme, String ssp,
-			String fragment) {
+	                            String fragment) {
 		if (scheme == null) {
 			throw new NullPointerException("scheme");
 		}
@@ -824,7 +829,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		}
 
 		return new OpaqueUri(scheme, Part.fromDecoded(ssp),
-				Part.fromDecoded(fragment));
+		                     Part.fromDecoded(fragment));
 	}
 
 	/**
@@ -941,9 +946,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		public Builder buildUpon() {
 			return new Builder()
-					.scheme(this.scheme)
-					.opaquePart(this.ssp)
-					.fragment(this.fragment);
+			    .scheme(this.scheme)
+			    .opaquePart(this.ssp)
+			    .fragment(this.fragment);
 		}
 	}
 
@@ -951,7 +956,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 * Wrapper for path segment array.
 	 */
 	static class PathSegments extends AbstractList<String>
-			implements RandomAccess {
+	    implements RandomAccess {
 
 		static final PathSegments EMPTY = new PathSegments(null, 0);
 
@@ -1031,7 +1036,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		private Part getUserInfoPart() {
 			return userInfo == null
-					? userInfo = Part.fromEncoded(parseUserInfo()) : userInfo;
+			         ? userInfo = Part.fromEncoded(parseUserInfo())
+			         : userInfo;
 		}
 
 		public final String getEncodedUserInfo() {
@@ -1071,8 +1077,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			int portSeparator = findPortSeparator(authority);
 
 			String encodedHost = portSeparator == NOT_FOUND
-					? authority.substring(userInfoSeparator + 1)
-					: authority.substring(userInfoSeparator + 1, portSeparator);
+			                       ? authority.substring(userInfoSeparator + 1)
+			                       : authority.substring(userInfoSeparator + 1, portSeparator);
 
 			return decode(encodedHost);
 		}
@@ -1081,8 +1087,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		public int getPort() {
 			return port == NOT_CALCULATED
-					? port = parsePort()
-					: port;
+			         ? port = parsePort()
+			         : port;
 		}
 
 		private int parsePort() {
@@ -1112,9 +1118,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			// look for characters rather than care about code points.
 			for (int i = authority.length() - 1; i >= 0; --i) {
 				final int character = authority.charAt(i);
-				if (':' == character) return i;
+				if (':' == character)
+					return i;
 				// Character.isDigit would include non-ascii digits
-				if (character < '0' || character > '9') return NOT_FOUND;
+				if (character < '0' || character > '9')
+					return NOT_FOUND;
 			}
 			return NOT_FOUND;
 		}
@@ -1132,7 +1140,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		private final Part fragment;
 
 		private HierarchicalUri(String scheme, Part authority, PathPart path,
-				Part query, Part fragment) {
+		                        Part query, Part fragment) {
 			this.scheme = scheme;
 			this.authority = Part.nonNull(authority);
 			this.path = generatePath(path);
@@ -1144,9 +1152,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			// In RFC3986 the path should be determined based on whether there is a scheme or
 			// authority present (https://www.rfc-editor.org/rfc/rfc3986.html#section-3.3).
 			final boolean hasSchemeOrAuthority =
-					(scheme != null && scheme.length() > 0) || !authority.isEmpty();
+			    (scheme != null && scheme.length() > 0) || !authority.isEmpty();
 			final PathPart newPath = hasSchemeOrAuthority ? PathPart.makeAbsolute(originalPath)
-														  : originalPath;
+			                                              : originalPath;
 			return newPath == null ? PathPart.NULL : newPath;
 		}
 
@@ -1166,7 +1174,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		private Part getSsp() {
 			return ssp == null
-					? ssp = Part.fromEncoded(makeSchemeSpecificPart()) : ssp;
+			         ? ssp = Part.fromEncoded(makeSchemeSpecificPart())
+			         : ssp;
 		}
 
 		public String getEncodedSchemeSpecificPart() {
@@ -1246,7 +1255,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			@SuppressWarnings("StringEquality")
 			boolean cached = (uriString != NotCachedHolder.NOT_CACHED);
 			return cached ? uriString
-					: (uriString = makeUriString());
+			              : (uriString = makeUriString());
 		}
 
 		private String makeUriString() {
@@ -1267,11 +1276,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 		public Builder buildUpon() {
 			return new Builder()
-					.scheme(scheme)
-					.authority(authority)
-					.path(path)
-					.query(query)
-					.fragment(fragment);
+			    .scheme(scheme)
+			    .authority(authority)
+			    .path(path)
+			    .query(query)
+			    .fragment(fragment);
 		}
 	}
 
@@ -1458,7 +1467,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			this.opaquePart = null;
 
 			String encodedParameter = encode(key, null) + "="
-					+ encode(value, null);
+			                        + encode(value, null);
 
 			if (query == null) {
 				query = Part.fromEncoded(encodedParameter);
@@ -1479,7 +1488,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		 * Clears the the previously set query.
 		 */
 		public Builder clearQuery() {
-		  return query((Part) null);
+			return query((Part)null);
 		}
 
 		/**
@@ -1492,7 +1501,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			if (opaquePart != null) {
 				if (this.scheme == null) {
 					throw new UnsupportedOperationException(
-							"An opaque URI must have a scheme.");
+					    "An opaque URI must have a scheme.");
 				}
 
 				return new OpaqueUri(scheme, opaquePart, fragment);
@@ -1510,14 +1519,13 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 				}
 
 				return new HierarchicalUri(
-						scheme, authority, path, query, fragment);
+				    scheme, authority, path, query, fragment);
 			}
 		}
 
 		private boolean hasSchemeOrAuthority() {
 			return scheme != null
-					|| (authority != null && authority != Part.NULL);
-
+			    || (authority != null && authority != Part.NULL);
 		}
 
 		@Override
@@ -1579,7 +1587,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			throw new UnsupportedOperationException(NOT_HIERARCHICAL);
 		}
 		if (key == null) {
-		  throw new NullPointerException("key");
+			throw new NullPointerException("key");
 		}
 
 		String query = getEncodedQuery();
@@ -1607,11 +1615,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			}
 
 			if (separator - start == encodedKey.length()
-					&& query.regionMatches(start, encodedKey, 0, encodedKey.length())) {
+			    && query.regionMatches(start, encodedKey, 0, encodedKey.length())) {
 				if (separator == end) {
-				  values.add("");
+					values.add("");
 				} else {
-				  values.add(decode(query.substring(separator + 1, end)));
+					values.add(decode(query.substring(separator + 1, end)));
 				}
 			}
 
@@ -1663,7 +1671,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			}
 
 			if (separator - start == encodedKey.length()
-					&& query.regionMatches(start, encodedKey, 0, encodedKey.length())) {
+			    && query.regionMatches(start, encodedKey, 0, encodedKey.length())) {
 				if (separator == end) {
 					return "";
 				} else {
@@ -1723,9 +1731,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 */
 	public Uri normalizeScheme() {
 		String scheme = getScheme();
-		if (scheme == null) return this;  // give up
+		if (scheme == null)
+			return this; // give up
 		String lowerScheme = scheme.toLowerCase(Locale.ROOT);
-		if (scheme.equals(lowerScheme)) return this;  // no change
+		if (scheme.equals(lowerScheme))
+			return this; // no change
 
 		return buildUpon().scheme(lowerScheme).build();
 	}
@@ -1779,7 +1789,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			// Find the next character which needs to be encoded.
 			int nextToEncode = current;
 			while (nextToEncode < oldLength
-					&& isAllowed(s.charAt(nextToEncode), allow)) {
+			       && isAllowed(s.charAt(nextToEncode), allow)) {
 				nextToEncode++;
 			}
 
@@ -1812,7 +1822,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			current = nextToEncode;
 			int nextAllowed = current + 1;
 			while (nextAllowed < oldLength
-					&& !isAllowed(s.charAt(nextAllowed), allow)) {
+			       && !isAllowed(s.charAt(nextAllowed), allow)) {
 				nextAllowed++;
 			}
 
@@ -1848,10 +1858,10 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 */
 	private static boolean isAllowed(char c, String allow) {
 		return (c >= 'A' && c <= 'Z')
-				|| (c >= 'a' && c <= 'z')
-				|| (c >= '0' && c <= '9')
-				|| "_-!.~'()*".indexOf(c) != NOT_FOUND
-				|| (allow != null && allow.indexOf(c) != NOT_FOUND);
+		    || (c >= 'a' && c <= 'z')
+		    || (c >= '0' && c <= '9')
+		    || "_-!.~'()*".indexOf(c) != NOT_FOUND
+		    || (allow != null && allow.indexOf(c) != NOT_FOUND);
 	}
 
 	/**
@@ -1868,7 +1878,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			return null;
 		}
 		return UriCodec.decode(
-				s, false /* convertPlus */, StandardCharsets.UTF_8, false /* throwOnFailure */);
+		    s, false /* convertPlus */, StandardCharsets.UTF_8, false /* throwOnFailure */);
 	}
 
 	/**
@@ -1971,7 +1981,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			if (decoded == null) {
 				return NULL;
 			}
-			if (decoded .length() == 0) {
+			if (decoded.length() == 0) {
 				return EMPTY;
 			}
 
@@ -2049,8 +2059,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 				// This check keeps us from adding a segment if the path starts
 				// '/' and an empty segment for "//".
 				if (previous < current) {
-					String decodedSegment
-							= decode(path.substring(previous, current));
+					String decodedSegment = decode(path.substring(previous, current));
 					segmentBuilder.add(decodedSegment);
 				}
 				previous = current + 1;
@@ -2065,7 +2074,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 		}
 
 		static PathPart appendEncodedSegment(PathPart oldPart,
-				String newSegment) {
+		                                     String newSegment) {
 			// If there is no old path, should we make the new path relative
 			// or absolute? I pick absolute.
 
@@ -2150,20 +2159,21 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 			String oldPath = encodedCached ? oldPart.encoded : oldPart.decoded;
 
 			if (oldPath == null || oldPath.length() == 0
-					|| oldPath.startsWith("/")) {
+			    || oldPath.startsWith("/")) {
 				return oldPart;
 			}
 
 			// Prepend encoded string if present.
 			String newEncoded = encodedCached
-					? "/" + oldPart.encoded : NotCachedHolder.NOT_CACHED;
+			                      ? "/" + oldPart.encoded
+			                      : NotCachedHolder.NOT_CACHED;
 
 			// Prepend decoded string if present.
 			@SuppressWarnings("StringEquality")
 			boolean decodedCached = oldPart.decoded != NotCachedHolder.NOT_CACHED;
 			String newDecoded = decodedCached
-					? "/" + oldPart.decoded
-					: NotCachedHolder.NOT_CACHED;
+			                      ? "/" + oldPart.decoded
+			                      : NotCachedHolder.NOT_CACHED;
 
 			return new PathPart(newEncoded, newDecoded);
 		}
@@ -2204,13 +2214,13 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
 			if (Environment.isExternalStorageEmulated()) {
 				final String legacyPath = Environment.getLegacyExternalStorageDirectory()
-						.toString();
+				                              .toString();
 
 				// Splice in user-specific path when legacy path is found
 				if (canonicalPath.startsWith(legacyPath)) {
 					return Uri.fromFile(new File(
-							Environment.getExternalStorageDirectory().toString(),
-							canonicalPath.substring(legacyPath.length() + 1)));
+					    Environment.getExternalStorageDirectory().toString(),
+					    canonicalPath.substring(legacyPath.length() + 1)));
 				}
 			}
 
@@ -2227,14 +2237,17 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 	 * @hide
 	 */
 	public boolean isPathPrefixMatch(Uri prefix) {
-		if (!Objects.equals(getScheme(), prefix.getScheme())) return false;
-		if (!Objects.equals(getAuthority(), prefix.getAuthority())) return false;
+		if (!Objects.equals(getScheme(), prefix.getScheme()))
+			return false;
+		if (!Objects.equals(getAuthority(), prefix.getAuthority()))
+			return false;
 
 		List<String> seg = getPathSegments();
 		List<String> prefixSeg = prefix.getPathSegments();
 
 		final int prefixSize = prefixSeg.size();
-		if (seg.size() < prefixSize) return false;
+		if (seg.size() < prefixSize)
+			return false;
 
 		for (int i = 0; i < prefixSize; i++) {
 			if (!Objects.equals(seg.get(i), prefixSeg.get(i))) {

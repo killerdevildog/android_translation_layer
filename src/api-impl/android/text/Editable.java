@@ -24,4 +24,7 @@ public interface Editable extends CharSequence {
 
 	public Editable insert(int where, CharSequence text);
 
+	public void clear();
+
+	public <T> T[] getSpans(int queryStart, int queryEnd, Class<T> kind);
 }

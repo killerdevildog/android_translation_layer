@@ -143,7 +143,7 @@ public interface ExpandableListAdapter {
 	 * @return the View corresponding to the child at the specified position
 	 */
 	View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-			  View convertView, ViewGroup parent);
+	                  View convertView, ViewGroup parent);
 
 	/**
 	 * Whether the child at the specified position is selectable.

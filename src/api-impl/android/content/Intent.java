@@ -7,13 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import org.xmlpull.v1.XmlPullParser;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import org.xmlpull.v1.XmlPullParser;
 
 public class Intent implements Parcelable {
 	public static final int FLAG_ACTIVITY_CLEAR_TOP = 1 << 26;
@@ -692,7 +691,7 @@ public class Intent implements Parcelable {
 		return data;
 	}
 
-	public String getDataString () {
+	public String getDataString() {
 		if (data == null)
 			return "";
 
@@ -889,5 +888,13 @@ public class Intent implements Parcelable {
 
 	public long[] getLongArrayExtra(String name) {
 		return extras.getLongArray(name);
+	}
+
+	public ArrayList<Integer> getIntegerArrayListExtra(String name) {
+		return extras.getIntegerArrayList(name);
+	}
+
+	public int[] getIntArrayExtra(String name) {
+		return extras.getIntArray(name);
 	}
 }

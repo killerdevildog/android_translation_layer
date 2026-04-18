@@ -1,5 +1,5 @@
-#include "../util.h"
 #include "../defines.h"
+#include "../util.h"
 
 #include "mpris-dbus.h"
 
@@ -10,7 +10,7 @@
 
 MediaPlayer2Player *mpris_player = NULL;
 static jobject callback = NULL;
-static jlong last_position = 0;  // playback_position - SystemClock.elapsedRealtime in ms
+static jlong last_position = 0; // playback_position - SystemClock.elapsedRealtime in ms
 
 static gboolean on_media_player_handle_action(MediaPlayer2Player *mpris_player, GDBusMethodInvocation *invocation, char *method)
 {
@@ -49,14 +49,14 @@ static gboolean on_media_player_handle_set_position(MediaPlayer2Player *mpris_pl
 	return TRUE;
 }
 
-#define ACTION_PAUSE (1 << 1)
-#define ACTION_PLAY (1 << 2)
+#define ACTION_PAUSE            (1 << 1)
+#define ACTION_PLAY             (1 << 2)
 #define ACTION_SKIP_TO_PREVIOUS (1 << 4)
-#define ACTION_SKIP_TO_NEXT (1 << 5)
-#define ACTION_SEEK_TO (1 << 8)
+#define ACTION_SKIP_TO_NEXT     (1 << 5)
+#define ACTION_SEEK_TO          (1 << 8)
 
 JNIEXPORT void JNICALL Java_android_media_session_MediaSession_nativeSetState(JNIEnv *env, jobject this, jint state,
-		jlong actions, jlong position, jlong update_time, jstring title_str, jstring artist_str, jstring art_url_str)
+                                                                              jlong actions, jlong position, jlong update_time, jstring title_str, jstring artist_str, jstring art_url_str)
 {
 	const char *playback_states[] = {"None", "Stopped", "Paused", "Playing"};
 	if (!mpris_player) {

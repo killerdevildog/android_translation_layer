@@ -272,9 +272,7 @@ public class DisplayMetrics {
 
 	@Override
 	public String toString() {
-		return "DisplayMetrics{density=" + density + ", width=" + widthPixels +
-		    ", height=" + heightPixels + ", scaledDensity=" + scaledDensity +
-		    ", xdpi=" + xdpi + ", ydpi=" + ydpi + "}";
+		return "DisplayMetrics{density=" + density + ", width=" + widthPixels + ", height=" + heightPixels + ", scaledDensity=" + scaledDensity + ", xdpi=" + xdpi + ", ydpi=" + ydpi + "}";
 	}
 
 	private static int getDeviceDensity() {

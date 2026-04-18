@@ -169,6 +169,38 @@ JNIEXPORT void JNICALL Java_android_text_Layout_native_1draw_1custom_1canvas
 
 /*
  * Class:     android_text_Layout
+ * Method:    native_get_line_for_offset
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_android_text_Layout_native_1get_1line_1for_1offset
+  (JNIEnv *, jobject, jlong, jint);
+
+/*
+ * Class:     android_text_Layout
+ * Method:    native_get_primary_horizontal
+ * Signature: (JI)F
+ */
+JNIEXPORT jfloat JNICALL Java_android_text_Layout_native_1get_1primary_1horizontal
+  (JNIEnv *, jobject, jlong, jint);
+
+/*
+ * Class:     android_text_Layout
+ * Method:    native_get_secondary_horizontal
+ * Signature: (JI)F
+ */
+JNIEXPORT jfloat JNICALL Java_android_text_Layout_native_1get_1secondary_1horizontal
+  (JNIEnv *, jobject, jlong, jint);
+
+/*
+ * Class:     android_text_Layout
+ * Method:    native_get_offset_for_horizontal
+ * Signature: (JIF)I
+ */
+JNIEXPORT jint JNICALL Java_android_text_Layout_native_1get_1offset_1for_1horizontal
+  (JNIEnv *, jobject, jlong, jint, jfloat);
+
+/*
+ * Class:     android_text_Layout
  * Method:    native_get_desired_width
  * Signature: (J)F
  */

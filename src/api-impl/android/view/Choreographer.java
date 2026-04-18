@@ -144,9 +144,8 @@ public final class Choreographer {
 		}
 	}
 	private static float getRefreshRate() {
-/*		DisplayInfo di = DisplayManagerGlobal.getInstance().getDisplayInfo(
-		    Display.DEFAULT_DISPLAY);*/
-		return 60/*di.refreshRate*/; // FIXME
+		/*DisplayInfo di = DisplayManagerGlobal.getInstance().getDisplayInfo(Display.DEFAULT_DISPLAY);*/
+		return 60 /*di.refreshRate*/; // FIXME
 	}
 	/**
 	 * Gets the choreographer for the calling thread.  Must be called from
@@ -251,7 +250,7 @@ public final class Choreographer {
 	 * @hide
 	 */
 	public void postCallbackDelayed(int callbackType,
-					Runnable action, Object token, long delayMillis) {
+	                                Runnable action, Object token, long delayMillis) {
 		if (action == null) {
 			throw new IllegalArgumentException("action must not be null");
 		}
@@ -261,7 +260,7 @@ public final class Choreographer {
 		postCallbackDelayedInternal(callbackType, action, token, delayMillis);
 	}
 	private void postCallbackDelayedInternal(int callbackType,
-						 Object action, Object token, long delayMillis) {
+	                                         Object action, Object token, long delayMillis) {
 		if (DEBUG) {
 			Log.d(TAG, "PostCallback: type=" + callbackType + ", action=" + action + ", token=" + token + ", delayMillis=" + delayMillis);
 		}
@@ -340,7 +339,7 @@ public final class Choreographer {
 			throw new IllegalArgumentException("callback must not be null");
 		}
 		postCallbackDelayedInternal(CALLBACK_ANIMATION,
-					    callback, FRAME_CALLBACK_TOKEN, delayMillis);
+		                            callback, FRAME_CALLBACK_TOKEN, delayMillis);
 	}
 	/**
 	 * Removes a previously posted frame callback.
@@ -396,7 +395,7 @@ public final class Choreographer {
 		synchronized (mLock) {
 			if (!mCallbacksRunning) {
 				throw new IllegalStateException("This method must only be called as "
-								+ "part of a callback while a frame is in progress.");
+				                                + "part of a callback while a frame is in progress.");
 			}
 			return USE_FRAME_TIME ? mLastFrameTimeNanos : System.nanoTime();
 		}
@@ -426,23 +425,23 @@ public final class Choreographer {
 				final long skippedFrames = jitterNanos / mFrameIntervalNanos;
 				if (skippedFrames >= SKIPPED_FRAME_WARNING_LIMIT) {
 					Log.i(TAG, "Skipped " + skippedFrames + " frames!  "
-						       + "The application may be doing too much work on its main thread.");
+					           + "The application may be doing too much work on its main thread.");
 				}
 				final long lastFrameOffset = jitterNanos % mFrameIntervalNanos;
 				if (DEBUG) {
 					Log.d(TAG, "Missed vsync by " + (jitterNanos * 0.000001f) + " ms "
-						       + "which is more than the frame interval of " + (mFrameIntervalNanos * 0.000001f) + " ms!  "
-						       + "Skipping " + skippedFrames + " frames and setting frame "
-						       + "time to " + (lastFrameOffset * 0.000001f) + " ms in the past.");
+					           + "which is more than the frame interval of " + (mFrameIntervalNanos * 0.000001f) + " ms!  "
+					           + "Skipping " + skippedFrames + " frames and setting frame "
+					           + "time to " + (lastFrameOffset * 0.000001f) + " ms in the past.");
 				}
 				frameTimeNanos = startNanos - lastFrameOffset;
 			}
 			if (frameTimeNanos < mLastFrameTimeNanos) {
 				if (DEBUG) {
 					Log.d(TAG, "Frame time appears to be going backwards.  May be due to a "
-						       + "previously skipped frame.  Waiting for next vsync.");
+					           + "previously skipped frame.  Waiting for next vsync.");
 				}
-//				scheduleVsyncLocked();
+				//scheduleVsyncLocked();
 				return;
 			}
 			mFrameScheduled = false;
@@ -561,7 +560,7 @@ public final class Choreographer {
 					break;
 				case MSG_DO_SCHEDULE_VSYNC:
 					Log.d(TAG, "VSYNC not supported!");
-//					doScheduleVsync();
+					//doScheduleVsync();
 					break;
 				case MSG_DO_SCHEDULE_CALLBACK:
 					doScheduleCallback(msg.arg1);

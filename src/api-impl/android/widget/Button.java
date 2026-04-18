@@ -29,7 +29,7 @@ public class Button extends TextView {
 			setText(a.getText(com.android.internal.R.styleable.TextView_text));
 		}
 
-		if(getBackground() != null){
+		if (getBackground() != null) {
 			native_addClass(widget, "ATL-no-border");
 		}
 		a.recycle();
@@ -58,5 +58,4 @@ public class Button extends TextView {
 		compoundDrawableLeft = left;
 		native_setCompoundDrawables(widget, left != null ? left.paintable : 0);
 	}
-
 }

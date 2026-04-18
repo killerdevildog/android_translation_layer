@@ -484,8 +484,8 @@ final class StringBlock {
 	}
 
 	private static native int nativeCreate(byte[] data,
-					       int offset,
-					       int size);
+	                                       int offset,
+	                                       int size);
 	private static native int nativeGetSize(int obj);
 	private static native String nativeGetString(int obj, int idx);
 	private static native int[] nativeGetStyle(int obj, int idx);

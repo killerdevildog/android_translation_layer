@@ -148,7 +148,7 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 		nextFrame(false);
 	}
 
-//	@Override
+	//@Override
 	public void unscheduleSelf(Runnable what) {
 		mCurFrame = -1;
 		super.unscheduleSelf(what);
@@ -230,8 +230,8 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 		}
 	}
 
-//	@Override
-/*	public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs)
+	//@Override
+	/*public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs)
 	    throws XmlPullParserException, IOException {
 
 		TypedArray a = obtainAttributes(r, theme, attrs,
@@ -252,8 +252,8 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 
 		final int innerDepth = parser.getDepth() + 1;
 		int depth;
-		while ((type = parser.next()) != XmlPullParser.END_DOCUMENT &&
-		       ((depth = parser.getDepth()) >= innerDepth || type != XmlPullParser.END_TAG)) {
+		while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+		       && ((depth = parser.getDepth()) >= innerDepth || type != XmlPullParser.END_TAG)) {
 			if (type != XmlPullParser.START_TAG) {
 				continue;
 			}
@@ -298,7 +298,7 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 
 		setFrame(0, true, false);
 	}
-*/
+	*/
 	@Override
 	public Drawable mutate() {
 		if (!mMutated && super.mutate() == this) {
@@ -313,7 +313,7 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 		private boolean mOneShot;
 
 		AnimationState(AnimationState orig, AnimationDrawable owner,
-			       Resources res) {
+		               Resources res) {
 			super(orig, owner, res);
 
 			if (orig != null) {
@@ -325,12 +325,12 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 			}
 		}
 
-//		@Override
+		//@Override
 		public Drawable newDrawable() {
 			return new AnimationDrawable(this, null);
 		}
 
-//		@Override
+		//@Override
 		public Drawable newDrawable(Resources res) {
 			return new AnimationDrawable(this, res);
 		}

@@ -17,11 +17,10 @@
 package android.test;
 
 import android.util.Log;
-import junit.framework.Test;
-import junit.framework.TestListener;
-
 import java.util.HashSet;
 import java.util.Set;
+import junit.framework.Test;
+import junit.framework.TestListener;
 
 /**
  * Prints the test progress to stdout. Android includes a default
@@ -35,63 +34,62 @@ import java.util.Set;
 @Deprecated
 class TestPrinter implements TestListener {
 
-    private String mTag;
-    private boolean mOnlyFailures;
-    private Set<String> mFailedTests = new HashSet<String>();
+	private String mTag;
+	private boolean mOnlyFailures;
+	private Set<String> mFailedTests = new HashSet<String>();
 
+	TestPrinter(String tag, boolean onlyFailures) {
+		mTag = tag;
+		mOnlyFailures = onlyFailures;
+	}
 
-    TestPrinter(String tag, boolean onlyFailures) {
-        mTag = tag;
-        mOnlyFailures = onlyFailures;
-    }
+	private void started(String className) {
+		if (!mOnlyFailures) {
+			Log.i(mTag, "started: " + className);
+		}
+	}
 
-    private void started(String className) {
-        if (!mOnlyFailures) {
-            Log.i(mTag, "started: " + className);
-        }
-    }
+	private void finished(String className) {
+		if (!mOnlyFailures) {
+			Log.i(mTag, "finished: " + className);
+		}
+	}
 
-    private void finished(String className) {
-        if (!mOnlyFailures) {
-            Log.i(mTag, "finished: " + className);
-        }
-    }
+	private void passed(String className) {
+		if (!mOnlyFailures) {
+			Log.i(mTag, "passed: " + className);
+		}
+	}
 
-    private void passed(String className) {
-        if (!mOnlyFailures) {
-            Log.i(mTag, "passed: " + className);
-        }
-    }
+	private void failed(String className, Throwable exception) {
+		Log.i(mTag, "failed: " + className);
+		Log.i(mTag, "----- begin exception -----");
+		Log.i(mTag, "", exception);
+		Log.i(mTag, "----- end exception -----");
+	}
 
-    private void failed(String className, Throwable exception) {
-        Log.i(mTag, "failed: " + className);
-        Log.i(mTag, "----- begin exception -----");
-        Log.i(mTag, "", exception);
-        Log.i(mTag, "----- end exception -----");
-    }
+	private void failed(Test test, Throwable t) {
+		mFailedTests.add(test.toString());
+		failed(test.toString(), t);
+	}
 
-    private void failed(Test test, Throwable t) {
-        mFailedTests.add(test.toString());
-        failed(test.toString(), t);
-    }
+	public void addError(Test test, Throwable t) {
+		failed(test, t);
+	}
 
-    public void addError(Test test, Throwable t) {
-        failed(test, t);
-    }
+	public void addFailure(Test test, junit.framework.AssertionFailedError t) {
+		failed(test, t);
+	}
 
-    public void addFailure(Test test, junit.framework.AssertionFailedError t) {
-        failed(test, t);
-    }
+	public void endTest(Test test) {
+		finished(test.toString());
+		if (!mFailedTests.contains(test.toString())) {
+			passed(test.toString());
+		}
+		mFailedTests.remove(test.toString());
+	}
 
-    public void endTest(Test test) {
-        finished(test.toString());
-        if (!mFailedTests.contains(test.toString())) {
-            passed(test.toString());
-        }
-        mFailedTests.remove(test.toString());
-    }
-
-    public void startTest(Test test) {
-        started(test.toString());
-    }
+	public void startTest(Test test) {
+		started(test.toString());
+	}
 }

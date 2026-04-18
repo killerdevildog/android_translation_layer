@@ -43,7 +43,7 @@ public class RectShape extends Shape {
 	public void getOutline(Outline outline) {
 		final RectF rect = rect();
 		outline.setRect((int)Math.ceil(rect.left), (int)Math.ceil(rect.top),
-				(int)Math.floor(rect.right), (int)Math.floor(rect.bottom));
+		                (int)Math.floor(rect.right), (int)Math.floor(rect.bottom));
 	}
 
 	@Override

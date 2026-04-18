@@ -197,7 +197,7 @@ public abstract class AsyncTask<Params, Progress, Result> {
 	 * An {@link Executor} that can be used to execute tasks in parallel.
 	 */
 	public static final Executor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-										   TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+	                                                                           TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
 	/**
 	 * An {@link Executor} that executes tasks one at a time in serial
@@ -301,7 +301,7 @@ public abstract class AsyncTask<Params, Progress, Result> {
 					android.util.Log.w(LOG_TAG, e);
 				} catch (ExecutionException e) {
 					throw new RuntimeException("An error occured while executing doInBackground()",
-								   e.getCause());
+					                           e.getCause());
 				} catch (CancellationException e) {
 					postResultIfNotInvoked(null);
 				}
@@ -319,7 +319,7 @@ public abstract class AsyncTask<Params, Progress, Result> {
 	private Result postResult(Result result) {
 		@SuppressWarnings("unchecked")
 		Message message = sHandler.obtainMessage(MESSAGE_POST_RESULT,
-							 new AsyncTaskResult<Result>(this, result));
+		                                         new AsyncTaskResult<Result>(this, result));
 		message.sendToTarget();
 		return result;
 	}
@@ -572,16 +572,16 @@ public abstract class AsyncTask<Params, Progress, Result> {
 	 * @see #execute(Object[])
 	 */
 	public final AsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec,
-									   Params... params) {
+	                                                                   Params... params) {
 		if (mStatus != Status.PENDING) {
 			switch (mStatus) {
 				case RUNNING:
 					throw new IllegalStateException("Cannot execute task:"
-									+ " the task is already running.");
+					                                + " the task is already running.");
 				case FINISHED:
 					throw new IllegalStateException("Cannot execute task:"
-									+ " the task has already been executed "
-									+ "(a task can be executed only once)");
+					                                + " the task has already been executed "
+					                                + "(a task can be executed only once)");
 			}
 		}
 
@@ -624,7 +624,7 @@ public abstract class AsyncTask<Params, Progress, Result> {
 	protected final void publishProgress(Progress... values) {
 		if (!isCancelled()) {
 			sHandler.obtainMessage(MESSAGE_POST_PROGRESS,
-					       new AsyncTaskResult<Progress>(this, values))
+			                       new AsyncTaskResult<Progress>(this, values))
 			    .sendToTarget();
 		}
 	}

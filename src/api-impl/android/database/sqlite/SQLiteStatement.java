@@ -66,7 +66,7 @@ public final class SQLiteStatement extends SQLiteProgram {
 		acquireReference();
 		try {
 			return getSession().executeForChangedRowCount(
-					getSql(), getBindArgs(), getConnectionFlags(), null);
+			    getSql(), getBindArgs(), getConnectionFlags(), null);
 		} catch (SQLiteDatabaseCorruptException ex) {
 			onCorruption();
 			throw ex;
@@ -88,7 +88,7 @@ public final class SQLiteStatement extends SQLiteProgram {
 		acquireReference();
 		try {
 			return getSession().executeForLastInsertedRowId(
-					getSql(), getBindArgs(), getConnectionFlags(), null);
+			    getSql(), getBindArgs(), getConnectionFlags(), null);
 		} catch (SQLiteDatabaseCorruptException ex) {
 			onCorruption();
 			throw ex;
@@ -109,7 +109,7 @@ public final class SQLiteStatement extends SQLiteProgram {
 		acquireReference();
 		try {
 			return getSession().executeForLong(
-					getSql(), getBindArgs(), getConnectionFlags(), null);
+			    getSql(), getBindArgs(), getConnectionFlags(), null);
 		} catch (SQLiteDatabaseCorruptException ex) {
 			onCorruption();
 			throw ex;
@@ -130,7 +130,7 @@ public final class SQLiteStatement extends SQLiteProgram {
 		acquireReference();
 		try {
 			return getSession().executeForString(
-					getSql(), getBindArgs(), getConnectionFlags(), null);
+			    getSql(), getBindArgs(), getConnectionFlags(), null);
 		} catch (SQLiteDatabaseCorruptException ex) {
 			onCorruption();
 			throw ex;
@@ -151,7 +151,7 @@ public final class SQLiteStatement extends SQLiteProgram {
 		acquireReference();
 		try {
 			return getSession().executeForBlobFileDescriptor(
-					getSql(), getBindArgs(), getConnectionFlags(), null);
+			    getSql(), getBindArgs(), getConnectionFlags(), null);
 		} catch (SQLiteDatabaseCorruptException ex) {
 			onCorruption();
 			throw ex;

@@ -275,7 +275,7 @@ public class KeyCharacterMap {
 
 	private static native char nativeGetCharacter(int ptr, int keyCode, int metaState);
 	private static native boolean nativeGetFallbackAction(int ptr, int keyCode, int metaState,
-							      FallbackAction outFallbackAction);
+	                                                      FallbackAction outFallbackAction);
 	private static native char nativeGetNumber(int ptr, int keyCode);
 	private static native char nativeGetMatch(int ptr, int keyCode, char[] chars, int metaState);
 	private static native char nativeGetDisplayLabel(int ptr, int keyCode);
@@ -297,7 +297,7 @@ public class KeyCharacterMap {
 	 * is missing from the system.
 	 */
 	public static KeyCharacterMap load(int deviceId) {
-/*		final InputManager im = InputManager.getInstance();
+		/*final InputManager im = InputManager.getInstance();
 		InputDevice inputDevice = im.getInputDevice(deviceId);
 		if (inputDevice == null) {
 			inputDevice = im.getInputDevice(VIRTUAL_KEYBOARD);
@@ -476,8 +476,8 @@ public class KeyCharacterMap {
 				sDeadKeyBuilder.append((char)combining);
 				String result = Normalizer.normalize(sDeadKeyBuilder, Normalizer.Form.NFC);
 				combined = result.codePointCount(0, result.length()) == 1
-					       ? result.codePointAt(0)
-					       : 0;
+				             ? result.codePointAt(0)
+				             : 0;
 				sDeadKeyCache.put(combination, combined);
 			}
 		}
@@ -545,7 +545,7 @@ public class KeyCharacterMap {
 		results.meta[1] = nativeGetCharacter(mPtr, keyCode, KeyEvent.META_SHIFT_ON);
 		results.meta[2] = nativeGetCharacter(mPtr, keyCode, KeyEvent.META_ALT_ON);
 		results.meta[3] = nativeGetCharacter(mPtr, keyCode,
-						     KeyEvent.META_ALT_ON | KeyEvent.META_SHIFT_ON);
+		                                     KeyEvent.META_ALT_ON | KeyEvent.META_SHIFT_ON);
 		return true;
 	}
 
@@ -664,7 +664,7 @@ public class KeyCharacterMap {
 	 * @return True if at least one attached keyboard supports the specified key code.
 	 */
 	public static boolean deviceHasKey(int keyCode) {
-//		return InputManager.getInstance().deviceHasKeys(new int[] {keyCode})[0];
+		//return InputManager.getInstance().deviceHasKeys(new int[] {keyCode})[0];
 		return false;
 	}
 
@@ -679,7 +679,7 @@ public class KeyCharacterMap {
 	 * at the same index in the key codes array.
 	 */
 	public static boolean[] deviceHasKeys(int[] keyCodes) {
-//		return InputManager.getInstance().deviceHasKeys(keyCodes);
+		//return InputManager.getInstance().deviceHasKeys(keyCodes);
 		System.out.println("deviceHasKeys: FIXME");
 		return null;
 	}

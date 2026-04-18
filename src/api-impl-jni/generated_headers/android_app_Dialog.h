@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     android_app_Dialog
  * Method:    nativeInit
- * Signature: (Z)J
+ * Signature: ()J
  */
 JNIEXPORT jlong JNICALL Java_android_app_Dialog_nativeInit
-  (JNIEnv *, jobject, jboolean);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     android_app_Dialog

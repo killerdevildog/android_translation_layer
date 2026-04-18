@@ -27,5 +27,4 @@ public class Fragment {
 	public Activity getActivity() {
 		return activity;
 	}
-
 }

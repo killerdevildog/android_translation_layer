@@ -20,10 +20,9 @@
 
 package android.database.sqlite;
 
-import java.util.ArrayList;
-
 import android.util.Log;
 import android.util.Printer;
+import java.util.ArrayList;
 
 /**
  * Provides debugging info about all SQLite databases running in the current process.
@@ -39,7 +38,7 @@ public final class SQLiteDebug {
 	 * Enable using "adb shell setprop log.tag.SQLiteLog VERBOSE".
 	 */
 	public static final boolean DEBUG_SQL_LOG =
-			Log.isLoggable("SQLiteLog", Log.VERBOSE);
+	    Log.isLoggable("SQLiteLog", Log.VERBOSE);
 
 	/**
 	 * Controls the printing of SQL statements as they are executed.
@@ -47,7 +46,7 @@ public final class SQLiteDebug {
 	 * Enable using "adb shell setprop log.tag.SQLiteStatements VERBOSE".
 	 */
 	public static final boolean DEBUG_SQL_STATEMENTS =
-			Log.isLoggable("SQLiteStatements", Log.VERBOSE);
+	    Log.isLoggable("SQLiteStatements", Log.VERBOSE);
 
 	/**
 	 * Controls the printing of wall-clock time taken to execute SQL statements
@@ -56,7 +55,7 @@ public final class SQLiteDebug {
 	 * Enable using "adb shell setprop log.tag.SQLiteTime VERBOSE".
 	 */
 	public static final boolean DEBUG_SQL_TIME =
-			Log.isLoggable("SQLiteTime", Log.VERBOSE);
+	    Log.isLoggable("SQLiteTime", Log.VERBOSE);
 
 	/**
 	 * True to enable database performance testing instrumentation.
@@ -82,8 +81,7 @@ public final class SQLiteDebug {
 	 */
 	public static final boolean shouldLogSlowQuery(long elapsedTimeMillis) {
 		int slowQueryMillis = Integer.parseInt(
-			System.getProperty("db.log.slow_query_threshold", "10000")
-		);
+		    System.getProperty("db.log.slow_query_threshold", "10000"));
 		return slowQueryMillis >= 0 && elapsedTimeMillis >= slowQueryMillis;
 	}
 
@@ -138,7 +136,7 @@ public final class SQLiteDebug {
 		public String cache;
 
 		public DbStats(String dbName, long pageCount, long pageSize, int lookaside,
-			int hits, int misses, int cachesize) {
+		               int hits, int misses, int cachesize) {
 			this.dbName = dbName;
 			this.pageSize = pageSize / 1024;
 			dbSize = (pageCount * pageSize) / 1024;

@@ -25,7 +25,6 @@ import android.util.Xml;
 import java.io.FileReader;
 import java.lang.reflect.Constructor;
 import java.util.LinkedList;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -36,7 +35,7 @@ public class LayoutInflater {
 	/* pretty print for debugging */
 	private int indent = 1;
 	private String tabs(int indent) {
-		return indent > 0 ? String.format("%"+indent+"s", "").replace(" ", "\t") : "";
+		return indent > 0 ? String.format("%" + indent + "s", "").replace(" ", "\t") : "";
 	}
 
 	public interface Factory {
@@ -54,19 +53,30 @@ public class LayoutInflater {
 		this.context = context;
 	}
 
+	public LayoutInflater(LayoutInflater original, Context context) {
+		this.context = context;
+		this.factories.addAll(original.factories);
+		this.mFactory = original.mFactory;
+		this.mFactory2 = original.mFactory2;
+	}
+
 	private Factory mFactory;
 
 	public final LayoutInflater.Factory getFactory() {
 		return mFactory;
 	}
 
-	public void setFactory(LayoutInflater.Factory factory){
+	public void setFactory(LayoutInflater.Factory factory) {
 		mFactory = factory;
 	}
 
 	public void setFactory2(Factory2 factory) {
 		this.mFactory2 = factory;
 		factories.addFirst(factory);
+	}
+
+	public Factory2 getFactory2() {
+		return mFactory2;
 	}
 
 	public static LayoutInflater from(Context context) {
@@ -76,13 +86,13 @@ public class LayoutInflater {
 	public final View createView(String name, String prefix, AttributeSet attrs) throws Exception {
 		Slog.v(TAG, tabs(indent) + "createView(" + name + ", " + prefix + ", " + attrs + ");");
 
-		String view_class_name = prefix!=null ? prefix + name : name;
+		String view_class_name = prefix != null ? prefix + name : name;
 		Class view_class = Class.forName(view_class_name);
 
 		Constructor constructor = view_class.getConstructor(Context.class, AttributeSet.class);
 
 		Context context = this.context;
-		final TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{com.android.internal.R.attr.theme});
+		final TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {com.android.internal.R.attr.theme});
 		final int themeResId = ta.getResourceId(0, 0);
 		if (themeResId != 0) {
 			context = new ContextThemeWrapper(context, themeResId);
@@ -167,8 +177,8 @@ public class LayoutInflater {
 
 		// Look for the root node.
 		int type;
-		while ((type = parser.next()) != XmlPullParser.START_TAG &&
-		       type != XmlPullParser.END_DOCUMENT) {
+		while ((type = parser.next()) != XmlPullParser.START_TAG
+		       && type != XmlPullParser.END_DOCUMENT) {
 			// Empty
 		}
 
@@ -206,7 +216,6 @@ public class LayoutInflater {
 				// Create layout params that match root, if supplied
 				try {
 					params = root.generateLayoutParams(attrs);
-					params.resolveLayoutDirection(root.getLayoutDirection());
 					if (!attachToRoot) {
 						// Set the layout params for temp if we are not
 						// attaching. (If we are, we use addView, below)
@@ -245,9 +254,9 @@ public class LayoutInflater {
 		int type;
 
 		indent++; // prettyprint for debugging
-		while (((type = parser.next()) != XmlPullParser.END_TAG ||
-		       parser.getDepth() > depth) &&
-		       type != XmlPullParser.END_DOCUMENT) {
+		while (((type = parser.next()) != XmlPullParser.END_TAG
+		        || parser.getDepth() > depth)
+		       && type != XmlPullParser.END_DOCUMENT) {
 
 			if (type != XmlPullParser.START_TAG) {
 				continue;
@@ -281,7 +290,6 @@ public class LayoutInflater {
 				} catch (RuntimeException e) {
 					params = viewGroup.generateDefaultLayoutParams();
 				}
-				params.resolveLayoutDirection(viewGroup.getLayoutDirection());
 				rInflate(parser, view, attrs, true);
 				viewGroup.addView(view, params);
 			}
@@ -300,8 +308,8 @@ public class LayoutInflater {
 		final XmlResourceParser childParser = context.getResources().getLayout(layout);
 		final AttributeSet childAttrs = Xml.asAttributeSet(childParser);
 
-		while ((type = childParser.next()) != XmlPullParser.START_TAG &&
-			type != XmlPullParser.END_DOCUMENT) {
+		while ((type = childParser.next()) != XmlPullParser.START_TAG
+		       && type != XmlPullParser.END_DOCUMENT) {
 			// Empty.
 		}
 		if (type != XmlPullParser.START_TAG) {
@@ -325,12 +333,11 @@ public class LayoutInflater {
 			if (params == null) {
 				params = group.generateLayoutParams(childAttrs);
 			}
-			params.resolveLayoutDirection(group.getLayoutDirection());
 			view.setLayoutParams(params);
 			// Inflate all children.
 			rInflate(childParser, view, childAttrs, true);
 
-			TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{com.android.internal.R.attr.id});
+			TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {com.android.internal.R.attr.id});
 			int id = ta.getResourceId(0, 0);
 			if (id != 0)
 				view.setId(id);

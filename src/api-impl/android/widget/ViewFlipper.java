@@ -12,5 +12,4 @@ public class ViewFlipper extends ViewAnimator {
 	public ViewFlipper(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-	
 }

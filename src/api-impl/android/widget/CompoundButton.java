@@ -28,6 +28,8 @@ public abstract class CompoundButton extends Button implements Checkable {
 
 	@Override
 	protected native long native_constructor(Context context, AttributeSet attrs);
+	@Override
+	public native void native_setText(long widget, String text);
 
 	public static interface OnCheckedChangeListener {
 		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked);
@@ -48,8 +50,6 @@ public abstract class CompoundButton extends Button implements Checkable {
 	// following methods are overridden to prevent calling incompatible methods from superclasses
 	@Override
 	public void setOnClickListener(final OnClickListener l) {}
-	@Override
-	public void setText(CharSequence text) {}
 	@Override
 	public void setTextColor(int color) {}
 	@Override

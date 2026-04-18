@@ -28,7 +28,7 @@ public class DataSetObservable extends Observable<DataSetObserver> {
 	 * will obtain the new contents the next time it queries the data set.
 	 */
 	public void notifyChanged() {
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			// since onChanged() is implemented by the app, it could do anything, including
 			// removing itself from {@link mObservers} - and that could cause problems if
 			// an iterator is used on the ArrayList {@link mObservers}.

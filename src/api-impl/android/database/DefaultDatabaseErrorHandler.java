@@ -20,13 +20,12 @@
 
 package android.database;
 
-import java.io.File;
-import java.util.List;
-
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import android.util.Pair;
+import java.io.File;
+import java.util.List;
 
 /**
  * Default class used to define the action to take when database corruption is reported
@@ -58,9 +57,10 @@ public final class DefaultDatabaseErrorHandler implements DatabaseErrorHandler {
 	public void onCorruption(SQLiteDatabase dbObj) {
 		Log.e(TAG, "Corruption reported by sqlite on database: " + dbObj.getPath());
 
-	// If this is a SEE build, do not delete any database files.
+		// If this is a SEE build, do not delete any database files.
 		// It may be that the user has specified an incorrect password.
-	if( SQLiteDatabase.hasCodec() ) return;
+		if (SQLiteDatabase.hasCodec())
+			return;
 
 		// is the corruption detected even before database could be 'opened'?
 		if (!dbObj.isOpen()) {

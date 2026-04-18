@@ -185,8 +185,10 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 		}
 
 		if (cursorPresent) {
-			if (mChangeObserver != null) c.registerContentObserver(mChangeObserver);
-			if (mDataSetObserver != null) c.registerDataSetObserver(mDataSetObserver);
+			if (mChangeObserver != null)
+				c.registerContentObserver(mChangeObserver);
+			if (mDataSetObserver != null)
+				c.registerDataSetObserver(mDataSetObserver);
 		}
 	}
 
@@ -233,7 +235,7 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * @see android.widget.ListAdapter#getItem(int)
 	 */
@@ -260,7 +262,7 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 			return 0;
 		}
 	}
-	
+
 	@Override
 	public boolean hasStableIds() {
 		return true;
@@ -334,7 +336,7 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 	 * moved to the correct position.
 	 */
 	public abstract void bindView(View view, Context context, Cursor cursor);
-	
+
 	/**
 	 * Change the underlying cursor to a new cursor. If there is an existing cursor it will be
 	 * closed.
@@ -364,13 +366,17 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 		}
 		Cursor oldCursor = mCursor;
 		if (oldCursor != null) {
-			if (mChangeObserver != null) oldCursor.unregisterContentObserver(mChangeObserver);
-			if (mDataSetObserver != null) oldCursor.unregisterDataSetObserver(mDataSetObserver);
+			if (mChangeObserver != null)
+				oldCursor.unregisterContentObserver(mChangeObserver);
+			if (mDataSetObserver != null)
+				oldCursor.unregisterDataSetObserver(mDataSetObserver);
 		}
 		mCursor = newCursor;
 		if (newCursor != null) {
-			if (mChangeObserver != null) newCursor.registerContentObserver(mChangeObserver);
-			if (mDataSetObserver != null) newCursor.registerDataSetObserver(mDataSetObserver);
+			if (mChangeObserver != null)
+				newCursor.registerContentObserver(mChangeObserver);
+			if (mDataSetObserver != null)
+				newCursor.registerDataSetObserver(mDataSetObserver);
 			mRowIDColumn = newCursor.getColumnIndexOrThrow("_id");
 			mDataValid = true;
 			// notify the observers about the new cursor
@@ -475,7 +481,8 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 	 */
 	protected void onContentChanged() {
 		if (mAutoRequery && mCursor != null && !mCursor.isClosed()) {
-			if (false) Log.v("Cursor", "Auto requerying " + mCursor + " due to update");
+			if (false)
+				Log.v("Cursor", "Auto requerying " + mCursor + " due to update");
 			mDataValid = mCursor.requery();
 		}
 	}
@@ -509,5 +516,4 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable {
 			notifyDataSetInvalidated();
 		}
 	}
-
 }

@@ -31,44 +31,18 @@ public class HctSolver {
 	private HctSolver() {}
 
 	// Matrix used when converting from linear RGB to CAM16.
-	static final double[][] SCALED_DISCOUNT_FROM_LINRGB =
-	    new double[][] {
-		new double[] {
-		    0.001200833568784504,
-		    0.002389694492170889,
-		    0.0002795742885861124,
-		},
-		new double[] {
-		    0.0005891086651375999,
-		    0.0029785502573438758,
-		    0.0003270666104008398,
-		},
-		new double[] {
-		    0.00010146692491640572,
-		    0.0005364214359186694,
-		    0.0032979401770712076,
-		},
-	    };
+	static final double[][] SCALED_DISCOUNT_FROM_LINRGB = new double[][] {
+		new double[] {  0.001200833568784504,  0.002389694492170889, 0.0002795742885861124},
+		new double[] { 0.0005891086651375999, 0.0029785502573438758, 0.0003270666104008398},
+		new double[] {0.00010146692491640572, 0.0005364214359186694, 0.0032979401770712076},
+	};
 
 	// Matrix used when converting from CAM16 to linear RGB.
-	static final double[][] LINRGB_FROM_SCALED_DISCOUNT =
-	    new double[][] {
-		new double[] {
-		    1373.2198709594231,
-		    -1100.4251190754821,
-		    -7.278681089101213,
-		},
-		new double[] {
-		    -271.815969077903,
-		    559.6580465940733,
-		    -32.46047482791194,
-		},
-		new double[] {
-		    1.9622899599665666,
-		    -57.173814538844006,
-		    308.7233197812385,
-		},
-	    };
+	static final double[][] LINRGB_FROM_SCALED_DISCOUNT = new double[][] {
+		new double[] {1373.2198709594231, -1100.4251190754821, -7.278681089101213},
+		new double[] { -271.815969077903,   559.6580465940733, -32.46047482791194},
+		new double[] {1.9622899599665666, -57.173814538844006,  308.7233197812385},
+	};
 
 	// Weights for transforming a set of linear RGB coordinates to Y in XYZ.
 	static final double[] Y_FROM_LINRGB = new double[] {0.2126, 0.7152, 0.0722};
@@ -77,8 +51,7 @@ public class HctSolver {
 	// L* in L*a*b*. HCT's T is L*, and XYZ's Y is directly correlated to linear RGB, this table
 	// allows us to thus find the intersection between HCT and RGB, giving a solution to the
 	// RGB coordinates that correspond to a given set of HCT coordinates.
-	static final double[] CRITICAL_PLANES =
-	    new double[] {
+	static final double[] CRITICAL_PLANES = new double[] {
 		0.015176349177441876,
 		0.045529047532325624,
 		0.07588174588720938,
@@ -334,7 +307,7 @@ public class HctSolver {
 		97.78421388448044,
 		98.6670533535366,
 		99.55452497210776,
-	    };
+	};
 
 	/**
 	 * Sanitizes a small enough angle in radians.
@@ -434,9 +407,9 @@ public class HctSolver {
 	 */
 	static double[] lerpPoint(double[] source, double t, double[] target) {
 		return new double[] {
-		    source[0] + (target[0] - source[0]) * t,
-		    source[1] + (target[1] - source[1]) * t,
-		    source[2] + (target[2] - source[2]) * t,
+			source[0] + (target[0] - source[0]) * t,
+			source[1] + (target[1] - source[1]) * t,
+			source[2] + (target[2] - source[2]) * t,
 		};
 	}
 
@@ -602,7 +575,7 @@ public class HctSolver {
 			}
 		}
 		return CamUtils.argbFromLinrgbComponents((left[0] + right[0]) / 2,
-							 (left[1] + right[1]) / 2, (left[2] + right[2]) / 2);
+		                                         (left[1] + right[1]) / 2, (left[2] + right[2]) / 2);
 	}
 
 	/**

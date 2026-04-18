@@ -114,7 +114,7 @@ public final class Insets implements Parcelable {
 	 */
 	public static @NonNull Insets max(@NonNull Insets a, @NonNull Insets b) {
 		return Insets.of(Math.max(a.left, b.left), Math.max(a.top, b.top),
-				 Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
+		                 Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public final class Insets implements Parcelable {
 	 */
 	public static @NonNull Insets min(@NonNull Insets a, @NonNull Insets b) {
 		return Insets.of(Math.min(a.left, b.left), Math.min(a.top, b.top),
-				 Math.min(a.right, b.right), Math.min(a.bottom, b.bottom));
+		                 Math.min(a.right, b.right), Math.min(a.bottom, b.bottom));
 	}
 
 	/**
@@ -170,12 +170,7 @@ public final class Insets implements Parcelable {
 	@Override
 	public String toString() {
 		return "Insets{"
-		    +
-		    "left=" + left +
-		    ", top=" + top +
-		    ", right=" + right +
-		    ", bottom=" + bottom +
-		    '}';
+		     + "left=" + left + ", top=" + top + ", right=" + right + ", bottom=" + bottom + '}';
 	}
 
 	/*@Override

@@ -23,95 +23,95 @@ import java.util.List;
  * {@code Predicate} objects.
  */
 public class Predicates {
-    private Predicates() {
-    }
+	private Predicates() {
+	}
 
-  private static <T> List<T> defensiveCopy(T... array) {
-    return defensiveCopy(Arrays.asList(array));
-  }
+	private static <T> List<T> defensiveCopy(T... array) {
+		return defensiveCopy(Arrays.asList(array));
+	}
 
-  static <T> List<T> defensiveCopy(Iterable<T> iterable) {
-    ArrayList<T> list = new ArrayList<>();
-    for (T element : iterable) {
-      list.add(/*checkNotNull(*/element/*)*/);
-    }
-    return list;
-  }
+	static <T> List<T> defensiveCopy(Iterable<T> iterable) {
+		ArrayList<T> list = new ArrayList<>();
+		for (T element : iterable) {
+			list.add(/*checkNotNull(*/ element /*)*/);
+		}
+		return list;
+	}
 
-  private static String toStringHelper(String methodName, Iterable<?> components) {
-    StringBuilder builder = new StringBuilder("Predicates.").append(methodName).append('(');
-    boolean first = true;
-    for (Object o : components) {
-      if (!first) {
-        builder.append(',');
-      }
-      builder.append(o);
-      first = false;
-    }
-    return builder.append(')').toString();
-  }
+	private static String toStringHelper(String methodName, Iterable<?> components) {
+		StringBuilder builder = new StringBuilder("Predicates.").append(methodName).append('(');
+		boolean first = true;
+		for (Object o : components) {
+			if (!first) {
+				builder.append(',');
+			}
+			builder.append(o);
+			first = false;
+		}
+		return builder.append(')').toString();
+	}
 
-  private static class OrPredicate<T extends /*@Nullable*/ Object>
-      implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+	private static class OrPredicate<T extends /*@Nullable*/ Object>
+	    implements Predicate<T>, Serializable {
+		private final List<? extends Predicate<? super T>> components;
 
-    private OrPredicate(List<? extends Predicate<? super T>> components) {
-      this.components = components;
-    }
+		private OrPredicate(List<? extends Predicate<? super T>> components) {
+			this.components = components;
+		}
 
-    @Override
-    public boolean apply(/*@ParametricNullness*/ T t) {
-      // Avoid using the Iterator to avoid generating garbage (issue 820).
-      for (int i = 0; i < components.size(); i++) {
-        if (components.get(i).apply(t)) {
-          return true;
-        }
-      }
-      return false;
-    }
+		@Override
+		public boolean apply(/*@ParametricNullness*/ T t) {
+			// Avoid using the Iterator to avoid generating garbage (issue 820).
+			for (int i = 0; i < components.size(); i++) {
+				if (components.get(i).apply(t)) {
+					return true;
+				}
+			}
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-      // add a random number to avoid collisions with AndPredicate
-      return components.hashCode() + 0x053c91cf;
-    }
+		@Override
+		public int hashCode() {
+			// add a random number to avoid collisions with AndPredicate
+			return components.hashCode() + 0x053c91cf;
+		}
 
-    @Override
-    public boolean equals(/*@CheckForNull*/ Object obj) {
-      if (obj instanceof OrPredicate) {
-        OrPredicate<?> that = (OrPredicate<?>) obj;
-        return components.equals(that.components);
-      }
-      return false;
-    }
+		@Override
+		public boolean equals(/*@CheckForNull*/ Object obj) {
+			if (obj instanceof OrPredicate) {
+				OrPredicate<?> that = (OrPredicate<?>)obj;
+				return components.equals(that.components);
+			}
+			return false;
+		}
 
-    @Override
-    public String toString() {
-      return toStringHelper("or", components);
-    }
+		@Override
+		public String toString() {
+			return toStringHelper("or", components);
+		}
 
-    private static final long serialVersionUID = 0;
-  }
+		private static final long serialVersionUID = 0;
+	}
 
-    public static <T extends /*@Nullable*/ Object> Predicate<T> or(Predicate<? super T>... components) {
-        return new OrPredicate<T>(defensiveCopy(components));
-    }
+	public static <T extends /*@Nullable*/ Object> Predicate<T> or(Predicate<? super T>... components) {
+		return new OrPredicate<T>(defensiveCopy(components));
+	}
 
-    /**
+	/**
      * Returns a Predicate that evaluates to true iff the given Predicate
      * evaluates to false.
      */
-    public static <T> Predicate<T> not(Predicate<? super T> predicate) {
-        return new NotPredicate<T>(predicate);
-    }
+	public static <T> Predicate<T> not(Predicate<? super T> predicate) {
+		return new NotPredicate<T>(predicate);
+	}
 
-    private static class NotPredicate<T> implements Predicate<T> {
-        private final Predicate<? super T> predicate;
-        private NotPredicate(Predicate<? super T> predicate) {
-            this.predicate = predicate;
-        }
-        public boolean apply(T t) {
-            return !predicate.apply(t);
-        }
-    }
+	private static class NotPredicate<T> implements Predicate<T> {
+		private final Predicate<? super T> predicate;
+		private NotPredicate(Predicate<? super T> predicate) {
+			this.predicate = predicate;
+		}
+		public boolean apply(T t) {
+			return !predicate.apply(t);
+		}
+	}
 }

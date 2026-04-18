@@ -73,11 +73,11 @@ public class EGLImpl implements EGL10 {
 		} /*else if (native_window instanceof SurfaceTexture) {
 			eglSurfaceId = native_eglCreateWindowSurfaceTexture(display, config,
 								      native_window, attrib_list);
-		}*/ else {
+		}*/
+		else {
 			throw new java.lang.UnsupportedOperationException(
 			    "eglCreateWindowSurface() can only be called with an instance of "
-			    +
-			    "Surface, SurfaceView, SurfaceHolder or [FIXME]SurfaceTexture at the moment.");
+			    + "Surface, SurfaceView, SurfaceHolder or [FIXME]SurfaceTexture at the moment.");
 		}
 
 		if (eglSurfaceId == 0) {

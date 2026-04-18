@@ -16,8 +16,6 @@
 
 package android.widget;
 
-import com.android.internal.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -26,6 +24,7 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+import com.android.internal.R;
 
 /**
  * An abstract base class for spinner widgets. SDK users will probably not
@@ -69,12 +68,12 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 		initAbsSpinner();
 
 		final TypedArray a = context.obtainStyledAttributes(
-				attrs, R.styleable.AbsSpinner, defStyleAttr, defStyleRes);
+		    attrs, R.styleable.AbsSpinner, defStyleAttr, defStyleRes);
 
 		final CharSequence[] entries = a.getTextArray(R.styleable.AbsSpinner_entries);
 		if (entries != null) {
 			final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
-					context, R.layout.simple_spinner_item, entries);
+			    context, R.layout.simple_spinner_item, entries);
 			adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 			setAdapter(adapter);
 		}
@@ -170,13 +169,13 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 		int heightSize;
 
 		mSpinnerPadding.left = paddingLeft > mSelectionLeftPadding ? paddingLeft
-				: mSelectionLeftPadding;
+		                                                           : mSelectionLeftPadding;
 		mSpinnerPadding.top = paddingTop > mSelectionTopPadding ? paddingTop
-				: mSelectionTopPadding;
+		                                                        : mSelectionTopPadding;
 		mSpinnerPadding.right = paddingRight > mSelectionRightPadding ? paddingRight
-				: mSelectionRightPadding;
+		                                                              : mSelectionRightPadding;
 		mSpinnerPadding.bottom = paddingBottom > mSelectionBottomPadding ? paddingBottom
-				: mSelectionBottomPadding;
+		                                                                 : mSelectionBottomPadding;
 
 		if (mDataChanged) {
 			handleDataChanged();
@@ -243,8 +242,8 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 	@Override
 	protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
 		return new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT);
+		    ViewGroup.LayoutParams.MATCH_PARENT,
+		    ViewGroup.LayoutParams.WRAP_CONTENT);
 	}
 
 	void recycleAllViews() {
@@ -265,8 +264,8 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 	 */
 	public void setSelection(int position, boolean animate) {
 		// Animate only if requested position is already on screen somewhere
-		boolean shouldAnimate = animate && mFirstPosition <= position &&
-				position <= mFirstPosition + getChildCount() - 1;
+		boolean shouldAnimate = animate && mFirstPosition <= position
+		                     && position <= mFirstPosition + getChildCount() - 1;
 		setSelectionInt(position, shouldAnimate);
 	}
 
@@ -276,7 +275,6 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 		requestLayout();
 		invalidate();
 	}
-
 
 	/**
 	 * Makes the item at the supplied position selected.
@@ -288,7 +286,7 @@ public abstract class AbsSpinner extends AdapterView<SpinnerAdapter> {
 	void setSelectionInt(int position, boolean animate) {
 		if (position != mOldSelectedPosition) {
 			mBlockLayoutRequests = true;
-			int delta  = position - mSelectedPosition;
+			int delta = position - mSelectedPosition;
 			setNextSelectedPositionInt(position);
 			layout(delta, animate);
 			mBlockLayoutRequests = false;

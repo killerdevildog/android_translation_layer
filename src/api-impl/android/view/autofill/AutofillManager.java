@@ -7,4 +7,6 @@ public class AutofillManager {
 	public interface AutofillClient {}
 
 	public void registerCallback(AutofillCallback callback) {}
+
+	public void unregisterCallback(AutofillCallback callback) {}
 }

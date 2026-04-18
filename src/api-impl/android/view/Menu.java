@@ -6,9 +6,11 @@ import android.view.MenuItem;
 
 public interface Menu {
 
+	public static final int NONE = 0;
+
 	public MenuItem add(int groupId, int itemId, int order, CharSequence title);
 
-	public MenuItem add(int groupId, int itemId,int order, int titleRes);
+	public MenuItem add(int groupId, int itemId, int order, int titleRes);
 
 	public MenuItem findItem(int id);
 
@@ -38,5 +40,5 @@ public interface Menu {
 
 	public SubMenu addSubMenu(int groupId, int itemId, int order, int titleRes);
 
-	public int addIntentOptions (int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems);
+	public int addIntentOptions(int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems);
 }

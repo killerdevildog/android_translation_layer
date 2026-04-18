@@ -149,6 +149,18 @@ extern "C" {
 #define android_widget_EditText_PFLAG2_LAYOUT_DIRECTION_RESOLVED 32L
 #undef android_widget_EditText_PFLAG2_LAYOUT_DIRECTION_RESOLVED_MASK
 #define android_widget_EditText_PFLAG2_LAYOUT_DIRECTION_RESOLVED_MASK 48L
+#undef android_widget_EditText_SCROLL_AXIS_NONE
+#define android_widget_EditText_SCROLL_AXIS_NONE 0L
+#undef android_widget_EditText_SCROLL_AXIS_HORIZONTAL
+#define android_widget_EditText_SCROLL_AXIS_HORIZONTAL 1L
+#undef android_widget_EditText_SCROLL_AXIS_VERTICAL
+#define android_widget_EditText_SCROLL_AXIS_VERTICAL 2L
+#undef android_widget_EditText_OVER_SCROLL_ALWAYS
+#define android_widget_EditText_OVER_SCROLL_ALWAYS 0L
+#undef android_widget_EditText_OVER_SCROLL_IF_CONTENT_SCROLLS
+#define android_widget_EditText_OVER_SCROLL_IF_CONTENT_SCROLLS 1L
+#undef android_widget_EditText_OVER_SCROLL_NEVER
+#define android_widget_EditText_OVER_SCROLL_NEVER 2L
 #undef android_widget_EditText_STATUS_BAR_HIDDEN
 #define android_widget_EditText_STATUS_BAR_HIDDEN 1L
 #undef android_widget_EditText_STATUS_BAR_VISIBLE
@@ -246,6 +258,22 @@ JNIEXPORT void JNICALL Java_android_widget_EditText_native_1setOnEditorActionLis
  */
 JNIEXPORT void JNICALL Java_android_widget_EditText_native_1setText
   (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     android_widget_EditText
+ * Method:    native_setHint
+ * Signature: (JLjava/lang/CharSequence;)V
+ */
+JNIEXPORT void JNICALL Java_android_widget_EditText_native_1setHint
+  (JNIEnv *, jobject, jlong, jobject);
+
+/*
+ * Class:     android_widget_EditText
+ * Method:    native_getHint
+ * Signature: (J)Ljava/lang/CharSequence;
+ */
+JNIEXPORT jobject JNICALL Java_android_widget_EditText_native_1getHint
+  (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus
 }

@@ -16,10 +16,10 @@
 
 package android.test;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 /**
  * This annotation can be used on an {@link android.test.InstrumentationTestCase}'s
@@ -36,12 +36,12 @@ import java.lang.annotation.ElementType;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FlakyTest {
-    /**
+	/**
      * Indicates how many times a test can run and fail before being reported
      * as a failed test. If the tolerance factor is less than 1, the test runs
      * only once.
      *
      * @return The total number of allowed run, the default is 1.
      */
-    int tolerance() default 1;
+	int tolerance() default 1;
 }

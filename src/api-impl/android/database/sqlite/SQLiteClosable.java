@@ -54,10 +54,10 @@ public abstract class SQLiteClosable implements Closeable {
 	 * been released.
 	 */
 	public void acquireReference() {
-		synchronized(this) {
+		synchronized (this) {
 			if (mReferenceCount <= 0) {
 				throw new IllegalStateException(
-						"attempt to re-open an already-closed object: " + this);
+				    "attempt to re-open an already-closed object: " + this);
 			}
 			mReferenceCount++;
 		}
@@ -71,7 +71,7 @@ public abstract class SQLiteClosable implements Closeable {
 	 */
 	public void releaseReference() {
 		boolean refCountIsZero = false;
-		synchronized(this) {
+		synchronized (this) {
 			refCountIsZero = --mReferenceCount == 0;
 		}
 		if (refCountIsZero) {
@@ -89,7 +89,7 @@ public abstract class SQLiteClosable implements Closeable {
 	@Deprecated
 	public void releaseReferenceFromContainer() {
 		boolean refCountIsZero = false;
-		synchronized(this) {
+		synchronized (this) {
 			refCountIsZero = --mReferenceCount == 0;
 		}
 		if (refCountIsZero) {

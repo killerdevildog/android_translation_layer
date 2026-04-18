@@ -1,7 +1,7 @@
 package android.text;
 
-import android.graphics.Canvas;
 import android.atl.GskCanvas;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 
@@ -17,7 +17,7 @@ public class Layout {
 
 	public class Directions {}
 
-	long layout;  // native PangoLayout
+	long layout; // native PangoLayout
 	private CharSequence text;
 	private TextPaint paint;
 	private float spacing_mult;
@@ -53,7 +53,7 @@ public class Layout {
 		return native_get_ellipsis_count(layout, line);
 	}
 
-	public CharSequence getText() {return text;}
+	public CharSequence getText() { return text; }
 
 	public int getWidth() {
 		return native_get_width(layout);
@@ -73,7 +73,7 @@ public class Layout {
 	public int getParagraphDirection(int line) {
 		if (line < 0 || line >= getLineCount())
 			throw new ArrayIndexOutOfBoundsException();
-		return 0;
+		return /*DIR_LEFT_TO_RIGHT*/ 1;
 	}
 
 	public static float getDesiredWidth(CharSequence source, int start, int end, TextPaint paint) {
@@ -105,16 +105,16 @@ public class Layout {
 		return native_get_line_descent(layout, line);
 	}
 
-	public int getTopPadding() {return -5;}
+	public int getTopPadding() { return -5; }
 
-	public int getBottomPadding() {return 5;}
+	public int getBottomPadding() { return 5; }
 
-	public boolean isRtlCharAt(int offset) {return false;}
+	public boolean isRtlCharAt(int offset) { return false; }
 
-	public float getSecondaryHorizontal(int line) {
+	public float getSecondaryHorizontal(int offset) {
 		if (getLineDirections(0) == null)
 			throw new NullPointerException();
-		return 0;
+		return native_get_secondary_horizontal(layout, offset);
 	}
 
 	public int getLineForVertical(int y) {
@@ -124,16 +124,18 @@ public class Layout {
 	public int getOffsetForHorizontal(int line, float x) {
 		if (getLineDirections(0) == null)
 			throw new NullPointerException();
-		return 0;
+		return native_get_offset_for_horizontal(layout, line, x);
 	}
 
-	public float getPrimaryHorizontal(int line) {
+	public float getPrimaryHorizontal(int offset) {
 		if (getLineDirections(0) == null)
 			throw new NullPointerException();
-		return 0;
+		return native_get_primary_horizontal(layout, offset);
 	}
 
-	public int getLineForOffset(int offset) {return 0;}
+	public int getLineForOffset(int offset) {
+		return native_get_line_for_offset(layout, offset);
+	}
 
 	public int getLineTop(int line) {
 		if (line < 0 || line >= getLineCount())
@@ -260,6 +262,10 @@ public class Layout {
 	protected native int native_get_ellipsis_count(long layout, int line);
 	protected native void native_draw(long layout, long snapshot, long paint);
 	protected native void native_draw_custom_canvas(long layout, Canvas canvas, Paint paint);
+	protected native int native_get_line_for_offset(long layout, int offset);
+	protected native float native_get_primary_horizontal(long layout, int offset);
+	protected native float native_get_secondary_horizontal(long layout, int offset);
+	protected native int native_get_offset_for_horizontal(long layout, int line, float x);
 	protected static native float native_get_desired_width(long layout);
 	protected static native void native_free(long layout);
 }

@@ -61,7 +61,7 @@ public class RoundRectShape extends RectShape {
 	 *                   ignored.
 	 */
 	public RoundRectShape(@Nullable float[] outerRadii, @Nullable RectF inset,
-			      @Nullable float[] innerRadii) {
+	                      @Nullable float[] innerRadii) {
 		if (outerRadii != null && outerRadii.length < 8) {
 			throw new ArrayIndexOutOfBoundsException("outer radii must have >= 8 values");
 		}
@@ -102,7 +102,7 @@ public class RoundRectShape extends RectShape {
 
 		final RectF rect = rect();
 		outline.setRoundRect((int)Math.ceil(rect.left), (int)Math.ceil(rect.top),
-				     (int)Math.floor(rect.right), (int)Math.floor(rect.bottom), radius);
+		                     (int)Math.floor(rect.right), (int)Math.floor(rect.bottom), radius);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class RoundRectShape extends RectShape {
 		}
 		if (mInnerRect != null) {
 			mInnerRect.set(r.left + mInset.left, r.top + mInset.top,
-				       r.right - mInset.right, r.bottom - mInset.bottom);
+			               r.right - mInset.right, r.bottom - mInset.bottom);
 			if (mInnerRect.width() < w && mInnerRect.height() < h) {
 				if (mInnerRadii != null) {
 					mPath.addRoundRect(mInnerRect, mInnerRadii, Path.Direction.CCW);

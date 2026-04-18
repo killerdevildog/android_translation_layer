@@ -225,4 +225,14 @@ public class BaseInputConnection implements InputConnection {
 	public boolean reportFullscreenMode(boolean enabled) {
 		return true;
 	}
+
+	/**
+	 * Default implementation calls {@link #finishComposingText()} and {@code
+	 * setImeConsumesInput(false)}.
+	 */
+	@Override
+	public void closeConnection() {
+		finishComposingText();
+		// setImeConsumesInput(false);
+	}
 }

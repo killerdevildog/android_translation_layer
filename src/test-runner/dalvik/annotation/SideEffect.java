@@ -26,10 +26,10 @@ import java.lang.annotation.Target;
  * @hide
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE })
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface SideEffect {
-    /**
+	/**
      * Plain text reason for adding this annotation.
      */
-    String value();
+	String value();
 }

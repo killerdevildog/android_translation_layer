@@ -177,8 +177,9 @@ public class GridLayout extends ViewGroup {
 	 * @hide
 	 */
 	@IntDef(prefix = {"HORIZONTAL", "VERTICAL"}, value = {
-							 HORIZONTAL,
-							 VERTICAL})
+							     HORIZONTAL,
+							     VERTICAL
+						     })
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface Orientation {}
 
@@ -207,8 +208,9 @@ public class GridLayout extends ViewGroup {
 	 * @hide
 	 */
 	@IntDef(prefix = {"ALIGN_"}, value = {
-					 ALIGN_BOUNDS,
-					 ALIGN_MARGINS})
+					     ALIGN_BOUNDS,
+					     ALIGN_MARGINS
+				     })
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface AlignmentMode {}
 
@@ -306,7 +308,7 @@ public class GridLayout extends ViewGroup {
 		final TypedArray a = context.obtainStyledAttributes(
 		    attrs, R.styleable.GridLayout, defStyleAttr, defStyleRes);
 		saveAttributeDataForStyleable(context, R.styleable.GridLayout,
-					      attrs, a, defStyleAttr, defStyleRes);
+		                              attrs, a, defStyleAttr, defStyleRes);
 		try {
 			setRowCount(a.getInt(ROW_COUNT, DEFAULT_COUNT));
 			setColumnCount(a.getInt(COLUMN_COUNT, DEFAULT_COUNT));
@@ -705,7 +707,7 @@ public class GridLayout extends ViewGroup {
 		Spec spec = horizontal ? p.columnSpec : p.rowSpec;
 		Axis axis = horizontal ? mHorizontalAxis : mVerticalAxis;
 		Interval span = spec.span;
-		boolean leading1 = (horizontal && /*isLayoutRtl()*/false) ? !leading : leading;
+		boolean leading1 = (horizontal && /*isLayoutRtl()*/ false) ? !leading : leading;
 		boolean isAtEdge = leading1 ? (span.min == 0) : (span.max == axis.getCount());
 
 		return getDefaultMargin(c, isAtEdge, horizontal, leading);
@@ -874,8 +876,7 @@ public class GridLayout extends ViewGroup {
 		int count = axis.definedCount;
 		if (count != UNDEFINED) {
 			if (span.max > count) {
-				handleInvalidParams(groupName +
-						    " indices (start + span) mustn't exceed the " + groupName + " count");
+				handleInvalidParams(groupName + " indices (start + span) mustn't exceed the " + groupName + " count");
 			}
 			if (span.size() > count) {
 				handleInvalidParams(groupName + " span mustn't exceed the " + groupName + " count");
@@ -921,7 +922,7 @@ public class GridLayout extends ViewGroup {
 	// Draw grid
 
 	private void drawLine(Canvas graphics, int x1, int y1, int x2, int y2, Paint paint) {
-		if (/*isLayoutRtl()*/false) {
+		if (/*isLayoutRtl()*/ false) {
 			int width = getWidth();
 			graphics.drawLine(width - x1, y1, width - x2, y2, paint);
 		} else {
@@ -1026,7 +1027,7 @@ public class GridLayout extends ViewGroup {
 			mLastLayoutParamsHashCode = computeLayoutParamsHashCode();
 		} else if (mLastLayoutParamsHashCode != computeLayoutParamsHashCode()) {
 			mPrinter.println("The fields of some layout parameters were modified in between "
-					 + "layout operations. Check the javadoc for GridLayout.LayoutParams#rowSpec.");
+			                 + "layout operations. Check the javadoc for GridLayout.LayoutParams#rowSpec.");
 			invalidateStructure();
 			consistencyCheck();
 		}
@@ -1036,11 +1037,11 @@ public class GridLayout extends ViewGroup {
 
 	// Note: padding has already been removed from the supplied specs
 	private void measureChildWithMargins2(View child, int parentWidthSpec, int parentHeightSpec,
-					      int childWidth, int childHeight) {
+	                                      int childWidth, int childHeight) {
 		int childWidthSpec = getChildMeasureSpec(parentWidthSpec,
-							 getTotalMargin(child, true), childWidth);
+		                                         getTotalMargin(child, true), childWidth);
 		int childHeightSpec = getChildMeasureSpec(parentHeightSpec,
-							  getTotalMargin(child, false), childHeight);
+		                                          getTotalMargin(child, false), childHeight);
 		child.measure(childWidthSpec, childHeightSpec);
 	}
 
@@ -1216,7 +1217,7 @@ public class GridLayout extends ViewGroup {
 
 			int dx = x1 + gravityOffsetX + alignmentOffsetX;
 
-			int cx = !/*isLayoutRtl()*/false ? paddingLeft + leftMargin + dx : targetWidth - width - paddingRight - rightMargin - dx;
+			int cx = !/*isLayoutRtl()*/ false ? paddingLeft + leftMargin + dx : targetWidth - width - paddingRight - rightMargin - dx;
 			int cy = paddingTop + y1 + gravityOffsetY + alignmentOffsetY + topMargin;
 
 			if (width != c.getMeasuredWidth() || height != c.getMeasuredHeight()) {
@@ -1311,10 +1312,8 @@ public class GridLayout extends ViewGroup {
 
 		public void setCount(int count) {
 			if (count != UNDEFINED && count < getMaxIndex()) {
-				handleInvalidParams((horizontal ? "column" : "row") +
-						    "Count must be greater than or equal to the maximum of all grid indices "
-						    +
-						    "(and spans) defined in the LayoutParams of each child");
+				handleInvalidParams((horizontal ? "column" : "row") + "Count must be greater than or equal to the maximum of all grid indices "
+				                    + "(and spans) defined in the LayoutParams of each child");
 			}
 			this.definedCount = count;
 		}
@@ -1351,8 +1350,7 @@ public class GridLayout extends ViewGroup {
 				// we must include views that are GONE here, see introductory javadoc
 				LayoutParams lp = getLayoutParams(c);
 				Spec spec = horizontal ? lp.columnSpec : lp.rowSpec;
-				int size = getMeasurementIncludingMargin(c, horizontal) +
-					   ((spec.weight == 0) ? 0 : getDeltas()[i]);
+				int size = getMeasurementIncludingMargin(c, horizontal) + ((spec.weight == 0) ? 0 : getDeltas()[i]);
 				groupBounds.getValue(i).include(GridLayout.this, c, spec, this, size);
 			}
 		}
@@ -1418,7 +1416,7 @@ public class GridLayout extends ViewGroup {
 		}
 
 		private void include(List<Arc> arcs, Interval key, MutableInt size,
-				     boolean ignoreIfAlreadyPresent) {
+		                     boolean ignoreIfAlreadyPresent) {
 			/*
 			Remove self referential links.
 			These appear:
@@ -1614,8 +1612,7 @@ public class GridLayout extends ViewGroup {
 					removed.add(arc);
 				}
 			}
-			mPrinter.println(axisName + " constraints: " + arcsToString(culprits) +
-					 " are inconsistent; permanently removing: " + arcsToString(removed) + ". ");
+			mPrinter.println(axisName + " constraints: " + arcsToString(culprits) + " are inconsistent; permanently removing: " + arcsToString(removed) + ". ");
 		}
 
 		/*
@@ -2434,7 +2431,7 @@ public class GridLayout extends ViewGroup {
 		}
 
 		protected int getOffset(GridLayout gl, View c, Alignment a, int size, boolean horizontal) {
-			return before - a.getAlignmentValue(c, size, /*gl.getLayoutMode()*/0);
+			return before - a.getAlignmentValue(c, size, /*gl.getLayoutMode()*/ 0);
 		}
 
 		protected final void include(GridLayout gl, View c, Spec spec, Axis axis, int size) {
@@ -2442,17 +2439,14 @@ public class GridLayout extends ViewGroup {
 			//boolean horizontal = axis.horizontal;
 			Alignment alignment = spec.getAbsoluteAlignment(axis.horizontal);
 			// todo test this works correctly when the returned value is UNDEFINED
-			int before = alignment.getAlignmentValue(c, size, /*gl.getLayoutMode()*/0);
+			int before = alignment.getAlignmentValue(c, size, /*gl.getLayoutMode()*/ 0);
 			include(before, size - before);
 		}
 
 		@Override
 		public String toString() {
 			return "Bounds{"
-			    +
-			    "before=" + before +
-			    ", after=" + after +
-			    '}';
+			     + "before=" + before + ", after=" + after + '}';
 		}
 	}
 
@@ -2903,12 +2897,12 @@ public class GridLayout extends ViewGroup {
 		return new Alignment() {
 			@Override
 			int getGravityOffset(View view, int cellDelta) {
-				return (!/*view.isLayoutRtl()*/false ? ltr : rtl).getGravityOffset(view, cellDelta);
+				return (!/*view.isLayoutRtl()*/ false ? ltr : rtl).getGravityOffset(view, cellDelta);
 			}
 
 			@Override
 			public int getAlignmentValue(View view, int viewSize, int mode) {
-				return (!/*view.isLayoutRtl()*/false ? ltr : rtl).getAlignmentValue(view, viewSize, mode);
+				return (!/*view.isLayoutRtl()*/ false ? ltr : rtl).getAlignmentValue(view, viewSize, mode);
 			}
 		};
 	}

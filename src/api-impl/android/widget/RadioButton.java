@@ -35,5 +35,4 @@ public class RadioButton extends CompoundButton {
 	public void setTextColor(int color) {}
 	@Override
 	public void setTextSize(float size) {}
-
 }

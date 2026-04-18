@@ -26,7 +26,6 @@ import android.os.CancellationSignal;
 import android.os.OperationCanceledException;
 import android.text.TextUtils;
 import android.util.Log;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,15 +36,14 @@ import java.util.regex.Pattern;
  * This is a convience class that helps build SQL queries to be sent to
  * {@link SQLiteDatabase} objects.
  */
-public class SQLiteQueryBuilder
-{
+public class SQLiteQueryBuilder {
 	private static final String TAG = "SQLiteQueryBuilder";
 	private static final Pattern sLimitPattern =
-			Pattern.compile("\\s*\\d+\\s*(,\\s*\\d+\\s*)?");
+	    Pattern.compile("\\s*\\d+\\s*(,\\s*\\d+\\s*)?");
 
 	private Map<String, String> mProjectionMap = null;
 	private String mTables = "";
-	private StringBuilder mWhereClause = null;  // lazily created
+	private StringBuilder mWhereClause = null; // lazily created
 	private boolean mDistinct;
 	private SQLiteDatabase.CursorFactory mFactory;
 	private boolean mStrict;
@@ -202,11 +200,11 @@ public class SQLiteQueryBuilder
 	 * @return the SQL query string
 	 */
 	public static String buildQueryString(
-			boolean distinct, String tables, String[] columns, String where,
-			String groupBy, String having, String orderBy, String limit) {
+	    boolean distinct, String tables, String[] columns, String where,
+	    String groupBy, String having, String orderBy, String limit) {
 		if (TextUtils.isEmpty(groupBy) && !TextUtils.isEmpty(having)) {
 			throw new IllegalArgumentException(
-					"HAVING clauses are only permitted when using a groupBy clause");
+			    "HAVING clauses are only permitted when using a groupBy clause");
 		}
 		if (!TextUtils.isEmpty(limit) && !sLimitPattern.matcher(limit).matches()) {
 			throw new IllegalArgumentException("invalid LIMIT clauses:" + limit);
@@ -292,10 +290,10 @@ public class SQLiteQueryBuilder
 	 *      String, String[], String)
 	 */
 	public Cursor query(SQLiteDatabase db, String[] projectionIn,
-			String selection, String[] selectionArgs, String groupBy,
-			String having, String sortOrder) {
+	                    String selection, String[] selectionArgs, String groupBy,
+	                    String having, String sortOrder) {
 		return query(db, projectionIn, selection, selectionArgs, groupBy, having, sortOrder,
-				null /* limit */, null /* cancellationSignal */);
+		             null /* limit */, null /* cancellationSignal */);
 	}
 
 	/**
@@ -331,10 +329,10 @@ public class SQLiteQueryBuilder
 	 *      String, String[], String)
 	 */
 	public Cursor query(SQLiteDatabase db, String[] projectionIn,
-			String selection, String[] selectionArgs, String groupBy,
-			String having, String sortOrder, String limit) {
+	                    String selection, String[] selectionArgs, String groupBy,
+	                    String having, String sortOrder, String limit) {
 		return query(db, projectionIn, selection, selectionArgs,
-				groupBy, having, sortOrder, limit, null);
+		             groupBy, having, sortOrder, limit, null);
 	}
 
 	/**
@@ -373,8 +371,8 @@ public class SQLiteQueryBuilder
 	 *      String, String[], String)
 	 */
 	public Cursor query(SQLiteDatabase db, String[] projectionIn,
-			String selection, String[] selectionArgs, String groupBy,
-			String having, String sortOrder, String limit, CancellationSignal cancellationSignal) {
+	                    String selection, String[] selectionArgs, String groupBy,
+	                    String having, String sortOrder, String limit, CancellationSignal cancellationSignal) {
 		if (mTables == null) {
 			return null;
 		}
@@ -388,21 +386,21 @@ public class SQLiteQueryBuilder
 			// would escape the SQL expression while maintaining balanced parentheses
 			// in both the wrapped and original forms.
 			String sqlForValidation = buildQuery(projectionIn, "(" + selection + ")", groupBy,
-					having, sortOrder, limit);
+			                                     having, sortOrder, limit);
 			db.validateSql(sqlForValidation, cancellationSignal); // will throw if query is invalid
 		}
 
 		String sql = buildQuery(
-				projectionIn, selection, groupBy, having,
-				sortOrder, limit);
+		    projectionIn, selection, groupBy, having,
+		    sortOrder, limit);
 
 		if (Log.isLoggable(TAG, Log.DEBUG)) {
 			Log.d(TAG, "Performing query: " + sql);
 		}
 		return db.rawQueryWithFactory(
-				mFactory, sql, selectionArgs,
-				SQLiteDatabase.findEditTable(mTables),
-				cancellationSignal); // will throw if query is invalid
+		    mFactory, sql, selectionArgs,
+		    SQLiteDatabase.findEditTable(mTables),
+		    cancellationSignal); // will throw if query is invalid
 	}
 
 	/**
@@ -434,8 +432,8 @@ public class SQLiteQueryBuilder
 	 * @return the resulting SQL SELECT statement
 	 */
 	public String buildQuery(
-			String[] projectionIn, String selection, String groupBy,
-			String having, String sortOrder, String limit) {
+	    String[] projectionIn, String selection, String groupBy,
+	    String having, String sortOrder, String limit) {
 		String[] projection = computeProjection(projectionIn);
 
 		StringBuilder where = new StringBuilder();
@@ -458,8 +456,8 @@ public class SQLiteQueryBuilder
 		}
 
 		return buildQueryString(
-				mDistinct, mTables, projection, where.toString(),
-				groupBy, having, sortOrder, limit);
+		    mDistinct, mTables, projection, where.toString(),
+		    groupBy, having, sortOrder, limit);
 	}
 
 	/**
@@ -470,8 +468,8 @@ public class SQLiteQueryBuilder
 	 */
 	@Deprecated
 	public String buildQuery(
-			String[] projectionIn, String selection, String[] selectionArgs,
-			String groupBy, String having, String sortOrder, String limit) {
+	    String[] projectionIn, String selection, String[] selectionArgs,
+	    String groupBy, String having, String sortOrder, String limit) {
 		return buildQuery(projectionIn, selection, groupBy, having, sortOrder, limit);
 	}
 
@@ -515,14 +513,14 @@ public class SQLiteQueryBuilder
 	 * @return the resulting SQL SELECT statement
 	 */
 	public String buildUnionSubQuery(
-			String typeDiscriminatorColumn,
-			String[] unionColumns,
-			Set<String> columnsPresentInTable,
-			int computedColumnsOffset,
-			String typeDiscriminatorValue,
-			String selection,
-			String groupBy,
-			String having) {
+	    String typeDiscriminatorColumn,
+	    String[] unionColumns,
+	    Set<String> columnsPresentInTable,
+	    int computedColumnsOffset,
+	    String typeDiscriminatorValue,
+	    String selection,
+	    String groupBy,
+	    String having) {
 		int unionColumnsCount = unionColumns.length;
 		String[] projectionIn = new String[unionColumnsCount];
 
@@ -531,18 +529,18 @@ public class SQLiteQueryBuilder
 
 			if (unionColumn.equals(typeDiscriminatorColumn)) {
 				projectionIn[i] = "'" + typeDiscriminatorValue + "' AS "
-						+ typeDiscriminatorColumn;
+				                + typeDiscriminatorColumn;
 			} else if (i <= computedColumnsOffset
-					   || columnsPresentInTable.contains(unionColumn)) {
+			           || columnsPresentInTable.contains(unionColumn)) {
 				projectionIn[i] = unionColumn;
 			} else {
 				projectionIn[i] = "NULL AS " + unionColumn;
 			}
 		}
 		return buildQuery(
-				projectionIn, selection, groupBy, having,
-				null /* sortOrder */,
-				null /* limit */);
+		    projectionIn, selection, groupBy, having,
+		    null /* sortOrder */,
+		    null /* limit */);
 	}
 
 	/**
@@ -554,19 +552,19 @@ public class SQLiteQueryBuilder
 	 */
 	@Deprecated
 	public String buildUnionSubQuery(
-			String typeDiscriminatorColumn,
-			String[] unionColumns,
-			Set<String> columnsPresentInTable,
-			int computedColumnsOffset,
-			String typeDiscriminatorValue,
-			String selection,
-			String[] selectionArgs,
-			String groupBy,
-			String having) {
+	    String typeDiscriminatorColumn,
+	    String[] unionColumns,
+	    Set<String> columnsPresentInTable,
+	    int computedColumnsOffset,
+	    String typeDiscriminatorValue,
+	    String selection,
+	    String[] selectionArgs,
+	    String groupBy,
+	    String having) {
 		return buildUnionSubQuery(
-				typeDiscriminatorColumn, unionColumns, columnsPresentInTable,
-				computedColumnsOffset, typeDiscriminatorValue, selection,
-				groupBy, having);
+		    typeDiscriminatorColumn, unionColumns, columnsPresentInTable,
+		    computedColumnsOffset, typeDiscriminatorValue, selection,
+		    groupBy, having);
 	}
 
 	/**
@@ -614,15 +612,15 @@ public class SQLiteQueryBuilder
 						continue;
 					}
 
-					if (!mStrict &&
-							( userColumn.contains(" AS ") || userColumn.contains(" as "))) {
+					if (!mStrict
+					    && (userColumn.contains(" AS ") || userColumn.contains(" as "))) {
 						/* A column alias already exist */
 						projection[i] = userColumn;
 						continue;
 					}
 
 					throw new IllegalArgumentException("Invalid column "
-							+ projectionIn[i]);
+					                                   + projectionIn[i]);
 				}
 				return projection;
 			} else {
@@ -639,7 +637,7 @@ public class SQLiteQueryBuilder
 				Entry<String, String> entry = entryIter.next();
 
 				// Don't include the _count column when people ask for no projection.
-				if (entry.getKey().equals(/*BaseColumns._COUNT*/"_count")) {
+				if (entry.getKey().equals(/*BaseColumns._COUNT*/ "_count")) {
 					continue;
 				}
 				projection[i++] = entry.getValue();

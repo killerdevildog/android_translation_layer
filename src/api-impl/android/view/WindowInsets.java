@@ -112,7 +112,7 @@ public class WindowInsets {
 					return 9;
 				default:
 					throw new IllegalArgumentException("type needs to be >= FIRST and <= LAST,"
-									   + " type=" + type);
+					                                   + " type=" + type);
 			}
 		}
 

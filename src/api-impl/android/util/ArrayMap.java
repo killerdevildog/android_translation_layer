@@ -439,7 +439,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 		index = ~index;
 		if (mSize >= mHashes.length) {
 			final int n = mSize >= (BASE_SIZE * 2) ? (mSize + (mSize >> 1))
-							       : (mSize >= BASE_SIZE ? (BASE_SIZE * 2) : BASE_SIZE);
+			                                       : (mSize >= BASE_SIZE ? (BASE_SIZE * 2) : BASE_SIZE);
 
 			if (DEBUG)
 				Log.d(TAG, "put: grow from " + mHashes.length + " to " + n);
@@ -574,7 +574,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 						Log.d(TAG, "remove: copy from " + (index + 1) + "-" + mSize + " to " + index);
 					System.arraycopy(ohashes, index + 1, mHashes, index, mSize - index);
 					System.arraycopy(oarray, (index + 1) << 1, mArray, index << 1,
-							 (mSize - index) << 1);
+					                 (mSize - index) << 1);
 				}
 			} else {
 				mSize--;
@@ -583,7 +583,7 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 						Log.d(TAG, "remove: move " + (index + 1) + "-" + mSize + " to " + index);
 					System.arraycopy(mHashes, index + 1, mHashes, index, mSize - index);
 					System.arraycopy(mArray, (index + 1) << 1, mArray, index << 1,
-							 (mSize - index) << 1);
+					                 (mSize - index) << 1);
 				}
 				mArray[mSize << 1] = null;
 				mArray[(mSize << 1) + 1] = null;

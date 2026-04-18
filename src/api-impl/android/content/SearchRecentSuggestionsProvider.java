@@ -1,11 +1,10 @@
 package android.content;
 
-import java.io.FileNotFoundException;
-
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import java.io.FileNotFoundException;
 
 public class SearchRecentSuggestionsProvider extends ContentProvider {
 	public void setupSuggestions(String s, int i) {}

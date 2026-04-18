@@ -11,6 +11,10 @@ public class WebSettings {
 		HIGH,
 	}
 
+	public static String getDefaultUserAgent(android.content.Context context) {
+		return "GDPR VIOLATION";
+	}
+
 	public String getUserAgentString() {
 		return "GDPR VIOLATION";
 	}
@@ -56,4 +60,24 @@ public class WebSettings {
 	public void setMixedContentMode(int mode) {}
 
 	public void setBlockNetworkImage(boolean block) {}
+
+	public void setDomStorageEnabled(boolean flag) {}
+
+	public void setMediaPlaybackRequiresUserGesture(boolean require) {}
+
+	public void setJavaScriptCanOpenWindowsAutomatically(boolean flag) {}
+
+	public void setAppCacheMaxSize(long size) {}
+
+	public void setDatabaseEnabled(boolean enabled) {}
+
+	public void setDatabasePath(String path) {}
+
+	public void setAllowUniversalAccessFromFileURLs(boolean allow) {}
+
+	public void setGeolocationDatabasePath(String path) {}
+
+	public void setSaveFormData(boolean save) {}
+
+	public void setAllowContentAccess(boolean allow) {}
 }

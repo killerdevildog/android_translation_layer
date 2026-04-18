@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     android_graphics_Path
  * Method:    native_create_builder
- * Signature: (J)J
+ * Signature: (JJ)J
  */
 JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1create_1builder
-  (JNIEnv *, jclass, jlong);
+  (JNIEnv *, jclass, jlong, jlong);
 
 /*
  * Class:     android_graphics_Path

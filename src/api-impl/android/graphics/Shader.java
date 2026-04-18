@@ -13,6 +13,5 @@ public class Shader {
 
 	public void setLocalMatrix(Matrix matrix) {}
 
-
 	protected void copyLocalMatrix(Shader dest) {}
 }

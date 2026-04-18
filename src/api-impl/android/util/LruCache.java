@@ -186,7 +186,7 @@ public class LruCache<K, V> {
 			synchronized (this) {
 				if (size < 0 || (map.isEmpty() && size != 0)) {
 					throw new IllegalStateException(getClass().getName()
-							+ ".sizeOf() is reporting inconsistent results!");
+					                                + ".sizeOf() is reporting inconsistent results!");
 				}
 				if (size <= maxSize) {
 					break;
@@ -352,10 +352,11 @@ public class LruCache<K, V> {
 		return new LinkedHashMap<K, V>(map);
 	}
 
-	@Override public synchronized final String toString() {
+	@Override
+	public synchronized final String toString() {
 		int accesses = hitCount + missCount;
 		int hitPercent = accesses != 0 ? (100 * hitCount / accesses) : 0;
 		return String.format("LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]",
-				maxSize, hitCount, missCount, hitPercent);
+		                     maxSize, hitCount, missCount, hitPercent);
 	}
 }

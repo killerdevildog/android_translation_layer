@@ -9,13 +9,15 @@ struct _ContainerPaintable {
 };
 G_DECLARE_FINAL_TYPE(ContainerPaintable, container_paintable, CONTAINER, PAINTABLE, GObject)
 
-static void container_paintable_snapshot(GdkPaintable *paintable, GdkSnapshot *snapshot, double width, double height) {
+static void container_paintable_snapshot(GdkPaintable *paintable, GdkSnapshot *snapshot, double width, double height)
+{
 	ContainerPaintable *container = CONTAINER_PAINTABLE(paintable);
 	if (container->child)
 		gdk_paintable_snapshot(container->child, snapshot, width, height);
 }
 
-static double container_paintable_get_intrinsic_aspect_ratio(GdkPaintable *paintable) {
+static double container_paintable_get_intrinsic_aspect_ratio(GdkPaintable *paintable)
+{
 	ContainerPaintable *container = CONTAINER_PAINTABLE(paintable);
 	if (container->child)
 		return gdk_paintable_get_intrinsic_aspect_ratio(container->child);
@@ -23,7 +25,8 @@ static double container_paintable_get_intrinsic_aspect_ratio(GdkPaintable *paint
 		return 0;
 }
 
-static int container_paintable_get_intrinsic_width(GdkPaintable *paintable) {
+static int container_paintable_get_intrinsic_width(GdkPaintable *paintable)
+{
 	ContainerPaintable *container = CONTAINER_PAINTABLE(paintable);
 	if (container->child)
 		return gdk_paintable_get_intrinsic_width(container->child);
@@ -31,7 +34,8 @@ static int container_paintable_get_intrinsic_width(GdkPaintable *paintable) {
 		return 0;
 }
 
-static int container_paintable_get_intrinsic_height(GdkPaintable *paintable) {
+static int container_paintable_get_intrinsic_height(GdkPaintable *paintable)
+{
 	ContainerPaintable *container = CONTAINER_PAINTABLE(paintable);
 	if (container->child)
 		return gdk_paintable_get_intrinsic_height(container->child);
@@ -51,11 +55,12 @@ static void container_paintable_paintable_init(GdkPaintableInterface *iface)
 	iface->get_intrinsic_height = container_paintable_get_intrinsic_height;
 }
 
-static void container_paintable_class_init(ContainerPaintableClass *class) {
+static void container_paintable_class_init(ContainerPaintableClass *class)
+{
 }
 
 G_DEFINE_TYPE_WITH_CODE(ContainerPaintable, container_paintable, G_TYPE_OBJECT,
-		G_IMPLEMENT_INTERFACE(GDK_TYPE_PAINTABLE, container_paintable_paintable_init))
+                        G_IMPLEMENT_INTERFACE(GDK_TYPE_PAINTABLE, container_paintable_paintable_init))
 
 JNIEXPORT jlong JNICALL Java_android_graphics_drawable_DrawableContainer_native_1constructor(JNIEnv *env, jobject this)
 {

@@ -1,6 +1,7 @@
 package android.view.inputmethod;
 
 import android.os.Bundle;
+import android.os.LocaleList;
 
 public class EditorInfo {
 	public int actionId = 0;
@@ -17,4 +18,5 @@ public class EditorInfo {
 	public CharSequence label = null;
 	public String packageName = "com.example.FIXME";
 	public String privateImeOptions = null;
+	public LocaleList hintLocales = null;
 }

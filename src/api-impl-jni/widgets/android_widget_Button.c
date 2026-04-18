@@ -25,7 +25,7 @@ JNIEXPORT jlong JNICALL Java_android_widget_Button_native_1constructor(JNIEnv *e
 	gtk_button_set_child(GTK_BUTTON(button), box);
 	gtk_box_append(GTK_BOX(box), gtk_label_new(text));
 	wrapper_widget_set_child(WRAPPER_WIDGET(wrapper), button);
-	wrapper_widget_consume_touch_events(WRAPPER_WIDGET(wrapper));  // Android button consumes touch events
+	wrapper_widget_consume_touch_events(WRAPPER_WIDGET(wrapper)); // Android button consumes touch events
 	wrapper_widget_set_jobject(WRAPPER_WIDGET(wrapper), env, this);
 
 	return _INTPTR(button);
@@ -40,13 +40,14 @@ JNIEXPORT void JNICALL Java_android_widget_Button_native_1setText(JNIEnv *env, j
 	((*env)->ReleaseStringUTFChars(env, text, nativeText));
 }
 
-static void clicked_cb(GtkWidget *button, gpointer user_data) {
+static void clicked_cb(GtkWidget *button, gpointer user_data)
+{
 	JNIEnv *env = get_jni_env();
 	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_widget_get_parent(button));
 
 	(*env)->CallBooleanMethod(env, wrapper->jobj, handle_cache.view.performClick);
 
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 }
 

@@ -50,10 +50,10 @@ public class PackageUserState {
 		blocked = o.blocked;
 		lastDisableAppCaller = o.lastDisableAppCaller;
 		disabledComponents = o.disabledComponents != null
-					 ? new HashSet<String>(o.disabledComponents)
-					 : null;
+		                       ? new HashSet<String>(o.disabledComponents)
+		                       : null;
 		enabledComponents = o.enabledComponents != null
-					? new HashSet<String>(o.enabledComponents)
-					: null;
+		                      ? new HashSet<String>(o.enabledComponents)
+		                      : null;
 	}
 }

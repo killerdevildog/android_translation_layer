@@ -2,6 +2,7 @@ package android.app;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.os.SystemClock;
 import android.text.format.DateUtils;
 import android.util.Slog;
@@ -11,6 +12,10 @@ public class AlarmManager {
 
 	public void cancel(PendingIntent operation) {
 		Slog.i(TAG, "cancel(" + operation + ") called");
+	}
+
+	public void cancel(OnAlarmListener listener) {
+		Slog.i(TAG, "cancel(" + listener + ") called");
 	}
 
 	public void setInexactRepeating(int type, long triggerTime, long interval, PendingIntent operation) {
@@ -47,5 +52,37 @@ public class AlarmManager {
 
 	public void setExactAndAllowWhileIdle(int type, long triggerAtMillis, PendingIntent operation) {
 		setExact(type, triggerAtMillis, operation);
+	}
+
+	public void setAlarmClock(AlarmClockInfo info, PendingIntent operation) {
+	}
+
+	public void setAndAllowWhileIdle(int type, long triggerAtMillis, PendingIntent operation) {
+		setExact(type, triggerAtMillis, operation);
+	}
+
+	public boolean canScheduleExactAlarms() {
+		return true;
+	}
+
+	public static class AlarmClockInfo implements Parcelable {
+		private long mTriggerTime;
+		private PendingIntent mPendingIntent;
+		public AlarmClockInfo(long triggerTime, PendingIntent showIntent) {
+			mTriggerTime = triggerTime;
+			mPendingIntent = showIntent;
+		}
+
+		public long getTriggerTime() {
+			return mTriggerTime;
+		}
+
+		public PendingIntent getShowIntent() {
+			return mPendingIntent;
+		}
+	}
+
+	public static interface OnAlarmListener {
+		void onAlarm();
 	}
 }

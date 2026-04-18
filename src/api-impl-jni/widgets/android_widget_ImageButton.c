@@ -14,20 +14,21 @@ JNIEXPORT jlong JNICALL Java_android_widget_ImageButton_native_1constructor(JNIE
 	GtkWidget *image = gtk_picture_new_for_resource("/org/gtk/libgtk/icons/16x16/status/image-missing.png"); // show "broken image" icon
 	gtk_button_set_child(GTK_BUTTON(button), image);
 	wrapper_widget_set_child(WRAPPER_WIDGET(wrapper), button);
-	wrapper_widget_consume_touch_events(WRAPPER_WIDGET(wrapper));  // Android button consumes touch events
+	wrapper_widget_consume_touch_events(WRAPPER_WIDGET(wrapper)); // Android button consumes touch events
 	wrapper_widget_set_jobject(WRAPPER_WIDGET(wrapper), env, this);
 
 	return _INTPTR(button);
 }
 
-static void clicked_cb(GtkWidget *button, gpointer user_data) {
+static void clicked_cb(GtkWidget *button, gpointer user_data)
+{
 	printf("clicked_cb\n");
 	JNIEnv *env = get_jni_env();
 	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_widget_get_parent(button));
 
 	(*env)->CallBooleanMethod(env, wrapper->jobj, handle_cache.view.performClick);
 
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 }
 

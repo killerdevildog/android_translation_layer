@@ -32,7 +32,6 @@ JNIEXPORT jint JNICALL Java_android_content_res_XmlBlock_nativeNext(JNIEnv *env,
 				return code;
 			default:
 				continue;
-
 		}
 	}
 }

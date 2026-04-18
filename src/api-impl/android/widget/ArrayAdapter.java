@@ -163,7 +163,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				mObjects.add(object);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Adds the specified Collection at the end of the array.
@@ -178,14 +179,15 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				mObjects.addAll(collection);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Adds the specified items at the end of the array.
 	 *
 	 * @param items The items to add at the end of the array.
 	 */
-	public void addAll(T ... items) {
+	public void addAll(T... items) {
 		synchronized (mLock) {
 			if (mOriginalValues != null) {
 				Collections.addAll(mOriginalValues, items);
@@ -193,7 +195,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				Collections.addAll(mObjects, items);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Inserts the specified object at the specified index in the array.
@@ -209,7 +212,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				mObjects.add(index, object);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Removes the specified object from the array.
@@ -224,7 +228,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				mObjects.remove(object);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Remove all elements from the list.
@@ -237,7 +242,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				mObjects.clear();
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * Sorts the content of this adapter using the specified comparator.
@@ -253,7 +259,8 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 				Collections.sort(mObjects, comparator);
 			}
 		}
-		if (mNotifyOnChange) notifyDataSetChanged();
+		if (mNotifyOnChange)
+			notifyDataSetChanged();
 	}
 	/**
 	 * {@inheritDoc}
@@ -331,7 +338,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 		return createViewFromResource(position, convertView, parent, mResource);
 	}
 	private View createViewFromResource(int position, View convertView, ViewGroup parent,
-			int resource) {
+	                                    int resource) {
 		View view;
 		TextView text;
 		if (convertView == null) {
@@ -342,15 +349,15 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 		try {
 			if (mFieldId == 0) {
 				//  If no custom field is assigned, assume the whole resource is a TextView
-				text = (TextView) view;
+				text = (TextView)view;
 			} else {
 				//  Otherwise, find the TextView field within the layout
-				text = (TextView) view.findViewById(mFieldId);
+				text = (TextView)view.findViewById(mFieldId);
 			}
 		} catch (ClassCastException e) {
 			Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");
 			throw new IllegalStateException(
-					"ArrayAdapter requires the resource ID to be a TextView", e);
+			    "ArrayAdapter requires the resource ID to be a TextView", e);
 		}
 		T item = getItem(position);
 		if (item instanceof CharSequence) {
@@ -387,7 +394,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 	 * @return An ArrayAdapter<CharSequence>.
 	 */
 	public static ArrayAdapter<CharSequence> createFromResource(Context context,
-			int textArrayResId, int textViewResId) {
+	                                                            int textArrayResId, int textViewResId) {
 		CharSequence[] strings = context.getResources().getTextArray(textArrayResId);
 		return new ArrayAdapter<CharSequence>(context, textViewResId, strings);
 	}
@@ -455,7 +462,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			//noinspection unchecked
-			mObjects = (List<T>) results.values;
+			mObjects = (List<T>)results.values;
 			if (results.count > 0) {
 				notifyDataSetChanged();
 			} else {

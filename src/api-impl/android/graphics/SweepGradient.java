@@ -49,7 +49,7 @@ public class SweepGradient extends Shader {
 	 *                 spaced evenly.
 	 */
 	public SweepGradient(float cx, float cy,
-			     int colors[], float positions[]) {
+	                     int colors[], float positions[]) {
 		if (colors.length < 2) {
 			throw new IllegalArgumentException("needs >= 2 number of colors");
 		}
@@ -91,15 +91,14 @@ public class SweepGradient extends Shader {
 		switch (mType) {
 			case TYPE_COLORS_AND_POSITIONS:
 				copy = new SweepGradient(mCx, mCy, mColors.clone(),
-							 mPositions != null ? mPositions.clone() : null);
+				                         mPositions != null ? mPositions.clone() : null);
 				break;
 			case TYPE_COLOR_START_AND_COLOR_END:
 				copy = new SweepGradient(mCx, mCy, mColor0, mColor1);
 				break;
 			default:
 				throw new IllegalArgumentException("SweepGradient should be created with either "
-								   +
-								   "colors and positions or start color and end color");
+				                                   + "colors and positions or start color and end color");
 		}
 		copyLocalMatrix(copy);
 		return copy;

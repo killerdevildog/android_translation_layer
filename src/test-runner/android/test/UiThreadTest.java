@@ -16,10 +16,10 @@
 
 package android.test;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 /**
  * This annotation can be used on an {@link InstrumentationTestCase}'s test methods.

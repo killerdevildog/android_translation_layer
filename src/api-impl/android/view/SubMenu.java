@@ -9,5 +9,4 @@ public interface SubMenu extends Menu {
 	public void clearHeader();
 
 	public SubMenu setIcon(Drawable icon);
-
 }

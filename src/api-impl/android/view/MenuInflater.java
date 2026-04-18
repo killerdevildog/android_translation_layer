@@ -24,13 +24,11 @@ import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * This class is used to instantiate menu XML files into Menu objects.
@@ -105,7 +103,8 @@ public class MenuInflater {
 		} catch (IOException e) {
 			throw new InflateException("Error inflating menu XML", e);
 		} finally {
-			if (parser != null) parser.close();
+			if (parser != null)
+				parser.close();
 		}
 	}
 
@@ -114,7 +113,7 @@ public class MenuInflater {
 	* call this recursively.
 	*/
 	private void parseMenu(XmlPullParser parser, AttributeSet attrs, Menu menu)
-			throws XmlPullParserException, IOException {
+	    throws XmlPullParserException, IOException {
 		MenuState menuState = new MenuState(menu);
 
 		int eventType = parser.getEventType();
@@ -195,7 +194,7 @@ public class MenuInflater {
 	* appears to do nothing.
 	*/
 	private void registerMenu(@SuppressWarnings("unused") MenuItem item,
-			@SuppressWarnings("unused") AttributeSet set) {
+	                          @SuppressWarnings("unused") AttributeSet set) {
 	}
 
 	/**
@@ -204,7 +203,7 @@ public class MenuInflater {
 	* appears to do nothing.
 	*/
 	private void registerMenu(@SuppressWarnings("unused") SubMenu subMenu,
-			@SuppressWarnings("unused") AttributeSet set) {
+	                          @SuppressWarnings("unused") AttributeSet set) {
 	}
 
 	// Needed by layoutlib.
@@ -213,8 +212,8 @@ public class MenuInflater {
 	}
 
 	private static class InflatedOnMenuItemClickListener
-			implements MenuItem.OnMenuItemClickListener {
-		private static final Class<?>[] PARAM_TYPES = new Class[] { MenuItem.class };
+	    implements MenuItem.OnMenuItemClickListener {
+		private static final Class<?>[] PARAM_TYPES = new Class[] {MenuItem.class};
 
 		private Object mRealOwner;
 		private Method mMethod;
@@ -226,8 +225,7 @@ public class MenuInflater {
 				mMethod = c.getMethod(methodName, PARAM_TYPES);
 			} catch (Exception e) {
 				InflateException ex = new InflateException(
-						"Couldn't resolve menu item onClick handler " + methodName +
-						" in class " + c.getName());
+				    "Couldn't resolve menu item onClick handler " + methodName + " in class " + c.getName());
 				ex.initCause(e);
 				throw ex;
 			}
@@ -236,7 +234,7 @@ public class MenuInflater {
 		public boolean onMenuItemClick(MenuItem item) {
 			try {
 				if (mMethod.getReturnType() == Boolean.TYPE) {
-					return (Boolean) mMethod.invoke(mRealOwner, item);
+					return (Boolean)mMethod.invoke(mRealOwner, item);
 				} else {
 					mMethod.invoke(mRealOwner, item);
 					return true;
@@ -259,7 +257,7 @@ public class MenuInflater {
 			return owner;
 		}
 		if (owner instanceof ContextWrapper) {
-			return findRealOwner(((ContextWrapper) owner).getBaseContext());
+			return findRealOwner(((ContextWrapper)owner).getBaseContext());
 		}
 		return owner;
 	}
@@ -338,7 +336,7 @@ public class MenuInflater {
 		*/
 		public void readGroup(AttributeSet attrs) {
 			TypedArray a = mContext.obtainStyledAttributes(attrs,
-					com.android.internal.R.styleable.MenuGroup);
+			                                               com.android.internal.R.styleable.MenuGroup);
 
 			groupId = a.getResourceId(com.android.internal.R.styleable.MenuGroup_id, defaultGroupId);
 			groupCheckable = a.getInt(com.android.internal.R.styleable.MenuGroup_checkableBehavior, defaultItemCheckable);
@@ -353,7 +351,7 @@ public class MenuInflater {
 		*/
 		public void readItem(AttributeSet attrs) {
 			TypedArray a = mContext.obtainStyledAttributes(attrs,
-					com.android.internal.R.styleable.MenuItem);
+			                                               com.android.internal.R.styleable.MenuItem);
 
 			// Inherit attributes from the group as default value
 			itemId = a.getResourceId(com.android.internal.R.styleable.MenuItem_id, defaultItemId);
@@ -384,11 +382,11 @@ public class MenuInflater {
 
 		private void setItem(MenuItem item) {
 			item.setChecked(itemChecked)
-				.setVisible(itemVisible)
-				.setEnabled(itemEnabled)
-				.setCheckable(itemCheckable >= 1)
-				.setTitleCondensed(itemTitleCondensed)
-				.setIcon(itemIconResId);
+			    .setVisible(itemVisible)
+			    .setEnabled(itemEnabled)
+			    .setCheckable(itemCheckable >= 1)
+			    .setTitleCondensed(itemTitleCondensed)
+			    .setIcon(itemIconResId);
 
 			if (itemShowAsAction >= 0) {
 				item.setShowAsAction(itemShowAsAction);
@@ -397,16 +395,16 @@ public class MenuInflater {
 			if (itemListenerMethodName != null) {
 				if (mContext.isRestricted()) {
 					throw new IllegalStateException("The android:onClick attribute cannot "
-							+ "be used within a restricted context");
+					                                + "be used within a restricted context");
 				}
 				item.setOnMenuItemClickListener(
-						new InflatedOnMenuItemClickListener(getRealOwner(), itemListenerMethodName));
+				    new InflatedOnMenuItemClickListener(getRealOwner(), itemListenerMethodName));
 			}
 
 			boolean actionViewSpecified = false;
 			if (itemActionViewClassName != null) {
-				View actionView = (View) newInstance(itemActionViewClassName,
-						ACTION_VIEW_CONSTRUCTOR_SIGNATURE, mActionViewConstructorArguments);
+				View actionView = (View)newInstance(itemActionViewClassName,
+				                                    ACTION_VIEW_CONSTRUCTOR_SIGNATURE, mActionViewConstructorArguments);
 				item.setActionView(actionView);
 				actionViewSpecified = true;
 			}
@@ -415,7 +413,7 @@ public class MenuInflater {
 					actionViewSpecified = true;
 				} else {
 					Log.w(LOG_TAG, "Ignoring attribute 'itemActionViewLayout'."
-							+ " Action view already specified.");
+					               + " Action view already specified.");
 				}
 			}
 		}
@@ -440,12 +438,12 @@ public class MenuInflater {
 
 		@SuppressWarnings("unchecked")
 		private <T> T newInstance(String className, Class<?>[] constructorSignature,
-				Object[] arguments) {
+		                          Object[] arguments) {
 			try {
 				Class<?> clazz = mContext.getClassLoader().loadClass(className);
 				Constructor<?> constructor = clazz.getConstructor(constructorSignature);
 				constructor.setAccessible(true);
-				return (T) constructor.newInstance(arguments);
+				return (T)constructor.newInstance(arguments);
 			} catch (Exception e) {
 				Log.w(LOG_TAG, "Cannot instantiate class: " + className, e);
 			}

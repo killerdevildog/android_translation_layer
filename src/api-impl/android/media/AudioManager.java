@@ -6,6 +6,8 @@ public class AudioManager {
 
 	public static final int STREAM_MUSIC = 0x3;
 
+	private native void nativeSetStreamVolume(int volume);
+
 	public boolean isBluetoothA2dpOn() {
 		return false;
 	}
@@ -38,11 +40,11 @@ public class AudioManager {
 	}
 
 	public int requestAudioFocus(OnAudioFocusChangeListener listener, int streamType, int durationHint) {
-		return /*AUDIOFOCUS_REQUEST_GRANTED*/1;
+		return /*AUDIOFOCUS_REQUEST_GRANTED*/ 1;
 	}
 
 	public int abandonAudioFocus(OnAudioFocusChangeListener listener) {
-		return /*AUDIOFOCUS_REQUEST_GRANTED*/1;
+		return /*AUDIOFOCUS_REQUEST_GRANTED*/ 1;
 	}
 
 	public boolean isWiredHeadsetOn() {
@@ -50,7 +52,7 @@ public class AudioManager {
 	}
 
 	public void setStreamVolume(int streamType, int index, int flags) {
-		System.out.println("AudioManager.setStreamVolume: >" + streamType + "< >" + index + "< >" + flags + "<");
+		nativeSetStreamVolume(index);
 	}
 
 	public boolean isStreamMute(int streamType) {
@@ -59,5 +61,38 @@ public class AudioManager {
 
 	public boolean isMusicActive() {
 		return false;
+	}
+
+	public void setSpeakerphoneOn(boolean on) {}
+
+	public boolean isSpeakerphoneOn() {
+		return false;
+	}
+
+	public void setBluetoothScoOn(boolean on) {}
+
+	public boolean isBluetoothScoOn() {
+		return false;
+	}
+
+	public void stopBluetoothSco() {}
+
+	public void setMode(int mode) {}
+
+	public int getMode() {
+		return /*MODE_NORMAL*/ 0;
+	}
+
+	public boolean isMicrophoneMute() {
+		return false;
+	}
+
+	public void setMicrophoneMute(boolean on) {
+		System.out.println("AudioManager.setMicrophoneMute(" + on + ")");
+	}
+	public void unloadSoundEffects() {}
+
+	public int generateAudioSessionId() {
+		return 0;
 	}
 }

@@ -1,10 +1,5 @@
 package android.atl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.res.AssetFileDescriptor;
@@ -14,6 +9,10 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class ATLMediaContentProvider extends ContentProvider {
 
@@ -26,7 +25,7 @@ public class ATLMediaContentProvider extends ContentProvider {
 		this.selectedFile = selectedFile == null ? null : new File(selectedFile);
 		this.waitingForFileChooser = false;
 		this.timestamp = System.currentTimeMillis();
-		synchronized(this) {
+		synchronized (this) {
 			notifyAll();
 		}
 	}
@@ -41,7 +40,7 @@ public class ATLMediaContentProvider extends ContentProvider {
 				}
 			});
 		}
-		synchronized(this) {
+		synchronized (this) {
 			try {
 				while (waitingForFileChooser) {
 					wait();
@@ -54,6 +53,10 @@ public class ATLMediaContentProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+		if (selectionArgs != null && selectionArgs.length > 0) {
+			selectedFile = new File(selectionArgs[0]);
+			timestamp = System.currentTimeMillis();
+		}
 		// if we haven't selected a file, open the file chooser
 		if (!"0".equals(uri.getLastPathSegment()) && timestamp + 1000 < System.currentTimeMillis()) {
 			openFileChooser();
@@ -63,12 +66,12 @@ public class ATLMediaContentProvider extends ContentProvider {
 		if (uri.getQueryParameter("distinct") != null) {
 			for (int i = 0; i < projection.length; i++) {
 				switch (projection[i]) {
-				case "bucket_display_name":
-					row[i] = "files";
-					break;
-				case "bucket_id":
-					row[i] = 0;
-					break;
+					case "bucket_display_name":
+						row[i] = "files";
+						break;
+					case "bucket_id":
+						row[i] = 0;
+						break;
 				}
 			}
 		} else {

@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
-
 import javax.crypto.KeyGeneratorSpi;
 import javax.crypto.SecretKey;
 
@@ -17,7 +16,7 @@ public abstract class KeyGenerator extends KeyGeneratorSpi {
 	public static class AES extends KeyGenerator {
 		@Override
 		protected void engineInit(AlgorithmParameterSpec params, SecureRandom random)
-				throws InvalidAlgorithmParameterException {
+		    throws InvalidAlgorithmParameterException {
 			try {
 				keyGenerator = javax.crypto.KeyGenerator.getInstance("AES", "BC");
 				this.params = params;
@@ -32,7 +31,7 @@ public abstract class KeyGenerator extends KeyGeneratorSpi {
 	public static class HmacSHA512 extends KeyGenerator {
 		@Override
 		protected void engineInit(AlgorithmParameterSpec params, SecureRandom random)
-				throws InvalidAlgorithmParameterException {
+		    throws InvalidAlgorithmParameterException {
 			try {
 				keyGenerator = javax.crypto.KeyGenerator.getInstance("HmacSHA512", "BC");
 				this.params = params;
@@ -43,7 +42,6 @@ public abstract class KeyGenerator extends KeyGeneratorSpi {
 			}
 		}
 	}
-
 
 	@Override
 	protected SecretKey engineGenerateKey() {
@@ -64,5 +62,4 @@ public abstract class KeyGenerator extends KeyGeneratorSpi {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'engineInit'");
 	}
-
 }

@@ -19,9 +19,7 @@ package android.test.suitebuilder;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.Smoke;
 import android.test.suitebuilder.annotation.Suppress;
-
 import com.android.internal.util.Predicate;
-
 import java.lang.annotation.Annotation;
 
 /**
@@ -29,53 +27,52 @@ import java.lang.annotation.Annotation;
  */
 public class TestPredicates {
 
-    static final Predicate<TestMethod> REJECT_INSTRUMENTATION =
-            not(new AssignableFrom(InstrumentationTestCase.class));
+	static final Predicate<TestMethod> REJECT_INSTRUMENTATION =
+	    not(new AssignableFrom(InstrumentationTestCase.class));
 
-    static final Predicate<TestMethod> SELECT_SMOKE = hasAnnotation(Smoke.class);
+	static final Predicate<TestMethod> SELECT_SMOKE = hasAnnotation(Smoke.class);
 
-    static final Predicate<TestMethod> REJECT_SUPPRESSED = not(hasAnnotation(Suppress.class));
+	static final Predicate<TestMethod> REJECT_SUPPRESSED = not(hasAnnotation(Suppress.class));
 
-    /**
+	/**
      * Return a predicate that checks to see if a {@link TestMethod} has an instance of the supplied
      * annotation class, either on the method or on the containing class.
      */
-    public static Predicate<TestMethod> hasAnnotation(Class<? extends Annotation> annotationClass) {
-        return new HasAnnotation(annotationClass);
-    }
+	public static Predicate<TestMethod> hasAnnotation(Class<? extends Annotation> annotationClass) {
+		return new HasAnnotation(annotationClass);
+	}
 
-    private static class HasAnnotation implements Predicate<TestMethod> {
+	private static class HasAnnotation implements Predicate<TestMethod> {
 
-        private final Class<? extends Annotation> annotationClass;
+		private final Class<? extends Annotation> annotationClass;
 
-        private HasAnnotation(Class<? extends Annotation> annotationClass) {
-            this.annotationClass = annotationClass;
-        }
+		private HasAnnotation(Class<? extends Annotation> annotationClass) {
+			this.annotationClass = annotationClass;
+		}
 
-        @Override
-        public boolean apply(TestMethod testMethod) {
-            return testMethod.getAnnotation(annotationClass) != null ||
-                    testMethod.getEnclosingClass().getAnnotation(annotationClass) != null;
-        }
-    }
+		@Override
+		public boolean apply(TestMethod testMethod) {
+			return testMethod.getAnnotation(annotationClass) != null || testMethod.getEnclosingClass().getAnnotation(annotationClass) != null;
+		}
+	}
 
-    /**
+	/**
      * Returns a Predicate that evaluates to true iff the given Predicate
      * evaluates to false.
      */
-    public static <T> Predicate<T> not(Predicate<? super T> predicate) {
-        return new NotPredicate<T>(predicate);
-    }
+	public static <T> Predicate<T> not(Predicate<? super T> predicate) {
+		return new NotPredicate<T>(predicate);
+	}
 
-    private static class NotPredicate<T> implements Predicate<T> {
-        private final Predicate<? super T> predicate;
+	private static class NotPredicate<T> implements Predicate<T> {
+		private final Predicate<? super T> predicate;
 
-        private NotPredicate(Predicate<? super T> predicate) {
-            this.predicate = predicate;
-        }
+		private NotPredicate(Predicate<? super T> predicate) {
+			this.predicate = predicate;
+		}
 
-        public boolean apply(T t) {
-            return !predicate.apply(t);
-        }
-    }
+		public boolean apply(T t) {
+			return !predicate.apply(t);
+		}
+	}
 }

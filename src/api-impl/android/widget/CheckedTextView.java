@@ -17,5 +17,4 @@ public class CheckedTextView extends TextView {
 	public void setChecked(boolean checked) {}
 
 	public void setCheckMarkDrawable(Drawable d) {}
-
 }

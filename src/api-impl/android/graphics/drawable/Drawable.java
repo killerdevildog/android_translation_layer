@@ -1,27 +1,18 @@
 package android.graphics.drawable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
+import android.atl.GskCanvas;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.content.res.Resources.Theme;
 import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.atl.GskCanvas;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
@@ -29,6 +20,14 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.LayoutDirection;
 import android.util.TypedValue;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 public class Drawable {
 	public static interface Callback {
@@ -51,6 +50,15 @@ public class Drawable {
 	}
 
 	public Drawable(long paintable) {
+		native_ref(paintable);
+		this.paintable = paintable;
+	}
+
+	protected void setPaintable(long paintable) {
+		if (this.paintable != 0)
+			native_unref(this.paintable);
+		if (paintable != 0)
+			native_ref(paintable);
 		this.paintable = paintable;
 	}
 
@@ -62,7 +70,6 @@ public class Drawable {
 
 	public ConstantState getConstantState() {
 		return new ConstantState() {
-
 			@Override
 			public Drawable newDrawable(Resources res) {
 				return Drawable.this;
@@ -77,7 +84,6 @@ public class Drawable {
 			public int getChangingConfigurations() {
 				return Drawable.this.getChangingConfigurations();
 			}
-
 		};
 	}
 
@@ -86,6 +92,10 @@ public class Drawable {
 		public abstract Drawable newDrawable(Resources res);
 
 		public abstract Drawable newDrawable();
+
+		public Drawable newDrawable(Resources res, Theme theme) {
+			return newDrawable(res);
+		}
 
 		public abstract int getChangingConfigurations();
 	}
@@ -160,7 +170,7 @@ public class Drawable {
 		return false;
 	}
 
-	public boolean setVisible (boolean visible, boolean restart) {
+	public boolean setVisible(boolean visible, boolean restart) {
 		return false;
 	}
 
@@ -173,8 +183,8 @@ public class Drawable {
 
 	public void clearColorFilter() {}
 
-	public final int getLevel() {return 0;}
-	public final boolean setLevel(int level) {return false;}
+	public final int getLevel() { return 0; }
+	public final boolean setLevel(int level) { return false; }
 
 	public void setColorFilter(int color, PorterDuff.Mode mode) {
 		setColorFilter(new PorterDuffColorFilter(color, mode));
@@ -185,8 +195,8 @@ public class Drawable {
 		return this;
 	}
 
-	public int getIntrinsicWidth() {return -1;}
-	public int getIntrinsicHeight() {return -1;}
+	public int getIntrinsicWidth() { return -1; }
+	public int getIntrinsicHeight() { return -1; }
 
 	public void setTintList(ColorStateList tint) {}
 
@@ -201,20 +211,20 @@ public class Drawable {
 	/* Copyright (C) 2006 The Android Open Source Project */
 	BlendModeColorFilter updateBlendModeFilter(BlendModeColorFilter blendFilter, ColorStateList tint, BlendMode blendMode) {
 		if (tint == null || blendMode == null) {
-		    return null;
+			return null;
 		}
 
 		final int color = tint.getColorForState(getState(), Color.TRANSPARENT);
 		if (blendFilter == null || blendFilter.getColor() != color
-			|| blendFilter.getMode() != blendMode) {
-		    return new BlendModeColorFilter(color, blendMode);
+		    || blendFilter.getMode() != blendMode) {
+			return new BlendModeColorFilter(color, blendMode);
 		}
 		return blendFilter;
 	}
 
 	/* Copyright (C) 2006 The Android Open Source Project */
 	PorterDuffColorFilter updateTintFilter(PorterDuffColorFilter tintFilter, ColorStateList tint, PorterDuff.Mode tintMode) {
-		System.out.println("updateTintFilter("+tintFilter+", "+tint+", "+tintMode+")");
+		System.out.println("updateTintFilter(" + tintFilter + ", " + tint + ", " + tintMode + ")");
 		if (tint == null || tintMode == null) {
 			return null;
 		}
@@ -231,7 +241,7 @@ public class Drawable {
 
 	public void setTintMode(PorterDuff.Mode tintMode) {}
 
-	public boolean isProjected () {return false;}
+	public boolean isProjected() { return false; }
 
 	public static Drawable createFromXml(Resources resources, XmlResourceParser parser) throws XmlPullParserException, IOException {
 		return createFromXml(resources, parser, null);
@@ -239,7 +249,8 @@ public class Drawable {
 
 	public static Drawable createFromXml(Resources resources, XmlResourceParser parser, Theme theme) throws XmlPullParserException, IOException {
 		int type;
-		while ((type=parser.next()) != XmlPullParser.START_TAG && type != XmlPullParser.END_DOCUMENT);
+		while ((type = parser.next()) != XmlPullParser.START_TAG && type != XmlPullParser.END_DOCUMENT)
+			;
 		if (type != XmlPullParser.START_TAG)
 			throw new XmlPullParserException("No start tag found");
 
@@ -261,7 +272,8 @@ public class Drawable {
 				GradientDrawable drawable = new GradientDrawable();
 				drawable.inflate(resources, parser, attrs, theme);
 				return drawable;
-			} case "bitmap": {
+			}
+			case "bitmap": {
 				BitmapDrawable drawable = new BitmapDrawable();
 				drawable.inflate(resources, parser, attrs, theme);
 				return drawable;
@@ -306,9 +318,12 @@ public class Drawable {
 	}
 
 	public static Drawable createFromResourceStream(Resources resources, TypedValue value, InputStream is, String file,
-			Object object) {
+	                                                Object object) {
 		if (!file.endsWith(".9.png")) {
-			return new BitmapDrawable(resources, BitmapFactory.decodeStream(is));
+			final Bitmap bm = BitmapFactory.decodeStream(is);
+			if (bm == null)
+				return null;
+			return new BitmapDrawable(resources, bm);
 		}
 		Path path = Paths.get(android.os.Environment.getExternalStorageDirectory().getPath(), file);
 		if (!Files.exists(path)) {
@@ -321,14 +336,15 @@ public class Drawable {
 				e.printStackTrace();
 			}
 		}
-		long paintable = native_paintable_from_path(path.toString());
-		return new Drawable(paintable);
+		return new NinePatchDrawable(path.toString());
 	}
 
 	public static Drawable createFromPath(String path) {
 		if (path == null)
 			return null;
 
+		if (path.endsWith(".9.png"))
+			return new NinePatchDrawable(path);
 		long paintable = native_paintable_from_path(path);
 		return new Drawable(paintable);
 	}
@@ -381,8 +397,21 @@ public class Drawable {
 
 	public void setHotspotBounds(int left, int top, int right, int bottom) {}
 
+	@SuppressWarnings("removal")
+	protected void finalize() throws Throwable {
+		try {
+			if (paintable != 0)
+				native_unref(paintable);
+			paintable = 0;
+		} finally {
+			super.finalize();
+		}
+	}
+
 	protected static native long native_paintable_from_path(String path);
 	protected native long native_constructor();
 	protected native void native_invalidate(long paintable);
 	protected native void native_draw(long paintable, long snapshot, int width, int height);
+	protected native void native_ref(long paintable);
+	protected native void native_unref(long paintable);
 }

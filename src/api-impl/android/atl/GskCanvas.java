@@ -1,63 +1,101 @@
 package android.atl;
 
 import android.graphics.*;
-
+import android.view.DisplayListCanvas;
+import android.view.RenderNode;
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * GskCanvas:
  *   - implements Canvas for onscreen rendering inside GTKs snapshot function
  */
-public class GskCanvas extends Canvas {
+public class GskCanvas extends DisplayListCanvas {
 	public long snapshot;
-	private int save_count = 1;
 	private int[] push_history = null;
+	private Stack<Matrix> state_stack = new Stack<>();
 
 	private static Paint default_paint = new Paint();
 
 	public GskCanvas(long snapshot) {
 		this.snapshot = snapshot;
+		state_stack.push(new Matrix());
 	}
 
 	@Override
 	public int save() {
 		native_save(snapshot);
-		return save_count++;
+		state_stack.push(new Matrix(state_stack.peek()));
+		return getSaveCount() - 1;
 	}
 
 	@Override
 	public void restore() {
+		int save_count = getSaveCount();
+		if (save_count <= 1)
+			throw new IllegalStateException("No more saves to restore");
 		if (push_history != null && push_history.length > save_count && push_history[save_count] > 0) {
 			native_pop(snapshot, push_history[save_count]);
 			push_history[save_count] = 0;
 		}
-		save_count--;
+		state_stack.pop();
 		native_restore(snapshot);
 	}
 
 	@Override
-	public void restoreToCount(int count) {
-		if (count < 1) {
-			throw new IllegalArgumentException("count must be >= 1");
-		}
-		while (save_count > count) {
-			restore();
-		}
+	public int getSaveCount() {
+		return state_stack.size();
 	}
 
 	@Override
 	public void translate(float dx, float dy) {
 		native_translate(snapshot, dx, dy);
+		state_stack.peek().preTranslate(dx, dy);
 	}
 
 	@Override
 	public void rotate(float degrees) {
 		native_rotate(snapshot, degrees);
+		state_stack.peek().preRotate(degrees);
+	}
+
+	@Override
+	public void scale(float sx, float sy) {
+		native_scale(snapshot, sx, sy);
+		state_stack.peek().preScale(sx, sy);
+	}
+
+	@Override
+	public void concat(Matrix matrix) {
+		if (matrix != null) {
+			native_concat(snapshot, matrix.native_instance);
+			state_stack.peek().preConcat(matrix);
+		}
+	}
+
+	@Override
+	public void getMatrix(Matrix matrix) {
+		matrix.set(state_stack.peek());
+	}
+
+	@Override
+	public boolean clipRect(float left, float top, float right, float bottom) {
+		native_clipRect(snapshot, left, top, right, bottom);
+		int save_count = getSaveCount();
+		if (push_history == null)
+			push_history = new int[save_count + 1];
+		else if (push_history.length <= save_count)
+			push_history = Arrays.copyOf(push_history, save_count + 1);
+		push_history[save_count]++;
+		return right > left && bottom > top;
 	}
 
 	@Override
 	public void drawBitmap(Bitmap bitmap, Rect src, Rect dst, Paint paint) {
-		native_drawBitmap(snapshot, bitmap.getTexture(), dst.left, dst.top, dst.width(), dst.height(), paint != null ? paint.paint : default_paint.paint);
+		if (src == null)
+			native_drawBitmap(snapshot, bitmap.getTexture(), dst.left, dst.top, dst.width(), dst.height(), paint != null ? paint.paint : default_paint.paint);
+		else
+			native_drawBitmap(snapshot, bitmap.getTexture(), dst.left, dst.top, dst.width(), dst.height(), src.left, src.top, src.width(), src.height(), paint != null ? paint.paint : default_paint.paint);
 	}
 
 	@Override
@@ -72,24 +110,12 @@ public class GskCanvas extends Canvas {
 	}
 
 	@Override
-	public void rotate(float degrees, float px, float py) {
-		native_translate(snapshot, px, py);
-		native_rotate(snapshot, degrees);
-		native_translate(snapshot, -px, -py);
-	}
-
-	@Override
 	public void drawText(String text, float x, float y, Paint paint) {
-		if(text == null) {
+		if (text == null) {
 			new Exception("drawText: text is null; stack trace:").printStackTrace();
 			return;
 		}
 		native_drawText(snapshot, text, x, y, paint != null ? paint.paint : default_paint.paint);
-	}
-
-	@Override
-	public void drawText(String text, int start, int end, float x, float y, Paint paint) {
-		drawText(text.substring(start, end), x, y, paint);
 	}
 
 	@Override
@@ -98,36 +124,10 @@ public class GskCanvas extends Canvas {
 	}
 
 	@Override
-	public void drawLines(float[] points, Paint paint) {
-		drawLines(points, 0, points.length, paint);
-	}
-
-	@Override
 	public void drawLines(float[] points, int offset, int count, Paint paint) {
 		if (offset + count < 0 /* overflow */ || offset + count > points.length)
-			throw new IndexOutOfBoundsException();
+			throw new ArrayIndexOutOfBoundsException();
 		native_drawLines(snapshot, points, offset, count, paint != null ? paint.paint : default_paint.paint);
-	}
-
-	@Override
-	public void drawBitmap(Bitmap bitmap, float left, float top, Paint paint) {
-		Rect src = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		Rect dst = new Rect((int)left, (int)top, (int)left + bitmap.getWidth(), (int)top + bitmap.getHeight());
-		drawBitmap(bitmap, src, dst, paint);
-	}
-
-	@Override
-	public void drawBitmap(Bitmap bitmap, Rect src, RectF dst, Paint paint) {
-		drawBitmap(bitmap, src, new Rect((int)dst.left, (int)dst.top, (int)dst.right, (int)dst.bottom), paint);
-	}
-
-	@Override
-	public void drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint) {
-		save();
-		concat(matrix);
-		drawBitmap(bitmap, 0, 0, paint);
-		restore();
-
 	}
 
 	@Override
@@ -141,33 +141,17 @@ public class GskCanvas extends Canvas {
 	}
 
 	@Override
-	public void scale(float sx, float sy) {
-		native_scale(snapshot, sx, sy);
+	public void drawOval(float left, float top, float right, float bottom, Paint paint) {
+		drawRoundRect(left, top, right, bottom, (right - left) / 2, (bottom - top) / 2, paint);
 	}
 
 	@Override
-	public void concat(Matrix matrix) {
-		if (matrix != null)
-			native_concat(snapshot, matrix.native_instance);
-	}
-
-	@Override
-	public void drawText(CharSequence text, int start, int end, float x, float y, Paint paint) {
-		drawText(text.toString().substring(start, end), x, y, paint);
-	}
-
-	@Override
-	public boolean clipRect(float left, float top, float right, float bottom) {
-		native_clipRect(snapshot, left, top, right, bottom);
-		if (push_history == null)
-			push_history = new int[save_count+1];
-		else if (push_history.length <= save_count)
-			push_history = Arrays.copyOf(push_history, save_count+1);
-		push_history[save_count]++;
-		return right > left && bottom > top;
+	public void drawRenderNode(RenderNode node) {
+		native_drawRenderNode(snapshot, node.getGskNode());
 	}
 
 	protected native void native_drawBitmap(long snapshot, long texture, int x, int y, int width, int height, long paint);
+	protected native void native_drawBitmap(long snapshot, long texture, int x, int y, int width, int height, int src_x, int src_y, int src_width, int src_height, long paint);
 	protected native void native_drawRect(long snapshot, float left, float top, float right, float bottom, long paint);
 	protected native void native_drawPath(long snapshot, long path, long paint);
 	protected native void native_translate(long snapshot, float dx, float dy);
@@ -182,4 +166,5 @@ public class GskCanvas extends Canvas {
 	protected native void native_concat(long snapshot, long matrix);
 	protected native void native_clipRect(long snapshot, float left, float top, float right, float bottom);
 	protected native void native_pop(long snapshot, int pop_count);
+	protected native void native_drawRenderNode(long snapshot, long render_node);
 }

@@ -3,9 +3,13 @@ package android.provider;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.AndroidException;
+import android.util.Slog;
 
 public class Settings {
-	public static final class Secure {
+	public static class NameValueTable implements BaseColumns {}
+
+	public static final class Secure extends NameValueTable {
+		private final static String TAG = "Settings$Secure";
 		public static final Uri CONTENT_URI = Uri.parse("content://settings/secure");
 
 		public static Uri getUriFor(String name) {
@@ -19,96 +23,207 @@ public class Settings {
 				case "advertising_id":
 					return "";
 				default:
-					java.lang.System.out.println("!!!! Settings$Secure.getString: unknown key: >" + key + "<");
+					Slog.w(TAG, "!!!! getString: unknown key: >" + key + "<");
 					return "NOTICEME";
 			}
 		}
-		public static int getInt(ContentResolver content_resolver, String key) {
-			return getInt(content_resolver, key, -1);
-		}
 
-		public static int getInt(ContentResolver content_resolver, String key, int def) {
+		protected static Integer getIntOrNull(ContentResolver content_resolver, String key) {
 			switch (key) {
 				case "limit_ad_tracking":
 					return 1; // obviously, duh
 				case "user_setup_complete":
 					return 1;
 				default:
-					java.lang.System.out.println("!!!! Settings$Secure.getInt: unknown key: >" + key + "<");
-					return def;
+					Slog.w(TAG, "!!!! getInt: unknown key: >" + key + "<");
+					return null;
+			}
+		}
+
+		public static int getInt(ContentResolver content_resolver, String key) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return -1; // NOTE: should actually throw a Settings$SettingNotFoundException
+			}
+		}
+
+		public static int getInt(ContentResolver content_resolver, String key, int def) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return def;
+			}
+		}
+
+		protected static Float getFloatOrNull(ContentResolver cr, String key) {
+			switch (key) {
+				default:
+					Slog.w(TAG, "!!!! getFloat: unknown key: >" + key + "<");
+					return null;
+			}
+		}
+
+		public static float getFloat(ContentResolver cr, String key) {
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return 0.0f; // NOTE: should actually throw a Settings$SettingNotFoundException
+			}
+		}
+
+		public static float getFloat(ContentResolver cr, String key, float def) {
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return def;
 			}
 		}
 	}
-	public static final class System {
+
+	public static final class System extends NameValueTable {
+		private final static String TAG = "Settings$System";
 		public static final Uri CONTENT_URI = Uri.parse("content://settings/system");
 
 		public static final Uri DEFAULT_NOTIFICATION_URI = getUriFor("notification_sound");
 
 		public static final Uri DEFAULT_RINGTONE_URI = getUriFor("ringtone");
 
-		public static int getInt(ContentResolver cr, String key, int def) {
-			int ret = getInt(cr, key);
-			if (ret != -1) {
-				return ret;
-			} else {
-				return def; // FIXME
-			}
+		public static Uri getUriFor(String name) {
+			return Uri.withAppendedPath(CONTENT_URI, name);
 		}
 
-		public static int getInt(ContentResolver cr, String key) {
+		protected static Integer getIntOrNull(ContentResolver cr, String key) {
 			switch (key) {
 				case "accelerometer_rotation":
 					return 0; // degrees? no clue
 				case "always_finish_activities":
 					return 0; // we certainly don't aggressively kill activities :P
 				default:
-					java.lang.System.out.println("!!!! Settings$System.getInt: unknown key: >" + key + "<");
-					return 0; // TODO: should be -1 probably?
+					Slog.w(TAG, "!!!! getInt: unknown key: >" + key + "<");
+					return null;
 			}
 		}
 
-		public static Uri getUriFor(String name) {
-			return Uri.withAppendedPath(CONTENT_URI, name);
-		}
-
-		public static float getFloat(ContentResolver cr, String key, float def) {
-			return 0.0f;
-		}
-	}
-
-	public static final class Global {
-		public static final Uri CONTENT_URI = Uri.parse("content://settings/global");
-
-		public static int getInt(ContentResolver cr, String key, int def) {
-			switch (key) {
-				default:
-					java.lang.System.out.println("!!!! Settings$Global.getInt: unknown key: >" + key + "<");
-					return def;
+		public static int getInt(ContentResolver content_resolver, String key) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return -1; // NOTE: should actually throw a Settings$SettingNotFoundException
 			}
 		}
 
-		public static float getFloat(ContentResolver cr, String key, float def) {
+		public static int getInt(ContentResolver content_resolver, String key, int def) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return def;
+			}
+		}
+
+		protected static Float getFloatOrNull(ContentResolver cr, String key) {
 			switch (key) {
+				case "font_scale":
+					return 1f;
 				default:
-					java.lang.System.out.println("!!!! Settings$Global.getFloat: unknown key: >" + key + "<");
-					return def;
+					Slog.w(TAG, "!!!! getFloat: unknown key: >" + key + "<");
+					return null;
 			}
 		}
 
 		public static float getFloat(ContentResolver cr, String key) {
-			return getFloat(cr, key, -1);
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return 0.0f; // NOTE: should actually throw a Settings$SettingNotFoundException
+			}
+		}
+
+		public static float getFloat(ContentResolver cr, String key, float def) {
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return def;
+			}
+		}
+	}
+
+	public static final class Global extends NameValueTable {
+		private final static String TAG = "Settings$Global";
+		public static final Uri CONTENT_URI = Uri.parse("content://settings/global");
+
+		public static Uri getUriFor(String name) {
+			return Uri.withAppendedPath(CONTENT_URI, name);
 		}
 
 		public static String getString(ContentResolver cr, String key) {
 			switch (key) {
 				default:
-					java.lang.System.out.println("!!!! Settings$Global.getString: unknown key: >" + key + "<");
+					Slog.w(TAG, "!!!! getString: unknown key: >" + key + "<");
 					return "STRING_FROM_SETTINGS_GLOBAL_WITH_KEY_" + key;
 			}
 		}
 
-		public static Uri getUriFor(String name) {
-			return Uri.withAppendedPath(CONTENT_URI, name);
+		protected static Integer getIntOrNull(ContentResolver content_resolver, String key) {
+			switch (key) {
+				default:
+					Slog.w(TAG, "!!!! getInt: unknown key: >" + key + "<");
+					return null;
+			}
+		}
+
+		public static int getInt(ContentResolver content_resolver, String key) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return -1; // NOTE: should actually throw a Settings$SettingNotFoundException
+			}
+		}
+
+		public static int getInt(ContentResolver content_resolver, String key, int def) {
+			Integer output = getIntOrNull(content_resolver, key);
+			if (output != null) {
+				return output.intValue();
+			} else {
+				return def;
+			}
+		}
+
+		protected static Float getFloatOrNull(ContentResolver cr, String key) {
+			switch (key) {
+				case "animator_duration_scale":
+					return 1.f;
+				default:
+					Slog.w(TAG, "!!!! getFloat: unknown key: >" + key + "<");
+					return null;
+			}
+		}
+
+		public static float getFloat(ContentResolver cr, String key) {
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return 0.0f; // NOTE: should actually throw a Settings$SettingNotFoundException
+			}
+		}
+
+		public static float getFloat(ContentResolver cr, String key, float def) {
+			Float output = getFloatOrNull(cr, key);
+			if (output != null) {
+				return output.floatValue();
+			} else {
+				return def;
+			}
 		}
 	}
 

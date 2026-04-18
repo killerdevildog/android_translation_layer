@@ -14,4 +14,7 @@ public class Toolbar extends View {
 		super(context, attributeSet);
 	}
 
+	public void setNavigationIcon(int resId) {}
+
+	public void setNavigationOnClickListener(OnClickListener listener) {}
 }

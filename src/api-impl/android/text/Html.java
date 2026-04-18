@@ -1,8 +1,7 @@
 package android.text;
 
-import org.xml.sax.XMLReader;
-
 import android.graphics.drawable.Drawable;
+import org.xml.sax.XMLReader;
 
 public class Html {
 
@@ -16,13 +15,17 @@ public class Html {
 
 	public static Spanned fromHtml(String source, int flags) {
 		return new SpannableString(source.replace("<br/>", "\n")
-		                                 .replace("<br>", "\n")
-		                                 .replace("&nbsp;", " "));
+		                               .replace("<br>", "\n")
+		                               .replace("&nbsp;", " "));
 		// TODO when JTidy is in use: s/<br \/>//g
 	}
 
 	public static Spanned fromHtml(String source, ImageGetter imageGetter, TagHandler tagHandler) {
 		return fromHtml(source, 0);
+	}
+
+	public static Spanned fromHtml(String source, int flags, ImageGetter imageGetter, TagHandler tagHandler) {
+		return fromHtml(source, flags);
 	}
 
 	public static String escapeHtml(CharSequence source) {
@@ -31,7 +34,7 @@ public class Html {
 			char c = source.charAt(i);
 			if (c == '<' || c == '>' || c == '&' || c == '"' || c == '\'' || c > 0x7F) {
 				out.append("&#");
-				out.append((int) c);
+				out.append((int)c);
 				out.append(';');
 			} else {
 				out.append(c);

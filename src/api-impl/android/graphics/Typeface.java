@@ -33,7 +33,7 @@ public class Typeface {
 	public static final int ITALIC = 2;
 	public static final int BOLD_ITALIC = 3;
 
-	public long native_instance = 0;  // directly accessed by androidx
+	public long native_instance = 0; // directly accessed by androidx
 
 	public static Typeface createFromAsset(AssetManager mgr, String path) {
 		return DEFAULT;
@@ -62,5 +62,21 @@ public class Typeface {
 
 	public static Typeface createFromFamiliesWithDefault(FontFamily[] families) {
 		return DEFAULT;
+	}
+
+	public static Typeface createFromFamiliesWithDefault(FontFamily[] families, int dummy1, int dummy2) {
+		return createFromFamiliesWithDefault(families);
+	}
+
+	public static class Builder {
+		public Builder(AssetManager mgr, String path) {}
+
+		public Builder setFontVariationSettings(String settings) {
+			return this;
+		}
+
+		public Typeface build() {
+			return DEFAULT;
+		}
 	}
 }

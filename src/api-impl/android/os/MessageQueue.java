@@ -135,7 +135,7 @@ public final class MessageQueue {
 			// We can assume mPtr != 0 because the loop is obviously still running.
 			// The looper will not call this method after the loop quits.
 			if (nativePollOnce(mPtr, nextPollTimeoutMillis)) {
-				return null;  // thread is managed by glib, so return instead of blocking
+				return null; // thread is managed by glib, so return instead of blocking
 			}
 
 			synchronized (this) {
@@ -288,7 +288,7 @@ public final class MessageQueue {
 			}
 			if (p == null) {
 				throw new IllegalStateException("The specified message queue synchronization "
-								+ " barrier token has not been posted or has already been removed.");
+				                                + " barrier token has not been posted or has already been removed.");
 			}
 			final boolean needWake;
 			if (prev != null) {

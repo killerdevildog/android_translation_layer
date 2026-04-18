@@ -76,7 +76,7 @@ public class SimpleAdapter extends BaseAdapter /*implements Filterable*/ {
 	 *        in the from parameter.
 	 */
 	public SimpleAdapter(Context context, List<? extends Map<String, ?>> data,
-			     int resource, String[] from, int[] to) {
+	                     int resource, String[] from, int[] to) {
 		mData = data;
 		mResource = mDropDownResource = resource;
 		mFrom = from;
@@ -113,7 +113,7 @@ public class SimpleAdapter extends BaseAdapter /*implements Filterable*/ {
 	}
 
 	private View createViewFromResource(int position, View convertView,
-					    ViewGroup parent, int resource) {
+	                                    ViewGroup parent, int resource) {
 		View v;
 		if (convertView == null) {
 			v = mInflater.inflate(resource, parent, false);
@@ -175,9 +175,7 @@ public class SimpleAdapter extends BaseAdapter /*implements Filterable*/ {
 							// ifs since a lot of views are TextViews (e.g. CheckBoxes).
 							setViewText((TextView)v, text);
 						} else {
-							throw new IllegalStateException(v.getClass().getName() +
-											" should be bound to a Boolean, not a " +
-											(data == null ? "<unknown type>" : data.getClass()));
+							throw new IllegalStateException(v.getClass().getName() + " should be bound to a Boolean, not a " + (data == null ? "<unknown type>" : data.getClass()));
 						}
 					} else if (v instanceof TextView) {
 						// Note: keep the instanceof TextView check at the bottom of these
@@ -191,8 +189,7 @@ public class SimpleAdapter extends BaseAdapter /*implements Filterable*/ {
 						}
 					} else {
 						throw new IllegalStateException(v.getClass().getName() + " is not a "
-										+
-										" view that can be bounds by this SimpleAdapter");
+						                                + " view that can be bounds by this SimpleAdapter");
 					}
 				}
 			}

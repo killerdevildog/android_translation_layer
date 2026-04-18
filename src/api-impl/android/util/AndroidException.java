@@ -19,19 +19,19 @@ package android.util;
 /**
  * Base class for all checked exceptions thrown by the Android frameworks.
  */
-public class AndroidException extends Exception {
-	public AndroidException() {
-	}
+public class AndroidException extends Exception{
+	public AndroidException(){}
 
-	public AndroidException(String name) {
+	public AndroidException(String name){
 		super(name);
-	}
+}
 
-	public AndroidException(String name, Throwable cause) {
-		super(name, cause);
-	}
+public AndroidException(String name, Throwable cause) {
+	super(name, cause);
+}
 
-	public AndroidException(Exception cause) {
-		super(cause);
-	}
-};
+public AndroidException(Exception cause) {
+	super(cause);
+}
+}
+;

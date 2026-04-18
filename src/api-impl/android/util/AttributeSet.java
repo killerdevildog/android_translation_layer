@@ -158,7 +158,7 @@ public interface AttributeSet {
 	 * @return Index in to 'options' or defaultValue.
 	 */
 	public int getAttributeListValue(String namespace, String attribute,
-					 String[] options, int defaultValue);
+	                                 String[] options, int defaultValue);
 
 	/**
 	 * Return the boolean value of 'attribute'.
@@ -170,7 +170,7 @@ public interface AttributeSet {
 	 * @return Resulting value.
 	 */
 	public boolean getAttributeBooleanValue(String namespace, String attribute,
-						boolean defaultValue);
+	                                        boolean defaultValue);
 
 	/**
 	 * Return the value of 'attribute' as a resource identifier.
@@ -188,7 +188,7 @@ public interface AttributeSet {
 	 * @return Resulting value.
 	 */
 	public int getAttributeResourceValue(String namespace, String attribute,
-					     int defaultValue);
+	                                     int defaultValue);
 
 	/**
 	 * Return the integer value of 'attribute'.
@@ -200,7 +200,7 @@ public interface AttributeSet {
 	 * @return Resulting value.
 	 */
 	public int getAttributeIntValue(String namespace, String attribute,
-					int defaultValue);
+	                                int defaultValue);
 
 	/**
 	 * Return the boolean value of 'attribute' that is formatted as an
@@ -214,7 +214,7 @@ public interface AttributeSet {
 	 * @return Resulting value.
 	 */
 	public int getAttributeUnsignedIntValue(String namespace, String attribute,
-						int defaultValue);
+	                                        int defaultValue);
 
 	/**
 	 * Return the float value of 'attribute'.
@@ -226,7 +226,7 @@ public interface AttributeSet {
 	 * @return Resulting value.
 	 */
 	public float getAttributeFloatValue(String namespace, String attribute,
-					    float defaultValue);
+	                                    float defaultValue);
 
 	/**
 	 * Return the index of the value of attribute at 'index' in the list

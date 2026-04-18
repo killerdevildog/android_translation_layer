@@ -30,18 +30,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
-
 import com.android.internal.util.Predicate;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestListener;
-import junit.framework.TestResult;
-import junit.framework.TestSuite;
-import junit.runner.BaseTestRunner;
-import junit.textui.ResultPrinter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
@@ -50,6 +39,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestListener;
+import junit.framework.TestResult;
+import junit.framework.TestSuite;
+import junit.runner.BaseTestRunner;
+import junit.textui.ResultPrinter;
 
 /**
  * An {@link Instrumentation} that runs various types of {@link junit.framework.TestCase}s against
@@ -176,678 +173,680 @@ import java.util.List;
 @Deprecated
 public class InstrumentationTestRunner extends Instrumentation implements TestSuiteProvider {
 
-    /** @hide */
-    static final String ARGUMENT_TEST_CLASS = "class";
-    /** @hide */
-    private static final String ARGUMENT_TEST_PACKAGE = "package";
-    /** @hide */
-    private static final String ARGUMENT_TEST_SIZE_PREDICATE = "size";
-    /** @hide */
-    static final String ARGUMENT_DELAY_MSEC = "delay_msec";
+	/** @hide */
+	static final String ARGUMENT_TEST_CLASS = "class";
+	/** @hide */
+	private static final String ARGUMENT_TEST_PACKAGE = "package";
+	/** @hide */
+	private static final String ARGUMENT_TEST_SIZE_PREDICATE = "size";
+	/** @hide */
+	static final String ARGUMENT_DELAY_MSEC = "delay_msec";
 
-    private static final String SMALL_SUITE = "small";
-    private static final String MEDIUM_SUITE = "medium";
-    private static final String LARGE_SUITE = "large";
+	private static final String SMALL_SUITE = "small";
+	private static final String MEDIUM_SUITE = "medium";
+	private static final String LARGE_SUITE = "large";
 
-    private static final String ARGUMENT_LOG_ONLY = "log";
-    /** @hide */
-    static final String ARGUMENT_ANNOTATION = "annotation";
-    /** @hide */
-    static final String ARGUMENT_NOT_ANNOTATION = "notAnnotation";
+	private static final String ARGUMENT_LOG_ONLY = "log";
+	/** @hide */
+	static final String ARGUMENT_ANNOTATION = "annotation";
+	/** @hide */
+	static final String ARGUMENT_NOT_ANNOTATION = "notAnnotation";
 
-    private static final Predicate<TestMethod> SELECT_SMALL = hasAnnotation(SmallTest.class);
+	private static final Predicate<TestMethod> SELECT_SMALL = hasAnnotation(SmallTest.class);
 
-    private static final Predicate<TestMethod> SELECT_MEDIUM = hasAnnotation(MediumTest.class);
+	private static final Predicate<TestMethod> SELECT_MEDIUM = hasAnnotation(MediumTest.class);
 
-    private static final Predicate<TestMethod> SELECT_LARGE = hasAnnotation(LargeTest.class);
+	private static final Predicate<TestMethod> SELECT_LARGE = hasAnnotation(LargeTest.class);
 
-    /**
+	/**
      * This constant defines the maximum allowed runtime (in ms) for a test included in the "small"
      * suite. It is used to make an educated guess at what suite an unlabeled test belongs.
      */
-    private static final float SMALL_SUITE_MAX_RUNTIME = 100;
+	private static final float SMALL_SUITE_MAX_RUNTIME = 100;
 
-    /**
+	/**
      * This constant defines the maximum allowed runtime (in ms) for a test included in the
      * "medium" suite. It is used to make an educated guess at what suite an unlabeled test belongs.
      */
-    private static final float MEDIUM_SUITE_MAX_RUNTIME = 1000;
+	private static final float MEDIUM_SUITE_MAX_RUNTIME = 1000;
 
-    /*
+	/*
      * The following keys are used in the status bundle to provide structured reports to
      * an IInstrumentationWatcher.
      */
 
-    /**
+	/**
      * This value, if stored with key {@link android.app.Instrumentation#REPORT_KEY_IDENTIFIER},
      * identifies InstrumentationTestRunner as the source of the report.  This is sent with all
      * status messages.
      */
-    public static final String REPORT_VALUE_ID = "InstrumentationTestRunner";
-    /**
+	public static final String REPORT_VALUE_ID = "InstrumentationTestRunner";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * identifies the total number of tests that are being run.  This is sent with all status
      * messages.
      */
-    public static final String REPORT_KEY_NUM_TOTAL = "numtests";
-    /**
+	public static final String REPORT_KEY_NUM_TOTAL = "numtests";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * identifies the sequence number of the current test.  This is sent with any status message
      * describing a specific test being started or completed.
      */
-    public static final String REPORT_KEY_NUM_CURRENT = "current";
-    /**
+	public static final String REPORT_KEY_NUM_CURRENT = "current";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * identifies the name of the current test class.  This is sent with any status message
      * describing a specific test being started or completed.
      */
-    public static final String REPORT_KEY_NAME_CLASS = "class";
-    /**
+	public static final String REPORT_KEY_NAME_CLASS = "class";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * identifies the name of the current test.  This is sent with any status message
      * describing a specific test being started or completed.
      */
-    public static final String REPORT_KEY_NAME_TEST = "test";
-    /**
+	public static final String REPORT_KEY_NAME_TEST = "test";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * reports the run time in seconds of the current test.
      */
-    private static final String REPORT_KEY_RUN_TIME = "runtime";
-    /**
+	private static final String REPORT_KEY_RUN_TIME = "runtime";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * reports the number of total iterations of the current test.
      */
-    private static final String REPORT_KEY_NUM_ITERATIONS = "numiterations";
-    /**
+	private static final String REPORT_KEY_NUM_ITERATIONS = "numiterations";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * reports the guessed suite assignment for the current test.
      */
-    private static final String REPORT_KEY_SUITE_ASSIGNMENT = "suiteassignment";
-    /**
+	private static final String REPORT_KEY_SUITE_ASSIGNMENT = "suiteassignment";
+	/**
      * If included in the status or final bundle sent to an IInstrumentationWatcher, this key
      * identifies the path to the generated code coverage file.
      */
-    private static final String REPORT_KEY_COVERAGE_PATH = "coverageFilePath";
+	private static final String REPORT_KEY_COVERAGE_PATH = "coverageFilePath";
 
-    /**
+	/**
      * The test is starting.
      */
-    public static final int REPORT_VALUE_RESULT_START = 1;
-    /**
+	public static final int REPORT_VALUE_RESULT_START = 1;
+	/**
      * The test completed successfully.
      */
-    public static final int REPORT_VALUE_RESULT_OK = 0;
-    /**
+	public static final int REPORT_VALUE_RESULT_OK = 0;
+	/**
      * The test completed with an error.
      */
-    public static final int REPORT_VALUE_RESULT_ERROR = -1;
-    /**
+	public static final int REPORT_VALUE_RESULT_ERROR = -1;
+	/**
      * The test completed with a failure.
      */
-    public static final int REPORT_VALUE_RESULT_FAILURE = -2;
-    /**
+	public static final int REPORT_VALUE_RESULT_FAILURE = -2;
+	/**
      * If included in the status bundle sent to an IInstrumentationWatcher, this key
      * identifies a stack trace describing an error or failure.  This is sent with any status
      * message describing a specific test being completed.
      */
-    public static final String REPORT_KEY_STACK = "stack";
+	public static final String REPORT_KEY_STACK = "stack";
 
-    // Default file name for code coverage
-    private static final String DEFAULT_COVERAGE_FILE_NAME = "coverage.ec";
+	// Default file name for code coverage
+	private static final String DEFAULT_COVERAGE_FILE_NAME = "coverage.ec";
 
-    private static final String LOG_TAG = "InstrumentationTestRunner";
+	private static final String LOG_TAG = "InstrumentationTestRunner";
 
-    private final Bundle mResults = new Bundle();
-    private Bundle mArguments;
-    private AndroidTestRunner mTestRunner;
-    private boolean mDebug;
-    private boolean mJustCount;
-    private boolean mSuiteAssignmentMode;
-    private int mTestCount;
-    private String mPackageOfTests;
-    private boolean mCoverage;
-    private String mCoverageFilePath;
-    private int mDelayMsec;
+	private final Bundle mResults = new Bundle();
+	private Bundle mArguments;
+	private AndroidTestRunner mTestRunner;
+	private boolean mDebug;
+	private boolean mJustCount;
+	private boolean mSuiteAssignmentMode;
+	private int mTestCount;
+	private String mPackageOfTests;
+	private boolean mCoverage;
+	private String mCoverageFilePath;
+	private int mDelayMsec;
 
-    @Override
-    public void onCreate(Bundle arguments) {
-        super.onCreate(arguments);
-        mArguments = arguments;
+	@Override
+	public void onCreate(Bundle arguments) {
+		super.onCreate(arguments);
+		mArguments = arguments;
 
-        // Apk paths used to search for test classes when using TestSuiteBuilders.
-        String[] apkPaths =
-                {getTargetContext().getPackageCodePath(), getContext().getPackageCodePath()};
-        ClassPathPackageInfoSource.setApkPaths(apkPaths);
+		// Apk paths used to search for test classes when using TestSuiteBuilders.
+		String[] apkPaths =
+		    {getTargetContext().getPackageCodePath(), getContext().getPackageCodePath()};
+		ClassPathPackageInfoSource.setApkPaths(apkPaths);
 
-        Predicate<TestMethod> testSizePredicate = null;
-        Predicate<TestMethod> testAnnotationPredicate = null;
-        Predicate<TestMethod> testNotAnnotationPredicate = null;
-        String testClassesArg = null;
-        boolean logOnly = false;
+		Predicate<TestMethod> testSizePredicate = null;
+		Predicate<TestMethod> testAnnotationPredicate = null;
+		Predicate<TestMethod> testNotAnnotationPredicate = null;
+		String testClassesArg = null;
+		boolean logOnly = false;
 
-        if (arguments != null) {
-            // Test class name passed as an argument should override any meta-data declaration.
-            testClassesArg = arguments.getString(ARGUMENT_TEST_CLASS);
-            mDebug = getBooleanArgument(arguments, "debug");
-            mJustCount = getBooleanArgument(arguments, "count");
-            mSuiteAssignmentMode = getBooleanArgument(arguments, "suiteAssignment");
-            mPackageOfTests = arguments.getString(ARGUMENT_TEST_PACKAGE);
-            testSizePredicate = getSizePredicateFromArg(
-                    arguments.getString(ARGUMENT_TEST_SIZE_PREDICATE));
-            testAnnotationPredicate = getAnnotationPredicate(
-                    arguments.getString(ARGUMENT_ANNOTATION));
-            testNotAnnotationPredicate = getNotAnnotationPredicate(
-                    arguments.getString(ARGUMENT_NOT_ANNOTATION));
+		if (arguments != null) {
+			// Test class name passed as an argument should override any meta-data declaration.
+			testClassesArg = arguments.getString(ARGUMENT_TEST_CLASS);
+			mDebug = getBooleanArgument(arguments, "debug");
+			mJustCount = getBooleanArgument(arguments, "count");
+			mSuiteAssignmentMode = getBooleanArgument(arguments, "suiteAssignment");
+			mPackageOfTests = arguments.getString(ARGUMENT_TEST_PACKAGE);
+			testSizePredicate = getSizePredicateFromArg(
+			    arguments.getString(ARGUMENT_TEST_SIZE_PREDICATE));
+			testAnnotationPredicate = getAnnotationPredicate(
+			    arguments.getString(ARGUMENT_ANNOTATION));
+			testNotAnnotationPredicate = getNotAnnotationPredicate(
+			    arguments.getString(ARGUMENT_NOT_ANNOTATION));
 
-            logOnly = getBooleanArgument(arguments, ARGUMENT_LOG_ONLY);
-            mCoverage = getBooleanArgument(arguments, "coverage");
-            mCoverageFilePath = arguments.getString("coverageFile");
+			logOnly = getBooleanArgument(arguments, ARGUMENT_LOG_ONLY);
+			mCoverage = getBooleanArgument(arguments, "coverage");
+			mCoverageFilePath = arguments.getString("coverageFile");
 
-            try {
-                Object delay = arguments.get(ARGUMENT_DELAY_MSEC);  // Accept either string or int
-                if (delay != null) mDelayMsec = Integer.parseInt(delay.toString());
-            } catch (NumberFormatException e) {
-                Log.e(LOG_TAG, "Invalid delay_msec parameter", e);
-            }
-        }
+			try {
+				Object delay = arguments.get(ARGUMENT_DELAY_MSEC); // Accept either string or int
+				if (delay != null)
+					mDelayMsec = Integer.parseInt(delay.toString());
+			} catch (NumberFormatException e) {
+				Log.e(LOG_TAG, "Invalid delay_msec parameter", e);
+			}
+		}
 
-        TestSuiteBuilder testSuiteBuilder = new TestSuiteBuilder(getClass().getName(),
-                getTargetContext().getClassLoader());
+		TestSuiteBuilder testSuiteBuilder = new TestSuiteBuilder(getClass().getName(),
+		                                                         getTargetContext().getClassLoader());
 
-        if (testSizePredicate != null) {
-            testSuiteBuilder.addRequirements(testSizePredicate);
-        }
-        if (testAnnotationPredicate != null) {
-            testSuiteBuilder.addRequirements(testAnnotationPredicate);
-        }
-        if (testNotAnnotationPredicate != null) {
-            testSuiteBuilder.addRequirements(testNotAnnotationPredicate);
-        }
+		if (testSizePredicate != null) {
+			testSuiteBuilder.addRequirements(testSizePredicate);
+		}
+		if (testAnnotationPredicate != null) {
+			testSuiteBuilder.addRequirements(testAnnotationPredicate);
+		}
+		if (testNotAnnotationPredicate != null) {
+			testSuiteBuilder.addRequirements(testNotAnnotationPredicate);
+		}
 
-        if (testClassesArg == null) {
-            if (mPackageOfTests != null) {
-                testSuiteBuilder.includePackages(mPackageOfTests);
-            } else {
-                TestSuite testSuite = getTestSuite();
-                if (testSuite != null) {
-                    testSuiteBuilder.addTestSuite(testSuite);
-                } else {
-                    // no package or class bundle arguments were supplied, and no test suite
-                    // provided so add all tests in application
-                    testSuiteBuilder.includePackages("");
-                }
-            }
-        } else {
-            parseTestClasses(testClassesArg, testSuiteBuilder);
-        }
+		if (testClassesArg == null) {
+			if (mPackageOfTests != null) {
+				testSuiteBuilder.includePackages(mPackageOfTests);
+			} else {
+				TestSuite testSuite = getTestSuite();
+				if (testSuite != null) {
+					testSuiteBuilder.addTestSuite(testSuite);
+				} else {
+					// no package or class bundle arguments were supplied, and no test suite
+					// provided so add all tests in application
+					testSuiteBuilder.includePackages("");
+				}
+			}
+		} else {
+			parseTestClasses(testClassesArg, testSuiteBuilder);
+		}
 
-        testSuiteBuilder.addRequirements(getBuilderRequirements());
+		testSuiteBuilder.addRequirements(getBuilderRequirements());
 
-        mTestRunner = getAndroidTestRunner();
-        mTestRunner.setContext(getTargetContext());
-        mTestRunner.setInstrumentation(this);
-        mTestRunner.setSkipExecution(logOnly);
-        mTestRunner.setTest(testSuiteBuilder.build());
-        mTestCount = mTestRunner.getTestCases().size();
-        if (mSuiteAssignmentMode) {
-            mTestRunner.addTestListener(new SuiteAssignmentPrinter());
-        } else {
-            WatcherResultPrinter resultPrinter = new WatcherResultPrinter(mTestCount);
-            mTestRunner.addTestListener(new TestPrinter("TestRunner", false));
-            mTestRunner.addTestListener(resultPrinter);
-        }
-        start();
-    }
+		mTestRunner = getAndroidTestRunner();
+		mTestRunner.setContext(getTargetContext());
+		mTestRunner.setInstrumentation(this);
+		mTestRunner.setSkipExecution(logOnly);
+		mTestRunner.setTest(testSuiteBuilder.build());
+		mTestCount = mTestRunner.getTestCases().size();
+		if (mSuiteAssignmentMode) {
+			mTestRunner.addTestListener(new SuiteAssignmentPrinter());
+		} else {
+			WatcherResultPrinter resultPrinter = new WatcherResultPrinter(mTestCount);
+			mTestRunner.addTestListener(new TestPrinter("TestRunner", false));
+			mTestRunner.addTestListener(resultPrinter);
+		}
+		start();
+	}
 
-    /**
+	/**
      * Get the arguments passed to this instrumentation.
      *
      * @return the Bundle object
      */
-    public Bundle getArguments() {
-        return mArguments;
-    }
+	public Bundle getArguments() {
+		return mArguments;
+	}
 
-    /**
+	/**
      * Add a {@link TestListener}
      */
-    protected void addTestListener(TestListener listener){
-        if(mTestRunner!=null && listener!=null){
-            mTestRunner.addTestListener(listener);
-        }
-    }
+	protected void addTestListener(TestListener listener) {
+		if (mTestRunner != null && listener != null) {
+			mTestRunner.addTestListener(listener);
+		}
+	}
 
-    List<Predicate<TestMethod>> getBuilderRequirements() {
-        return new ArrayList<Predicate<TestMethod>>();
-    }
+	List<Predicate<TestMethod>> getBuilderRequirements() {
+		return new ArrayList<Predicate<TestMethod>>();
+	}
 
-    /**
+	/**
      * Parses and loads the specified set of test classes
      *
      * @param testClassArg - comma-separated list of test classes and methods
      * @param testSuiteBuilder - builder to add tests to
      */
-    private void parseTestClasses(String testClassArg, TestSuiteBuilder testSuiteBuilder) {
-        String[] testClasses = testClassArg.split(",");
-        for (String testClass : testClasses) {
-            parseTestClass(testClass, testSuiteBuilder);
-        }
-    }
+	private void parseTestClasses(String testClassArg, TestSuiteBuilder testSuiteBuilder) {
+		String[] testClasses = testClassArg.split(",");
+		for (String testClass : testClasses) {
+			parseTestClass(testClass, testSuiteBuilder);
+		}
+	}
 
-    /**
+	/**
      * Parse and load the given test class and, optionally, method
      *
      * @param testClassName - full package name of test class and optionally method to add.
      *        Expected format: com.android.TestClass#testMethod
      * @param testSuiteBuilder - builder to add tests to
      */
-    private void parseTestClass(String testClassName, TestSuiteBuilder testSuiteBuilder) {
-        int methodSeparatorIndex = testClassName.indexOf('#');
-        String testMethodName = null;
+	private void parseTestClass(String testClassName, TestSuiteBuilder testSuiteBuilder) {
+		int methodSeparatorIndex = testClassName.indexOf('#');
+		String testMethodName = null;
 
-        if (methodSeparatorIndex > 0) {
-            testMethodName = testClassName.substring(methodSeparatorIndex + 1);
-            testClassName = testClassName.substring(0, methodSeparatorIndex);
-        }
-        testSuiteBuilder.addTestClassByName(testClassName, testMethodName, getTargetContext());
-    }
+		if (methodSeparatorIndex > 0) {
+			testMethodName = testClassName.substring(methodSeparatorIndex + 1);
+			testClassName = testClassName.substring(0, methodSeparatorIndex);
+		}
+		testSuiteBuilder.addTestClassByName(testClassName, testMethodName, getTargetContext());
+	}
 
-    protected AndroidTestRunner getAndroidTestRunner() {
-        return new AndroidTestRunner();
-    }
+	protected AndroidTestRunner getAndroidTestRunner() {
+		return new AndroidTestRunner();
+	}
 
-    private boolean getBooleanArgument(Bundle arguments, String tag) {
-        String tagString = arguments.getString(tag);
-        return tagString != null && Boolean.parseBoolean(tagString);
-    }
+	private boolean getBooleanArgument(Bundle arguments, String tag) {
+		String tagString = arguments.getString(tag);
+		return tagString != null && Boolean.parseBoolean(tagString);
+	}
 
-    /*
+	/*
      * Returns the size predicate object, corresponding to the "size" argument value.
      */
-    private Predicate<TestMethod> getSizePredicateFromArg(String sizeArg) {
+	private Predicate<TestMethod> getSizePredicateFromArg(String sizeArg) {
 
-        if (SMALL_SUITE.equals(sizeArg)) {
-            return SELECT_SMALL;
-        } else if (MEDIUM_SUITE.equals(sizeArg)) {
-            return SELECT_MEDIUM;
-        } else if (LARGE_SUITE.equals(sizeArg)) {
-            return SELECT_LARGE;
-        } else {
-            return null;
-        }
-    }
+		if (SMALL_SUITE.equals(sizeArg)) {
+			return SELECT_SMALL;
+		} else if (MEDIUM_SUITE.equals(sizeArg)) {
+			return SELECT_MEDIUM;
+		} else if (LARGE_SUITE.equals(sizeArg)) {
+			return SELECT_LARGE;
+		} else {
+			return null;
+		}
+	}
 
-   /**
+	/**
     * Returns the test predicate object, corresponding to the annotation class value provided via
     * the {@link #ARGUMENT_ANNOTATION} argument.
     *
     * @return the predicate or <code>null</code>
     */
-    private Predicate<TestMethod> getAnnotationPredicate(String annotationClassName) {
-        Class<? extends Annotation> annotationClass = getAnnotationClass(annotationClassName);
-        if (annotationClass != null) {
-            return hasAnnotation(annotationClass);
-        }
-        return null;
-    }
+	private Predicate<TestMethod> getAnnotationPredicate(String annotationClassName) {
+		Class<? extends Annotation> annotationClass = getAnnotationClass(annotationClassName);
+		if (annotationClass != null) {
+			return hasAnnotation(annotationClass);
+		}
+		return null;
+	}
 
-    /**
+	/**
      * Returns the negative test predicate object, corresponding to the annotation class value
      * provided via the {@link #ARGUMENT_NOT_ANNOTATION} argument.
      *
      * @return the predicate or <code>null</code>
      */
-     private Predicate<TestMethod> getNotAnnotationPredicate(String annotationClassName) {
-         Class<? extends Annotation> annotationClass = getAnnotationClass(annotationClassName);
-         if (annotationClass != null) {
-             return TestPredicates.not(hasAnnotation(annotationClass));
-         }
-         return null;
-     }
+	private Predicate<TestMethod> getNotAnnotationPredicate(String annotationClassName) {
+		Class<? extends Annotation> annotationClass = getAnnotationClass(annotationClassName);
+		if (annotationClass != null) {
+			return TestPredicates.not(hasAnnotation(annotationClass));
+		}
+		return null;
+	}
 
-    /**
+	/**
      * Helper method to return the annotation class with specified name
      *
      * @param annotationClassName the fully qualified name of the class
      * @return the annotation class or <code>null</code>
      */
-    private Class<? extends Annotation> getAnnotationClass(String annotationClassName) {
-        if (annotationClassName == null) {
-            return null;
-        }
-        try {
-           Class<?> annotationClass = Class.forName(annotationClassName);
-           if (annotationClass.isAnnotation()) {
-               return (Class<? extends Annotation>)annotationClass;
-           } else {
-               Log.e(LOG_TAG, String.format("Provided annotation value %s is not an Annotation",
-                       annotationClassName));
-           }
-        } catch (ClassNotFoundException e) {
-            Log.e(LOG_TAG, String.format("Could not find class for specified annotation %s",
-                    annotationClassName));
-        }
-        return null;
-    }
+	private Class<? extends Annotation> getAnnotationClass(String annotationClassName) {
+		if (annotationClassName == null) {
+			return null;
+		}
+		try {
+			Class<?> annotationClass = Class.forName(annotationClassName);
+			if (annotationClass.isAnnotation()) {
+	       return (Class<? extends Annotation>)annotationClass;
+			} else {
+				Log.e(LOG_TAG, String.format("Provided annotation value %s is not an Annotation",
+				                             annotationClassName));
+			}
+		} catch (ClassNotFoundException e) {
+			Log.e(LOG_TAG, String.format("Could not find class for specified annotation %s",
+			                             annotationClassName));
+		}
+		return null;
+	}
 
-    /**
+	/**
      * Initialize the current thread as a looper.
      * <p/>
      * Exposed for unit testing.
      */
-    void prepareLooper() {
-        Looper.prepare();
-    }
+	void prepareLooper() {
+		Looper.prepare();
+	}
 
-    @Override
-    public void onStart() {
-        prepareLooper();
+	@Override
+	public void onStart() {
+		prepareLooper();
 
-        if (mJustCount) {
-            mResults.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
-            mResults.putInt(REPORT_KEY_NUM_TOTAL, mTestCount);
-            finish(Activity.RESULT_OK, mResults);
-        } else {
-            if (mDebug) {
-                Debug.waitForDebugger();
-            }
+		if (mJustCount) {
+			mResults.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
+			mResults.putInt(REPORT_KEY_NUM_TOTAL, mTestCount);
+			finish(Activity.RESULT_OK, mResults);
+		} else {
+			if (mDebug) {
+				Debug.waitForDebugger();
+			}
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            PrintStream writer = new PrintStream(byteArrayOutputStream);
-            try {
-                StringResultPrinter resultPrinter = new StringResultPrinter(writer);
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			PrintStream writer = new PrintStream(byteArrayOutputStream);
+			try {
+				StringResultPrinter resultPrinter = new StringResultPrinter(writer);
 
-                mTestRunner.addTestListener(resultPrinter);
+				mTestRunner.addTestListener(resultPrinter);
 
-                long startTime = System.currentTimeMillis();
-                mTestRunner.runTest();
-                long runTime = System.currentTimeMillis() - startTime;
+				long startTime = System.currentTimeMillis();
+				mTestRunner.runTest();
+				long runTime = System.currentTimeMillis() - startTime;
 
-                resultPrinter.printResult(mTestRunner.getTestResult(), runTime);
-            } catch (Throwable t) {
-                // catch all exceptions so a more verbose error message can be outputted
-                writer.println(String.format("Test run aborted due to unexpected exception: %s",
-                                t.getMessage()));
-                t.printStackTrace(writer);
-            } finally {
-                mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                        String.format("\nTest results for %s=%s",
-                        mTestRunner.getTestClassName(),
-                        byteArrayOutputStream.toString()));
+				resultPrinter.printResult(mTestRunner.getTestResult(), runTime);
+			} catch (Throwable t) {
+				// catch all exceptions so a more verbose error message can be outputted
+				writer.println(String.format("Test run aborted due to unexpected exception: %s",
+				                             t.getMessage()));
+				t.printStackTrace(writer);
+			} finally {
+				mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+				                   String.format("\nTest results for %s=%s",
+				                                 mTestRunner.getTestClassName(),
+				                                 byteArrayOutputStream.toString()));
 
-                if (mCoverage) {
-                    generateCoverageReport();
-                }
-                writer.close();
+				if (mCoverage) {
+					generateCoverageReport();
+				}
+				writer.close();
 
-                finish(Activity.RESULT_OK, mResults);
-            }
-        }
-    }
+				finish(Activity.RESULT_OK, mResults);
+			}
+		}
+	}
 
-    public TestSuite getTestSuite() {
-        return getAllTests();
-    }
+	public TestSuite getTestSuite() {
+		return getAllTests();
+	}
 
-    /**
+	/**
      * Override this to define all of the tests to run in your package.
      */
-    public TestSuite getAllTests() {
-        return null;
-    }
+	public TestSuite getAllTests() {
+		return null;
+	}
 
-    /**
+	/**
      * Override this to provide access to the class loader of your package.
      */
-    public ClassLoader getLoader() {
-        return null;
-    }
+	public ClassLoader getLoader() {
+		return null;
+	}
 
-    private void generateCoverageReport() {
-        // use reflection to call emma dump coverage method, to avoid
-        // always statically compiling against emma jar
-        String coverageFilePath = getCoverageFilePath();
-        java.io.File coverageFile = new java.io.File(coverageFilePath);
-        try {
-            Class<?> emmaRTClass = Class.forName("com.vladium.emma.rt.RT");
-            Method dumpCoverageMethod = emmaRTClass.getMethod("dumpCoverageData",
-                    coverageFile.getClass(), boolean.class, boolean.class);
+	private void generateCoverageReport() {
+		// use reflection to call emma dump coverage method, to avoid
+		// always statically compiling against emma jar
+		String coverageFilePath = getCoverageFilePath();
+		java.io.File coverageFile = new java.io.File(coverageFilePath);
+		try {
+			Class<?> emmaRTClass = Class.forName("com.vladium.emma.rt.RT");
+			Method dumpCoverageMethod = emmaRTClass.getMethod("dumpCoverageData",
+			                                                  coverageFile.getClass(), boolean.class, boolean.class);
 
-            dumpCoverageMethod.invoke(null, coverageFile, false, false);
-            // output path to generated coverage file so it can be parsed by a test harness if
-            // needed
-            mResults.putString(REPORT_KEY_COVERAGE_PATH, coverageFilePath);
-            // also output a more user friendly msg
-            final String currentStream = mResults.getString(
-                    Instrumentation.REPORT_KEY_STREAMRESULT);
-            mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                String.format("%s\nGenerated code coverage data to %s", currentStream,
-                coverageFilePath));
-        } catch (ClassNotFoundException e) {
-            reportEmmaError("Is emma jar on classpath?", e);
-        } catch (SecurityException e) {
-            reportEmmaError(e);
-        } catch (NoSuchMethodException e) {
-            reportEmmaError(e);
-        } catch (IllegalArgumentException e) {
-            reportEmmaError(e);
-        } catch (IllegalAccessException e) {
-            reportEmmaError(e);
-        } catch (InvocationTargetException e) {
-            reportEmmaError(e);
-        }
-    }
+			dumpCoverageMethod.invoke(null, coverageFile, false, false);
+			// output path to generated coverage file so it can be parsed by a test harness if
+			// needed
+			mResults.putString(REPORT_KEY_COVERAGE_PATH, coverageFilePath);
+			// also output a more user friendly msg
+			final String currentStream = mResults.getString(
+			    Instrumentation.REPORT_KEY_STREAMRESULT);
+			mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+			                   String.format("%s\nGenerated code coverage data to %s", currentStream,
+			                                 coverageFilePath));
+		} catch (ClassNotFoundException e) {
+			reportEmmaError("Is emma jar on classpath?", e);
+		} catch (SecurityException e) {
+			reportEmmaError(e);
+		} catch (NoSuchMethodException e) {
+			reportEmmaError(e);
+		} catch (IllegalArgumentException e) {
+			reportEmmaError(e);
+		} catch (IllegalAccessException e) {
+			reportEmmaError(e);
+		} catch (InvocationTargetException e) {
+			reportEmmaError(e);
+		}
+	}
 
-    private String getCoverageFilePath() {
-        if (mCoverageFilePath == null) {
-            return getTargetContext().getFilesDir().getAbsolutePath() + File.separator +
-                   DEFAULT_COVERAGE_FILE_NAME;
-        } else {
-            return mCoverageFilePath;
-        }
-    }
+	private String getCoverageFilePath() {
+		if (mCoverageFilePath == null) {
+			return getTargetContext().getFilesDir().getAbsolutePath() + File.separator + DEFAULT_COVERAGE_FILE_NAME;
+		} else {
+			return mCoverageFilePath;
+		}
+	}
 
-    private void reportEmmaError(Exception e) {
-        reportEmmaError("", e);
-    }
+	private void reportEmmaError(Exception e) {
+		reportEmmaError("", e);
+	}
 
-    private void reportEmmaError(String hint, Exception e) {
-        String msg = "Failed to generate emma coverage. " + hint;
-        Log.e(LOG_TAG, msg, e);
-        mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "\nError: " + msg);
-    }
+	private void reportEmmaError(String hint, Exception e) {
+		String msg = "Failed to generate emma coverage. " + hint;
+		Log.e(LOG_TAG, msg, e);
+		mResults.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "\nError: " + msg);
+	}
 
-    // TODO kill this, use status() and prettyprint model for better output
-    private class StringResultPrinter extends ResultPrinter {
+	// TODO kill this, use status() and prettyprint model for better output
+	private class StringResultPrinter extends ResultPrinter {
 
-        public StringResultPrinter(PrintStream writer) {
-            super(writer);
-        }
+		public StringResultPrinter(PrintStream writer) {
+			super(writer);
+		}
 
-        public synchronized void printResult(TestResult result, long runTime) {
-            printHeader(runTime);
-            printFooter(result);
-        }
-    }
+		public synchronized void printResult(TestResult result, long runTime) {
+			printHeader(runTime);
+			printFooter(result);
+		}
+	}
 
-    /**
+	/**
      * This class sends status reports back to the IInstrumentationWatcher about
      * which suite each test belongs.
      */
-    private class SuiteAssignmentPrinter implements TestListener {
+	private class SuiteAssignmentPrinter implements TestListener {
 
-        private Bundle mTestResult;
-        private long mStartTime;
-        private long mEndTime;
-        private boolean mTimingValid;
+		private Bundle mTestResult;
+		private long mStartTime;
+		private long mEndTime;
+		private boolean mTimingValid;
 
-        public SuiteAssignmentPrinter() {
-        }
+		public SuiteAssignmentPrinter() {
+		}
 
-        /**
+		/**
          * send a status for the start of a each test, so long tests can be seen as "running"
          */
-        public void startTest(Test test) {
-            mTimingValid = true;
-            mStartTime = System.currentTimeMillis();
-        }
+		public void startTest(Test test) {
+			mTimingValid = true;
+			mStartTime = System.currentTimeMillis();
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#addError(Test, Throwable)
          */
-        public void addError(Test test, Throwable t) {
-            mTimingValid = false;
-        }
+		public void addError(Test test, Throwable t) {
+			mTimingValid = false;
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#addFailure(Test, AssertionFailedError)
          */
-        public void addFailure(Test test, AssertionFailedError t) {
-            mTimingValid = false;
-        }
+		public void addFailure(Test test, AssertionFailedError t) {
+			mTimingValid = false;
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#endTest(Test)
          */
-        public void endTest(Test test) {
-            float runTime;
-            String assignmentSuite;
-            mEndTime = System.currentTimeMillis();
-            mTestResult = new Bundle();
+		public void endTest(Test test) {
+			float runTime;
+			String assignmentSuite;
+			mEndTime = System.currentTimeMillis();
+			mTestResult = new Bundle();
 
-            if (!mTimingValid || mStartTime < 0) {
-                assignmentSuite = "NA";
-                runTime = -1;
-            } else {
-                runTime = mEndTime - mStartTime;
-                if (runTime < SMALL_SUITE_MAX_RUNTIME
-                        && !InstrumentationTestCase.class.isAssignableFrom(test.getClass())) {
-                    assignmentSuite = SMALL_SUITE;
-                } else if (runTime < MEDIUM_SUITE_MAX_RUNTIME) {
-                    assignmentSuite = MEDIUM_SUITE;
-                } else {
-                    assignmentSuite = LARGE_SUITE;
-                }
-            }
-            // Clear mStartTime so that we can verify that it gets set next time.
-            mStartTime = -1;
+			if (!mTimingValid || mStartTime < 0) {
+				assignmentSuite = "NA";
+				runTime = -1;
+			} else {
+				runTime = mEndTime - mStartTime;
+				if (runTime < SMALL_SUITE_MAX_RUNTIME
+				    && !InstrumentationTestCase.class.isAssignableFrom(test.getClass())) {
+					assignmentSuite = SMALL_SUITE;
+				} else if (runTime < MEDIUM_SUITE_MAX_RUNTIME) {
+					assignmentSuite = MEDIUM_SUITE;
+				} else {
+					assignmentSuite = LARGE_SUITE;
+				}
+			}
+			// Clear mStartTime so that we can verify that it gets set next time.
+			mStartTime = -1;
 
-            mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                    test.getClass().getName() + "#" + ((TestCase) test).getName()
-                    + "\nin " + assignmentSuite + " suite\nrunTime: "
-                    + String.valueOf(runTime) + "\n");
-            mTestResult.putFloat(REPORT_KEY_RUN_TIME, runTime);
-            mTestResult.putString(REPORT_KEY_SUITE_ASSIGNMENT, assignmentSuite);
+			mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+			                      test.getClass().getName() + "#" + ((TestCase)test).getName()
+			                      + "\nin " + assignmentSuite + " suite\nrunTime: "
+			                      + String.valueOf(runTime) + "\n");
+			mTestResult.putFloat(REPORT_KEY_RUN_TIME, runTime);
+			mTestResult.putString(REPORT_KEY_SUITE_ASSIGNMENT, assignmentSuite);
 
-            sendStatus(0, mTestResult);
-        }
-    }
+			sendStatus(0, mTestResult);
+		}
+	}
 
-    /**
+	/**
      * This class sends status reports back to the IInstrumentationWatcher
      */
-    private class WatcherResultPrinter implements TestListener {
-        private final Bundle mResultTemplate;
-        Bundle mTestResult;
-        int mTestNum = 0;
-        int mTestResultCode = 0;
-        String mTestClass = null;
+	private class WatcherResultPrinter implements TestListener {
+		private final Bundle mResultTemplate;
+		Bundle mTestResult;
+		int mTestNum = 0;
+		int mTestResultCode = 0;
+		String mTestClass = null;
 
-        public WatcherResultPrinter(int numTests) {
-            mResultTemplate = new Bundle();
-            mResultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
-            mResultTemplate.putInt(REPORT_KEY_NUM_TOTAL, numTests);
-        }
+		public WatcherResultPrinter(int numTests) {
+			mResultTemplate = new Bundle();
+			mResultTemplate.putString(Instrumentation.REPORT_KEY_IDENTIFIER, REPORT_VALUE_ID);
+			mResultTemplate.putInt(REPORT_KEY_NUM_TOTAL, numTests);
+		}
 
-        /**
+		/**
          * send a status for the start of a each test, so long tests can be seen
          * as "running"
          */
-        public void startTest(Test test) {
-            String testClass = test.getClass().getName();
-            String testName = ((TestCase)test).getName();
-            mTestResult = new Bundle(mResultTemplate);
-            mTestResult.putString(REPORT_KEY_NAME_CLASS, testClass);
-            mTestResult.putString(REPORT_KEY_NAME_TEST, testName);
-            mTestResult.putInt(REPORT_KEY_NUM_CURRENT, ++mTestNum);
-            // pretty printing
-            if (testClass != null && !testClass.equals(mTestClass)) {
-                mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                        String.format("\n%s:", testClass));
-                mTestClass = testClass;
-            } else {
-                mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
-            }
+		public void startTest(Test test) {
+			String testClass = test.getClass().getName();
+			String testName = ((TestCase)test).getName();
+			mTestResult = new Bundle(mResultTemplate);
+			mTestResult.putString(REPORT_KEY_NAME_CLASS, testClass);
+			mTestResult.putString(REPORT_KEY_NAME_TEST, testName);
+			mTestResult.putInt(REPORT_KEY_NUM_CURRENT, ++mTestNum);
+			// pretty printing
+			if (testClass != null && !testClass.equals(mTestClass)) {
+				mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+				                      String.format("\n%s:", testClass));
+				mTestClass = testClass;
+			} else {
+				mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, "");
+			}
 
-            Method testMethod = null;
-            try {
-                testMethod = test.getClass().getMethod(testName);
-                // Report total number of iterations, if test is repetitive
-                if (testMethod.isAnnotationPresent(RepetitiveTest.class)) {
-                    int numIterations = testMethod.getAnnotation(
-                        RepetitiveTest.class).numIterations();
-                    mTestResult.putInt(REPORT_KEY_NUM_ITERATIONS, numIterations);
-                }
-            } catch (NoSuchMethodException e) {
-                // ignore- the test with given name does not exist. Will be handled during test
-                // execution
-            }
+			Method testMethod = null;
+			try {
+				testMethod = test.getClass().getMethod(testName);
+				// Report total number of iterations, if test is repetitive
+				if (testMethod.isAnnotationPresent(RepetitiveTest.class)) {
+					int numIterations = testMethod.getAnnotation(
+									  RepetitiveTest.class)
+					                        .numIterations();
+					mTestResult.putInt(REPORT_KEY_NUM_ITERATIONS, numIterations);
+				}
+			} catch (NoSuchMethodException e) {
+				// ignore- the test with given name does not exist. Will be handled during test
+				// execution
+			}
 
-            // The delay_msec parameter is normally used to provide buffers of idle time
-            // for power measurement purposes. To make sure there is a delay before and after
-            // every test in a suite, we delay *after* every test (see endTest below) and also
-            // delay *before* the first test. So, delay test1 delay test2 delay.
+			// The delay_msec parameter is normally used to provide buffers of idle time
+			// for power measurement purposes. To make sure there is a delay before and after
+			// every test in a suite, we delay *after* every test (see endTest below) and also
+			// delay *before* the first test. So, delay test1 delay test2 delay.
 
-            try {
-                if (mTestNum == 1) Thread.sleep(mDelayMsec);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
+			try {
+				if (mTestNum == 1)
+					Thread.sleep(mDelayMsec);
+			} catch (InterruptedException e) {
+				throw new IllegalStateException(e);
+			}
 
-            sendStatus(REPORT_VALUE_RESULT_START, mTestResult);
-            mTestResultCode = 0;
-        }
+			sendStatus(REPORT_VALUE_RESULT_START, mTestResult);
+			mTestResultCode = 0;
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#addError(Test, Throwable)
          */
-        public void addError(Test test, Throwable t) {
-            mTestResult.putString(REPORT_KEY_STACK, BaseTestRunner.getFilteredTrace(t));
-            mTestResultCode = REPORT_VALUE_RESULT_ERROR;
-            // pretty printing
-            mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                String.format("\nError in %s:\n%s",
-                    ((TestCase)test).getName(), BaseTestRunner.getFilteredTrace(t)));
-        }
+		public void addError(Test test, Throwable t) {
+			mTestResult.putString(REPORT_KEY_STACK, BaseTestRunner.getFilteredTrace(t));
+			mTestResultCode = REPORT_VALUE_RESULT_ERROR;
+			// pretty printing
+			mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+			                      String.format("\nError in %s:\n%s",
+			                                    ((TestCase)test).getName(), BaseTestRunner.getFilteredTrace(t)));
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#addFailure(Test, AssertionFailedError)
          */
-        public void addFailure(Test test, AssertionFailedError t) {
-            mTestResult.putString(REPORT_KEY_STACK, BaseTestRunner.getFilteredTrace(t));
-            mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
-            // pretty printing
-            mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
-                String.format("\nFailure in %s:\n%s",
-                    ((TestCase)test).getName(), BaseTestRunner.getFilteredTrace(t)));
-        }
+		public void addFailure(Test test, AssertionFailedError t) {
+			mTestResult.putString(REPORT_KEY_STACK, BaseTestRunner.getFilteredTrace(t));
+			mTestResultCode = REPORT_VALUE_RESULT_FAILURE;
+			// pretty printing
+			mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT,
+			                      String.format("\nFailure in %s:\n%s",
+			                                    ((TestCase)test).getName(), BaseTestRunner.getFilteredTrace(t)));
+		}
 
-        /**
+		/**
          * @see junit.framework.TestListener#endTest(Test)
          */
-        public void endTest(Test test) {
-            if (mTestResultCode == 0) {
-                mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
-            }
-            sendStatus(mTestResultCode, mTestResult);
+		public void endTest(Test test) {
+			if (mTestResultCode == 0) {
+				mTestResult.putString(Instrumentation.REPORT_KEY_STREAMRESULT, ".");
+			}
+			sendStatus(mTestResultCode, mTestResult);
 
-            try { // Sleep after every test, if specified
-                Thread.sleep(mDelayMsec);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
-            }
-        }
+			try { // Sleep after every test, if specified
+				Thread.sleep(mDelayMsec);
+			} catch (InterruptedException e) {
+				throw new IllegalStateException(e);
+			}
+		}
 
-        // TODO report the end of the cycle
-    }
+		// TODO report the end of the cycle
+	}
 }

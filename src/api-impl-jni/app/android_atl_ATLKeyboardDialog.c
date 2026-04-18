@@ -1,7 +1,7 @@
-#include <gtk/gtk.h>
-#include <gtk4-layer-shell/gtk4-layer-shell.h>
 #include <gio/gio.h>
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <gtk4-layer-shell/gtk4-layer-shell.h>
 #include <jni.h>
 
 #include <stdio.h>
@@ -12,10 +12,10 @@
 
 #define DEBUG(fmt, ...) android_log_printf(ANDROID_LOG_INFO, "ATLKeyboardDialog", "%s:%d: " fmt, __func__, __LINE__, ##__VA_ARGS__)
 
-static GDBusNodeInfo   *introspection_data = NULL;
+static GDBusNodeInfo *introspection_data = NULL;
 static GDBusConnection *dbus_connection = NULL;
-static gboolean         visible = TRUE;
-static GtkWidget       *osk_window = NULL;
+static gboolean visible = TRUE;
+static GtkWidget *osk_window = NULL;
 
 static void emit_property_changed(GDBusConnection *connection)
 {
@@ -25,11 +25,11 @@ static void emit_property_changed(GDBusConnection *connection)
 	g_variant_builder_add(&builder, "{sv}", "Visible", g_variant_new_boolean(visible));
 
 	g_dbus_connection_emit_signal(connection,
-			NULL,
-			"/sm/puri/OSK0",
-			"org.freedesktop.DBus.Properties",
-			"PropertiesChanged",
-			g_variant_new("(sa{sv}as)", "sm.puri.OSK0", &builder, NULL), NULL);
+	                              NULL,
+	                              "/sm/puri/OSK0",
+	                              "org.freedesktop.DBus.Properties",
+	                              "PropertiesChanged",
+	                              g_variant_new("(sa{sv}as)", "sm.puri.OSK0", &builder, NULL), NULL);
 
 	g_variant_builder_clear(&builder);
 }
@@ -37,7 +37,7 @@ static void emit_property_changed(GDBusConnection *connection)
 /* Used in IMS. */
 void atlosk_set_visible(gboolean new_visible)
 {
-        visible = new_visible;
+	visible = new_visible;
 
 	if (osk_window) {
 		gtk_widget_set_visible(osk_window, visible);
@@ -87,8 +87,8 @@ static const GDBusInterfaceVTable interface_vtable = {
 
 static void on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data)
 {
-    DEBUG("Acquired D-Bus name: %s\n", name);
-    dbus_connection = connection;
+	DEBUG("Acquired D-Bus name: %s\n", name);
+	dbus_connection = connection;
 }
 
 static int connect_osk_dbus_iface(GtkWidget *dialog)
@@ -99,11 +99,11 @@ static int connect_osk_dbus_iface(GtkWidget *dialog)
 	guint owner_id;
 
 	owner_id = g_bus_own_name(G_BUS_TYPE_SESSION,
-			"sm.puri.OSK0",
-			G_BUS_NAME_OWNER_FLAGS_REPLACE,
-			NULL,
-			on_name_acquired,
-			NULL, NULL, NULL);
+	                          "sm.puri.OSK0",
+	                          G_BUS_NAME_OWNER_FLAGS_REPLACE,
+	                          NULL,
+	                          on_name_acquired,
+	                          NULL, NULL, NULL);
 
 	if (owner_id == 0) {
 		g_printerr("OSK: Error: Could not acquire D-Bus name\n");
@@ -112,14 +112,14 @@ static int connect_osk_dbus_iface(GtkWidget *dialog)
 
 	/* https://world.pages.gitlab.gnome.org/Phosh/phosh/phosh-dbus-sm.puri.OSK0.html */
 	const gchar introspection_xml[] =
-		"<node>"
-		"  <interface name='sm.puri.OSK0'>"
-		"    <method name='SetVisible'>"
-		"      <arg type='b' name='visible' direction='in'/>"
-		"    </method>"
-		"    <property name='Visible' type='b' access='read'/>"
-		"  </interface>"
-		"</node>";
+	    "<node>"
+	    "  <interface name='sm.puri.OSK0'>"
+	    "    <method name='SetVisible'>"
+	    "      <arg type='b' name='visible' direction='in'/>"
+	    "    </method>"
+	    "    <property name='Visible' type='b' access='read'/>"
+	    "  </interface>"
+	    "</node>";
 
 	introspection_data = g_dbus_node_info_new_for_xml(introspection_xml, &error);
 	if (!introspection_data) {
@@ -136,10 +136,10 @@ static int connect_osk_dbus_iface(GtkWidget *dialog)
 	}
 
 	registration_id = g_dbus_connection_register_object(connection,
-			"/sm/puri/OSK0",
-			introspection_data->interfaces[0],
-			&interface_vtable,
-			NULL, NULL, &error);
+	                                                    "/sm/puri/OSK0",
+	                                                    introspection_data->interfaces[0],
+	                                                    &interface_vtable,
+	                                                    NULL, NULL, &error);
 	if (!registration_id) {
 		g_printerr("OSK: Failed to register object: %s\n", error->message);
 		g_error_free(error);
@@ -159,7 +159,7 @@ static gboolean on_close_request(GtkWidget *dialog, jobject jobj)
 	return FALSE;
 }
 
-JNIEXPORT jlong JNICALL Java_android_atl_ATLKeyboardDialog_nativeInit(JNIEnv *env, jobject this, jboolean floating)
+JNIEXPORT jlong JNICALL Java_android_atl_ATLKeyboardDialog_nativeInit(JNIEnv *env, jobject this)
 {
 	GtkWidget *dialog = gtk_window_new();
 	GtkWindow *window = GTK_WINDOW(dialog);

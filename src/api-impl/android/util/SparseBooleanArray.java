@@ -71,7 +71,7 @@ public class SparseBooleanArray implements Cloneable {
 	public SparseBooleanArray clone() {
 		SparseBooleanArray clone = null;
 		try {
-			clone = (SparseBooleanArray) super.clone();
+			clone = (SparseBooleanArray)super.clone();
 			clone.mKeys = mKeys.clone();
 			clone.mValues = mValues.clone();
 		} catch (CloneNotSupportedException cnse) {
@@ -303,25 +303,25 @@ public class SparseBooleanArray implements Cloneable {
 
 	@Override
 	public boolean equals(Object that) {
-	  if (this == that) {
-		  return true;
-	  }
-	  if (!(that instanceof SparseBooleanArray)) {
-		  return false;
-	  }
-	  SparseBooleanArray other = (SparseBooleanArray) that;
-	  if (mSize != other.mSize) {
-		  return false;
-	  }
-	  for (int i = 0; i < mSize; i++) {
-		  if (mKeys[i] != other.mKeys[i]) {
-			  return false;
-		  }
-		  if (mValues[i] != other.mValues[i]) {
-			  return false;
-		  }
-	  }
-	  return true;
+		if (this == that) {
+			return true;
+		}
+		if (!(that instanceof SparseBooleanArray)) {
+			return false;
+		}
+		SparseBooleanArray other = (SparseBooleanArray)that;
+		if (mSize != other.mSize) {
+			return false;
+		}
+		for (int i = 0; i < mSize; i++) {
+			if (mKeys[i] != other.mKeys[i]) {
+				return false;
+			}
+			if (mValues[i] != other.mValues[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class SparseBooleanArray implements Cloneable {
 		}
 		StringBuilder buffer = new StringBuilder(mSize * 28);
 		buffer.append('{');
-		for (int i=0; i<mSize; i++) {
+		for (int i = 0; i < mSize; i++) {
 			if (i > 0) {
 				buffer.append(", ");
 			}

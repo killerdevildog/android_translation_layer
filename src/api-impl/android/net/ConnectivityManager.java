@@ -28,7 +28,7 @@ public class ConnectivityManager {
 	protected native boolean nativeGetNetworkAvailable();
 
 	public NetworkInfo[] getAllNetworkInfo() {
-		return new NetworkInfo[] { getActiveNetworkInfo() };
+		return new NetworkInfo[] {getActiveNetworkInfo()};
 	}
 
 	public Network getActiveNetwork() {
@@ -36,7 +36,7 @@ public class ConnectivityManager {
 	}
 
 	public Network[] getAllNetworks() {
-		return new Network[] { getActiveNetwork() };
+		return new Network[] {getActiveNetwork()};
 	}
 
 	public NetworkCapabilities getNetworkCapabilities(Network network) {
@@ -48,5 +48,4 @@ public class ConnectivityManager {
 	public void registerDefaultNetworkCallback(NetworkCallback cb) {}
 
 	public ProxyInfo getDefaultProxy() { return null; }
-
 }

@@ -21,8 +21,9 @@ package android.animation;
  * Any custom listener that cares only about a subset of the methods of this listener can
  * simply subclass this adapter class instead of implementing the interface directly.
  */
-public abstract class AnimatorListenerAdapter implements Animator.AnimatorListener/*,
-		Animator.AnimatorPauseListener*/ {
+public abstract class AnimatorListenerAdapter implements Animator.AnimatorListener /*,
+		Animator.AnimatorPauseListener*/
+{
 	/**
 	 * {@inheritDoc}
 	 */

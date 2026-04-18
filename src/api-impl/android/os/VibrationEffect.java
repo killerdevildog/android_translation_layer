@@ -9,5 +9,4 @@ public class VibrationEffect {
 	public static VibrationEffect createWaveform(long[] pattern, int repeat) {
 		return new VibrationEffect();
 	}
-
 }

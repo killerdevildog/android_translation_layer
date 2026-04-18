@@ -21,8 +21,9 @@ package com.google.android.gles_jni;
 
 /*import android.app.AppGlobals;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageManager;
-import android.os.Build;
+import android.content.pm.IPackageManager;*/
+import android.opengl.GLES10;
+/*import android.os.Build;
 import android.os.UserHandle;
 import android.util.Log;
 */
@@ -32,8 +33,6 @@ import javax.microedition.khronos.opengles.GL10Ext;
 import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL11Ext;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
-
-import android.opengl.GLES10;
 
 public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	// Private accessors for native code
@@ -108,8 +107,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 
 	public void glBindTexture(
 	    int target,
-	    int texture)
-	{
+	    int texture) {
 		GLES10.glBindTexture(target, texture);
 	}
 
@@ -208,11 +206,11 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if ((size == 4) &&
-		    ((type == GL_FLOAT) ||
-		     (type == GL_UNSIGNED_BYTE) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if ((size == 4)
+		    && ((type == GL_FLOAT)
+		        || (type == GL_UNSIGNED_BYTE)
+		        || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_colorPointer = pointer;
 		}
 	}
@@ -284,8 +282,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 
 	public void glDeleteTextures(
 	    int n,
-	    java.nio.IntBuffer textures)
-	{
+	    java.nio.IntBuffer textures) {
 		GLES10.glDeleteTextures(n, textures);
 	}
 
@@ -314,8 +311,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	// C function void glDisable ( GLenum cap )
 
 	public void glDisable(
-	    int cap)
-	{
+	    int cap) {
 		GLES10.glDisable(cap);
 	}
 
@@ -337,16 +333,14 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	    int mode,
 	    int count,
 	    int type,
-	    java.nio.Buffer indices)
-	{
+	    java.nio.Buffer indices) {
 		GLES10.glDrawElements(mode, count, type, indices);
 	}
 
 	// C function void glEnable ( GLenum cap )
 
 	public void glEnable(
-	    int cap)
-	{
+	    int cap) {
 		GLES10.glEnable(cap);
 	}
 
@@ -406,8 +400,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	// C function void glFrontFace ( GLenum mode )
 
 	public void glFrontFace(
-	    int mode)
-	{
+	    int mode) {
 		GLES10.glFrontFace(mode);
 	}
 
@@ -436,8 +429,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	public void glGenTextures(
 	    int n,
 	    int[] textures,
-	    int offset)
-	{
+	    int offset) {
 		GLES10.glGenTextures(n, textures, offset);
 	}
 
@@ -728,11 +720,11 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if (((type == GL_FLOAT) ||
-		     (type == GL_BYTE) ||
-		     (type == GL_SHORT) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if (((type == GL_FLOAT)
+		     || (type == GL_BYTE)
+		     || (type == GL_SHORT)
+		     || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_normalPointer = pointer;
 		}
 	}
@@ -900,14 +892,14 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if (((size == 2) ||
-		     (size == 3) ||
-		     (size == 4)) &&
-		    ((type == GL_FLOAT) ||
-		     (type == GL_BYTE) ||
-		     (type == GL_SHORT) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if (((size == 2)
+		     || (size == 3)
+		     || (size == 4))
+		    && ((type == GL_FLOAT)
+		        || (type == GL_BYTE)
+		        || (type == GL_SHORT)
+		        || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_texCoordPointer = pointer;
 		}
 	}
@@ -974,8 +966,7 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 	public void glTexParameterf(
 	    int target,
 	    int pname,
-	    float param)
-	{
+	    float param) {
 		GLES10.glTexParameterf(target, pname, param);
 	}
 
@@ -1033,14 +1024,14 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if (((size == 2) ||
-		     (size == 3) ||
-		     (size == 4)) &&
-		    ((type == GL_FLOAT) ||
-		     (type == GL_BYTE) ||
-		     (type == GL_SHORT) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if (((size == 2)
+		     || (size == 3)
+		     || (size == 4))
+		    && ((type == GL_FLOAT)
+		        || (type == GL_BYTE)
+		        || (type == GL_SHORT)
+		        || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_vertexPointer = pointer;
 		}
 	}
@@ -1461,9 +1452,9 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if (((type == GL_FLOAT) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if (((type == GL_FLOAT)
+		     || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_pointSizePointerOES = pointer;
 		}
 	}
@@ -1667,14 +1658,14 @@ public class GLImpl implements GL10, GL10Ext, GL11, GL11Ext, GL11ExtensionPack {
 		    stride,
 		    pointer,
 		    pointer.remaining());
-		if (((size == 2) ||
-		     (size == 3) ||
-		     (size == 4)) &&
-		    ((type == GL_FLOAT) ||
-		     (type == GL_BYTE) ||
-		     (type == GL_SHORT) ||
-		     (type == GL_FIXED)) &&
-		    (stride >= 0)) {
+		if (((size == 2)
+		     || (size == 3)
+		     || (size == 4))
+		    && ((type == GL_FLOAT)
+		        || (type == GL_BYTE)
+		        || (type == GL_SHORT)
+		        || (type == GL_FIXED))
+		    && (stride >= 0)) {
 			_matrixIndexPointerOES = pointer;
 		}
 	}

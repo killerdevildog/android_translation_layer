@@ -13469,9 +13469,10 @@ public final class R {
 		   @see #AbsListView_transcriptMode
 		 */
 		public static final int[] AbsListView = {
-		    0x010100fb, 0x010100fc, 0x010100fd, 0x010100fe,
-		    0x010100ff, 0x01010100, 0x01010101, 0x0101012b,
-		    0x01010226, 0x01010231, 0x01010335};
+			0x010100fb, 0x010100fc, 0x010100fd, 0x010100fe,
+			0x010100ff, 0x01010100, 0x01010101, 0x0101012b,
+			0x01010226, 0x01010231, 0x01010335
+		};
 		/**
 		  <p>
 		  @attr description
@@ -13707,7 +13708,8 @@ public final class R {
 		   @see #AbsSpinner_entries
 		 */
 		public static final int[] AbsSpinner = {
-		    0x010100b2};
+			0x010100b2
+		};
 		/**
 		  <p>
 		  @attr description
@@ -13736,7 +13738,8 @@ public final class R {
 		   @see #AbsoluteLayout_Layout_layout_y
 		 */
 		public static final int[] AbsoluteLayout_Layout = {
-		    0x0101017f, 0x01010180};
+			0x0101017f, 0x01010180
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#layout_x}
 		  attribute's value can be found in the {@link #AbsoluteLayout_Layout} array.
@@ -13781,7 +13784,8 @@ public final class R {
 		   @see #AccelerateInterpolator_factor
 		 */
 		public static final int[] AccelerateInterpolator = {
-		    0x010101d3};
+			0x010101d3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -13845,9 +13849,10 @@ public final class R {
 		   @see #AccessibilityService_settingsActivity
 		 */
 		public static final int[] AccessibilityService = {
-		    0x01010020, 0x01010225, 0x01010380, 0x01010381,
-		    0x01010382, 0x01010383, 0x01010384, 0x01010385,
-		    0x010103d7, 0x010103d8, 0x010103d9};
+			0x01010020, 0x01010225, 0x01010380, 0x01010381,
+			0x01010382, 0x01010383, 0x01010384, 0x01010385,
+			0x010103d7, 0x010103d8, 0x010103d9
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14124,8 +14129,9 @@ public final class R {
 		   @see #AccountAuthenticator_smallIcon
 		 */
 		public static final int[] AccountAuthenticator = {
-		    0x01010001, 0x01010002, 0x0101028f, 0x0101029e,
-		    0x0101029f, 0x0101033b};
+			0x01010001, 0x01010002, 0x0101028f, 0x0101029e,
+			0x0101029f, 0x0101033b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14264,11 +14270,12 @@ public final class R {
 		   @see #ActionBar_titleTextStyle
 		 */
 		public static final int[] ActionBar = {
-		    0x01010002, 0x01010077, 0x010100d4, 0x01010129,
-		    0x01010155, 0x010101e1, 0x010102be, 0x010102cf,
-		    0x010102d0, 0x010102d1, 0x010102d2, 0x010102f8,
-		    0x010102f9, 0x01010318, 0x01010319, 0x0101031d,
-		    0x0101032d, 0x0101038a, 0x0101038b};
+			0x01010002, 0x01010077, 0x010100d4, 0x01010129,
+			0x01010155, 0x010101e1, 0x010102be, 0x010102cf,
+			0x010102d0, 0x010102d1, 0x010102d2, 0x010102f8,
+			0x010102f9, 0x01010318, 0x01010319, 0x0101031d,
+			0x0101032d, 0x0101038a, 0x0101038b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14583,7 +14590,8 @@ public final class R {
 		   @see #ActionBar_LayoutParams_layout_gravity
 		 */
 		public static final int[] ActionBar_LayoutParams = {
-		    0x010100b3};
+			0x010100b3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14635,7 +14643,8 @@ public final class R {
 		   @see #ActionMenuItemView_minWidth
 		 */
 		public static final int[] ActionMenuItemView = {
-		    0x0101013f};
+			0x0101013f
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#minWidth}
 		  attribute's value can be found in the {@link #ActionMenuItemView} array.
@@ -14672,8 +14681,9 @@ public final class R {
 		   @see #ActionMode_titleTextStyle
 		 */
 		public static final int[] ActionMode = {
-		    0x010100d4, 0x01010155, 0x010102f8, 0x010102f9,
-		    0x0101038b};
+			0x010100d4, 0x01010155, 0x010102f8, 0x010102f9,
+			0x0101038b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14759,7 +14769,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] ActivityChooserView = {
-		    0x0101044d, 0x0101044e};
+			0x0101044d, 0x0101044e
+		};
 		/**
 		Attributes that can be used with a AdapterViewAnimator.
 		   <p>Includes the following attributes:</p>
@@ -14780,7 +14791,8 @@ public final class R {
 		   @see #AdapterViewAnimator_outAnimation
 		 */
 		public static final int[] AdapterViewAnimator = {
-		    0x01010177, 0x01010178, 0x010102d5, 0x01010307};
+			0x01010177, 0x01010178, 0x010102d5, 0x01010307
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14857,7 +14869,8 @@ public final class R {
 		   @see #AdapterViewFlipper_flipInterval
 		 */
 		public static final int[] AdapterViewFlipper = {
-		    0x01010179, 0x010102b5};
+			0x01010179, 0x010102b5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14903,7 +14916,8 @@ public final class R {
 		   @see #AidFilter_name
 		 */
 		public static final int[] AidFilter = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -14940,7 +14954,8 @@ public final class R {
 		   @see #AidGroup_description
 		 */
 		public static final int[] AidGroup = {
-		    0x01010020, 0x010103e8};
+			0x01010020, 0x010103e8
+		};
 		/**
 		  <p>
 		  @attr description
@@ -15009,11 +15024,12 @@ public final class R {
 		   @see #AlertDialog_topDark
 		 */
 		public static final int[] AlertDialog = {
-		    0x010100c6, 0x010100c7, 0x010100c8, 0x010100c9,
-		    0x010100ca, 0x010100cb, 0x010100cc, 0x010100cd,
-		    0x010100ce, 0x010100cf, 0x010100f2, 0x01010428,
-		    0x01010429, 0x0101042a, 0x0101042b, 0x0101042c,
-		    0x0101042d};
+			0x010100c6, 0x010100c7, 0x010100c8, 0x010100c9,
+			0x010100ca, 0x010100cb, 0x010100cc, 0x010100cd,
+			0x010100ce, 0x010100cf, 0x010100f2, 0x01010428,
+			0x01010429, 0x0101042a, 0x0101042b, 0x0101042c,
+			0x0101042d
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#bottomBright}
 		  attribute's value can be found in the {@link #AlertDialog} array.
@@ -15163,7 +15179,8 @@ public final class R {
 		   @see #AlphaAnimation_toAlpha
 		 */
 		public static final int[] AlphaAnimation = {
-		    0x010101ca, 0x010101cb};
+			0x010101ca, 0x010101cb
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fromAlpha}
 		  attribute's value can be found in the {@link #AlphaAnimation} array.
@@ -15208,7 +15225,8 @@ public final class R {
 		   @see #AnalogClock_hand_minute
 		 */
 		public static final int[] AnalogClock = {
-		    0x01010102, 0x01010103, 0x01010104};
+			0x01010102, 0x01010103, 0x01010104
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#dial}
 		  attribute's value can be found in the {@link #AnalogClock} array.
@@ -15278,8 +15296,9 @@ public final class R {
 		   @see #AndroidManifest_versionName
 		 */
 		public static final int[] AndroidManifest = {
-		    0x0101000b, 0x0101021b, 0x0101021c, 0x01010261,
-		    0x010102b7};
+			0x0101000b, 0x0101021b, 0x0101021c, 0x01010261,
+			0x010102b7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -15404,7 +15423,8 @@ public final class R {
 		   @see #AndroidManifestAction_name
 		 */
 		public static final int[] AndroidManifestAction = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -15528,14 +15548,15 @@ public final class R {
 		   @see #AndroidManifestActivity_windowSoftInputMode
 		 */
 		public static final int[] AndroidManifestActivity = {
-		    0x01010000, 0x01010001, 0x01010002, 0x01010003,
-		    0x01010006, 0x0101000e, 0x01010010, 0x01010011,
-		    0x01010012, 0x01010013, 0x01010014, 0x01010015,
-		    0x01010016, 0x01010017, 0x0101001d, 0x0101001e,
-		    0x0101001f, 0x01010020, 0x01010203, 0x01010204,
-		    0x0101022b, 0x0101022d, 0x010102a7, 0x010102be,
-		    0x010102c0, 0x010102d3, 0x01010398, 0x010103a7,
-		    0x010103bf, 0x010103c9, 0x01010480};
+			0x01010000, 0x01010001, 0x01010002, 0x01010003,
+			0x01010006, 0x0101000e, 0x01010010, 0x01010011,
+			0x01010012, 0x01010013, 0x01010014, 0x01010015,
+			0x01010016, 0x01010017, 0x0101001d, 0x0101001e,
+			0x0101001f, 0x01010020, 0x01010203, 0x01010204,
+			0x0101022b, 0x0101022d, 0x010102a7, 0x010102be,
+			0x010102c0, 0x010102d3, 0x01010398, 0x010103a7,
+			0x010103bf, 0x010103c9, 0x01010480
+		};
 		/**
 		  <p>
 		  @attr description
@@ -16494,9 +16515,10 @@ public final class R {
 		   @see #AndroidManifestActivityAlias_targetActivity
 		 */
 		public static final int[] AndroidManifestActivityAlias = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010006,
-		    0x0101000e, 0x01010010, 0x01010020, 0x01010202,
-		    0x010102be, 0x010103a7};
+			0x01010001, 0x01010002, 0x01010003, 0x01010006,
+			0x0101000e, 0x01010010, 0x01010020, 0x01010202,
+			0x010102be, 0x010103a7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -16816,14 +16838,15 @@ public final class R {
 		   @see #AndroidManifestApplication_vmSafeMode
 		 */
 		public static final int[] AndroidManifestApplication = {
-		    0x01010000, 0x01010001, 0x01010002, 0x01010003,
-		    0x01010004, 0x01010005, 0x01010006, 0x0101000c,
-		    0x0101000d, 0x0101000e, 0x0101000f, 0x01010011,
-		    0x01010012, 0x01010020, 0x01010204, 0x01010272,
-		    0x0101027f, 0x01010280, 0x0101029c, 0x0101029d,
-		    0x010102b8, 0x010102ba, 0x010102be, 0x010102d3,
-		    0x0101035a, 0x01010398, 0x010103af, 0x010103d0,
-		    0x010103d5, 0x010103d6, 0x0101047e, 0x0101047f};
+			0x01010000, 0x01010001, 0x01010002, 0x01010003,
+			0x01010004, 0x01010005, 0x01010006, 0x0101000c,
+			0x0101000d, 0x0101000e, 0x0101000f, 0x01010011,
+			0x01010012, 0x01010020, 0x01010204, 0x01010272,
+			0x0101027f, 0x01010280, 0x0101029c, 0x0101029d,
+			0x010102b8, 0x010102ba, 0x010102be, 0x010102d3,
+			0x0101035a, 0x01010398, 0x010103af, 0x010103d0,
+			0x010103d5, 0x010103d6, 0x0101047e, 0x0101047f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -17501,7 +17524,8 @@ public final class R {
 		   @see #AndroidManifestCategory_name
 		 */
 		public static final int[] AndroidManifestCategory = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -17543,7 +17567,8 @@ public final class R {
 		   @see #AndroidManifestCompatibleScreensScreen_screenSize
 		 */
 		public static final int[] AndroidManifestCompatibleScreensScreen = {
-		    0x010102ca, 0x010102cb};
+			0x010102ca, 0x010102cb
+		};
 		/**
 		  <p>
 		  @attr description
@@ -17661,9 +17686,10 @@ public final class R {
 		   @see #AndroidManifestData_sspPrefix
 		 */
 		public static final int[] AndroidManifestData = {
-		    0x01010026, 0x01010027, 0x01010028, 0x01010029,
-		    0x0101002a, 0x0101002b, 0x0101002c, 0x010103e3,
-		    0x010103e4, 0x010103e5};
+			0x01010026, 0x01010027, 0x01010028, 0x01010029,
+			0x0101002a, 0x0101002b, 0x0101002c, 0x010103e3,
+			0x010103e4, 0x010103e5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -17908,7 +17934,8 @@ public final class R {
 		   @see #AndroidManifestGrantUriPermission_pathPrefix
 		 */
 		public static final int[] AndroidManifestGrantUriPermission = {
-		    0x0101002a, 0x0101002b, 0x0101002c};
+			0x0101002a, 0x0101002b, 0x0101002c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18005,8 +18032,9 @@ public final class R {
 		   @see #AndroidManifestInstrumentation_targetPackage
 		 */
 		public static final int[] AndroidManifestInstrumentation = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010021,
-		    0x01010022, 0x01010023, 0x010102be};
+			0x01010001, 0x01010002, 0x01010003, 0x01010021,
+			0x01010022, 0x01010023, 0x010102be
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18199,7 +18227,8 @@ public final class R {
 		   @see #AndroidManifestIntentFilter_priority
 		 */
 		public static final int[] AndroidManifestIntentFilter = {
-		    0x01010001, 0x01010002, 0x0101001c, 0x010102be};
+			0x01010001, 0x01010002, 0x0101001c, 0x010102be
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18324,7 +18353,8 @@ public final class R {
 		   @see #AndroidManifestLibrary_name
 		 */
 		public static final int[] AndroidManifestLibrary = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18374,7 +18404,8 @@ public final class R {
 		   @see #AndroidManifestMetaData_value
 		 */
 		public static final int[] AndroidManifestMetaData = {
-		    0x01010003, 0x01010024, 0x01010025};
+			0x01010003, 0x01010024, 0x01010025
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18457,7 +18488,8 @@ public final class R {
 		   @see #AndroidManifestOriginalPackage_name
 		 */
 		public static final int[] AndroidManifestOriginalPackage = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18493,7 +18525,8 @@ public final class R {
 		   @see #AndroidManifestPackageVerifier_publicKey
 		 */
 		public static final int[] AndroidManifestPackageVerifier = {
-		    0x01010003, 0x010103a6};
+			0x01010003, 0x010103a6
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18565,8 +18598,9 @@ public final class R {
 		   @see #AndroidManifestPathPermission_writePermission
 		 */
 		public static final int[] AndroidManifestPathPermission = {
-		    0x01010006, 0x01010007, 0x01010008, 0x0101002a,
-		    0x0101002b, 0x0101002c};
+			0x01010006, 0x01010007, 0x01010008, 0x0101002a,
+			0x0101002b, 0x0101002c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18730,8 +18764,9 @@ public final class R {
 		   @see #AndroidManifestPermission_protectionLevel
 		 */
 		public static final int[] AndroidManifestPermission = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010009,
-		    0x0101000a, 0x01010020, 0x010102be, 0x010103c7};
+			0x01010001, 0x01010002, 0x01010003, 0x01010009,
+			0x0101000a, 0x01010020, 0x010102be, 0x010103c7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -18984,8 +19019,9 @@ public final class R {
 		   @see #AndroidManifestPermissionGroup_priority
 		 */
 		public static final int[] AndroidManifestPermissionGroup = {
-		    0x01010001, 0x01010002, 0x01010003, 0x0101001c,
-		    0x01010020, 0x010102be, 0x010103c5};
+			0x01010001, 0x01010002, 0x01010003, 0x0101001c,
+			0x01010020, 0x010102be, 0x010103c5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -19181,7 +19217,8 @@ public final class R {
 		   @see #AndroidManifestPermissionTree_name
 		 */
 		public static final int[] AndroidManifestPermissionTree = {
-		    0x01010001, 0x01010002, 0x01010003, 0x010102be};
+			0x01010001, 0x01010002, 0x01010003, 0x010102be
+		};
 		/**
 		  <p>
 		  @attr description
@@ -19296,7 +19333,8 @@ public final class R {
 		   @see #AndroidManifestProtectedBroadcast_name
 		 */
 		public static final int[] AndroidManifestProtectedBroadcast = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -19382,11 +19420,12 @@ public final class R {
 		   @see #AndroidManifestProvider_writePermission
 		 */
 		public static final int[] AndroidManifestProvider = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010006,
-		    0x01010007, 0x01010008, 0x0101000e, 0x01010010,
-		    0x01010011, 0x01010013, 0x01010018, 0x01010019,
-		    0x0101001a, 0x0101001b, 0x01010020, 0x010102be,
-		    0x010103bf};
+			0x01010001, 0x01010002, 0x01010003, 0x01010006,
+			0x01010007, 0x01010008, 0x0101000e, 0x01010010,
+			0x01010011, 0x01010013, 0x01010018, 0x01010019,
+			0x0101001a, 0x0101001b, 0x01010020, 0x010102be,
+			0x010103bf
+		};
 		/**
 		  <p>
 		  @attr description
@@ -19822,9 +19861,10 @@ public final class R {
 		   @see #AndroidManifestReceiver_singleUser
 		 */
 		public static final int[] AndroidManifestReceiver = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010006,
-		    0x0101000e, 0x01010010, 0x01010011, 0x01010020,
-		    0x010102be, 0x010103bf};
+			0x01010001, 0x01010002, 0x01010003, 0x01010006,
+			0x0101000e, 0x01010010, 0x01010011, 0x01010020,
+			0x010102be, 0x010103bf
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20114,9 +20154,10 @@ public final class R {
 		   @see #AndroidManifestService_stopWithTask
 		 */
 		public static final int[] AndroidManifestService = {
-		    0x01010001, 0x01010002, 0x01010003, 0x01010006,
-		    0x0101000e, 0x01010010, 0x01010011, 0x01010020,
-		    0x010102be, 0x0101036a, 0x010103a9, 0x010103bf};
+			0x01010001, 0x01010002, 0x01010003, 0x01010006,
+			0x0101000e, 0x01010010, 0x01010011, 0x01010020,
+			0x010102be, 0x0101036a, 0x010103a9, 0x010103bf
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20408,7 +20449,8 @@ public final class R {
 		   @see #AndroidManifestSupportsInputInputType_name
 		 */
 		public static final int[] AndroidManifestSupportsInputInputType = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20472,9 +20514,10 @@ public final class R {
 		   @see #AndroidManifestSupportsScreens_xlargeScreens
 		 */
 		public static final int[] AndroidManifestSupportsScreens = {
-		    0x0101026c, 0x01010284, 0x01010285, 0x01010286,
-		    0x0101028d, 0x010102bf, 0x01010364, 0x01010365,
-		    0x01010366};
+			0x0101026c, 0x01010284, 0x01010285, 0x01010286,
+			0x0101028d, 0x010102bf, 0x01010364, 0x01010365,
+			0x01010366
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20710,8 +20753,9 @@ public final class R {
 		   @see #AndroidManifestUsesConfiguration_reqTouchScreen
 		 */
 		public static final int[] AndroidManifestUsesConfiguration = {
-		    0x01010227, 0x01010228, 0x01010229, 0x0101022a,
-		    0x01010232};
+			0x01010227, 0x01010228, 0x01010229, 0x0101022a,
+			0x01010232
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20836,7 +20880,8 @@ public final class R {
 		   @see #AndroidManifestUsesFeature_required
 		 */
 		public static final int[] AndroidManifestUsesFeature = {
-		    0x01010003, 0x01010281, 0x0101028e};
+			0x01010003, 0x01010281, 0x0101028e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20915,7 +20960,8 @@ public final class R {
 		   @see #AndroidManifestUsesLibrary_required
 		 */
 		public static final int[] AndroidManifestUsesLibrary = {
-		    0x01010003, 0x0101028e};
+			0x01010003, 0x0101028e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -20992,7 +21038,8 @@ public final class R {
 		   @see #AndroidManifestUsesPermission_name
 		 */
 		public static final int[] AndroidManifestUsesPermission = {
-		    0x01010003, 0x01010271};
+			0x01010003, 0x01010271
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21056,7 +21103,8 @@ public final class R {
 		   @see #AndroidManifestUsesSdk_targetSdkVersion
 		 */
 		public static final int[] AndroidManifestUsesSdk = {
-		    0x0101020c, 0x01010270, 0x01010271};
+			0x0101020c, 0x01010270, 0x01010271
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21146,8 +21194,9 @@ public final class R {
 		   @see #AnimatedRotateDrawable_visible
 		 */
 		public static final int[] AnimatedRotateDrawable = {
-		    0x01010194, 0x01010199, 0x010101b5, 0x010101b6,
-		    0x0101044a, 0x0101044b};
+			0x01010194, 0x01010199, 0x010101b5, 0x010101b6,
+			0x0101044a, 0x0101044b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21252,9 +21301,10 @@ public final class R {
 		   @see #Animation_zAdjustment
 		 */
 		public static final int[] Animation = {
-		    0x010100d4, 0x01010141, 0x01010198, 0x010101bc,
-		    0x010101bd, 0x010101be, 0x010101bf, 0x010101c0,
-		    0x010101c1, 0x0101024f, 0x010102a6};
+			0x010100d4, 0x01010141, 0x01010198, 0x010101bc,
+			0x010101bd, 0x010101be, 0x010101bf, 0x010101c0,
+			0x010101c1, 0x0101024f, 0x010102a6
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21480,7 +21530,8 @@ public final class R {
 		   @see #AnimationDrawable_visible
 		 */
 		public static final int[] AnimationDrawable = {
-		    0x01010194, 0x01010195, 0x01010197};
+			0x01010194, 0x01010195, 0x01010197
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21555,7 +21606,8 @@ public final class R {
 		   @see #AnimationDrawableItem_duration
 		 */
 		public static final int[] AnimationDrawableItem = {
-		    0x01010198, 0x01010199};
+			0x01010198, 0x01010199
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21612,8 +21664,9 @@ public final class R {
 		   @see #AnimationSet_startOffset
 		 */
 		public static final int[] AnimationSet = {
-		    0x01010198, 0x010101bb, 0x010101bc, 0x010101bd,
-		    0x010101be, 0x010101c0};
+			0x01010198, 0x010101bb, 0x010101bc, 0x010101bd,
+			0x010101be, 0x010101c0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21747,8 +21800,9 @@ public final class R {
 		   @see #Animator_valueType
 		 */
 		public static final int[] Animator = {
-		    0x01010141, 0x01010198, 0x010101be, 0x010101bf,
-		    0x010101c0, 0x010102de, 0x010102df, 0x010102e0};
+			0x01010141, 0x01010198, 0x010101be, 0x010101bf,
+			0x010101c0, 0x010102de, 0x010102df, 0x010102e0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21923,7 +21977,8 @@ public final class R {
 		   @see #AnimatorSet_ordering
 		 */
 		public static final int[] AnimatorSet = {
-		    0x010102e2};
+			0x010102e2
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21956,7 +22011,8 @@ public final class R {
 		   @see #AnticipateInterpolator_tension
 		 */
 		public static final int[] AnticipateInterpolator = {
-		    0x0101026a};
+			0x0101026a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -21988,7 +22044,8 @@ public final class R {
 		   @see #AnticipateOvershootInterpolator_tension
 		 */
 		public static final int[] AnticipateOvershootInterpolator = {
-		    0x0101026a, 0x0101026b};
+			0x0101026a, 0x0101026b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -22062,9 +22119,10 @@ public final class R {
 		   @see #AppWidgetProviderInfo_widgetCategory
 		 */
 		public static final int[] AppWidgetProviderInfo = {
-		    0x0101013f, 0x01010140, 0x01010250, 0x01010251,
-		    0x0101025d, 0x010102da, 0x0101030f, 0x01010363,
-		    0x01010395, 0x01010396, 0x010103c2, 0x010103c4};
+			0x0101013f, 0x01010140, 0x01010250, 0x01010251,
+			0x0101025d, 0x010102da, 0x0101030f, 0x01010363,
+			0x01010395, 0x01010396, 0x010103c2, 0x010103c4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -22318,9 +22376,10 @@ public final class R {
 		   @see #AutoCompleteTextView_inputType
 		 */
 		public static final int[] AutoCompleteTextView = {
-		    0x01010172, 0x01010173, 0x01010174, 0x01010175,
-		    0x01010220, 0x01010262, 0x01010263, 0x01010283,
-		    0x010102ac, 0x010102ad};
+			0x01010172, 0x01010173, 0x01010174, 0x01010175,
+			0x01010220, 0x01010262, 0x01010263, 0x01010283,
+			0x010102ac, 0x010102ad
+		};
 		/**
 		  <p>
 		  @attr description
@@ -22661,8 +22720,9 @@ public final class R {
 		   @see #BitmapDrawable_tileMode
 		 */
 		public static final int[] BitmapDrawable = {
-		    0x010100af, 0x01010119, 0x0101011a, 0x0101011b,
-		    0x0101011c, 0x01010201, 0x010103cd, 0x010103ea};
+			0x010100af, 0x01010119, 0x0101011a, 0x0101011b,
+			0x0101011c, 0x01010201, 0x010103cd, 0x010103ea
+		};
 		/**
 		  <p>
 		  @attr description
@@ -22875,10 +22935,11 @@ public final class R {
 		   @see #CalendarView_weekSeparatorLineColor
 		 */
 		public static final int[] CalendarView = {
-		    0x0101033d, 0x0101033e, 0x0101033f, 0x01010340,
-		    0x01010341, 0x01010342, 0x01010343, 0x01010344,
-		    0x01010345, 0x01010346, 0x01010347, 0x01010348,
-		    0x01010349};
+			0x0101033d, 0x0101033e, 0x0101033f, 0x01010340,
+			0x01010341, 0x01010342, 0x01010343, 0x01010344,
+			0x01010345, 0x01010346, 0x01010347, 0x01010348,
+			0x01010349
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23096,7 +23157,8 @@ public final class R {
 		   @see #CheckBoxPreference_summaryOn
 		 */
 		public static final int[] CheckBoxPreference = {
-		    0x010101ef, 0x010101f0, 0x010101f1};
+			0x010101ef, 0x010101f0, 0x010101f1
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23167,7 +23229,8 @@ public final class R {
 		   @see #CheckedTextView_checked
 		 */
 		public static final int[] CheckedTextView = {
-		    0x01010106, 0x01010108};
+			0x01010106, 0x01010108
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23212,7 +23275,8 @@ public final class R {
 		   @see #Chronometer_format
 		 */
 		public static final int[] Chronometer = {
-		    0x01010105};
+			0x01010105
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23250,7 +23314,8 @@ public final class R {
 		   @see #ClipDrawable_gravity
 		 */
 		public static final int[] ClipDrawable = {
-		    0x010100af, 0x01010199, 0x0101020a};
+			0x010100af, 0x01010199, 0x0101020a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23335,7 +23400,8 @@ public final class R {
 		   @see #ColorDrawable_color
 		 */
 		public static final int[] ColorDrawable = {
-		    0x010101a5};
+			0x010101a5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23368,7 +23434,8 @@ public final class R {
 		   @see #CompoundButton_checked
 		 */
 		public static final int[] CompoundButton = {
-		    0x01010106, 0x01010107};
+			0x01010106, 0x01010107
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23421,8 +23488,9 @@ public final class R {
 		   @see #ContactsDataKind_summaryColumn
 		 */
 		public static final int[] ContactsDataKind = {
-		    0x01010002, 0x01010026, 0x010102a2, 0x010102a3,
-		    0x010102a4, 0x010102cc};
+			0x01010002, 0x01010026, 0x010102a2, 0x010102a3,
+			0x010102a4, 0x010102cc
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23534,7 +23602,8 @@ public final class R {
 		   @see #CycleInterpolator_cycles
 		 */
 		public static final int[] CycleInterpolator = {
-		    0x010101d4};
+			0x010101d4
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#cycles}
 		  attribute's value can be found in the {@link #CycleInterpolator} array.
@@ -23571,8 +23640,9 @@ public final class R {
 		   @see #DatePicker_startYear
 		 */
 		public static final int[] DatePicker = {
-		    0x0101017c, 0x0101017d, 0x0101033f, 0x01010340,
-		    0x0101034b, 0x0101034c, 0x0101043c};
+			0x0101017c, 0x0101017d, 0x0101033f, 0x01010340,
+			0x0101034b, 0x0101034c, 0x0101043c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23693,7 +23763,8 @@ public final class R {
 		   @see #DecelerateInterpolator_factor
 		 */
 		public static final int[] DecelerateInterpolator = {
-		    0x010101d3};
+			0x010101d3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23730,7 +23801,8 @@ public final class R {
 		   @see #DeviceAdmin_visible
 		 */
 		public static final int[] DeviceAdmin = {
-		    0x01010194};
+			0x01010194
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23773,8 +23845,9 @@ public final class R {
 		   @see #DialogPreference_positiveButtonText
 		 */
 		public static final int[] DialogPreference = {
-		    0x010101f2, 0x010101f3, 0x010101f4, 0x010101f5,
-		    0x010101f6, 0x010101f7};
+			0x010101f2, 0x010101f3, 0x010101f4, 0x010101f5,
+			0x010101f6, 0x010101f7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23888,7 +23961,8 @@ public final class R {
 		   @see #Drawable_visible
 		 */
 		public static final int[] Drawable = {
-		    0x01010194, 0x010103ea};
+			0x01010194, 0x010103ea
+		};
 		/**
 		  <p>
 		  @attr description
@@ -23948,8 +24022,9 @@ public final class R {
 		   @see #DrawableCorners_topRightRadius
 		 */
 		public static final int[] DrawableCorners = {
-		    0x010101a8, 0x010101a9, 0x010101aa, 0x010101ab,
-		    0x010101ac};
+			0x010101a8, 0x010101a9, 0x010101aa, 0x010101ab,
+			0x010101ac
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24129,11 +24204,12 @@ public final class R {
 		   @see #DrawableStates_state_window_focused
 		 */
 		public static final int[] DrawableStates = {
-		    0x0101009c, 0x0101009d, 0x0101009e, 0x0101009f,
-		    0x010100a0, 0x010100a1, 0x010100a2, 0x010100a3,
-		    0x010100a4, 0x010100a5, 0x010100a6, 0x010100a7,
-		    0x010102fe, 0x0101031b, 0x01010367, 0x01010368,
-		    0x01010369, 0x0101044c};
+			0x0101009c, 0x0101009d, 0x0101009e, 0x0101009f,
+			0x010100a0, 0x010100a1, 0x010100a2, 0x010100a3,
+			0x010100a4, 0x010100a5, 0x010100a6, 0x010100a7,
+			0x010102fe, 0x0101031b, 0x01010367, 0x01010368,
+			0x01010369, 0x0101044c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24466,7 +24542,8 @@ public final class R {
 		   @see #Dream_settingsActivity
 		 */
 		public static final int[] Dream = {
-		    0x01010225};
+			0x01010225
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24503,7 +24580,8 @@ public final class R {
 		   @see #ExpandableListChildIndicatorState_state_last
 		 */
 		public static final int[] ExpandableListChildIndicatorState = {
-		    0x010100a6};
+			0x010100a6
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24535,7 +24613,8 @@ public final class R {
 		   @see #ExpandableListGroupIndicatorState_state_expanded
 		 */
 		public static final int[] ExpandableListGroupIndicatorState = {
-		    0x010100a8, 0x010100a9};
+			0x010100a8, 0x010100a9
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24602,9 +24681,10 @@ public final class R {
 		   @see #ExpandableListView_indicatorStart
 		 */
 		public static final int[] ExpandableListView = {
-		    0x0101010b, 0x0101010c, 0x0101010d, 0x0101010e,
-		    0x0101010f, 0x01010110, 0x01010111, 0x010103d1,
-		    0x010103d2, 0x010103d3, 0x010103d4};
+			0x0101010b, 0x0101010c, 0x0101010d, 0x0101010e,
+			0x0101010f, 0x01010110, 0x01010111, 0x010103d1,
+			0x010103d2, 0x010103d3, 0x010103d4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24819,7 +24899,8 @@ public final class R {
 		   @see #Extra_value
 		 */
 		public static final int[] Extra = {
-		    0x01010003, 0x01010024};
+			0x01010003, 0x01010024
+		};
 		/**
 		  <p>
 		  @attr description
@@ -24875,7 +24956,8 @@ public final class R {
 		   @see #Fade_fadingMode
 		 */
 		public static final int[] Fade = {
-		    0x010103e1};
+			0x010103e1
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fadingMode}
 		  attribute's value can be found in the {@link #Fade} array.
@@ -24918,7 +25000,8 @@ public final class R {
 		   @see #Fragment_tag
 		 */
 		public static final int[] Fragment = {
-		    0x01010003, 0x010100d0, 0x010100d1};
+			0x01010003, 0x010100d0, 0x010100d1
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25001,8 +25084,9 @@ public final class R {
 		   @see #FragmentAnimation_fragmentOpenExitAnimation
 		 */
 		public static final int[] FragmentAnimation = {
-		    0x010102e5, 0x010102e6, 0x010102e7, 0x010102e8,
-		    0x010102e9, 0x010102ea};
+			0x010102e5, 0x010102e6, 0x010102e7, 0x010102e8,
+			0x010102e9, 0x010102ea
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fragmentCloseEnterAnimation}
 		  attribute's value can be found in the {@link #FragmentAnimation} array.
@@ -25077,7 +25161,8 @@ public final class R {
 		   @see #FragmentBreadCrumbs_gravity
 		 */
 		public static final int[] FragmentBreadCrumbs = {
-		    0x010100af};
+			0x010100af
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25134,7 +25219,8 @@ public final class R {
 		   @see #FrameLayout_measureAllChildren
 		 */
 		public static final int[] FrameLayout = {
-		    0x01010109, 0x0101010a, 0x01010200, 0x0101042e};
+			0x01010109, 0x0101010a, 0x01010200, 0x0101042e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25219,7 +25305,8 @@ public final class R {
 		   @see #FrameLayout_Layout_layout_gravity
 		 */
 		public static final int[] FrameLayout_Layout = {
-		    0x010100b3};
+			0x010100b3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25279,7 +25366,8 @@ public final class R {
 		   @see #Gallery_unselectedAlpha
 		 */
 		public static final int[] Gallery = {
-		    0x010100af, 0x01010112, 0x01010113, 0x0101020e};
+			0x010100af, 0x01010112, 0x01010113, 0x0101020e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25409,9 +25497,10 @@ public final class R {
 		   @see #GestureOverlayView_uncertainGestureColor
 		 */
 		public static final int[] GestureOverlayView = {
-		    0x010100c4, 0x01010274, 0x01010275, 0x01010276,
-		    0x01010277, 0x01010278, 0x01010279, 0x0101027a,
-		    0x0101027b, 0x0101027c, 0x0101027d, 0x0101027e};
+			0x010100c4, 0x01010274, 0x01010275, 0x01010276,
+			0x01010277, 0x01010278, 0x01010279, 0x0101027a,
+			0x0101027b, 0x0101027c, 0x0101027d, 0x0101027e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25647,11 +25736,12 @@ public final class R {
 		   @see #GlowPadView_targetDescriptions
 		 */
 		public static final int[] GlowPadView = {
-		    0x010100af, 0x0101025f, 0x010103a0, 0x010103a1,
-		    0x01010450, 0x01010451, 0x01010452, 0x01010453,
-		    0x01010454, 0x01010455, 0x01010456, 0x01010457,
-		    0x0101045a, 0x0101045b, 0x0101045c, 0x0101045d,
-		    0x0101045e};
+			0x010100af, 0x0101025f, 0x010103a0, 0x010103a1,
+			0x01010450, 0x01010451, 0x01010452, 0x01010453,
+			0x01010454, 0x01010455, 0x01010456, 0x01010457,
+			0x0101045a, 0x0101045b, 0x0101045c, 0x0101045d,
+			0x0101045e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25762,8 +25852,9 @@ public final class R {
 		   @see #GradientDrawable_visible
 		 */
 		public static final int[] GradientDrawable = {
-		    0x0101011c, 0x01010194, 0x0101019a, 0x0101019b,
-		    0x0101019c, 0x0101019f, 0x0101025f, 0x01010260};
+			0x0101011c, 0x01010194, 0x0101019a, 0x0101019b,
+			0x0101019c, 0x0101019f, 0x0101025f, 0x01010260
+		};
 		/**
 		  <p>
 		  @attr description
@@ -25941,9 +26032,10 @@ public final class R {
 		   @see #GradientDrawableGradient_useLevel
 		 */
 		public static final int[] GradientDrawableGradient = {
-		    0x0101019d, 0x0101019e, 0x0101019f, 0x010101a0,
-		    0x010101a1, 0x010101a2, 0x010101a3, 0x010101a4,
-		    0x0101020b};
+			0x0101019d, 0x0101019e, 0x0101019f, 0x010101a0,
+			0x010101a1, 0x010101a2, 0x010101a3, 0x010101a4,
+			0x0101020b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26129,7 +26221,8 @@ public final class R {
 		   @see #GradientDrawablePadding_top
 		 */
 		public static final int[] GradientDrawablePadding = {
-		    0x010101ad, 0x010101ae, 0x010101af, 0x010101b0};
+			0x010101ad, 0x010101ae, 0x010101af, 0x010101b0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26220,7 +26313,8 @@ public final class R {
 		   @see #GradientDrawableSize_width
 		 */
 		public static final int[] GradientDrawableSize = {
-		    0x01010155, 0x01010159};
+			0x01010155, 0x01010159
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26271,7 +26365,8 @@ public final class R {
 		   @see #GradientDrawableSolid_color
 		 */
 		public static final int[] GradientDrawableSolid = {
-		    0x010101a5};
+			0x010101a5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26308,7 +26403,8 @@ public final class R {
 		   @see #GradientDrawableStroke_width
 		 */
 		public static final int[] GradientDrawableStroke = {
-		    0x01010159, 0x010101a5, 0x010101a6, 0x010101a7};
+			0x01010159, 0x010101a5, 0x010101a6, 0x010101a7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26412,8 +26508,9 @@ public final class R {
 		   @see #GridLayout_useDefaultMargins
 		 */
 		public static final int[] GridLayout = {
-		    0x010100c4, 0x01010375, 0x01010376, 0x01010377,
-		    0x01010378, 0x01010379, 0x0101037a};
+			0x010100c4, 0x01010375, 0x01010376, 0x01010377,
+			0x01010378, 0x01010379, 0x0101037a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26581,7 +26678,8 @@ public final class R {
 		   @see #GridLayoutAnimation_rowDelay
 		 */
 		public static final int[] GridLayoutAnimation = {
-		    0x010101cf, 0x010101d0, 0x010101d1, 0x010101d2};
+			0x010101cf, 0x010101d0, 0x010101d1, 0x010101d2
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26694,8 +26792,9 @@ public final class R {
 		   @see #GridLayout_Layout_layout_rowSpan
 		 */
 		public static final int[] GridLayout_Layout = {
-		    0x010100b3, 0x0101014c, 0x0101037b, 0x0101037c,
-		    0x0101037d};
+			0x010100b3, 0x0101014c, 0x0101037b, 0x0101037c,
+			0x0101037d
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26834,8 +26933,9 @@ public final class R {
 		   @see #GridView_verticalSpacing
 		 */
 		public static final int[] GridView = {
-		    0x010100af, 0x01010114, 0x01010115, 0x01010116,
-		    0x01010117, 0x01010118};
+			0x010100af, 0x01010114, 0x01010115, 0x01010116,
+			0x01010117, 0x01010118
+		};
 		/**
 		  <p>
 		  @attr description
@@ -26990,7 +27090,8 @@ public final class R {
 		   @see #HorizontalScrollView_fillViewport
 		 */
 		public static final int[] HorizontalScrollView = {
-		    0x0101017a};
+			0x0101017a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27028,7 +27129,8 @@ public final class R {
 		   @see #HostApduService_requireDeviceUnlock
 		 */
 		public static final int[] HostApduService = {
-		    0x01010020, 0x010103ec, 0x010103ed};
+			0x01010020, 0x010103ec, 0x010103ed
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27092,7 +27194,8 @@ public final class R {
 		   @see #Icon_mimeType
 		 */
 		public static final int[] Icon = {
-		    0x01010002, 0x01010026};
+			0x01010002, 0x01010026
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27152,7 +27255,8 @@ public final class R {
 		   @see #IconDefault_icon
 		 */
 		public static final int[] IconDefault = {
-		    0x01010002};
+			0x01010002
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27195,8 +27299,9 @@ public final class R {
 		   @see #IconMenuView_rowHeight
 		 */
 		public static final int[] IconMenuView = {
-		    0x01010132, 0x01010133, 0x01010134, 0x01010135,
-		    0x01010436};
+			0x01010132, 0x01010133, 0x01010134, 0x01010135,
+			0x01010436
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27300,9 +27405,10 @@ public final class R {
 		   @see #ImageView_tint
 		 */
 		public static final int[] ImageView = {
-		    0x01010119, 0x0101011d, 0x0101011e, 0x0101011f,
-		    0x01010120, 0x01010121, 0x01010122, 0x01010123,
-		    0x0101031c, 0x0101042f};
+			0x01010119, 0x0101011d, 0x0101011e, 0x0101011f,
+			0x01010120, 0x01010121, 0x01010122, 0x01010123,
+			0x0101031c, 0x0101042f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27509,7 +27615,8 @@ public final class R {
 		   @see #InputMethod_supportsSwitchingToNextInputMethod
 		 */
 		public static final int[] InputMethod = {
-		    0x01010221, 0x01010225, 0x010103eb};
+			0x01010221, 0x01010225, 0x010103eb
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27590,7 +27697,8 @@ public final class R {
 		   @see #InputMethodService_imeFullscreenBackground
 		 */
 		public static final int[] InputMethodService = {
-		    0x0101022c, 0x01010268, 0x01010269};
+			0x0101022c, 0x01010268, 0x01010269
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27670,9 +27778,10 @@ public final class R {
 		   @see #InputMethod_Subtype_subtypeId
 		 */
 		public static final int[] InputMethod_Subtype = {
-		    0x01010001, 0x01010002, 0x010102ec, 0x010102ed,
-		    0x010102ee, 0x0101037f, 0x010103a2, 0x010103c1,
-		    0x010103e9};
+			0x01010001, 0x01010002, 0x010102ec, 0x010102ed,
+			0x010102ee, 0x0101037f, 0x010103a2, 0x010103c1,
+			0x010103e9
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27860,8 +27969,9 @@ public final class R {
 		   @see #InsetDrawable_visible
 		 */
 		public static final int[] InsetDrawable = {
-		    0x01010194, 0x01010199, 0x010101b7, 0x010101b8,
-		    0x010101b9, 0x010101ba};
+			0x01010194, 0x01010199, 0x010101b7, 0x010101b8,
+			0x010101b9, 0x010101ba
+		};
 		/**
 		  <p>
 		  @attr description
@@ -27986,8 +28096,9 @@ public final class R {
 		   @see #Intent_targetPackage
 		 */
 		public static final int[] Intent = {
-		    0x01010021, 0x01010026, 0x0101002d, 0x0101002e,
-		    0x0101002f};
+			0x01010021, 0x01010026, 0x0101002d, 0x0101002e,
+			0x0101002f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28098,7 +28209,8 @@ public final class R {
 		   @see #IntentCategory_name
 		 */
 		public static final int[] IntentCategory = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28128,7 +28240,8 @@ public final class R {
 		   @see #KeySet_name
 		 */
 		public static final int[] KeySet = {
-		    0x01010003};
+			0x01010003
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28166,7 +28279,8 @@ public final class R {
 		   @see #Keyboard_verticalGap
 		 */
 		public static final int[] Keyboard = {
-		    0x0101023d, 0x0101023e, 0x0101023f, 0x01010240};
+			0x0101023d, 0x0101023e, 0x0101023f, 0x01010240
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28279,7 +28393,8 @@ public final class R {
 		   @see #KeyboardLayout_name
 		 */
 		public static final int[] KeyboardLayout = {
-		    0x01010001, 0x01010003, 0x010103ab};
+			0x01010001, 0x01010003, 0x010103ab
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28356,9 +28471,10 @@ public final class R {
 		   @see #KeyboardView_verticalCorrection
 		 */
 		public static final int[] KeyboardView = {
-		    0x01010161, 0x01010164, 0x01010233, 0x01010234,
-		    0x01010235, 0x01010236, 0x01010237, 0x01010238,
-		    0x01010239, 0x0101023a, 0x0101023b, 0x0101044f};
+			0x01010161, 0x01010164, 0x01010233, 0x01010234,
+			0x01010235, 0x01010236, 0x01010237, 0x01010238,
+			0x01010239, 0x0101023a, 0x0101023b, 0x0101044f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28561,7 +28677,8 @@ public final class R {
 		   @see #KeyboardViewPreviewState_state_long_pressable
 		 */
 		public static final int[] KeyboardViewPreviewState = {
-		    0x0101023c};
+			0x0101023c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28614,9 +28731,10 @@ public final class R {
 		   @see #Keyboard_Key_popupKeyboard
 		 */
 		public static final int[] Keyboard_Key = {
-		    0x01010242, 0x01010243, 0x01010244, 0x01010245,
-		    0x01010246, 0x01010247, 0x01010248, 0x01010249,
-		    0x0101024a, 0x0101024b, 0x0101024c, 0x0101024d};
+			0x01010242, 0x01010243, 0x01010244, 0x01010245,
+			0x01010246, 0x01010247, 0x01010248, 0x01010249,
+			0x0101024a, 0x0101024b, 0x0101024c, 0x0101024d
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28824,7 +28942,8 @@ public final class R {
 		   @see #Keyboard_Row_rowEdgeFlags
 		 */
 		public static final int[] Keyboard_Row = {
-		    0x01010241, 0x0101024d};
+			0x01010241, 0x0101024d
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28869,7 +28988,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] KeyguardGlowStripView = {
-		    0x01010475, 0x01010476, 0x01010477, 0x01010478};
+			0x01010475, 0x01010476, 0x01010477, 0x01010478
+		};
 		/**
 		   Attributes that can be used with a KeyguardSecurityViewFlipper_Layout.
 		   <p>Includes the following attributes:</p>
@@ -28880,7 +29000,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] KeyguardSecurityViewFlipper_Layout = {
-		    0x0101045f, 0x0101047b};
+			0x0101045f, 0x0101047b
+		};
 		/**
 		 Drawable used to render several drawables stacked on top of each other.
 		 Each child drawable can be controlled individually.
@@ -28897,7 +29018,8 @@ public final class R {
 		   @see #LayerDrawable_opacity
 		 */
 		public static final int[] LayerDrawable = {
-		    0x0101031e, 0x010103ea};
+			0x0101031e, 0x010103ea
+		};
 		/**
 		  <p>
 		  @attr description
@@ -28962,8 +29084,9 @@ public final class R {
 		   @see #LayerDrawableItem_top
 		 */
 		public static final int[] LayerDrawableItem = {
-		    0x010100d0, 0x01010199, 0x010101ad, 0x010101ae,
-		    0x010101af, 0x010101b0};
+			0x010100d0, 0x01010199, 0x010101ad, 0x010101ae,
+			0x010101af, 0x010101b0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29087,7 +29210,8 @@ public final class R {
 		   @see #LayoutAnimation_interpolator
 		 */
 		public static final int[] LayoutAnimation = {
-		    0x01010141, 0x010101cc, 0x010101cd, 0x010101ce};
+			0x01010141, 0x010101cc, 0x010101cd, 0x010101ce
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29173,7 +29297,8 @@ public final class R {
 		   @see #LevelListDrawableItem_minLevel
 		 */
 		public static final int[] LevelListDrawableItem = {
-		    0x01010199, 0x010101b1, 0x010101b2};
+			0x01010199, 0x010101b1, 0x010101b2
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29256,9 +29381,10 @@ public final class R {
 		   @see #LinearLayout_weightSum
 		 */
 		public static final int[] LinearLayout = {
-		    0x010100af, 0x010100c4, 0x01010126, 0x01010127,
-		    0x01010128, 0x01010129, 0x010102d4, 0x01010329,
-		    0x0101032a};
+			0x010100af, 0x010100c4, 0x01010126, 0x01010127,
+			0x01010128, 0x01010129, 0x010102d4, 0x01010329,
+			0x0101032a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29472,7 +29598,8 @@ public final class R {
 		   @see #LinearLayout_Layout_layout_width
 		 */
 		public static final int[] LinearLayout_Layout = {
-		    0x010100b3, 0x010100f4, 0x010100f5, 0x01010181};
+			0x010100b3, 0x010100f4, 0x010100f5, 0x01010181
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29611,7 +29738,8 @@ public final class R {
 		   @see #ListPreference_entryValues
 		 */
 		public static final int[] ListPreference = {
-		    0x010100b2, 0x010101f8};
+			0x010100b2, 0x010101f8
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29665,8 +29793,9 @@ public final class R {
 		   @see #ListView_overScrollHeader
 		 */
 		public static final int[] ListView = {
-		    0x010100b2, 0x01010129, 0x0101012a, 0x0101022e,
-		    0x0101022f, 0x010102c2, 0x010102c3};
+			0x010100b2, 0x01010129, 0x0101012a, 0x0101022e,
+			0x0101022f, 0x010102c2, 0x010102c3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29792,7 +29921,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] LockPatternView = {
-		    0x01010461};
+			0x01010461
+		};
 		/**
 		   The set of attributes for a MapView.
 		   <p>Includes the following attributes:</p>
@@ -29805,7 +29935,8 @@ public final class R {
 		   @see #MapView_apiKey
 		 */
 		public static final int[] MapView = {
-		    0x01010211};
+			0x01010211
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29840,7 +29971,8 @@ public final class R {
 		   @see #MediaRouteButton_minWidth
 		 */
 		public static final int[] MediaRouteButton = {
-		    0x0101013f, 0x01010140, 0x010103ae, 0x01010471};
+			0x0101013f, 0x01010140, 0x010103ae, 0x01010471
+		};
 		/**
 		  <p>
 		  @attr description
@@ -29928,8 +30060,9 @@ public final class R {
 		   @see #MenuGroup_visible
 		 */
 		public static final int[] MenuGroup = {
-		    0x0101000e, 0x010100d0, 0x01010194, 0x010101de,
-		    0x010101df, 0x010101e0};
+			0x0101000e, 0x010100d0, 0x01010194, 0x010101de,
+			0x010101df, 0x010101e0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30087,11 +30220,12 @@ public final class R {
 		   @see #MenuItem_visible
 		 */
 		public static final int[] MenuItem = {
-		    0x01010002, 0x0101000e, 0x010100d0, 0x01010106,
-		    0x01010194, 0x010101de, 0x010101df, 0x010101e1,
-		    0x010101e2, 0x010101e3, 0x010101e4, 0x010101e5,
-		    0x0101026f, 0x010102d9, 0x010102fb, 0x010102fc,
-		    0x01010389};
+			0x01010002, 0x0101000e, 0x010100d0, 0x01010106,
+			0x01010194, 0x010101de, 0x010101df, 0x010101e1,
+			0x010101e2, 0x010101e3, 0x010101e4, 0x010101e5,
+			0x0101026f, 0x010102d9, 0x010102fb, 0x010102fc,
+			0x01010389
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30421,7 +30555,8 @@ public final class R {
 		   @see #MenuItemCheckedFocusedState_state_focused
 		 */
 		public static final int[] MenuItemCheckedFocusedState = {
-		    0x0101009c, 0x0101009f, 0x010100a0};
+			0x0101009c, 0x0101009f, 0x010100a0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30493,7 +30628,8 @@ public final class R {
 		   @see #MenuItemCheckedState_state_checked
 		 */
 		public static final int[] MenuItemCheckedState = {
-		    0x0101009f, 0x010100a0};
+			0x0101009f, 0x010100a0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30548,7 +30684,8 @@ public final class R {
 		   @see #MenuItemUncheckedFocusedState_state_focused
 		 */
 		public static final int[] MenuItemUncheckedFocusedState = {
-		    0x0101009c, 0x0101009f};
+			0x0101009c, 0x0101009f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30598,7 +30735,8 @@ public final class R {
 		   @see #MenuItemUncheckedState_state_checkable
 		 */
 		public static final int[] MenuItemUncheckedState = {
-		    0x0101009f};
+			0x0101009f
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30642,8 +30780,9 @@ public final class R {
 		   @see #MenuView_windowAnimationStyle
 		 */
 		public static final int[] MenuView = {
-		    0x010100ae, 0x0101012c, 0x0101012d, 0x0101012e,
-		    0x0101012f, 0x01010130, 0x01010131, 0x01010435};
+			0x010100ae, 0x0101012c, 0x0101012d, 0x0101012e,
+			0x0101012f, 0x01010130, 0x01010131, 0x01010435
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30755,7 +30894,8 @@ public final class R {
 		   @see #MultiPaneChallengeLayout_orientation
 		 */
 		public static final int[] MultiPaneChallengeLayout = {
-		    0x010100c4};
+			0x010100c4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30788,8 +30928,9 @@ public final class R {
 		   @see #MultiPaneChallengeLayout_Layout_layout_gravity
 		 */
 		public static final int[] MultiPaneChallengeLayout_Layout = {
-		    0x010100b3, 0x0101045f, 0x01010479, 0x0101047a,
-		    0x0101047b};
+			0x010100b3, 0x0101045f, 0x01010479, 0x0101047a,
+			0x0101047b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30844,7 +30985,8 @@ public final class R {
 		   @see #MultiSelectListPreference_entryValues
 		 */
 		public static final int[] MultiSelectListPreference = {
-		    0x010100b2, 0x010101f8};
+			0x010100b2, 0x010101f8
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30888,9 +31030,10 @@ public final class R {
 		   @see #MultiWaveView_targetDescriptions
 		 */
 		public static final int[] MultiWaveView = {
-		    0x010103a0, 0x010103a1, 0x01010456, 0x01010457,
-		    0x01010458, 0x01010459, 0x0101045a, 0x0101045b,
-		    0x0101045c, 0x0101045d, 0x0101045e};
+			0x010103a0, 0x010103a1, 0x01010456, 0x01010457,
+			0x01010458, 0x01010459, 0x0101045a, 0x0101045b,
+			0x0101045c, 0x0101045d, 0x0101045e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30936,7 +31079,8 @@ public final class R {
 		   @see #NinePatchDrawable_src
 		 */
 		public static final int[] NinePatchDrawable = {
-		    0x01010119, 0x0101011c, 0x010103ea};
+			0x01010119, 0x0101011c, 0x010103ea
+		};
 		/**
 		  <p>
 		  @attr description
@@ -30999,7 +31143,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] NumPadKey = {
-		    0x0101047c, 0x0101047d};
+			0x0101047c, 0x0101047d
+		};
 		/**
 		   Attributes that can be used with a NumberPicker.
 		   <p>Includes the following attributes:</p>
@@ -31012,9 +31157,10 @@ public final class R {
 		   @see #NumberPicker_solidColor
 		 */
 		public static final int[] NumberPicker = {
-		    0x0101034a, 0x0101043c, 0x01010442, 0x01010443,
-		    0x01010444, 0x01010445, 0x01010446, 0x01010447,
-		    0x01010448, 0x01010449};
+			0x0101034a, 0x0101043c, 0x01010442, 0x01010443,
+			0x01010444, 0x01010445, 0x01010446, 0x01010447,
+			0x01010448, 0x01010449
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31048,7 +31194,8 @@ public final class R {
 		   @see #OffHostApduService_description
 		 */
 		public static final int[] OffHostApduService = {
-		    0x01010020, 0x010103ed};
+			0x01010020, 0x010103ed
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31089,7 +31236,8 @@ public final class R {
 		   @see #OvershootInterpolator_tension
 		 */
 		public static final int[] OvershootInterpolator = {
-		    0x0101026a};
+			0x0101026a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31118,7 +31266,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] PagedView = {
-		    0x01010472, 0x01010473, 0x01010474};
+			0x01010472, 0x01010473, 0x01010474
+		};
 		/**
 		   Attributes that can be used with a Pointer.
 		   <p>Includes the following attributes:</p>
@@ -31129,7 +31278,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] Pointer = {
-		    0x01010462, 0x01010463, 0x01010464, 0x01010465};
+			0x01010462, 0x01010463, 0x01010464, 0x01010465
+		};
 		/**
 		   Attributes that can be used with a PointerIcon.
 		   <p>Includes the following attributes:</p>
@@ -31140,7 +31290,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] PointerIcon = {
-		    0x01010466, 0x01010467, 0x01010468};
+			0x01010466, 0x01010467, 0x01010468
+		};
 		/**
 		   Attributes that can be used with a PopupWindow.
 		   <p>Includes the following attributes:</p>
@@ -31155,7 +31306,8 @@ public final class R {
 		   @see #PopupWindow_popupBackground
 		 */
 		public static final int[] PopupWindow = {
-		    0x01010176, 0x010102c9};
+			0x01010176, 0x010102c9
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#popupAnimationStyle}
 		  attribute's value can be found in the {@link #PopupWindow} array.
@@ -31190,7 +31342,8 @@ public final class R {
 		   @see #PopupWindowBackgroundState_state_above_anchor
 		 */
 		public static final int[] PopupWindowBackgroundState = {
-		    0x010100aa};
+			0x010100aa
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31250,10 +31403,11 @@ public final class R {
 		   @see #Preference_widgetLayout
 		 */
 		public static final int[] Preference = {
-		    0x01010002, 0x0101000d, 0x0101000e, 0x010100f2,
-		    0x010101e1, 0x010101e6, 0x010101e8, 0x010101e9,
-		    0x010101ea, 0x010101eb, 0x010101ec, 0x010101ed,
-		    0x010101ee, 0x010102e3};
+			0x01010002, 0x0101000d, 0x0101000e, 0x010100f2,
+			0x010101e1, 0x010101e6, 0x010101e8, 0x010101e9,
+			0x010101ea, 0x010101eb, 0x010101ec, 0x010101ed,
+			0x010101ee, 0x010102e3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31500,7 +31654,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] PreferenceFrameLayout = {
-		    0x01010430, 0x01010431, 0x01010432, 0x01010433};
+			0x01010430, 0x01010431, 0x01010432, 0x01010433
+		};
 		/**
 		   Attributes that can be used with a PreferenceFrameLayout_Layout.
 		   <p>Includes the following attributes:</p>
@@ -31511,7 +31666,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] PreferenceFrameLayout_Layout = {
-		    0x01010434};
+			0x01010434
+		};
 		/**
 		   Base attributes available to PreferenceGroup.
 		   <p>Includes the following attributes:</p>
@@ -31524,7 +31680,8 @@ public final class R {
 		   @see #PreferenceGroup_orderingFromXml
 		 */
 		public static final int[] PreferenceGroup = {
-		    0x010101e7};
+			0x010101e7
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31569,8 +31726,9 @@ public final class R {
 		   @see #PreferenceHeader_title
 		 */
 		public static final int[] PreferenceHeader = {
-		    0x01010002, 0x010100d0, 0x010101e1, 0x010101e9,
-		    0x010102e3, 0x01010303, 0x01010304};
+			0x01010002, 0x010100d0, 0x010101e1, 0x010101e9,
+			0x010102e3, 0x01010303, 0x01010304
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31706,7 +31864,8 @@ public final class R {
 		   @see #PrintService_vendor
 		 */
 		public static final int[] PrintService = {
-		    0x01010225, 0x010103e6, 0x010103e7, 0x010103f1};
+			0x01010225, 0x010103e6, 0x010103e7, 0x010103f1
+		};
 		/**
 		  <p>
 		  @attr description
@@ -31822,10 +31981,11 @@ public final class R {
 		   @see #ProgressBar_secondaryProgress
 		 */
 		public static final int[] ProgressBar = {
-		    0x0101011f, 0x01010120, 0x01010136, 0x01010137,
-		    0x01010138, 0x01010139, 0x0101013a, 0x0101013b,
-		    0x0101013c, 0x0101013d, 0x0101013e, 0x0101013f,
-		    0x01010140, 0x01010141, 0x0101031a, 0x010103ce};
+			0x0101011f, 0x01010120, 0x01010136, 0x01010137,
+			0x01010138, 0x01010139, 0x0101013a, 0x0101013b,
+			0x0101013c, 0x0101013d, 0x0101013e, 0x0101013f,
+			0x01010140, 0x01010141, 0x0101031a, 0x010103ce
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32109,7 +32269,8 @@ public final class R {
 		   @see #PropertyAnimator_propertyName
 		 */
 		public static final int[] PropertyAnimator = {
-		    0x010102e1};
+			0x010102e1
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32139,7 +32300,8 @@ public final class R {
 		   @see #PublicKey_value
 		 */
 		public static final int[] PublicKey = {
-		    0x01010024};
+			0x01010024
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32178,7 +32340,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] QuickContactBadge = {
-		    0x0101043d};
+			0x0101043d
+		};
 		/**
 		   Attributes that can be used with a RadioGroup.
 		   <p>Includes the following attributes:</p>
@@ -32195,7 +32358,8 @@ public final class R {
 		   @see #RadioGroup_orientation
 		 */
 		public static final int[] RadioGroup = {
-		    0x010100c4, 0x01010148};
+			0x010100c4, 0x01010148
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32254,7 +32418,8 @@ public final class R {
 		   @see #RatingBar_stepSize
 		 */
 		public static final int[] RatingBar = {
-		    0x01010144, 0x01010145, 0x01010146, 0x01010147};
+			0x01010144, 0x01010145, 0x01010146, 0x01010147
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32339,7 +32504,8 @@ public final class R {
 		   @see #RecognitionService_settingsActivity
 		 */
 		public static final int[] RecognitionService = {
-		    0x01010225};
+			0x01010225
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32373,7 +32539,8 @@ public final class R {
 		   @see #RelativeLayout_ignoreGravity
 		 */
 		public static final int[] RelativeLayout = {
-		    0x010100af, 0x010101ff};
+			0x010100af, 0x010101ff
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32483,12 +32650,13 @@ public final class R {
 		   @see #RelativeLayout_Layout_layout_toStartOf
 		 */
 		public static final int[] RelativeLayout_Layout = {
-		    0x01010182, 0x01010183, 0x01010184, 0x01010185,
-		    0x01010186, 0x01010187, 0x01010188, 0x01010189,
-		    0x0101018a, 0x0101018b, 0x0101018c, 0x0101018d,
-		    0x0101018e, 0x0101018f, 0x01010190, 0x01010191,
-		    0x01010192, 0x010103b7, 0x010103b8, 0x010103b9,
-		    0x010103ba, 0x010103bb, 0x010103bc};
+			0x01010182, 0x01010183, 0x01010184, 0x01010185,
+			0x01010186, 0x01010187, 0x01010188, 0x01010189,
+			0x0101018a, 0x0101018b, 0x0101018c, 0x0101018d,
+			0x0101018e, 0x0101018f, 0x01010190, 0x01010191,
+			0x01010192, 0x010103b7, 0x010103b8, 0x010103b9,
+			0x010103ba, 0x010103bb, 0x010103bc
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32863,7 +33031,8 @@ public final class R {
 		   @see #RingtonePreference_showSilent
 		 */
 		public static final int[] RingtonePreference = {
-		    0x010101f9, 0x010101fa, 0x010101fb};
+			0x010101f9, 0x010101fa, 0x010101fb
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32933,7 +33102,8 @@ public final class R {
 		   @see #RotarySelector_orientation
 		 */
 		public static final int[] RotarySelector = {
-		    0x010100c4};
+			0x010100c4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -32972,7 +33142,8 @@ public final class R {
 		   @see #RotateAnimation_toDegrees
 		 */
 		public static final int[] RotateAnimation = {
-		    0x010101b3, 0x010101b4, 0x010101b5, 0x010101b6};
+			0x010101b3, 0x010101b4, 0x010101b5, 0x010101b6
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fromDegrees}
 		  attribute's value can be found in the {@link #RotateAnimation} array.
@@ -33058,8 +33229,9 @@ public final class R {
 		   @see #RotateDrawable_visible
 		 */
 		public static final int[] RotateDrawable = {
-		    0x01010194, 0x01010199, 0x010101b3, 0x010101b4,
-		    0x010101b5, 0x010101b6};
+			0x01010194, 0x01010199, 0x010101b3, 0x010101b4,
+			0x010101b5, 0x010101b6
+		};
 		/**
 		  <p>
 		  @attr description
@@ -33177,8 +33349,9 @@ public final class R {
 		   @see #ScaleAnimation_toYScale
 		 */
 		public static final int[] ScaleAnimation = {
-		    0x010101b5, 0x010101b6, 0x010101c2, 0x010101c3,
-		    0x010101c4, 0x010101c5};
+			0x010101b5, 0x010101b6, 0x010101c2, 0x010101c3,
+			0x010101c4, 0x010101c5
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fromXScale}
 		  attribute's value can be found in the {@link #ScaleAnimation} array.
@@ -33313,8 +33486,9 @@ public final class R {
 		   @see #ScaleDrawable_useIntrinsicSizeAsMinimum
 		 */
 		public static final int[] ScaleDrawable = {
-		    0x01010199, 0x010101fc, 0x010101fd, 0x010101fe,
-		    0x01010310};
+			0x01010199, 0x010101fc, 0x010101fd, 0x010101fe,
+			0x01010310
+		};
 		/**
 		  <p>
 		  @attr description
@@ -33434,7 +33608,8 @@ public final class R {
 		   @see #ScrollView_fillViewport
 		 */
 		public static final int[] ScrollView = {
-		    0x0101017a};
+			0x0101017a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -33472,8 +33647,9 @@ public final class R {
 		   @see #SearchView_queryHint
 		 */
 		public static final int[] SearchView = {
-		    0x0101011f, 0x01010220, 0x01010264, 0x010102fa,
-		    0x01010358};
+			0x0101011f, 0x01010220, 0x01010264, 0x010102fa,
+			0x01010358
+		};
 		/**
 		  <p>
 		  @attr description
@@ -33844,12 +34020,13 @@ public final class R {
 		   @see #Searchable_voiceSearchMode
 		 */
 		public static final int[] Searchable = {
-		    0x01010001, 0x01010002, 0x01010150, 0x010101d5,
-		    0x010101d6, 0x010101d7, 0x010101d8, 0x010101d9,
-		    0x010101da, 0x01010205, 0x01010220, 0x01010252,
-		    0x01010253, 0x01010254, 0x01010255, 0x01010256,
-		    0x01010264, 0x0101026d, 0x0101026e, 0x01010282,
-		    0x0101028a, 0x0101028c};
+			0x01010001, 0x01010002, 0x01010150, 0x010101d5,
+			0x010101d6, 0x010101d7, 0x010101d8, 0x010101d9,
+			0x010101da, 0x01010205, 0x01010220, 0x01010252,
+			0x01010253, 0x01010254, 0x01010255, 0x01010256,
+			0x01010264, 0x0101026d, 0x0101026e, 0x01010282,
+			0x0101028a, 0x0101028c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -34534,7 +34711,8 @@ public final class R {
 		   @see #SearchableActionKey_suggestActionMsgColumn
 		 */
 		public static final int[] SearchableActionKey = {
-		    0x010100c5, 0x010101db, 0x010101dc, 0x010101dd};
+			0x010100c5, 0x010101db, 0x010101dc, 0x010101dd
+		};
 		/**
 		  <p>
 		  @attr description
@@ -34873,7 +35051,8 @@ public final class R {
 		   @see #SeekBar_thumbOffset
 		 */
 		public static final int[] SeekBar = {
-		    0x01010142, 0x01010143};
+			0x01010142, 0x01010143
+		};
 		/**
 		  <p>
 		  @attr description
@@ -34924,7 +35103,8 @@ public final class R {
 		   @see #SelectionModeDrawables_actionModeSelectAllDrawable
 		 */
 		public static final int[] SelectionModeDrawables = {
-		    0x01010311, 0x01010312, 0x01010313, 0x0101037e};
+			0x01010311, 0x01010312, 0x01010313, 0x0101037e
+		};
 		/**
 		  <p>
 		  @attr description
@@ -34996,7 +35176,8 @@ public final class R {
 		   @see #SettingInjectorService_title
 		 */
 		public static final int[] SettingInjectorService = {
-		    0x01010002, 0x010101e1, 0x01010225};
+			0x01010002, 0x010101e1, 0x01010225
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35063,7 +35244,8 @@ public final class R {
 		   @see #ShapeDrawable_width
 		 */
 		public static final int[] ShapeDrawable = {
-		    0x0101011c, 0x01010155, 0x01010159, 0x010101a5};
+			0x0101011c, 0x01010155, 0x01010159, 0x010101a5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35155,7 +35337,8 @@ public final class R {
 		   @see #ShapeDrawablePadding_top
 		 */
 		public static final int[] ShapeDrawablePadding = {
-		    0x010101ad, 0x010101ae, 0x010101af, 0x010101b0};
+			0x010101ad, 0x010101ae, 0x010101af, 0x010101b0
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35248,7 +35431,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] SizeAdaptiveLayout_Layout = {
-		    0x0101045f, 0x01010460};
+			0x0101045f, 0x01010460
+		};
 		/**
 		   Attributes that can be used with a SlidingChallengeLayout_Layout.
 		   <p>Includes the following attributes:</p>
@@ -35259,7 +35443,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] SlidingChallengeLayout_Layout = {
-		    0x0101045f, 0x01010479};
+			0x0101045f, 0x01010479
+		};
 		/**
 		 SlidingDrawer specific attributes. These attributes are used to configure
 		 a SlidingDrawer from XML.
@@ -35287,8 +35472,9 @@ public final class R {
 		   @see #SlidingDrawer_topOffset
 		 */
 		public static final int[] SlidingDrawer = {
-		    0x010100c4, 0x01010257, 0x01010258, 0x01010259,
-		    0x0101025a, 0x0101025b, 0x0101025c};
+			0x010100c4, 0x01010257, 0x01010258, 0x01010259,
+			0x0101025a, 0x0101025b, 0x0101025c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35422,7 +35608,8 @@ public final class R {
 		   @see #SlidingTab_orientation
 		 */
 		public static final int[] SlidingTab = {
-		    0x010100c4};
+			0x010100c4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35464,7 +35651,8 @@ public final class R {
 		   @see #SpellChecker_settingsActivity
 		 */
 		public static final int[] SpellChecker = {
-		    0x01010001, 0x01010225};
+			0x01010001, 0x01010225
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35513,7 +35701,8 @@ public final class R {
 		   @see #SpellChecker_Subtype_subtypeLocale
 		 */
 		public static final int[] SpellChecker_Subtype = {
-		    0x01010001, 0x01010399, 0x0101039a};
+			0x01010001, 0x01010399, 0x0101039a
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35593,9 +35782,10 @@ public final class R {
 		   @see #Spinner_spinnerMode
 		 */
 		public static final int[] Spinner = {
-		    0x010100af, 0x01010175, 0x01010176, 0x0101017b,
-		    0x01010262, 0x010102ac, 0x010102ad, 0x010102f1,
-		    0x0101043a, 0x0101043b};
+			0x010100af, 0x01010175, 0x01010176, 0x0101017b,
+			0x01010262, 0x010102ac, 0x010102ad, 0x010102f1,
+			0x0101043a, 0x0101043b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35780,7 +35970,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] StackView = {
-		    0x01010437, 0x01010438};
+			0x01010437, 0x01010438
+		};
 		/**
 		 Drawable used to render several states. Each state is represented by
 		 a child drawable.
@@ -35812,8 +36003,9 @@ public final class R {
 		   @see #StateListDrawable_visible
 		 */
 		public static final int[] StateListDrawable = {
-		    0x0101011c, 0x01010194, 0x01010195, 0x01010196,
-		    0x0101030c, 0x0101030d, 0x010103ea};
+			0x0101011c, 0x01010194, 0x01010195, 0x01010196,
+			0x0101030c, 0x0101030d, 0x010103ea
+		};
 		/**
 		  <p>
 		  @attr description
@@ -35954,8 +36146,9 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] Storage = {
-		    0x01010469, 0x0101046a, 0x0101046b, 0x0101046c,
-		    0x0101046d, 0x0101046e, 0x0101046f, 0x01010470};
+			0x01010469, 0x0101046a, 0x0101046b, 0x0101046c,
+			0x0101046d, 0x0101046e, 0x0101046f, 0x01010470
+		};
 		/**
 		   Attributes that can be used with a SuggestionSpan.
 		   <p>Includes the following attributes:</p>
@@ -35966,7 +36159,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] SuggestionSpan = {
-		    0x010103f4, 0x010103f5};
+			0x010103f4, 0x010103f5
+		};
 		/**
 		   Attributes that can be used with a Switch.
 		   <p>Includes the following attributes:</p>
@@ -35993,8 +36187,9 @@ public final class R {
 		   @see #Switch_track
 		 */
 		public static final int[] Switch = {
-		    0x01010124, 0x01010125, 0x01010142, 0x0101036e,
-		    0x0101036f, 0x01010370, 0x01010371, 0x01010372};
+			0x01010124, 0x01010125, 0x01010142, 0x0101036e,
+			0x0101036f, 0x01010370, 0x01010371, 0x01010372
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36147,8 +36342,9 @@ public final class R {
 		   @see #SwitchPreference_switchTextOn
 		 */
 		public static final int[] SwitchPreference = {
-		    0x010101ef, 0x010101f0, 0x010101f1, 0x0101036b,
-		    0x0101036c};
+			0x010101ef, 0x010101f0, 0x010101f1, 0x0101036b,
+			0x0101036c
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36269,8 +36465,9 @@ public final class R {
 		   @see #SyncAdapter_userVisible
 		 */
 		public static final int[] SyncAdapter = {
-		    0x01010225, 0x0101028f, 0x01010290, 0x01010291,
-		    0x0101029b, 0x01010332, 0x01010333};
+			0x01010225, 0x0101028f, 0x01010290, 0x01010291,
+			0x0101029b, 0x01010332, 0x01010333
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36412,8 +36609,9 @@ public final class R {
 		   @see #TabWidget_tabStripRight
 		 */
 		public static final int[] TabWidget = {
-		    0x01010129, 0x010102bb, 0x010102bc, 0x010102bd,
-		    0x01010439};
+			0x01010129, 0x010102bb, 0x010102bc, 0x010102bd,
+			0x01010439
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36488,7 +36686,8 @@ public final class R {
 		   @see #TableLayout_stretchColumns
 		 */
 		public static final int[] TableLayout = {
-		    0x01010149, 0x0101014a, 0x0101014b};
+			0x01010149, 0x0101014a, 0x0101014b
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36570,7 +36769,8 @@ public final class R {
 		   @see #TableRow_Cell_layout_span
 		 */
 		public static final int[] TableRow_Cell = {
-		    0x0101014c, 0x0101014d};
+			0x0101014c, 0x0101014d
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36641,10 +36841,11 @@ public final class R {
 		   @see #TextAppearance_typeface
 		 */
 		public static final int[] TextAppearance = {
-		    0x01010095, 0x01010096, 0x01010097, 0x01010098,
-		    0x01010099, 0x0101009a, 0x0101009b, 0x01010161,
-		    0x01010162, 0x01010163, 0x01010164, 0x0101038c,
-		    0x010103ac};
+			0x01010095, 0x01010096, 0x01010097, 0x01010098,
+			0x01010099, 0x0101009a, 0x0101009b, 0x01010161,
+			0x01010162, 0x01010163, 0x01010164, 0x0101038c,
+			0x010103ac
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36888,7 +37089,8 @@ public final class R {
 		   @see #TextClock_timeZone
 		 */
 		public static final int[] TextClock = {
-		    0x010103ca, 0x010103cb, 0x010103cc};
+			0x010103ca, 0x010103cb, 0x010103cc
+		};
 		/**
 		  <p>
 		  @attr description
@@ -36975,7 +37177,8 @@ public final class R {
 		   @see #TextToSpeechEngine_settingsActivity
 		 */
 		public static final int[] TextToSpeechEngine = {
-		    0x01010225};
+			0x01010225
+		};
 		/**
 		  <p>
 		  @attr description
@@ -37194,25 +37397,26 @@ public final class R {
 		   @see #TextView_width
 		 */
 		public static final int[] TextView = {
-		    0x0101000e, 0x01010034, 0x01010095, 0x01010096,
-		    0x01010097, 0x01010098, 0x01010099, 0x0101009a,
-		    0x0101009b, 0x010100ab, 0x010100af, 0x010100b0,
-		    0x010100b1, 0x0101011f, 0x01010120, 0x0101013f,
-		    0x01010140, 0x0101014e, 0x0101014f, 0x01010150,
-		    0x01010151, 0x01010152, 0x01010153, 0x01010154,
-		    0x01010155, 0x01010156, 0x01010157, 0x01010158,
-		    0x01010159, 0x0101015a, 0x0101015b, 0x0101015c,
-		    0x0101015d, 0x0101015e, 0x0101015f, 0x01010160,
-		    0x01010161, 0x01010162, 0x01010163, 0x01010164,
-		    0x01010165, 0x01010166, 0x01010167, 0x01010168,
-		    0x01010169, 0x0101016a, 0x0101016b, 0x0101016c,
-		    0x0101016d, 0x0101016e, 0x0101016f, 0x01010170,
-		    0x01010171, 0x01010217, 0x01010218, 0x0101021d,
-		    0x01010220, 0x01010223, 0x01010224, 0x01010264,
-		    0x01010265, 0x01010266, 0x010102c5, 0x010102c6,
-		    0x010102c7, 0x01010314, 0x01010315, 0x01010316,
-		    0x0101035e, 0x0101035f, 0x01010362, 0x01010374,
-		    0x0101038c, 0x01010392, 0x01010393, 0x010103ac};
+			0x0101000e, 0x01010034, 0x01010095, 0x01010096,
+			0x01010097, 0x01010098, 0x01010099, 0x0101009a,
+			0x0101009b, 0x010100ab, 0x010100af, 0x010100b0,
+			0x010100b1, 0x0101011f, 0x01010120, 0x0101013f,
+			0x01010140, 0x0101014e, 0x0101014f, 0x01010150,
+			0x01010151, 0x01010152, 0x01010153, 0x01010154,
+			0x01010155, 0x01010156, 0x01010157, 0x01010158,
+			0x01010159, 0x0101015a, 0x0101015b, 0x0101015c,
+			0x0101015d, 0x0101015e, 0x0101015f, 0x01010160,
+			0x01010161, 0x01010162, 0x01010163, 0x01010164,
+			0x01010165, 0x01010166, 0x01010167, 0x01010168,
+			0x01010169, 0x0101016a, 0x0101016b, 0x0101016c,
+			0x0101016d, 0x0101016e, 0x0101016f, 0x01010170,
+			0x01010171, 0x01010217, 0x01010218, 0x0101021d,
+			0x01010220, 0x01010223, 0x01010224, 0x01010264,
+			0x01010265, 0x01010266, 0x010102c5, 0x010102c6,
+			0x010102c7, 0x01010314, 0x01010315, 0x01010316,
+			0x0101035e, 0x0101035f, 0x01010362, 0x01010374,
+			0x0101038c, 0x01010392, 0x01010393, 0x010103ac
+		};
 		/**
 		  <p>
 		  @attr description
@@ -38850,7 +39054,8 @@ public final class R {
 		   @see #TextViewAppearance_textAppearance
 		 */
 		public static final int[] TextViewAppearance = {
-		    0x01010034};
+			0x01010034
+		};
 		/**
 		  <p>
 		  @attr description
@@ -38876,7 +39081,8 @@ public final class R {
 		   @see #TextViewMultiLineBackgroundState_state_multiline
 		 */
 		public static final int[] TextViewMultiLineBackgroundState = {
-		    0x0101034d};
+			0x0101034d
+		};
 		/**
 		  <p>
 		  @attr description
@@ -39372,74 +39578,75 @@ public final class R {
 		   @see #Theme_yesNoPreferenceStyle
 		 */
 		public static final int[] Theme = {
-		    0x01010030, 0x01010031, 0x01010032, 0x01010033,
-		    0x01010034, 0x01010035, 0x01010036, 0x01010037,
-		    0x01010038, 0x01010039, 0x0101003a, 0x0101003b,
-		    0x0101003c, 0x0101003d, 0x0101003e, 0x0101003f,
-		    0x01010040, 0x01010041, 0x01010042, 0x01010043,
-		    0x01010044, 0x01010045, 0x01010046, 0x01010047,
-		    0x01010048, 0x01010049, 0x0101004a, 0x0101004b,
-		    0x0101004c, 0x0101004d, 0x0101004e, 0x0101004f,
-		    0x01010050, 0x01010051, 0x01010052, 0x01010053,
-		    0x01010054, 0x01010055, 0x01010056, 0x01010057,
-		    0x01010058, 0x01010059, 0x0101005a, 0x0101005b,
-		    0x0101005c, 0x0101005d, 0x0101005e, 0x0101005f,
-		    0x01010060, 0x01010061, 0x01010062, 0x0101006a,
-		    0x0101006b, 0x0101006c, 0x0101006d, 0x0101006e,
-		    0x0101006f, 0x01010070, 0x01010071, 0x01010072,
-		    0x01010073, 0x01010074, 0x01010075, 0x01010076,
-		    0x01010077, 0x01010078, 0x01010079, 0x0101007a,
-		    0x0101007b, 0x0101007c, 0x0101007d, 0x0101007e,
-		    0x01010080, 0x01010081, 0x01010082, 0x01010083,
-		    0x01010084, 0x01010085, 0x01010086, 0x01010087,
-		    0x01010088, 0x01010089, 0x0101008a, 0x0101008b,
-		    0x0101008c, 0x0101008d, 0x0101008e, 0x0101008f,
-		    0x01010090, 0x01010091, 0x01010092, 0x01010093,
-		    0x01010094, 0x010100ae, 0x01010206, 0x01010207,
-		    0x01010208, 0x0101020d, 0x0101020f, 0x01010210,
-		    0x01010212, 0x01010213, 0x01010214, 0x01010219,
-		    0x0101021a, 0x0101021e, 0x0101021f, 0x01010222,
-		    0x0101022b, 0x01010230, 0x01010267, 0x01010287,
-		    0x01010288, 0x01010289, 0x0101028b, 0x01010292,
-		    0x010102a0, 0x010102a1, 0x010102ab, 0x010102ae,
-		    0x010102af, 0x010102b0, 0x010102b1, 0x010102b2,
-		    0x010102b3, 0x010102b6, 0x010102b9, 0x010102c5,
-		    0x010102c6, 0x010102c7, 0x010102c8, 0x010102cd,
-		    0x010102ce, 0x010102d6, 0x010102d7, 0x010102d8,
-		    0x010102db, 0x010102dc, 0x010102dd, 0x010102e4,
-		    0x010102eb, 0x010102f0, 0x010102f3, 0x010102f4,
-		    0x010102f5, 0x010102f6, 0x010102f7, 0x010102fd,
-		    0x010102ff, 0x01010300, 0x01010301, 0x01010302,
-		    0x01010305, 0x01010306, 0x01010308, 0x01010309,
-		    0x0101030a, 0x0101030b, 0x0101030e, 0x01010311,
-		    0x01010312, 0x01010313, 0x01010314, 0x01010315,
-		    0x01010317, 0x0101032b, 0x0101032c, 0x0101032e,
-		    0x0101032f, 0x01010330, 0x01010336, 0x01010337,
-		    0x01010338, 0x01010339, 0x0101033a, 0x0101034e,
-		    0x0101034f, 0x01010350, 0x01010351, 0x01010352,
-		    0x01010353, 0x01010355, 0x01010359, 0x0101035b,
-		    0x0101035c, 0x0101035d, 0x0101035e, 0x0101035f,
-		    0x01010360, 0x01010361, 0x0101036d, 0x01010373,
-		    0x01010374, 0x0101037e, 0x01010386, 0x01010387,
-		    0x01010388, 0x0101038d, 0x0101038e, 0x0101038f,
-		    0x01010390, 0x01010391, 0x01010394, 0x01010397,
-		    0x0101039b, 0x0101039c, 0x0101039d, 0x0101039e,
-		    0x0101039f, 0x010103a3, 0x010103a4, 0x010103a8,
-		    0x010103ad, 0x010103bd, 0x010103be, 0x010103c0,
-		    0x010103c3, 0x010103c8, 0x010103cf, 0x010103ef,
-		    0x010103f0, 0x010103f2, 0x010103f3, 0x010103f4,
-		    0x010103f5, 0x010103f6, 0x010103f7, 0x010103f8,
-		    0x010103f9, 0x010103fa, 0x010103fb, 0x010103fc,
-		    0x010103fd, 0x010103fe, 0x010103ff, 0x01010400,
-		    0x01010401, 0x01010402, 0x01010403, 0x01010404,
-		    0x01010405, 0x01010406, 0x01010407, 0x01010408,
-		    0x01010409, 0x0101040a, 0x0101040b, 0x0101040c,
-		    0x0101040d, 0x0101040e, 0x0101040f, 0x01010410,
-		    0x01010411, 0x01010412, 0x01010413, 0x01010414,
-		    0x01010415, 0x01010416, 0x01010417, 0x01010418,
-		    0x01010419, 0x0101041a, 0x0101041b, 0x0101041c,
-		    0x0101041d, 0x0101041e, 0x0101041f, 0x01010420,
-		    0x01010421, 0x01010422, 0x01010423};
+			0x01010030, 0x01010031, 0x01010032, 0x01010033,
+			0x01010034, 0x01010035, 0x01010036, 0x01010037,
+			0x01010038, 0x01010039, 0x0101003a, 0x0101003b,
+			0x0101003c, 0x0101003d, 0x0101003e, 0x0101003f,
+			0x01010040, 0x01010041, 0x01010042, 0x01010043,
+			0x01010044, 0x01010045, 0x01010046, 0x01010047,
+			0x01010048, 0x01010049, 0x0101004a, 0x0101004b,
+			0x0101004c, 0x0101004d, 0x0101004e, 0x0101004f,
+			0x01010050, 0x01010051, 0x01010052, 0x01010053,
+			0x01010054, 0x01010055, 0x01010056, 0x01010057,
+			0x01010058, 0x01010059, 0x0101005a, 0x0101005b,
+			0x0101005c, 0x0101005d, 0x0101005e, 0x0101005f,
+			0x01010060, 0x01010061, 0x01010062, 0x0101006a,
+			0x0101006b, 0x0101006c, 0x0101006d, 0x0101006e,
+			0x0101006f, 0x01010070, 0x01010071, 0x01010072,
+			0x01010073, 0x01010074, 0x01010075, 0x01010076,
+			0x01010077, 0x01010078, 0x01010079, 0x0101007a,
+			0x0101007b, 0x0101007c, 0x0101007d, 0x0101007e,
+			0x01010080, 0x01010081, 0x01010082, 0x01010083,
+			0x01010084, 0x01010085, 0x01010086, 0x01010087,
+			0x01010088, 0x01010089, 0x0101008a, 0x0101008b,
+			0x0101008c, 0x0101008d, 0x0101008e, 0x0101008f,
+			0x01010090, 0x01010091, 0x01010092, 0x01010093,
+			0x01010094, 0x010100ae, 0x01010206, 0x01010207,
+			0x01010208, 0x0101020d, 0x0101020f, 0x01010210,
+			0x01010212, 0x01010213, 0x01010214, 0x01010219,
+			0x0101021a, 0x0101021e, 0x0101021f, 0x01010222,
+			0x0101022b, 0x01010230, 0x01010267, 0x01010287,
+			0x01010288, 0x01010289, 0x0101028b, 0x01010292,
+			0x010102a0, 0x010102a1, 0x010102ab, 0x010102ae,
+			0x010102af, 0x010102b0, 0x010102b1, 0x010102b2,
+			0x010102b3, 0x010102b6, 0x010102b9, 0x010102c5,
+			0x010102c6, 0x010102c7, 0x010102c8, 0x010102cd,
+			0x010102ce, 0x010102d6, 0x010102d7, 0x010102d8,
+			0x010102db, 0x010102dc, 0x010102dd, 0x010102e4,
+			0x010102eb, 0x010102f0, 0x010102f3, 0x010102f4,
+			0x010102f5, 0x010102f6, 0x010102f7, 0x010102fd,
+			0x010102ff, 0x01010300, 0x01010301, 0x01010302,
+			0x01010305, 0x01010306, 0x01010308, 0x01010309,
+			0x0101030a, 0x0101030b, 0x0101030e, 0x01010311,
+			0x01010312, 0x01010313, 0x01010314, 0x01010315,
+			0x01010317, 0x0101032b, 0x0101032c, 0x0101032e,
+			0x0101032f, 0x01010330, 0x01010336, 0x01010337,
+			0x01010338, 0x01010339, 0x0101033a, 0x0101034e,
+			0x0101034f, 0x01010350, 0x01010351, 0x01010352,
+			0x01010353, 0x01010355, 0x01010359, 0x0101035b,
+			0x0101035c, 0x0101035d, 0x0101035e, 0x0101035f,
+			0x01010360, 0x01010361, 0x0101036d, 0x01010373,
+			0x01010374, 0x0101037e, 0x01010386, 0x01010387,
+			0x01010388, 0x0101038d, 0x0101038e, 0x0101038f,
+			0x01010390, 0x01010391, 0x01010394, 0x01010397,
+			0x0101039b, 0x0101039c, 0x0101039d, 0x0101039e,
+			0x0101039f, 0x010103a3, 0x010103a4, 0x010103a8,
+			0x010103ad, 0x010103bd, 0x010103be, 0x010103c0,
+			0x010103c3, 0x010103c8, 0x010103cf, 0x010103ef,
+			0x010103f0, 0x010103f2, 0x010103f3, 0x010103f4,
+			0x010103f5, 0x010103f6, 0x010103f7, 0x010103f8,
+			0x010103f9, 0x010103fa, 0x010103fb, 0x010103fc,
+			0x010103fd, 0x010103fe, 0x010103ff, 0x01010400,
+			0x01010401, 0x01010402, 0x01010403, 0x01010404,
+			0x01010405, 0x01010406, 0x01010407, 0x01010408,
+			0x01010409, 0x0101040a, 0x0101040b, 0x0101040c,
+			0x0101040d, 0x0101040e, 0x0101040f, 0x01010410,
+			0x01010411, 0x01010412, 0x01010413, 0x01010414,
+			0x01010415, 0x01010416, 0x01010417, 0x01010418,
+			0x01010419, 0x0101041a, 0x0101041b, 0x0101041c,
+			0x0101041d, 0x0101041e, 0x0101041f, 0x01010420,
+			0x01010421, 0x01010422, 0x01010423
+		};
 		/**
 		  <p>
 		  @attr description
@@ -42676,7 +42883,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] TimePicker = {
-		    0x0101043c};
+			0x0101043c
+		};
 		/**
 		   Attributes that can be used with a ToggleButton.
 		   <p>Includes the following attributes:</p>
@@ -42693,7 +42901,8 @@ public final class R {
 		   @see #ToggleButton_textOn
 		 */
 		public static final int[] ToggleButton = {
-		    0x01010033, 0x01010124, 0x01010125};
+			0x01010033, 0x01010124, 0x01010125
+		};
 		/**
 		  <p>
 		  @attr description
@@ -42763,7 +42972,8 @@ public final class R {
 		   @see #Transition_startDelay
 		 */
 		public static final int[] Transition = {
-		    0x01010141, 0x01010198, 0x010103e2};
+			0x01010141, 0x01010198, 0x010103e2
+		};
 		/**
 		  <p>
 		  @attr description
@@ -42829,7 +43039,8 @@ public final class R {
 		   @see #TransitionManager_transition
 		 */
 		public static final int[] TransitionManager = {
-		    0x010103dd, 0x010103de, 0x010103df};
+			0x010103dd, 0x010103de, 0x010103df
+		};
 		/**
 		  <p>
 		  @attr description
@@ -42883,7 +43094,8 @@ public final class R {
 		   @see #TransitionSet_transitionOrdering
 		 */
 		public static final int[] TransitionSet = {
-		    0x010103e0};
+			0x010103e0
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#transitionOrdering}
 		  attribute's value can be found in the {@link #TransitionSet} array.
@@ -42919,7 +43131,8 @@ public final class R {
 		   @see #TransitionTarget_targetId
 		 */
 		public static final int[] TransitionTarget = {
-		    0x010103dc};
+			0x010103dc
+		};
 		/**
 		  <p>
 		  @attr description
@@ -42951,7 +43164,8 @@ public final class R {
 		   @see #TranslateAnimation_toYDelta
 		 */
 		public static final int[] TranslateAnimation = {
-		    0x010101c6, 0x010101c7, 0x010101c8, 0x010101c9};
+			0x010101c6, 0x010101c7, 0x010101c8, 0x010101c9
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#fromXDelta}
 		  attribute's value can be found in the {@link #TranslateAnimation} array.
@@ -43032,7 +43246,8 @@ public final class R {
 		   @see #TwoLineListItem_mode
 		 */
 		public static final int[] TwoLineListItem = {
-		    0x0101017e};
+			0x0101017e
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#mode}
 		  attribute's value can be found in the {@link #TwoLineListItem} array.
@@ -43064,7 +43279,8 @@ public final class R {
 		   @see #VerticalSlider_Layout_layout_scale
 		 */
 		public static final int[] VerticalSlider_Layout = {
-		    0x01010193};
+			0x01010193
+		};
 		/**
 		  <p>This symbol is the offset where the {@link android.R.attr#layout_scale}
 		  attribute's value can be found in the {@link #VerticalSlider_Layout} array.
@@ -43271,24 +43487,25 @@ public final class R {
 		   @see #View_visibility
 		 */
 		public static final int[] View = {
-		    0x01010063, 0x01010064, 0x01010065, 0x01010066,
-		    0x01010067, 0x01010068, 0x01010069, 0x0101007f,
-		    0x010100d0, 0x010100d1, 0x010100d2, 0x010100d3,
-		    0x010100d4, 0x010100d5, 0x010100d6, 0x010100d7,
-		    0x010100d8, 0x010100d9, 0x010100da, 0x010100db,
-		    0x010100dc, 0x010100dd, 0x010100de, 0x010100df,
-		    0x010100e0, 0x010100e1, 0x010100e2, 0x010100e3,
-		    0x010100e4, 0x010100e5, 0x010100e6, 0x010100e7,
-		    0x010100e8, 0x010100e9, 0x0101013f, 0x01010140,
-		    0x01010215, 0x01010216, 0x0101024e, 0x0101025e,
-		    0x0101026f, 0x01010273, 0x010102a8, 0x010102a9,
-		    0x010102aa, 0x010102c1, 0x010102c4, 0x0101031f,
-		    0x01010320, 0x01010321, 0x01010322, 0x01010323,
-		    0x01010324, 0x01010325, 0x01010326, 0x01010327,
-		    0x01010328, 0x01010334, 0x0101033c, 0x01010354,
-		    0x010103a5, 0x010103aa, 0x010103b0, 0x010103b1,
-		    0x010103b2, 0x010103b3, 0x010103b4, 0x010103c6,
-		    0x010103ee};
+			0x01010063, 0x01010064, 0x01010065, 0x01010066,
+			0x01010067, 0x01010068, 0x01010069, 0x0101007f,
+			0x010100d0, 0x010100d1, 0x010100d2, 0x010100d3,
+			0x010100d4, 0x010100d5, 0x010100d6, 0x010100d7,
+			0x010100d8, 0x010100d9, 0x010100da, 0x010100db,
+			0x010100dc, 0x010100dd, 0x010100de, 0x010100df,
+			0x010100e0, 0x010100e1, 0x010100e2, 0x010100e3,
+			0x010100e4, 0x010100e5, 0x010100e6, 0x010100e7,
+			0x010100e8, 0x010100e9, 0x0101013f, 0x01010140,
+			0x01010215, 0x01010216, 0x0101024e, 0x0101025e,
+			0x0101026f, 0x01010273, 0x010102a8, 0x010102a9,
+			0x010102aa, 0x010102c1, 0x010102c4, 0x0101031f,
+			0x01010320, 0x01010321, 0x01010322, 0x01010323,
+			0x01010324, 0x01010325, 0x01010326, 0x01010327,
+			0x01010328, 0x01010334, 0x0101033c, 0x01010354,
+			0x010103a5, 0x010103aa, 0x010103b0, 0x010103b1,
+			0x010103b2, 0x010103b3, 0x010103b4, 0x010103c6,
+			0x010103ee
+		};
 		/**
 		  <p>
 		  @attr description
@@ -44699,7 +44916,8 @@ public final class R {
 		   @see #ViewAnimator_outAnimation
 		 */
 		public static final int[] ViewAnimator = {
-		    0x01010177, 0x01010178, 0x010102d5};
+			0x01010177, 0x01010178, 0x010102d5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -44787,9 +45005,10 @@ public final class R {
 		   @see #ViewDrawableStates_state_window_focused
 		 */
 		public static final int[] ViewDrawableStates = {
-		    0x0101009c, 0x0101009d, 0x0101009e, 0x010100a1,
-		    0x010100a7, 0x010102fe, 0x0101031b, 0x01010367,
-		    0x01010368, 0x01010369};
+			0x0101009c, 0x0101009d, 0x0101009e, 0x010100a1,
+			0x010100a7, 0x010102fe, 0x0101031b, 0x01010367,
+			0x01010368, 0x01010369
+		};
 		/**
 		  <p>
 		  @attr description
@@ -44993,7 +45212,8 @@ public final class R {
 		   @see #ViewFlipper_flipInterval
 		 */
 		public static final int[] ViewFlipper = {
-		    0x01010179, 0x010102b5};
+			0x01010179, 0x010102b5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45066,9 +45286,10 @@ public final class R {
 		   @see #ViewGroup_splitMotionEvents
 		 */
 		public static final int[] ViewGroup = {
-		    0x010100ea, 0x010100eb, 0x010100ec, 0x010100ed,
-		    0x010100ee, 0x010100ef, 0x010100f0, 0x010100f1,
-		    0x010102ef, 0x010102f2, 0x010103da};
+			0x010100ea, 0x010100eb, 0x010100ec, 0x010100ed,
+			0x010100ee, 0x010100ef, 0x010100f0, 0x010100f1,
+			0x010102ef, 0x010102f2, 0x010103da
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45314,7 +45535,8 @@ public final class R {
 		   @see #ViewGroup_Layout_layout_width
 		 */
 		public static final int[] ViewGroup_Layout = {
-		    0x010100f4, 0x010100f5};
+			0x010100f4, 0x010100f5
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45420,9 +45642,10 @@ public final class R {
 		   @see #ViewGroup_MarginLayout_layout_width
 		 */
 		public static final int[] ViewGroup_MarginLayout = {
-		    0x010100f4, 0x010100f5, 0x010100f6, 0x010100f7,
-		    0x010100f8, 0x010100f9, 0x010100fa, 0x010103b5,
-		    0x010103b6};
+			0x010100f4, 0x010100f5, 0x010100f6, 0x010100f7,
+			0x010100f8, 0x010100f9, 0x010100fa, 0x010103b5,
+			0x010103b6
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45649,7 +45872,8 @@ public final class R {
 		   @see #ViewStub_layout
 		 */
 		public static final int[] ViewStub = {
-		    0x010100f2, 0x010100f3};
+			0x010100f2, 0x010100f3
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45696,7 +45920,8 @@ public final class R {
 		   @see #VolumePreference_streamType
 		 */
 		public static final int[] VolumePreference = {
-		    0x01010209};
+			0x01010209
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45745,7 +45970,8 @@ public final class R {
 		   @see #Wallpaper_thumbnail
 		 */
 		public static final int[] Wallpaper = {
-		    0x01010020, 0x01010225, 0x010102a5, 0x010102b4};
+			0x01010020, 0x01010225, 0x010102a5, 0x010102b4
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45816,7 +46042,8 @@ public final class R {
 		   @see #WallpaperPreviewInfo_staticWallpaperPreview
 		 */
 		public static final int[] WallpaperPreviewInfo = {
-		    0x01010331};
+			0x01010331
+		};
 		/**
 		  <p>
 		  @attr description
@@ -45840,7 +46067,8 @@ public final class R {
 		   </table>
 		 */
 		public static final int[] WeightedLinearLayout = {
-		    0x0101043e, 0x0101043f, 0x01010440, 0x01010441};
+			0x0101043e, 0x0101043f, 0x01010440, 0x01010441
+		};
 		/**
 		   The set of attributes that describe a Windows's theme.
 		   <p>Includes the following attributes:</p>
@@ -45914,14 +46142,15 @@ public final class R {
 		   @see #Window_windowTranslucentStatus
 		 */
 		public static final int[] Window = {
-		    0x01010032, 0x01010054, 0x01010055, 0x01010056,
-		    0x01010057, 0x01010058, 0x01010059, 0x01010098,
-		    0x010100ae, 0x0101020d, 0x0101021e, 0x0101021f,
-		    0x01010222, 0x0101022b, 0x01010292, 0x010102cd,
-		    0x010102dd, 0x010102e4, 0x01010317, 0x01010356,
-		    0x01010357, 0x0101035b, 0x010103cf, 0x010103ef,
-		    0x010103f0, 0x010103fa, 0x01010424, 0x01010425,
-		    0x01010426, 0x01010427};
+			0x01010032, 0x01010054, 0x01010055, 0x01010056,
+			0x01010057, 0x01010058, 0x01010059, 0x01010098,
+			0x010100ae, 0x0101020d, 0x0101021e, 0x0101021f,
+			0x01010222, 0x0101022b, 0x01010292, 0x010102cd,
+			0x010102dd, 0x010102e4, 0x01010317, 0x01010356,
+			0x01010357, 0x0101035b, 0x010103cf, 0x010103ef,
+			0x010103f0, 0x010103fa, 0x01010424, 0x01010425,
+			0x01010426, 0x01010427
+		};
 		/**
 		  <p>
 		  @attr description
@@ -46530,12 +46759,13 @@ public final class R {
 		   @see #WindowAnimation_windowShowAnimation
 		 */
 		public static final int[] WindowAnimation = {
-		    0x010100b4, 0x010100b5, 0x010100b6, 0x010100b7,
-		    0x010100b8, 0x010100b9, 0x010100ba, 0x010100bb,
-		    0x010100bc, 0x010100bd, 0x010100be, 0x010100bf,
-		    0x010100c0, 0x010100c1, 0x010100c2, 0x010100c3,
-		    0x01010293, 0x01010294, 0x01010295, 0x01010296,
-		    0x01010297, 0x01010298, 0x01010299, 0x0101029a};
+			0x010100b4, 0x010100b5, 0x010100b6, 0x010100b7,
+			0x010100b8, 0x010100b9, 0x010100ba, 0x010100bb,
+			0x010100bc, 0x010100bd, 0x010100be, 0x010100bf,
+			0x010100c0, 0x010100c1, 0x010100c2, 0x010100c3,
+			0x01010293, 0x01010294, 0x01010295, 0x01010296,
+			0x01010297, 0x01010298, 0x01010299, 0x0101029a
+		};
 		/**
 		  <p>
 		  @attr description

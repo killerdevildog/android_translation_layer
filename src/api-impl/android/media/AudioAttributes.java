@@ -4,9 +4,9 @@ public class AudioAttributes {
 
 	int streamType;
 
-	public int getFlags() {return 0;}
+	public int getFlags() { return 0; }
 
-	public int getUsage() {return 0;}
+	public int getUsage() { return 0; }
 
 	public class Builder {
 

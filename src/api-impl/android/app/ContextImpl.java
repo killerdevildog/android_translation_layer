@@ -1,6 +1,7 @@
 package android.app;
 
 import android.annotation.UnsupportedAppUsage;
+import android.app.SearchManager;
 import android.app.job.JobScheduler;
 import android.bluetooth.BluetoothManager;
 import android.content.ClipboardManager;
@@ -9,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraManager;
 import android.hardware.display.ColorDisplayManager;
 import android.hardware.display.DisplayManager;
 import android.hardware.input.InputManager;
@@ -21,6 +23,7 @@ import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.os.UserManager;
 import android.os.Vibrator;
+import android.os.storage.StorageManager;
 import android.telephony.TelephonyManager;
 import android.util.Slog;
 import android.view.Display;
@@ -29,7 +32,6 @@ import android.view.WindowManagerImpl;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.CaptioningManager;
 import android.view.inputmethod.InputMethodManager;
-
 import java.lang.reflect.InvocationTargetException;
 
 public final class ContextImpl extends Context {
@@ -144,8 +146,14 @@ public final class ContextImpl extends Context {
 				return new CaptioningManager();
 			case "statusbar":
 				return new StatusBarManager();
+			case "camera":
+				return new CameraManager();
 			case "color_display":
 				return new ColorDisplayManager();
+			case "search":
+				return new SearchManager();
+			case "storage":
+				return new StorageManager();
 			default:
 				Slog.e(TAG, "!!!!!!! getSystemService: case >" + name + "< is not implemented yet");
 				return null;
@@ -156,6 +164,8 @@ public final class ContextImpl extends Context {
 	public Object getSystemService(Class<?> serviceClass) throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		if (serviceClass == LayoutInflater.class)
 			return layout_inflater;
+		if (serviceClass == JobScheduler.class)
+			return job_scheduler;
 		return serviceClass.getConstructors()[0].newInstance();
 	}
 
@@ -182,5 +192,10 @@ public final class ContextImpl extends Context {
 	@Override
 	public Context createDeviceProtectedStorageContext() {
 		return this;
+	}
+
+	@Override
+	public int getThemeResId() {
+		return mThemeResource;
 	}
 }

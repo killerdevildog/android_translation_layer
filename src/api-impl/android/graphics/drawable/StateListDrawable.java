@@ -21,14 +21,11 @@ import android.content.res.Resources.Theme;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.StateSet;
-
 import com.android.internal.R;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.util.Arrays;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Lets you assign a number of graphic images to a single Drawable and swap out the visible item by a string
@@ -95,8 +92,9 @@ public class StateListDrawable extends DrawableContainer {
 		final boolean changed = super.onStateChange(stateSet);
 
 		int idx = mStateListState.indexOfStateSet(stateSet);
-		if (DEBUG) android.util.Log.i(TAG, "onStateChange " + this + " states "
-				+ Arrays.toString(stateSet) + " found " + idx);
+		if (DEBUG)
+			android.util.Log.i(TAG, "onStateChange " + this + " states "
+			                        + Arrays.toString(stateSet) + " found " + idx);
 		if (idx < 0) {
 			idx = mStateListState.indexOfStateSet(StateSet.WILD_CARD);
 		}
@@ -105,7 +103,7 @@ public class StateListDrawable extends DrawableContainer {
 	}
 
 	public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs, Theme theme)
-			throws XmlPullParserException, IOException {
+	    throws XmlPullParserException, IOException {
 		final TypedArray a = r.obtainAttributes(attrs, R.styleable.StateListDrawable);
 		a.recycle();
 
@@ -118,14 +116,14 @@ public class StateListDrawable extends DrawableContainer {
 	 * Inflates child elements from XML.
 	 */
 	private void inflateChildElements(Resources r, XmlPullParser parser, AttributeSet attrs,
-			Theme theme) throws XmlPullParserException, IOException {
+	                                  Theme theme) throws XmlPullParserException, IOException {
 		final StateListState state = mStateListState;
 		final int innerDepth = parser.getDepth() + 1;
 		int type;
 		int depth;
 		while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
-				&& ((depth = parser.getDepth()) >= innerDepth
-				|| type != XmlPullParser.END_TAG)) {
+		       && ((depth = parser.getDepth()) >= innerDepth
+		           || type != XmlPullParser.END_TAG)) {
 			if (type != XmlPullParser.START_TAG) {
 				continue;
 			}
@@ -137,7 +135,7 @@ public class StateListDrawable extends DrawableContainer {
 			// This allows state list drawable item elements to be themed at
 			// inflation time but does NOT make them work for Zygote preload.
 			final TypedArray a = r.obtainAttributes(attrs,
-					R.styleable.StateListDrawableItem);
+			                                        R.styleable.StateListDrawableItem);
 			Drawable dr = a.getDrawable(R.styleable.StateListDrawableItem_drawable);
 			a.recycle();
 
@@ -151,9 +149,9 @@ public class StateListDrawable extends DrawableContainer {
 				}
 				if (type != XmlPullParser.START_TAG) {
 					throw new XmlPullParserException(
-							parser.getPositionDescription()
-									+ ": <item> tag requires a 'drawable' attribute or "
-									+ "child tag defining a drawable");
+					    parser.getPositionDescription()
+					    + ": <item> tag requires a 'drawable' attribute or "
+					    + "child tag defining a drawable");
 				}
 				dr = Drawable.createFromXmlInner(r, parser, attrs, theme);
 			}
@@ -184,7 +182,8 @@ public class StateListDrawable extends DrawableContainer {
 					continue;
 				default:
 					states[j++] = attrs.getAttributeBooleanValue(i, false)
-							? stateResId : -stateResId;
+					                ? stateResId
+					                : -stateResId;
 			}
 		}
 		states = StateSet.trimStateSet(states, j);
@@ -285,7 +284,7 @@ public class StateListDrawable extends DrawableContainer {
 		super.setConstantState(state);
 
 		if (state instanceof StateListState) {
-			mStateListState = (StateListState) state;
+			mStateListState = (StateListState)state;
 		}
 	}
 

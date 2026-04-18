@@ -1,18 +1,18 @@
-#include <stdint.h>
 #include <dlfcn.h>
 #include <pthread.h>
+#include <stdint.h>
 
 #include <gtk/gtk.h>
 
-#include "util.h"
 #include "src/api-impl-jni/defines.h"
+#include "util.h"
 
-const char * attribute_set_get_string(JNIEnv *env, jobject attrs, char *attribute, char *schema)
+const char *attribute_set_get_string(JNIEnv *env, jobject attrs, char *attribute, char *schema)
 {
 	if (!attrs)
 		return NULL;
 
-	if(!schema)
+	if (!schema)
 		schema = "http://schemas.android.com/apk/res/android";
 
 	jstring string = (jstring)(*env)->CallObjectMethod(env, attrs, handle_cache.attribute_set.getAttributeValue_string, _JSTRING(schema), _JSTRING(attribute));
@@ -24,7 +24,7 @@ int attribute_set_get_int(JNIEnv *env, jobject attrs, char *attribute, char *sch
 	if (!attrs)
 		return default_value;
 
-	if(!schema)
+	if (!schema)
 		schema = "http://schemas.android.com/apk/res/android";
 
 	return (*env)->CallIntMethod(env, attrs, handle_cache.attribute_set.getAttributeValue_int, _JSTRING(schema), _JSTRING(attribute), default_value);
@@ -33,14 +33,14 @@ int attribute_set_get_int(JNIEnv *env, jobject attrs, char *attribute, char *sch
 JavaVM *jvm;
 
 // TODO: use this everywhere, not just for gdb helper functions
-JNIEnv * get_jni_env(void)
+JNIEnv *get_jni_env(void)
 {
 	JNIEnv *env;
-	(*jvm)->GetEnv(jvm, (void**)&env, JNI_VERSION_1_6);
+	(*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
 	return env;
 }
 
-JNIEnv * _gdb_get_jni_env(void)
+JNIEnv *_gdb_get_jni_env(void)
 {
 	return get_jni_env();
 }
@@ -60,7 +60,8 @@ void _gdb_force_java_stack_trace(void)
 }
 
 extern char *apk_path;
-void extract_from_apk(const char *path, const char *target) {
+void extract_from_apk(const char *path, const char *target)
+{
 	JNIEnv *env = get_jni_env();
 	(*env)->CallStaticVoidMethod(env, handle_cache.asset_manager.class, handle_cache.asset_manager.extractFromAPK, _JSTRING(apk_path), _JSTRING(path), _JSTRING(target));
 }
@@ -87,10 +88,10 @@ static int android_log_vprintf(int prio, const char *tag, const char *fmt, va_li
 {
 
 	static __android_log_vprint_type *_android_log_vprintf = NULL;
-	if(!_android_log_vprintf) {
+	if (!_android_log_vprintf) {
 		_android_log_vprintf = dlsym(RTLD_DEFAULT, "__android_log_vprint");
 
-		if(!_android_log_vprintf) {
+		if (!_android_log_vprintf) {
 			_android_log_vprintf = &fallback_verbose_log;
 		}
 	}
@@ -126,10 +127,10 @@ void *get_nio_buffer(JNIEnv *env, jobject buffer, jarray *array_ref, jbyte **arr
 	pointer = _PTR((*env)->GetLongField(env, buffer, _FIELD_ID(class, "address", "J")));
 	elementSizeShift = (*env)->GetIntField(env, buffer, _FIELD_ID(class, "_elementSizeShift", "I"));
 	position = (*env)->GetIntField(env, buffer, _FIELD_ID(class, "position", "I"));
-	if (pointer) {   // buffer is direct
+	if (pointer) { // buffer is direct
 		*array_ref = NULL;
 		pointer += position << elementSizeShift;
-	} else {   // buffer is indirect
+	} else { // buffer is indirect
 		*array_ref = (*env)->CallObjectMethod(env, buffer, _METHOD(class, "array", "()Ljava/lang/Object;"));
 		jint offset = (*env)->CallIntMethod(env, buffer, _METHOD(class, "arrayOffset", "()I"));
 		pointer = *array = (*env)->GetPrimitiveArrayCritical(env, *array_ref, NULL);
@@ -146,13 +147,13 @@ void release_nio_buffer(JNIEnv *env, jarray array_ref, jbyte *array)
 
 int get_nio_buffer_size(JNIEnv *env, jobject buffer)
 {
-	jclass class = _CLASS(buffer);;
+	jclass class = _CLASS(buffer);
+	;
 	int limit = (*env)->GetIntField(env, buffer, _FIELD_ID(class, "limit", "I"));
 	int position = (*env)->GetIntField(env, buffer, _FIELD_ID(class, "position", "I"));
 
 	return limit - position;
 }
-
 
 /* Calling these functions while snapshotting will cause Gtk to not snapshot the affected widgets.
  * Below are "safe" wrappers which will postpone the calls if inside a snapshot.
@@ -186,7 +187,7 @@ static gboolean queue_queue_resize(GtkWidget *widget, GdkFrameClock *frame_clock
 extern int snapshot_in_progress;
 void atl_ensure_widget_snapshotability(GtkWidget *widget)
 {
-	if(snapshot_in_progress) {
+	if (snapshot_in_progress) {
 		GtkAllocation allocation;
 		G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 		/* we probably don't need to use this deprecated function but it sure is convenient */
@@ -205,9 +206,9 @@ void atl_ensure_widget_snapshotability(GtkWidget *widget)
 	}
 }
 
-void atl_safe_gtk_label_set_text(GtkLabel* label, const char* str)
+void atl_safe_gtk_label_set_text(GtkLabel *label, const char *str)
 {
-	if(!snapshot_in_progress) {
+	if (!snapshot_in_progress) {
 		gtk_label_set_text(label, str);
 	} else {
 		/* strdup since the string may not exist by the time the callback runs */
@@ -226,7 +227,7 @@ void atl_safe_gtk_widget_set_visible(GtkWidget *widget, gboolean visible)
 
 void atl_safe_gtk_widget_queue_allocate(GtkWidget *widget)
 {
-	if(!snapshot_in_progress) {
+	if (!snapshot_in_progress) {
 		gtk_widget_queue_allocate(widget);
 	} else {
 		gtk_widget_add_tick_callback(widget, queue_queue_allocate, NULL, NULL);
@@ -235,14 +236,15 @@ void atl_safe_gtk_widget_queue_allocate(GtkWidget *widget)
 
 void atl_safe_gtk_widget_queue_resize(GtkWidget *widget)
 {
-	if(!snapshot_in_progress) {
+	if (!snapshot_in_progress) {
 		gtk_widget_queue_resize(widget);
 	} else {
 		gtk_widget_add_tick_callback(widget, queue_queue_resize, NULL, NULL);
 	}
 }
 
-GVariant *intent_serialize(JNIEnv *env, jobject intent) {
+GVariant *intent_serialize(JNIEnv *env, jobject intent)
+{
 	if (!intent)
 		return NULL;
 	jstring action_jstr = _GET_OBJ_FIELD(intent, "action", "Ljava/lang/String;");
@@ -270,7 +272,7 @@ GVariant *intent_serialize(JNIEnv *env, jobject intent) {
 		} else if ((*env)->IsInstanceOf(env, value_jobj, parcelable_class)) {
 			GVariantBuilder parcel_builder;
 			g_variant_builder_init(&parcel_builder, G_VARIANT_TYPE_TUPLE);
-			jobject parcel = (*env)->NewObject(env, handle_cache.parcel.class, handle_cache.parcel.constructor, _INTPTR(&parcel_builder), 0);
+			jobject parcel = (*env)->NewObject(env, handle_cache.builder_parcel.class, handle_cache.builder_parcel.constructor, _INTPTR(&parcel_builder));
 			(*env)->CallVoidMethod(env, parcel, handle_cache.parcel.writeParcelable, value_jobj, 0);
 			GVariant *parcel_variant = g_variant_builder_end(&parcel_builder);
 			g_variant_builder_add(&extras_builder, "{sv}", key, parcel_variant);
@@ -297,7 +299,8 @@ GVariant *intent_serialize(JNIEnv *env, jobject intent) {
 	return variant;
 }
 
-jobject intent_deserialize(JNIEnv *env, GVariant *variant) {
+jobject intent_deserialize(JNIEnv *env, GVariant *variant)
+{
 	const char *action;
 	const char *className;
 	const char *data;
@@ -334,7 +337,7 @@ jobject intent_deserialize(JNIEnv *env, GVariant *variant) {
 		} else if (g_variant_is_of_type(value, G_VARIANT_TYPE_TUPLE)) {
 			GVariantIter parcel_iter;
 			g_variant_iter_init(&parcel_iter, value);
-			jobject parcel = (*env)->NewObject(env, handle_cache.parcel.class, handle_cache.parcel.constructor, 0, _INTPTR(&parcel_iter));
+			jobject parcel = (*env)->NewObject(env, handle_cache.iter_parcel.class, handle_cache.iter_parcel.constructor, _INTPTR(&parcel_iter));
 			jmethodID getClassLoader = _METHOD((*env)->FindClass(env, "java/lang/Class"), "getClassLoader", "()Ljava/lang/ClassLoader;");
 			jobject class_loader = (*env)->CallObjectMethod(env, handle_cache.parcel.class, getClassLoader);
 			jobject parcelable = (*env)->CallObjectMethod(env, parcel, handle_cache.parcel.readParcelable, class_loader);
@@ -351,7 +354,8 @@ jobject intent_deserialize(JNIEnv *env, GVariant *variant) {
 	return intent;
 }
 
-const char *intent_actionname_from_type(int type) {
+const char *intent_actionname_from_type(int type)
+{
 	switch (type) {
 		case 0:
 			return "app.startActivity";

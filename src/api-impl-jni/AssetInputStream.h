@@ -1,7 +1,6 @@
 #include <gio/gio.h>
 
-struct _AssetInputStream
-{
+struct _AssetInputStream {
 	GInputStream parent_instance;
 	struct Asset *asset;
 };

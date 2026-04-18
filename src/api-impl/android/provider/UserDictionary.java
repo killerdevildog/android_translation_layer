@@ -132,7 +132,7 @@ public class UserDictionary {
 		 */
 		@Deprecated
 		public static void addWord(Context context, String word,
-					   int frequency, int localeType) {
+		                           int frequency, int localeType) {
 
 			if (localeType != LOCALE_TYPE_ALL && localeType != LOCALE_TYPE_CURRENT) {
 				return;
@@ -162,7 +162,7 @@ public class UserDictionary {
 		 *  for all locales.
 		 */
 		public static void addWord(Context context, String word,
-					   int frequency, String shortcut, Locale locale) {
+		                           int frequency, String shortcut, Locale locale) {
 			final ContentResolver resolver = context.getContentResolver();
 
 			if (TextUtils.isEmpty(word)) {

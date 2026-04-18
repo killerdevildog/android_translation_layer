@@ -245,10 +245,10 @@ public class ExpandableListView extends ListView {
 	 */
 	//@UnsupportedAppUsage
 	private static final int[][] GROUP_STATE_SETS = {
-	    EMPTY_STATE_SET,		   // 00
-	    GROUP_EXPANDED_STATE_SET,	   // 01
-	    GROUP_EMPTY_STATE_SET,	   // 10
-	    GROUP_EXPANDED_EMPTY_STATE_SET // 11
+		EMPTY_STATE_SET,               // 00
+		GROUP_EXPANDED_STATE_SET,      // 01
+		GROUP_EMPTY_STATE_SET,         // 10
+		GROUP_EXPANDED_EMPTY_STATE_SET // 11
 	};
 
 	/**
@@ -283,9 +283,9 @@ public class ExpandableListView extends ListView {
 		super(context, attrs, defStyleAttr, defStyleRes);
 
 		final TypedArray a = context.obtainStyledAttributes(attrs,
-								    com.android.internal.R.styleable.ExpandableListView, defStyleAttr, defStyleRes);
+		                                                    com.android.internal.R.styleable.ExpandableListView, defStyleAttr, defStyleRes);
 		saveAttributeDataForStyleable(context, com.android.internal.R.styleable.ExpandableListView,
-					      attrs, a, defStyleAttr, defStyleRes);
+		                              attrs, a, defStyleAttr, defStyleRes);
 
 		mGroupIndicator = a.getDrawable(
 		    com.android.internal.R.styleable.ExpandableListView_groupIndicator);
@@ -354,7 +354,7 @@ public class ExpandableListView extends ListView {
 	 * indicator when defined.
 	 */
 	private void resolveIndicator() {
-		final boolean isLayoutRtl = false/*isLayoutRtl()*/;
+		final boolean isLayoutRtl = false /*isLayoutRtl()*/;
 		if (isLayoutRtl) {
 			if (mIndicatorStart >= 0) {
 				mIndicatorRight = mIndicatorStart;
@@ -380,7 +380,7 @@ public class ExpandableListView extends ListView {
 	 * left/right child indicator when defined.
 	 */
 	private void resolveChildIndicator() {
-		final boolean isLayoutRtl = false/*isLayoutRtl()*/;
+		final boolean isLayoutRtl = false /*isLayoutRtl()*/;
 		if (isLayoutRtl) {
 			if (mChildIndicatorStart >= CHILD_INDICATOR_INHERIT) {
 				mChildIndicatorRight = mChildIndicatorStart;
@@ -409,14 +409,14 @@ public class ExpandableListView extends ListView {
 		}
 
 		int saveCount = 0;
-		final boolean clipToPadding = false/*(mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK*/;
+		final boolean clipToPadding = false /*(mGroupFlags & CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK*/;
 		if (clipToPadding) {
 			saveCount = canvas.save();
 			final int scrollX = getScrollX();
 			final int scrollY = getScrollY();
 			canvas.clipRect(scrollX + getPaddingLeft(), scrollY + getPaddingTop(),
-					scrollX + getRight() - getLeft() - getPaddingRight(),
-					scrollY + getBottom() - getTop() - getPaddingBottom());
+			                scrollX + getRight() - getLeft() - getPaddingRight(),
+			                scrollY + getBottom() - getTop() - getPaddingBottom());
 		}
 
 		final int headerViewsCount = getHeaderViewsCount();
@@ -461,7 +461,7 @@ public class ExpandableListView extends ListView {
 			// Get more expandable list-related info for this item
 			pos = mConnector.getUnflattenedPos(childFlPos);
 
-			final boolean isLayoutRtl = false/*isLayoutRtl()*/;
+			final boolean isLayoutRtl = false /*isLayoutRtl()*/;
 			final int width = getWidth();
 
 			// If this item type and the previous item type are different, then we need to change
@@ -535,12 +535,12 @@ public class ExpandableListView extends ListView {
 				// Empty check based on availability of data.  If the groupMetadata isn't null,
 				// we do a check on it. Otherwise, the group is collapsed so we consider it
 				// empty for performance reasons.
-				boolean isEmpty = (pos.groupMetadata == null) ||
-						  (pos.groupMetadata.lastChildFlPos == pos.groupMetadata.flPos);
+				boolean isEmpty = (pos.groupMetadata == null)
+				               || (pos.groupMetadata.lastChildFlPos == pos.groupMetadata.flPos);
 
 				final int stateSetIndex =
 				    (pos.isExpanded() ? 1 : 0) | // Expanded?
-				    (isEmpty ? 2 : 0);		 // Empty?
+				    (isEmpty ? 2 : 0);           // Empty?
 				indicator.setState(GROUP_STATE_SETS[stateSetIndex]);
 			}
 		} else {
@@ -549,8 +549,8 @@ public class ExpandableListView extends ListView {
 			if (indicator != null && indicator.isStateful()) {
 				// No need for a state sets array for the child since it only has two states
 				final int stateSet[] = pos.position.flatListPos == pos.groupMetadata.lastChildFlPos
-							   ? CHILD_LAST_STATE_SET
-							   : EMPTY_STATE_SET;
+				                         ? CHILD_LAST_STATE_SET
+				                         : EMPTY_STATE_SET;
 				indicator.setState(stateSet);
 			}
 		}
@@ -579,8 +579,7 @@ public class ExpandableListView extends ListView {
 			final int adjustedPosition = getFlatPositionForConnector(flatListPosition);
 			PositionMetadata pos = mConnector.getUnflattenedPos(adjustedPosition);
 			// If this item is a child, or it is a non-empty group that is expanded
-			if ((pos.position.type == ExpandableListPosition.CHILD) || (pos.isExpanded() &&
-										    pos.groupMetadata.lastChildFlPos != pos.groupMetadata.flPos)) {
+			if ((pos.position.type == ExpandableListPosition.CHILD) || (pos.isExpanded() && pos.groupMetadata.lastChildFlPos != pos.groupMetadata.flPos)) {
 				// These are the cases where we draw the child divider
 				final Drawable divider = mChildDivider;
 				divider.setBounds(bounds);
@@ -605,8 +604,7 @@ public class ExpandableListView extends ListView {
 	public void setAdapter(ListAdapter adapter) {
 		throw new RuntimeException(
 		    "For ExpandableListView, use setAdapter(ExpandableListAdapter) instead of "
-		    +
-		    "setAdapter(ListAdapter)");
+		    + "setAdapter(ListAdapter)");
 	}
 
 	/**
@@ -730,7 +728,7 @@ public class ExpandableListView extends ListView {
 			/* It's a group click, so pass on event */
 			if (mOnGroupClickListener != null) {
 				if (mOnGroupClickListener.onGroupClick(this, v,
-								       posMetadata.position.groupPos, id)) {
+				                                       posMetadata.position.groupPos, id)) {
 					posMetadata.recycle();
 					return true;
 				}
@@ -760,7 +758,7 @@ public class ExpandableListView extends ListView {
 
 				final int shiftedGroupPosition = groupFlatPos + getHeaderViewsCount();
 				smoothScrollToPosition(shiftedGroupPosition + mAdapter.getChildrenCount(groupPos),
-						       shiftedGroupPosition);
+				                       shiftedGroupPosition);
 			}
 
 			returnValue = true;
@@ -769,7 +767,7 @@ public class ExpandableListView extends ListView {
 			if (mOnChildClickListener != null) {
 				playSoundEffect(SoundEffectConstants.CLICK);
 				return mOnChildClickListener.onChildClick(this, v, posMetadata.position.groupPos,
-									  posMetadata.position.childPos, id);
+				                                          posMetadata.position.childPos, id);
 			}
 
 			returnValue = false;
@@ -815,7 +813,7 @@ public class ExpandableListView extends ListView {
 
 			final int shiftedGroupPosition = groupFlatPos + getHeaderViewsCount();
 			smoothScrollToPosition(shiftedGroupPosition + mAdapter.getChildrenCount(groupPos),
-					       shiftedGroupPosition);
+			                       shiftedGroupPosition);
 		}
 		pm.recycle();
 
@@ -897,7 +895,7 @@ public class ExpandableListView extends ListView {
 		 * @return True if the click was handled
 		 */
 		boolean onGroupClick(ExpandableListView parent, View v, int groupPosition,
-				     long id);
+		                     long id);
 	}
 
 	//@UnsupportedAppUsage
@@ -925,7 +923,7 @@ public class ExpandableListView extends ListView {
 		 * @return True if the click was handled
 		 */
 		boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
-				     int childPosition, long id);
+		                     int childPosition, long id);
 	}
 
 	//@UnsupportedAppUsage
@@ -974,7 +972,7 @@ public class ExpandableListView extends ListView {
 	 */
 	public int getFlatListPosition(long packedPosition) {
 		ExpandableListPosition elPackedPos = ExpandableListPosition
-							 .obtainPosition(packedPosition);
+		                                         .obtainPosition(packedPosition);
 		PositionMetadata pm = mConnector.getFlattenedPos(elPackedPos);
 		elPackedPos.recycle();
 		final int flatListPosition = pm.position.flatListPos;
@@ -1026,7 +1024,7 @@ public class ExpandableListView extends ListView {
 	 */
 	public void setSelectedGroup(int groupPosition) {
 		ExpandableListPosition elGroupPos = ExpandableListPosition
-							.obtainGroupPosition(groupPosition);
+		                                        .obtainGroupPosition(groupPosition);
 		PositionMetadata pm = mConnector.getFlattenedPos(elGroupPos);
 		elGroupPos.recycle();
 		final int absoluteFlatPosition = getAbsoluteFlatPosition(pm.position.flatListPos);
@@ -1101,8 +1099,8 @@ public class ExpandableListView extends ListView {
 		}
 
 		return (packedPosition & PACKED_POSITION_MASK_TYPE) == PACKED_POSITION_MASK_TYPE
-		    ? PACKED_POSITION_TYPE_CHILD
-		    : PACKED_POSITION_TYPE_GROUP;
+		         ? PACKED_POSITION_TYPE_CHILD
+		         : PACKED_POSITION_TYPE_GROUP;
 	}
 
 	/**
@@ -1176,7 +1174,7 @@ public class ExpandableListView extends ListView {
 	public static long getPackedPositionForGroup(int groupPosition) {
 		// No need to OR a type in because PACKED_POSITION_GROUP == 0
 		return ((((long)groupPosition) & PACKED_POSITION_INT_MASK_GROUP)
-			<< PACKED_POSITION_SHIFT_GROUP);
+		        << PACKED_POSITION_SHIFT_GROUP);
 	}
 
 	/*@Override

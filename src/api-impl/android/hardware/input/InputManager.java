@@ -13,12 +13,11 @@ public class InputManager {
 	public void registerInputDeviceListener(InputManager.InputDeviceListener listener, Handler handler) {
 	}
 
-	public int[] getInputDeviceIds () {
+	public int[] getInputDeviceIds() {
 		return InputDevice.getDeviceIds();
 	}
 
-	public InputDevice getInputDevice (int id) {
+	public InputDevice getInputDevice(int id) {
 		return InputDevice.getDevice(id);
 	}
-
 }

@@ -1,3 +1,8 @@
 package android.widget;
 
-public interface FilterQueryProvider {}
+import android.database.Cursor;
+
+public interface FilterQueryProvider {
+
+	public Cursor runQuery(CharSequence constraint);
+}

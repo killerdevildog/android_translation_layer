@@ -1,11 +1,10 @@
 package android.view;
 
+import android.atl.GskCanvas;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.atl.GskCanvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-
 import java.util.ArrayList;
 
 public class SurfaceView extends View {
@@ -20,6 +19,12 @@ public class SurfaceView extends View {
 
 	public SurfaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		mSurface.widget = this.widget;
+	}
+
+	public SurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
 
 		mSurface.widget = this.widget;
 	}
@@ -188,7 +193,7 @@ public class SurfaceView extends View {
 					mLastLockTime = now;
 					mSurfaceLock.unlock();
 			*/
-			if(getWidth() == 0 || getHeight() == 0)
+			if (getWidth() == 0 || getHeight() == 0)
 				return null;
 
 			return new GskCanvas(native_createSnapshot());
@@ -220,6 +225,10 @@ public class SurfaceView extends View {
 	};
 
 	public void setZOrderOnTop(boolean onTop) {
+		/* TODO */
+	}
+
+	public void setZOrderMediaOverlay(boolean mediaOverlay) {
 		/* TODO */
 	}
 }

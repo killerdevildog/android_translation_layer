@@ -29,8 +29,8 @@ public class TelephonyManager {
 		return 0; // PHONE_TYPE_NONE
 	}
 
-	public String getNetworkCountryIso() {return "";}
-	public String getSimCountryIso() {return "";}
+	public String getNetworkCountryIso() { return ""; }
+	public String getSimCountryIso() { return ""; }
 
 	public List getNeighboringCellInfo() {
 		return new ArrayList(0);

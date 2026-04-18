@@ -36,6 +36,7 @@ struct handle_cache {
 		jclass class;
 		jmethodID constructor;
 		jmethodID constructor_single;
+		jmethodID constructor_scroll;
 	} motion_event;
 	struct {
 		jclass class;
@@ -68,6 +69,7 @@ struct handle_cache {
 		jmethodID getSuggestedMinimumHeight;
 		jmethodID setMeasuredDimension;
 		jmethodID onGenericMotionEvent;
+		jmethodID dispatchGenericMotionEvent;
 		jmethodID computeScroll;
 		jmethodID getScrollX;
 		jmethodID getScrollY;
@@ -86,6 +88,7 @@ struct handle_cache {
 		jmethodID onKeyDown;
 		jmethodID onAttachedToWindow;
 		jmethodID onDetachedFromWindow;
+		jmethodID dispatchHoverEvent;
 	} view;
 	struct {
 		jclass class;
@@ -162,14 +165,29 @@ struct handle_cache {
 	} set;
 	struct {
 		jclass class;
-		jmethodID constructor;
 		jmethodID writeParcelable;
 		jmethodID readParcelable;
 	} parcel;
 	struct {
 		jclass class;
+		jmethodID constructor;
+	} builder_parcel;
+	struct {
+		jclass class;
+		jmethodID constructor;
+	} iter_parcel;
+	struct {
+		jclass class;
 		jmethodID dispatchOnGlobalLayout;
 	} view_tree_observer;
+	struct {
+		jclass class;
+		jmethodID onTimeChange;
+	} time_picker;
+	struct {
+		jclass class;
+		jmethodID onDateChange;
+	} date_picker;
 };
 
 extern struct handle_cache handle_cache;

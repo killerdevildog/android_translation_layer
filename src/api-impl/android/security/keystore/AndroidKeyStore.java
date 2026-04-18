@@ -1,5 +1,6 @@
 package android.security.keystore;
 
+import android.util.Slog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,8 +16,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-
-import android.util.Slog;
 
 public class AndroidKeyStore extends KeyStoreSpi {
 
@@ -49,7 +48,7 @@ public class AndroidKeyStore extends KeyStoreSpi {
 
 	@Override
 	public void engineSetKeyEntry(String alias, Key key, char[] password, Certificate[] chain)
-			throws KeyStoreException {
+	    throws KeyStoreException {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'engineSetKeyEntry'");
 	}
@@ -111,14 +110,13 @@ public class AndroidKeyStore extends KeyStoreSpi {
 
 	@Override
 	public void engineStore(OutputStream stream, char[] password)
-			throws IOException, NoSuchAlgorithmException, CertificateException {
+	    throws IOException, NoSuchAlgorithmException, CertificateException {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'engineStore'");
 	}
 
 	@Override
 	public void engineLoad(InputStream stream, char[] password)
-			throws IOException, NoSuchAlgorithmException, CertificateException {
+	    throws IOException, NoSuchAlgorithmException, CertificateException {
 	}
-	
 }

@@ -22,7 +22,6 @@ package android.database.sqlite;
 
 import android.database.DatabaseUtils;
 import android.os.CancellationSignal;
-
 import java.util.Arrays;
 
 /**
@@ -42,7 +41,7 @@ public abstract class SQLiteProgram extends SQLiteClosable {
 	private final Object[] mBindArgs;
 
 	SQLiteProgram(SQLiteDatabase db, String sql, Object[] bindArgs,
-			CancellationSignal cancellationSignalForPrepare) {
+	              CancellationSignal cancellationSignalForPrepare) {
 		mDatabase = db;
 		mSql = sql.trim();
 
@@ -60,8 +59,8 @@ public abstract class SQLiteProgram extends SQLiteClosable {
 				boolean assumeReadOnly = (n == DatabaseUtils.STATEMENT_SELECT);
 				SQLiteStatementInfo info = new SQLiteStatementInfo();
 				db.getThreadSession().prepare(mSql,
-						db.getThreadDefaultConnectionFlags(assumeReadOnly),
-						cancellationSignalForPrepare, info);
+				                              db.getThreadDefaultConnectionFlags(assumeReadOnly),
+				                              cancellationSignalForPrepare, info);
 				mReadOnly = info.readOnly;
 				mColumnNames = info.columnNames;
 				mNumParameters = info.numParameters;
@@ -70,8 +69,8 @@ public abstract class SQLiteProgram extends SQLiteClosable {
 
 		if (bindArgs != null && bindArgs.length > mNumParameters) {
 			throw new IllegalArgumentException("Too many bind arguments.  "
-					+ bindArgs.length + " arguments were provided but the statement needs "
-					+ mNumParameters + " arguments.");
+			                                   + bindArgs.length + " arguments were provided but the statement needs "
+			                                   + mNumParameters + " arguments.");
 		}
 
 		if (mNumParameters != 0) {
@@ -214,8 +213,8 @@ public abstract class SQLiteProgram extends SQLiteClosable {
 	private void bind(int index, Object value) {
 		if (index < 1 || index > mNumParameters) {
 			throw new IllegalArgumentException("Cannot bind argument at index "
-					+ index + " because the index is out of range.  "
-					+ "The statement has " + mNumParameters + " parameters.");
+			                                   + index + " because the index is out of range.  "
+			                                   + "The statement has " + mNumParameters + " parameters.");
 		}
 		mBindArgs[index - 1] = value;
 	}

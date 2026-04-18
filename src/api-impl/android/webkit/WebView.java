@@ -36,15 +36,16 @@ public class WebView extends ViewGroup {
 
 	// to be used by native code
 	void internalLoadChanged(int loadState, String url) {
-		if (loadState == /*WEBKIT_LOAD_STARTED*/0 && webViewClient != null) {
+		if (loadState == /*WEBKIT_LOAD_STARTED*/ 0 && webViewClient != null) {
 			webViewClient.onPageStarted(this, url);
-		} else if (loadState == /*WEBKIT_LOAD_FINISHED*/3 && webViewClient != null) {
+		} else if (loadState == /*WEBKIT_LOAD_FINISHED*/ 3 && webViewClient != null) {
 			webViewClient.onPageFinished(this, url);
 		}
 	}
 
 	public void setVerticalScrollBarEnabled(boolean enabled) {}
 	public void setVerticalScrollbarOverlay(boolean overlay) {}
+	public void setInitialScale(int scaleInPercent) {}
 
 	public void addJavascriptInterface(Object object, String name) {
 		// HACK: directly call onRenderingDone for OctoDroid, as the javascript interface is not implemented yet
@@ -90,6 +91,14 @@ public class WebView extends ViewGroup {
 		return getContext().getResources().getAssets();
 	}
 
+	public void onPause() {}
+
+	public void onResume() {}
+
+	public boolean isPaused() {
+		return false;
+	}
+
 	public void resumeTimers() {}
 
 	public void loadData(String data, String mimeType, String encoding) {
@@ -97,6 +106,23 @@ public class WebView extends ViewGroup {
 	}
 
 	public void evaluateJavascript(String script, ValueCallback resultCallback) {}
+
+	public static void setWebContentsDebuggingEnabled(boolean enabled) {}
+
+	public void clearFormData() {}
+
+	public void clearHistory() {}
+
+	public void clearMatches() {}
+
+	public void clearSslPreferences() {}
+
+	public void clearCache(boolean includeDiskFiles) {}
+
+	// directly accessed by androidx WebViewGlueCommunicator to get ClassLoader
+	private static Object getFactory() {
+		return new Object();
+	}
 
 	@Override
 	protected native long native_constructor(Context context, AttributeSet attrs);

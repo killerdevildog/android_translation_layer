@@ -64,7 +64,7 @@ public class ContentObservable extends Observable<ContentObserver> {
 	 * @param uri The Uri of the changed content, or null if unknown.
 	 */
 	public void dispatchChange(boolean selfChange, Uri uri) {
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			for (ContentObserver observer : mObservers) {
 				if (!selfChange || observer.deliverSelfNotifications()) {
 					observer.dispatchChange(selfChange, uri);
@@ -82,7 +82,7 @@ public class ContentObservable extends Observable<ContentObserver> {
 	 */
 	@Deprecated
 	public void notifyChange(boolean selfChange) {
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			for (ContentObserver observer : mObservers) {
 				observer.onChange(selfChange, null);
 			}

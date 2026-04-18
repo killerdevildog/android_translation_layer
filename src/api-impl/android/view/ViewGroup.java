@@ -2,22 +2,47 @@ package android.view;
 
 import android.R;
 import android.animation.LayoutTransition;
+import android.annotation.UnsupportedAppUsage;
+import android.atl.GskCanvas;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.atl.GskCanvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Slog;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
 public class ViewGroup extends View implements ViewParent, ViewManager {
+	/* clang-format off */
+	static final int FLAG_CLIP_CHILDREN        = (1 << 0);
+	static final int FLAG_INVALIDATE_REQUIRED  = (1 << 2);
+	static final int FLAG_ANIMATION_DONE       = (1 << 4);
+	static final int FLAG_OPTIMIZE_INVALIDATE  = (1 << 7);
+	static final int FLAG_CLEAR_TRANSFORMATION = (1 << 8);
+	@UnsupportedAppUsage
+	protected static final int FLAG_USE_CHILD_DRAWING_ORDER = (1 << 10);
+	@UnsupportedAppUsage
+	protected static final int FLAG_SUPPORT_STATIC_TRANSFORMATIONS = (1 << 11);
+	private static final int FLAG_MASK_FOCUSABILITY  = (3 << 17);
+	public static final int FOCUS_BEFORE_DESCENDANTS = (1 << 17);
+	public static final int FOCUS_AFTER_DESCENDANTS  = (2 << 17);
+	public static final int FOCUS_BLOCK_DESCENDANTS  = (3 << 17);
+	@UnsupportedAppUsage
+	protected static final int FLAG_DISALLOW_INTERCEPT = (1 << 19);
+	static final int FLAG_IS_TRANSITION_GROUP          = (1 << 24);
+	static final int FLAG_IS_TRANSITION_GROUP_SET      = (1 << 25);
+	static final int FLAG_TOUCHSCREEN_BLOCKS_FOCUS     = (1 << 26);
+	/* clang-format on */
+
 	public ArrayList<View> children;
 	private ArrayList<View> detachedChildren;
+	private boolean pendingHideDetachedChildren = false;
 	private OnHierarchyChangeListener onHierarchyChangeListener;
 	private LayoutTransition transition;
+	private ViewGroupOverlay viewGroupOverlay;
 
 	public ViewGroup(Context context) {
 		this(context, null);
@@ -62,11 +87,14 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	public void addView(View child, int index, LayoutParams params) {
-		addViewInternal(child, index, params);
+		addViewInternal(child, index, params, true);
 		requestLayout();
 	}
 
-	protected void addViewInternal(View child, int index, LayoutParams params) {
+	public void onViewAdded(View view) {}
+	public void onViewRemoved(View view) {}
+
+	protected void addViewInternal(View child, int index, LayoutParams params, boolean callOnViewAdded) {
 		if (child.parent == this)
 			return;
 		if (!checkLayoutParams(params))
@@ -77,9 +105,27 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		if (index < 0)
 			index = children.size();
 		children.add(index, child);
-		native_addView(widget, child.widget, index, params);
-		if (onHierarchyChangeListener != null)
-			onHierarchyChangeListener.onChildViewAdded(this, child);
+		int sortedIndex = index;
+		for (View v : children) {
+			if (v.getZ() != 0.0f) {
+				// sort children by z-order
+				ArrayList<View> sortedChildren = new ArrayList<View>(children);
+				sortedChildren.sort(new Comparator<View>() {
+					@Override
+					public int compare(View o1, View o2) {
+						return (int)(o1.getZ() - o2.getZ());
+					}
+				});
+				sortedIndex = sortedChildren.indexOf(child);
+				break;
+			}
+		}
+		native_addView(widget, child.widget, sortedIndex, params);
+		if (callOnViewAdded) {
+			onViewAdded(child);
+			if (onHierarchyChangeListener != null)
+				onHierarchyChangeListener.onChildViewAdded(this, child);
+		}
 	}
 
 	/* We never call this ourselves */
@@ -88,14 +134,13 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		return native_dispatchTouchEvent(widget, event, event.getX(), event.getY());
 	}
 
-
 	protected boolean addViewInLayout(View child, int index, LayoutParams params) {
-		addViewInternal(child, index, params);
+		addViewInternal(child, index, params, true);
 		return true;
 	}
 
 	protected boolean addViewInLayout(View child, int index, LayoutParams params, boolean preventRequestLayout) {
-		addViewInternal(child, index, params);
+		addViewInternal(child, index, params, true);
 		if (!preventRequestLayout)
 			requestLayout();
 		return true;
@@ -110,6 +155,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		child.parent = null;
 		children.remove(child);
 		native_removeView(widget, child.widget);
+		onViewRemoved(child);
 		if (onHierarchyChangeListener != null) {
 			onHierarchyChangeListener.onChildViewRemoved(this, child);
 		}
@@ -134,6 +180,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 			child.parent = null;
 			it.remove();
 			native_removeView(widget, child.widget);
+			onViewRemoved(child);
 			if (onHierarchyChangeListener != null) {
 				onHierarchyChangeListener.onChildViewRemoved(this, child);
 			}
@@ -142,15 +189,12 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	public void detachViewFromParent(int index) {
-		View child = children.remove(index);
-		child.native_setVisibility(child.widget, GONE, 0);
-		child.parent = null;
-		detachedChildren.add(child);
+		detachViewFromParent(getChildAt(index));
 	}
 
 	public void attachViewToParent(View view, int index, LayoutParams params) {
 		if (!detachedChildren.remove(view)) {
-			addViewInternal(view, index, params);
+			addViewInternal(view, index, params, false);
 		}
 		if (!checkLayoutParams(params))
 			params = generateLayoutParams(params);
@@ -178,7 +222,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		if (children == null) // happens if this gets called during super constructor
 			return;
 
-		for (View child: children) {
+		for (View child : children) {
 			child.dispatchVisibilityChanged(changedView, visibility);
 		}
 	}
@@ -310,8 +354,8 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	protected void measureChildWithMargins(View child,
-					       int parentWidthMeasureSpec, int widthUsed,
-					       int parentHeightMeasureSpec, int heightUsed) {
+	                                       int parentWidthMeasureSpec, int widthUsed,
+	                                       int parentHeightMeasureSpec, int heightUsed) {
 		final MarginLayoutParams lp = (MarginLayoutParams)child.getLayoutParams();
 		final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec, paddingLeft + paddingRight + lp.leftMargin + lp.rightMargin + widthUsed, lp.width);
 		final int childHeightMeasureSpec = getChildMeasureSpec(parentHeightMeasureSpec, paddingTop + paddingBottom + lp.topMargin + lp.bottomMargin + heightUsed, lp.height);
@@ -319,7 +363,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	protected void measureChild(View child, int parentWidthMeasureSpec,
-				    int parentHeightMeasureSpec) {
+	                            int parentHeightMeasureSpec) {
 		final LayoutParams lp = child.getLayoutParams();
 		final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec, paddingLeft + paddingRight, lp.width);
 		final int childHeightMeasureSpec = getChildMeasureSpec(parentHeightMeasureSpec, paddingTop + paddingBottom, lp.height);
@@ -327,7 +371,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	protected void measureChildren(int widthMeasureSpec, int heightMeasureSpec) {
-		for (View child: children) {
+		for (View child : children) {
 			measureChild(child, widthMeasureSpec, heightMeasureSpec);
 		}
 	}
@@ -351,7 +395,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	public void setGravity(int gravity) {
 		super.setGravity(gravity);
 		// update children as necessary
-		for (View child: children) {
+		for (View child : children) {
 			LayoutParams params = child.getLayoutParams();
 			if (params.gravity == -1)
 				child.setLayoutParams(params);
@@ -360,7 +404,10 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 
 	protected void setChildrenDrawingOrderEnabled(boolean enabled) {}
 
-	public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+	public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+		for (ViewGroup iter = this; iter != null; iter = iter.parent instanceof ViewGroup ? (ViewGroup)iter.parent : null)
+			iter.disallowIntercept = disallowIntercept;
+	}
 
 	protected boolean isChildrenDrawingOrderEnabled() { return false; }
 
@@ -382,12 +429,13 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	public void setClipToPadding(boolean clipToPadding) {}
 
 	public View findViewById(int id) {
-		Slog.v(TAG, "findViewById: looking for id: " + String.format("%x", id) + "(" + getResources().getAssets().getResourceName(id) + ")" + " | checking: " + this + ",id: " + String.format("%x", this.getId()) + ", id_str: " + this.getIdName());
+		Slog.v(TAG, "findViewById: looking for id: " + String.format("%x", id) + "(" + getResources().getAssets().getResourceName(id) + ")"
+		            + " | checking: " + this + ",id: " + String.format("%x", this.getId()) + ", id_str: " + this.getIdName());
 		if (this.id == id) {
-			Slog.v(TAG, "findViewById: found: "+this+" | id: " + String.format("%x", this.getId()) + ", id_str: " + this.getIdName());
+			Slog.v(TAG, "findViewById: found: " + this + " | id: " + String.format("%x", this.getId()) + ", id_str: " + this.getIdName());
 			return this;
 		}
-		for (View child: children) {
+		for (View child : children) {
 			View result = child.findViewById(id);
 			if (result != null)
 				return result;
@@ -399,6 +447,17 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		children.remove(view);
 		view.parent = null;
 		detachedChildren.add(view);
+		if (!pendingHideDetachedChildren) {
+			pendingHideDetachedChildren = true;
+			post(new Runnable() {
+				@Override
+				public void run() {
+					pendingHideDetachedChildren = false;
+					for (View child : detachedChildren)
+						child.native_setVisibility(child.widget, GONE, 0);
+				}
+			});
+		}
 	}
 
 	public void setTouchscreenBlocksFocus(boolean touchscreenBlocksFocus) {}
@@ -411,7 +470,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	public View findViewWithTag(Object tag) {
 		if (Objects.equals(tag, getTag()))
 			return this;
-		for (View child: children) {
+		for (View child : children) {
 			View result = child.findViewWithTag(tag);
 			if (result != null)
 				return result;
@@ -480,7 +539,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ViewGroup_Layout);
 			setBaseAttributes(a, R.styleable.ViewGroup_Layout_layout_width, R.styleable.ViewGroup_Layout_layout_height);
 			a.recycle();
-			a = context.obtainStyledAttributes(attrs, new int[] { android.R.attr.layout_gravity });
+			a = context.obtainStyledAttributes(attrs, new int[] {android.R.attr.layout_gravity});
 			gravity = a.getInt(0, -1);
 			a.recycle();
 		}
@@ -542,10 +601,10 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 			if (margin >= 0) {
 				leftMargin = margin;
 				topMargin = margin;
-				rightMargin= margin;
+				rightMargin = margin;
 				bottomMargin = margin;
 			} else {
-				if(marginVertical >= 0){
+				if (marginVertical >= 0) {
 					topMargin = marginVertical;
 					bottomMargin = marginVertical;
 				} else {
@@ -644,4 +703,17 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 	}
 
 	public native boolean native_dispatchTouchEvent(long widget, MotionEvent event, double x, double y);
+
+	@Override
+	public void onDescendantInvalidated(View child, View target) {}
+
+	public boolean getTouchscreenBlocksFocus() { return false; }
+
+	public ViewGroupOverlay getOverlay() {
+		if (viewGroupOverlay == null)
+			viewGroupOverlay = new ViewGroupOverlay();
+		return viewGroupOverlay;
+	}
+
+	public void scheduleLayoutAnimation() {}
 }

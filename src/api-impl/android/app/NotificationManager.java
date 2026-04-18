@@ -1,14 +1,13 @@
 package android.app;
 
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Notification.MediaStyle;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.service.notification.StatusBarNotification;
+import java.util.Collections;
+import java.util.List;
 
 public class NotificationManager {
 
@@ -17,7 +16,7 @@ public class NotificationManager {
 	public void cancelAll() {}
 
 	public void notify(String tag, int id, Notification notification) {
-		if (notification.style instanceof MediaStyle) {  // MPRIS content is handled by MediaSession implementation
+		if (notification.style instanceof MediaStyle) { // MPRIS content is handled by MediaSession implementation
 			if (mpris_notification_id == -1) {
 				nativeShowMPRIS(Context.this_application.getPackageName(), Context.this_application.get_app_label());
 				mpris_notification_id = id;
@@ -100,5 +99,9 @@ public class NotificationManager {
 
 	public StatusBarNotification[] getActiveNotifications() {
 		return new StatusBarNotification[0];
+	}
+
+	public NotificationChannel getNotificationChannel(String channel) {
+		return null;
 	}
 }

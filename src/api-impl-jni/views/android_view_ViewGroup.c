@@ -3,15 +3,15 @@
 #include "../defines.h"
 #include "../util.h"
 
-#include "../widgets/WrapperWidget.h"
 #include "../views/AndroidLayout.h"
+#include "../widgets/WrapperWidget.h"
 
-#include "../generated_headers/android_view_ViewGroup.h"
 #include "../generated_headers/android_view_View.h"
+#include "../generated_headers/android_view_ViewGroup.h"
 
 JNIEXPORT void JNICALL Java_android_view_ViewGroup_native_1addView(JNIEnv *env, jobject this, jlong widget, jlong child, jint index, jobject layout_params)
 {
-	if(layout_params) {
+	if (layout_params) {
 		/*
 		GtkWidget *_child = gtk_widget_get_parent(GTK_WIDGET(_PTR(child)));
 		jint child_width = -1;
@@ -34,9 +34,9 @@ JNIEXPORT void JNICALL Java_android_view_ViewGroup_native_1addView(JNIEnv *env, 
 	}
 	GtkWidget *parent = _PTR(widget);
 	GtkWidget *iter = gtk_widget_get_first_child(parent);
-	for(int i = 0; i < index; i++) {
+	for (int i = 0; i < index; i++) {
 		iter = gtk_widget_get_next_sibling(iter);
-		if(iter == NULL)
+		if (iter == NULL)
 			break;
 	}
 
@@ -60,7 +60,7 @@ JNIEXPORT void JNICALL Java_android_view_ViewGroup_native_1drawChild(JNIEnv *env
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	GtkWidget *child = gtk_widget_get_parent(GTK_WIDGET(_PTR(child_ptr)));
 	GdkSnapshot *snapshot = GDK_SNAPSHOT(_PTR(snapshot_ptr));
-	gtk_widget_queue_draw(child);   // FIXME: why didn't compose UI invalidate the child?
+	gtk_widget_queue_draw(child); // FIXME: why didn't compose UI invalidate the child?
 	gtk_widget_snapshot_child(widget, child, snapshot);
 }
 
@@ -70,7 +70,7 @@ bool view_dispatch_motionevent(JNIEnv *env, WrapperWidget *wrapper, GtkPropagati
 
 static bool dispatch_motionevent_if_JavaWidget(GtkWidget *widget, GtkPropagationPhase phase, jobject motion_event, GtkWidget *toplevel)
 {
-	if(!JAVA_IS_WIDGET(widget))
+	if (!JAVA_IS_WIDGET(widget))
 		return false;
 	JNIEnv *env = get_jni_env();
 
@@ -85,10 +85,10 @@ static bool dispatch_motionevent_if_JavaWidget(GtkWidget *widget, GtkPropagation
 
 /* used by atl_propagate_synthetic_motionevent */
 #define GDK_ARRAY_ELEMENT_TYPE GtkWidget *
-#define GDK_ARRAY_TYPE_NAME GtkWidgetStack
-#define GDK_ARRAY_NAME gtk_widget_stack
-#define GDK_ARRAY_FREE_FUNC g_object_unref
-#define GDK_ARRAY_PREALLOC 16
+#define GDK_ARRAY_TYPE_NAME    GtkWidgetStack
+#define GDK_ARRAY_NAME         gtk_widget_stack
+#define GDK_ARRAY_FREE_FUNC    g_object_unref
+#define GDK_ARRAY_PREALLOC     16
 #include "gdkarrayimpl.c"
 
 /* based on gtk_propagate_event_internal © GTK Team */
@@ -150,7 +150,7 @@ bool atl_propagate_synthetic_motionevent(GtkWidget *widget, jobject motionevent,
 			if (!gtk_widget_is_sensitive(widget))
 				handled_event = true;
 			else if (gtk_widget_get_realized(widget))
-			handled_event = dispatch_motionevent_if_JavaWidget(widget, GTK_PHASE_BUBBLE, motionevent, toplevel);
+				handled_event = dispatch_motionevent_if_JavaWidget(widget, GTK_PHASE_BUBBLE, motionevent, toplevel);
 
 			handled_event |= !gtk_widget_get_realized(widget);
 

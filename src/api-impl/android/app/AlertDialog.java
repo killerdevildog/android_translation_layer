@@ -3,19 +3,29 @@ package android.app;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
+import android.widget.Button;
 
 public class AlertDialog extends Dialog implements DialogInterface {
 
+	private Button[] buttons;
+
+	private native void nativeConstruct(long ptr, long button_positive, long button_negative, long button_neutral);
 	private native void nativeSetMessage(long ptr, String message);
-	private native void nativeSetButton(long ptr, int whichButton, String text, OnClickListener listener);
 	private native void nativeSetItems(long ptr, String[] items, DialogInterface.OnClickListener listener);
 
 	public AlertDialog(Context context) {
-		super(context, 0);
+		this(context, 0);
 	}
 
 	public AlertDialog(Context context, int themeResId) {
 		super(context, themeResId);
+		Context themeless = new ContextImpl(Context.r, Context.pkg.applicationInfo, Context.r.newTheme());
+		// three buttons: positive, negative, neutral
+		buttons = new Button[] {new Button(themeless), new Button(themeless), new Button(themeless)};
+		buttons[0].setVisibility(View.GONE);
+		buttons[1].setVisibility(View.GONE);
+		buttons[2].setVisibility(View.GONE);
+		nativeConstruct(nativePtr, buttons[0].widget, buttons[1].widget, buttons[2].widget);
 	}
 
 	public void setMessage(CharSequence message) {
@@ -24,7 +34,25 @@ public class AlertDialog extends Dialog implements DialogInterface {
 	}
 
 	public void setButton(int whichButton, CharSequence text, OnClickListener listener) {
-		nativeSetButton(nativePtr, whichButton, String.valueOf(text), listener);
+		Button button = getButton(whichButton);
+		button.setText(text);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				listener.onClick(AlertDialog.this, whichButton);
+				dismiss();
+			}
+		});
+		button.setVisibility(View.VISIBLE);
+	}
+
+	public Button getButton(int whichButton) {
+		// BUTTON_POSITIVE = -1, BUTTON_NEGATIVE = -2, BUTTON_NEUTRAL = -3
+		return buttons[-1 - whichButton];
+	}
+
+	public void setView(View view) {
+		setContentView(view);
 	}
 
 	public static class Builder {
@@ -49,7 +77,7 @@ public class AlertDialog extends Dialog implements DialogInterface {
 			return this;
 		}
 
-		public AlertDialog.Builder setNegativeButton (CharSequence text, DialogInterface.OnClickListener listener) {
+		public AlertDialog.Builder setNegativeButton(CharSequence text, DialogInterface.OnClickListener listener) {
 			System.out.println("AlertDialog.Builder setNegativeButton called with text: '" + text + "'");
 			dialog.setButton(DialogInterface.BUTTON_NEGATIVE, text, listener);
 			return this;
@@ -57,6 +85,16 @@ public class AlertDialog extends Dialog implements DialogInterface {
 
 		public AlertDialog.Builder setNegativeButton(int textId, DialogInterface.OnClickListener listener) {
 			return setNegativeButton(dialog.getContext().getText(textId), listener);
+		}
+
+		public AlertDialog.Builder setNeutralButton(CharSequence text, DialogInterface.OnClickListener listener) {
+			System.out.println("AlertDialog.Builder setNeutralButton called with text: '" + text + "'");
+			dialog.setButton(DialogInterface.BUTTON_NEUTRAL, text, listener);
+			return this;
+		}
+
+		public AlertDialog.Builder setNeutralButton(int textId, DialogInterface.OnClickListener listener) {
+			return setNeutralButton(dialog.getContext().getText(textId), listener);
 		}
 
 		public AlertDialog.Builder setCancelable(boolean cancelable) {
@@ -81,6 +119,10 @@ public class AlertDialog extends Dialog implements DialogInterface {
 			System.out.println("AlertDialog.Builder setMessage called with: '" + message + "'");
 			dialog.setMessage(message);
 			return this;
+		}
+
+		public AlertDialog.Builder setMessage(int message) {
+			return setMessage(dialog.getContext().getText(message));
 		}
 
 		public AlertDialog.Builder setView(View view) {

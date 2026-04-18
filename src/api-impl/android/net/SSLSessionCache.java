@@ -5,5 +5,4 @@ import java.io.File;
 public class SSLSessionCache {
 
 	public SSLSessionCache(File cacheDir) {}
-
 }

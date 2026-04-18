@@ -4,6 +4,8 @@
 #include <jni.h>
 #include <stdint.h>
 
+#include "../libandroid/native_window.h"
+
 #include "generated_headers/android_opengl_GLES20.h"
 
 JNIEXPORT jstring JNICALL Java_android_opengl_GLES20_glGetString(JNIEnv *env, jclass, jint name)
@@ -14,7 +16,7 @@ JNIEXPORT jstring JNICALL Java_android_opengl_GLES20_glGetString(JNIEnv *env, jc
 
 JNIEXPORT jint JNICALL Java_android_opengl_GLES20_glGetError(JNIEnv *env, jclass)
 {
-	return (jint) glGetError();
+	return (jint)glGetError();
 }
 
 JNIEXPORT void JNICALL Java_android_opengl_GLES20_glGetIntegerv__I_3II(JNIEnv *env, jclass, jint pname, jintArray params_ref, jint offset)
@@ -38,7 +40,6 @@ JNIEXPORT void JNICALL Java_android_opengl_GLES20_glVertexAttribPointerBounds(JN
 	glVertexAttribPointer(index, size, type, normalized, stride, pixels);
 	release_nio_buffer(env, array_ref, array);
 }
-
 
 JNIEXPORT void JNICALL Java_android_opengl_GLES20_glDisable(JNIEnv *env, jclass, jint cap)
 {
@@ -231,7 +232,7 @@ JNIEXPORT void JNICALL Java_android_opengl_GLES20_glDeleteTextures(JNIEnv *env, 
 {
 	jint *tex = (*env)->GetIntArrayElements(env, textures, NULL);
 
-	glDeleteTextures((GLsizei) n, (const GLuint*) tex + (4 * offset));
+	glDeleteTextures((GLsizei)n, (const GLuint *)tex + (4 * offset));
 
 	(*env)->ReleaseIntArrayElements(env, textures, tex, 0);
 }
@@ -364,7 +365,7 @@ JNIEXPORT void JNICALL Java_android_opengl_GLES20_glGenFramebuffers__I_3II(JNIEn
 
 JNIEXPORT void JNICALL Java_android_opengl_GLES20_glBindFramebuffer(JNIEnv *env, jclass this, jint target, jint framebuffer)
 {
-	glBindFramebuffer((GLenum)target, (GLuint)framebuffer);
+	bionic_glBindFramebuffer((GLenum)target, (GLuint)framebuffer);
 }
 
 JNIEXPORT void JNICALL Java_android_opengl_GLES20_glFramebufferTexture2D(JNIEnv *env, jclass this, jint target, jint attachment, jint textarget, jint texture, jint level)
@@ -401,4 +402,52 @@ JNIEXPORT void JNICALL Java_android_opengl_GLES20_glGetFloatv__ILjava_nio_FloatB
 	GLvoid *params = get_nio_buffer(env, params_buf, &array_ref, &array);
 	glGetFloatv((GLenum)pname, (GLfloat *)params);
 	release_nio_buffer(env, array_ref, array);
+}
+
+JNIEXPORT void JNICALL Java_android_opengl_GLES20_glGenerateMipmap(JNIEnv *env, jclass this, jint pname)
+{
+	glGenerateMipmap((GLenum)pname);
+}
+
+JNIEXPORT void JNICALL Java_android_opengl_GLES20_glLineWidth(JNIEnv *env, jclass this, jfloat width)
+{
+	glLineWidth((GLfloat)width);
+}
+
+JNIEXPORT void JNICALL Java_android_opengl_GLES20_glColorMask(JNIEnv *env, jclass this, jboolean red, jboolean green, jboolean blue, jboolean alpha)
+{
+	glColorMask((GLboolean)red, (GLboolean)green, (GLboolean)blue, (GLboolean)alpha);
+}
+
+JNIEXPORT void JNICALL Java_android_opengl_GLES20_glBufferSubData(JNIEnv *env, jclass this, jint target, jint offset, jint size, jobject data)
+{
+	glBufferSubData((GLenum)target, (GLintptr)offset, (GLsizeiptr)size, (void *)data);
+}
+
+JNIEXPORT jstring JNICALL Java_android_opengl_GLES20_glGetShaderInfoLog(JNIEnv *env, jclass this, jint shader)
+{
+	GLsizei bufSize;
+	glGetShaderiv((GLuint)shader, GL_INFO_LOG_LENGTH, &bufSize);
+
+	jstring output;
+	if (bufSize == 0) {
+		char cstring = 0;
+		output = _JSTRING(&cstring);
+	} else {
+		GLchar *infoLog = malloc(sizeof(GLchar) * bufSize + 1);
+		GLsizei length;
+		glGetShaderInfoLog((GLuint)shader, bufSize, &length, infoLog);
+		output = _JSTRING(infoLog);
+		free(infoLog);
+	}
+	return output;
+}
+
+JNIEXPORT jstring JNICALL Java_android_opengl_GLES20_glGetActiveUniform__IILjava_nio_IntBuffer_2Ljava_nio_IntBuffer_2(JNIEnv *env, jclass this, jint program, jint index, jobject buffer_1, jobject buffer_2)
+{
+	char *name = malloc(512);
+	glGetActiveUniform((GLuint)program, (GLuint)index, 512, NULL, NULL, NULL, name);
+	jstring output = _JSTRING(name);
+	free(name);
+	return output;
 }

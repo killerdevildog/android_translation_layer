@@ -19,13 +19,12 @@
 
 package android.database;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteClosable;
 import android.database.sqlite.SQLiteException;
 import android.os.Parcelable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A buffer containing multiple cursor rows.
@@ -182,7 +181,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 	 *
 	 * @return True if successful, false if the cursor window is out of memory.
 	 */
-	public boolean allocRow(){
+	public boolean allocRow() {
 		rows.add(new Object[numColumns]);
 		return true;
 	}
@@ -190,7 +189,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 	/**
 	 * Frees the last row in this cursor window.
 	 */
-	public void freeLastRow(){
+	public void freeLastRow() {
 		rows.remove(rows.size() - 1);
 	}
 
@@ -319,7 +318,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 			throw new IllegalStateException("Row index out of range");
 		Object value = rows.get(row - startPos)[column];
 		if (value instanceof byte[] || value == null) {
-			return (byte[]) value;
+			return (byte[])value;
 		} else {
 			throw new SQLiteException("Blob value expected");
 		}
@@ -430,12 +429,12 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 			result = (Long)object;
 		else if (object instanceof String)
 			try {
-				result = Long.parseLong((String) object);
+				result = Long.parseLong((String)object);
 			} catch (NumberFormatException e) {
 				result = 0L;
 			}
 		else if (object instanceof Double)
-			result = ((Double) object).longValue();
+			result = ((Double)object).longValue();
 		else if (object == null)
 			result = 0L;
 		else
@@ -472,7 +471,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 			return (Double)value;
 		else if (value instanceof String)
 			try {
-				return Double.parseDouble((String) value);
+				return Double.parseDouble((String)value);
 			} catch (NumberFormatException e) {
 				return 0.0;
 			}
@@ -497,7 +496,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 	 * @return The value of the field as a <code>short</code>.
 	 */
 	public short getShort(int row, int column) {
-		return (short) getLong(row, column);
+		return (short)getLong(row, column);
 	}
 
 	/**
@@ -513,7 +512,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 	 * @return The value of the field as an <code>int</code>.
 	 */
 	public int getInt(int row, int column) {
-		return (int) getLong(row, column);
+		return (int)getLong(row, column);
 	}
 
 	/**
@@ -529,7 +528,7 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 	 * @return The value of the field as an <code>float</code>.
 	 */
 	public float getFloat(int row, int column) {
-		return (float) getDouble(row, column);
+		return (float)getDouble(row, column);
 	}
 
 	/**
@@ -617,7 +616,8 @@ public class CursorWindow extends SQLiteClosable implements Parcelable {
 			// The cursor window size. resource xml file specifies the value in kB.
 			// convert it to bytes here by multiplying with 1024.
 			sCursorWindowSize = Resources.getSystem().getInteger(
-					com.android.internal.R.integer.config_cursorWindowSize) * 1024;
+						com.android.internal.R.integer.config_cursorWindowSize)
+			                  * 1024;
 		}
 		return sCursorWindowSize;
 	}

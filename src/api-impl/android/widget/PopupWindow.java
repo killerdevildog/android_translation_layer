@@ -38,7 +38,7 @@ public class PopupWindow {
 
 	private View contentView;
 	private Drawable background;
-	private long popover;  // native pointer to GtkPopover
+	private long popover; // native pointer to GtkPopover
 
 	public interface OnDismissListener {
 		public void onDismiss();
@@ -47,7 +47,7 @@ public class PopupWindow {
 	public void setBackgroundDrawable(Drawable background) {
 		this.background = background;
 		/* FIXME: use a decorview? */
-		if(contentView != null) {
+		if (contentView != null) {
 			contentView.setBackgroundDrawable(background);
 		}
 	}
@@ -78,9 +78,9 @@ public class PopupWindow {
 		native_setContentView(popover, view == null ? 0 : view.widget);
 	}
 
-	public int getMaxAvailableHeight(View anchor, int yOffset) {return 500;}
+	public int getMaxAvailableHeight(View anchor, int yOffset) { return 500; }
 
-	public int getMaxAvailableHeight(View anchor, int yOffset, boolean ignoreKeyboard) {return 500;}
+	public int getMaxAvailableHeight(View anchor, int yOffset, boolean ignoreKeyboard) { return 500; }
 
 	public void setOutsideTouchable(boolean touchable) {
 		/* FIXME: the semantics are different, this seems to specifically exist for cases
@@ -141,14 +141,14 @@ public class PopupWindow {
 
 	/* TODO: handle LayoutParams.WRAP_CONTENT and LayoutParams.MATCH_PARENT */
 	public void setWidth(int width) {
-		if(width < 0)
+		if (width < 0)
 			return;
 
 		native_setWidth(popover, width);
 	}
 
 	public void setHeight(int height) {
-		if(height < 0)
+		if (height < 0)
 			return;
 
 		native_setHeight(popover, height);
@@ -166,13 +166,14 @@ public class PopupWindow {
 
 	public void setWindowLayoutMode(int widthSpec, int heightSpec) {}
 
-
 	public boolean isTouchable() {
 		return native_isTouchable(popover);
 	}
 
 	public void setOverlapAnchor(boolean overlap) {
 	}
+
+	public void setSoftInputMode(int mode) {}
 
 	protected native long native_constructor();
 	protected native void native_setContentView(long widget, long contentView);

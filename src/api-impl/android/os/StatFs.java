@@ -71,7 +71,7 @@ public class StatFs {
 	 */
 	@Deprecated
 	public int getBlockSize() {
-		return (int) mStat.f_frsize;
+		return (int)mStat.f_frsize;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class StatFs {
 	 */
 	@Deprecated
 	public int getBlockCount() {
-		return (int) mStat.f_blocks;
+		return (int)mStat.f_blocks;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class StatFs {
 	 */
 	@Deprecated
 	public int getFreeBlocks() {
-		return (int) mStat.f_bfree;
+		return (int)mStat.f_bfree;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class StatFs {
 	 */
 	@Deprecated
 	public int getAvailableBlocks() {
-		return (int) mStat.f_bavail;
+		return (int)mStat.f_bavail;
 	}
 
 	/**

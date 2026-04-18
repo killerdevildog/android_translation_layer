@@ -1,8 +1,5 @@
 package android.content;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import android.accounts.Account;
 import android.content.res.AssetFileDescriptor;
 import android.database.ContentObserver;
@@ -12,6 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
 
 public class ContentResolver {
 	public static final String SCHEME_CONTENT = "content";
@@ -71,6 +74,28 @@ public class ContentResolver {
 		return openTypedAssetFileDescriptor(uri, mimeType, opts);
 	}
 
+	public InputStream openInputStream(Uri uri) throws FileNotFoundException {
+		ParcelFileDescriptor fd = openFileDescriptor(uri, "r");
+		return fd != null ? new ParcelFileDescriptor.AutoCloseInputStream(fd) : null;
+	}
+
+	public OutputStream openOutputStream(Uri uri) throws FileNotFoundException {
+		ParcelFileDescriptor fd = openFileDescriptor(uri, "w");
+		return fd != null ? new ParcelFileDescriptor.AutoCloseOutputStream(fd) : null;
+	}
+
+	public Cursor query(Uri uri, String[] projection, Bundle queryArgs, CancellationSignal cancellationSignal) {
+		if ("file".equals(uri.getScheme())) {
+			MatrixCursor cursor = new MatrixCursor(projection);
+			Object[] row = new Object[projection.length];
+			native_query_file_info(uri.getPath(), projection, row);
+			cursor.addRow(row);
+			return cursor;
+		} else {
+			return null;
+		}
+	}
+
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		ContentProvider provider = ContentProvider.providers.get(uri.getAuthority());
 		if (provider != null) {
@@ -120,6 +145,10 @@ public class ContentResolver {
 			return provider.update(uri, values, selection, selectionArgs);
 		else
 			return 0;
+	}
+
+	public List getPersistedUriPermissions() {
+		return Collections.emptyList();
 	}
 
 	public static void requestSync(Account account, String authority, Bundle extras) {

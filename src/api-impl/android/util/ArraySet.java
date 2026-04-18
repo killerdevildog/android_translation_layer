@@ -17,7 +17,6 @@
 package android.util;
 
 import android.annotation.Nullable;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
@@ -95,7 +94,6 @@ public final class ArraySet<E> implements Set<E> {
 		}
 	}
 
-
 	private int indexOf(Object key, int hash) {
 		final int N = mSize;
 
@@ -119,12 +117,14 @@ public final class ArraySet<E> implements Set<E> {
 		// Search for a matching key after the index.
 		int end;
 		for (end = index + 1; end < N && mHashes[end] == hash; end++) {
-			if (key.equals(mArray[end])) return end;
+			if (key.equals(mArray[end]))
+				return end;
 		}
 
 		// Search for a matching key before the index.
 		for (int i = index - 1; i >= 0 && mHashes[i] == hash; i--) {
-			if (key.equals(mArray[i])) return i;
+			if (key.equals(mArray[i]))
+				return i;
 		}
 
 		// Key not found -- return negative value indicating where a
@@ -157,12 +157,14 @@ public final class ArraySet<E> implements Set<E> {
 		// Search for a matching key after the index.
 		int end;
 		for (end = index + 1; end < N && mHashes[end] == 0; end++) {
-			if (null == mArray[end]) return end;
+			if (null == mArray[end])
+				return end;
 		}
 
 		// Search for a matching key before the index.
 		for (int i = index - 1; i >= 0 && mHashes[i] == 0; i--) {
-			if (null == mArray[i]) return i;
+			if (null == mArray[i])
+				return i;
 		}
 
 		// Key not found -- return negative value indicating where a
@@ -179,14 +181,14 @@ public final class ArraySet<E> implements Set<E> {
 					final Object[] array = sTwiceBaseCache;
 					try {
 						mArray = array;
-						sTwiceBaseCache = (Object[]) array[0];
-						mHashes = (int[]) array[1];
+						sTwiceBaseCache = (Object[])array[0];
+						mHashes = (int[])array[1];
 						if (mHashes != null) {
 							array[0] = array[1] = null;
 							sTwiceBaseCacheSize--;
 							if (DEBUG) {
 								Log.d(TAG, "Retrieving 2x cache " + Arrays.toString(mHashes)
-										+ " now have " + sTwiceBaseCacheSize + " entries");
+								           + " now have " + sTwiceBaseCacheSize + " entries");
 							}
 							return;
 						}
@@ -195,7 +197,7 @@ public final class ArraySet<E> implements Set<E> {
 					// Whoops!  Someone trampled the array (probably due to not protecting
 					// their access with a lock).  Our cache is corrupt; report and give up.
 					Slog.wtf(TAG, "Found corrupt ArraySet cache: [0]=" + array[0]
-							+ " [1]=" + array[1]);
+					              + " [1]=" + array[1]);
 					sTwiceBaseCache = null;
 					sTwiceBaseCacheSize = 0;
 				}
@@ -206,14 +208,14 @@ public final class ArraySet<E> implements Set<E> {
 					final Object[] array = sBaseCache;
 					try {
 						mArray = array;
-						sBaseCache = (Object[]) array[0];
-						mHashes = (int[]) array[1];
+						sBaseCache = (Object[])array[0];
+						mHashes = (int[])array[1];
 						if (mHashes != null) {
 							array[0] = array[1] = null;
 							sBaseCacheSize--;
 							if (DEBUG) {
 								Log.d(TAG, "Retrieving 1x cache " + Arrays.toString(mHashes)
-										+ " now have " + sBaseCacheSize + " entries");
+								           + " now have " + sBaseCacheSize + " entries");
 							}
 							return;
 						}
@@ -222,7 +224,7 @@ public final class ArraySet<E> implements Set<E> {
 					// Whoops!  Someone trampled the array (probably due to not protecting
 					// their access with a lock).  Our cache is corrupt; report and give up.
 					Slog.wtf(TAG, "Found corrupt ArraySet cache: [0]=" + array[0]
-							+ " [1]=" + array[1]);
+					              + " [1]=" + array[1]);
 					sBaseCache = null;
 					sBaseCacheSize = 0;
 				}
@@ -250,7 +252,7 @@ public final class ArraySet<E> implements Set<E> {
 					sTwiceBaseCacheSize++;
 					if (DEBUG) {
 						Log.d(TAG, "Storing 2x cache " + Arrays.toString(array) + " now have "
-								+ sTwiceBaseCacheSize + " entries");
+						           + sTwiceBaseCacheSize + " entries");
 					}
 				}
 			}
@@ -266,7 +268,7 @@ public final class ArraySet<E> implements Set<E> {
 					sBaseCacheSize++;
 					if (DEBUG) {
 						Log.d(TAG, "Storing 1x cache " + Arrays.toString(array) + " now have "
-								+ sBaseCacheSize + " entries");
+						           + sBaseCacheSize + " entries");
 					}
 				}
 			}
@@ -391,7 +393,7 @@ public final class ArraySet<E> implements Set<E> {
 	 */
 	public int indexOf(Object key) {
 		return key == null ? indexOfNull()
-				: indexOf(key, mIdentityHashCode ? System.identityHashCode(key) : key.hashCode());
+		                   : indexOf(key, mIdentityHashCode ? System.identityHashCode(key) : key.hashCode());
 	}
 
 	/**
@@ -406,7 +408,7 @@ public final class ArraySet<E> implements Set<E> {
 	 * @return Returns the value stored at the given index.
 	 */
 	public E valueAt(int index) {
-		if (index >= mSize && /*UtilConfig.sThrowExceptionForUpperArrayOutOfBounds*/true) {
+		if (index >= mSize && /*UtilConfig.sThrowExceptionForUpperArrayOutOfBounds*/ true) {
 			// The array might be slightly bigger than mSize, in which case, indexing won't fail.
 			// Check if exception should be thrown outside of the critical path.
 			throw new ArrayIndexOutOfBoundsException(index);
@@ -422,7 +424,7 @@ public final class ArraySet<E> implements Set<E> {
 	 * @hide
 	 */
 	public E valueAtUnchecked(int index) {
-		return (E) mArray[index];
+		return (E)mArray[index];
 	}
 
 	/**
@@ -459,9 +461,10 @@ public final class ArraySet<E> implements Set<E> {
 		index = ~index;
 		if (oSize >= mHashes.length) {
 			final int n = oSize >= (BASE_SIZE * 2) ? (oSize + (oSize >> 1))
-					: (oSize >= BASE_SIZE ? (BASE_SIZE * 2) : BASE_SIZE);
+			                                       : (oSize >= BASE_SIZE ? (BASE_SIZE * 2) : BASE_SIZE);
 
-			if (DEBUG) Log.d(TAG, "add: grow from " + mHashes.length + " to " + n);
+			if (DEBUG)
+				Log.d(TAG, "add: grow from " + mHashes.length + " to " + n);
 
 			final int[] ohashes = mHashes;
 			final Object[] oarray = mArray;
@@ -472,7 +475,8 @@ public final class ArraySet<E> implements Set<E> {
 			}
 
 			if (mHashes.length > 0) {
-				if (DEBUG) Log.d(TAG, "add: copy 0-" + oSize + " to 0");
+				if (DEBUG)
+					Log.d(TAG, "add: copy 0-" + oSize + " to 0");
 				System.arraycopy(ohashes, 0, mHashes, 0, ohashes.length);
 				System.arraycopy(oarray, 0, mArray, 0, oarray.length);
 			}
@@ -507,7 +511,7 @@ public final class ArraySet<E> implements Set<E> {
 		final int oSize = mSize;
 		final int index = mSize;
 		final int hash = value == null ? 0
-				: (mIdentityHashCode ? System.identityHashCode(value) : value.hashCode());
+		                               : (mIdentityHashCode ? System.identityHashCode(value) : value.hashCode());
 		if (index >= mHashes.length) {
 			throw new IllegalStateException("Array is full");
 		}
@@ -515,9 +519,7 @@ public final class ArraySet<E> implements Set<E> {
 			// Cannot optimize since it would break the sorted order - fallback to add()
 			if (DEBUG) {
 				RuntimeException e = new RuntimeException("here");
-				Log.w(TAG, "New hash " + hash
-						+ " is before end of array hash " + mHashes[index - 1]
-						+ " at index " + index, e);
+				Log.w(TAG, "New hash " + hash + " is before end of array hash " + mHashes[index - 1] + " at index " + index, e);
 			}
 			add(value);
 			return;
@@ -598,7 +600,7 @@ public final class ArraySet<E> implements Set<E> {
 	 * @return Returns the value that was stored at this index.
 	 */
 	public E removeAt(int index) {
-		if (index >= mSize && /*UtilConfig.sThrowExceptionForUpperArrayOutOfBounds*/true) {
+		if (index >= mSize && /*UtilConfig.sThrowExceptionForUpperArrayOutOfBounds*/ true) {
 			// The array might be slightly bigger than mSize, in which case, indexing won't fail.
 			// Check if exception should be thrown outside of the critical path.
 			throw new ArrayIndexOutOfBoundsException(index);
@@ -607,7 +609,8 @@ public final class ArraySet<E> implements Set<E> {
 		final Object old = mArray[index];
 		if (oSize <= 1) {
 			// Now empty.
-			if (DEBUG) Log.d(TAG, "remove: shrink from " + mHashes.length + " to 0");
+			if (DEBUG)
+				Log.d(TAG, "remove: shrink from " + mHashes.length + " to 0");
 			clear();
 		} else {
 			final int nSize = oSize - 1;
@@ -615,21 +618,23 @@ public final class ArraySet<E> implements Set<E> {
 				// Shrunk enough to reduce size of arrays.
 				final int n = getNewShrunkenSize();
 
-				if (DEBUG) Log.d(TAG, "remove: shrink from " + mHashes.length + " to " + n);
+				if (DEBUG)
+					Log.d(TAG, "remove: shrink from " + mHashes.length + " to " + n);
 
 				final int[] ohashes = mHashes;
 				final Object[] oarray = mArray;
 				allocArrays(n);
 
 				if (index > 0) {
-					if (DEBUG) Log.d(TAG, "remove: copy from 0-" + index + " to 0");
+					if (DEBUG)
+						Log.d(TAG, "remove: copy from 0-" + index + " to 0");
 					System.arraycopy(ohashes, 0, mHashes, 0, index);
 					System.arraycopy(oarray, 0, mArray, 0, index);
 				}
 				if (index < nSize) {
 					if (DEBUG) {
 						Log.d(TAG, "remove: copy from " + (index + 1) + "-" + nSize
-								+ " to " + index);
+						           + " to " + index);
 					}
 					System.arraycopy(ohashes, index + 1, mHashes, index, nSize - index);
 					System.arraycopy(oarray, index + 1, mArray, index, nSize - index);
@@ -649,7 +654,7 @@ public final class ArraySet<E> implements Set<E> {
 			}
 			mSize = nSize;
 		}
-		return (E) old;
+		return (E)old;
 	}
 
 	/**
@@ -689,7 +694,7 @@ public final class ArraySet<E> implements Set<E> {
 		int replaceIndex = 0;
 		int numRemoved = 0;
 		for (int i = 0; i < mSize; ++i) {
-			if (filter.test((E) mArray[i])) {
+			if (filter.test((E)mArray[i])) {
 				numRemoved++;
 			} else {
 				if (replaceIndex != i) {
@@ -763,8 +768,9 @@ public final class ArraySet<E> implements Set<E> {
 	@Override
 	public <T> T[] toArray(T[] array) {
 		if (array.length < mSize) {
-			@SuppressWarnings("unchecked") T[] newArray =
-					(T[]) Array.newInstance(array.getClass().getComponentType(), mSize);
+			@SuppressWarnings("unchecked")
+			T[] newArray =
+			    (T[])Array.newInstance(array.getClass().getComponentType(), mSize);
 			array = newArray;
 		}
 		System.arraycopy(mArray, 0, array, 0, mSize);
@@ -789,7 +795,7 @@ public final class ArraySet<E> implements Set<E> {
 			return true;
 		}
 		if (object instanceof Set) {
-			Set<?> set = (Set<?>) object;
+			Set<?> set = (Set<?>)object;
 			if (size() != set.size()) {
 				return false;
 			}

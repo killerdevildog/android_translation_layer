@@ -1,8 +1,10 @@
 package android.widget;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,13 +22,14 @@ public class ProgressBar extends View {
 		haveCustomMeasure = false;
 		TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ProgressBar, defStyle, 0);
 		setIndeterminateDrawable(a.getDrawable(com.android.internal.R.styleable.ProgressBar_indeterminateDrawable));
-		setProgressDrawable(a.getDrawable(com.android.internal.R.styleable.ProgressBar_progressDrawable));
-		setIndeterminate(a.getBoolean(com.android.internal.R.styleable.ProgressBar_indeterminate, false));
-		if (a.getBoolean(com.android.internal.R.styleable.ProgressBar_indeterminateOnly, false)) {
-			setIndeterminate(true);
-		}
+		Drawable progressDrawable = a.getDrawable(com.android.internal.R.styleable.ProgressBar_progressDrawable);
+		if (progressDrawable != null)
+			setProgressDrawable(progressDrawable);
+		indeterminate = a.getBoolean(com.android.internal.R.styleable.ProgressBar_indeterminate, false)
+		             || a.getBoolean(com.android.internal.R.styleable.ProgressBar_indeterminateOnly, false);
+		native_setIndeterminate(indeterminate);
 		/* FIXME hack: NewPipe expects this to not be null, but for some reason it is */
-		if(indeterminateDrawable == null)
+		if (indeterminateDrawable == null)
 			indeterminateDrawable = new Drawable() {
 				@Override
 				public void draw(Canvas canvas) {
@@ -57,7 +60,6 @@ public class ProgressBar extends View {
 		native_setIndeterminate(indeterminate);
 		indeterminate = true;
 	}
-
 
 	public Drawable getProgressDrawable() {
 		return progressDrawable;
@@ -112,4 +114,10 @@ public class ProgressBar extends View {
 	public int getSecondaryProgress() {
 		return 0;
 	}
+
+	public void setIndeterminateTintList(ColorStateList tint) {}
+
+	public void setIndeterminateTintMode(PorterDuff.Mode tintMode) {}
+
+	public void setProgressTintList(ColorStateList tint) {}
 }

@@ -150,8 +150,7 @@ abstract class MapCollections<K, V> {
 			}
 			final Object key = colGetEntry(mIndex, 0);
 			final Object value = colGetEntry(mIndex, 1);
-			return (key == null ? 0 : key.hashCode()) ^
-			    (value == null ? 0 : value.hashCode());
+			return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
 		}
 
 		@Override
@@ -255,8 +254,7 @@ abstract class MapCollections<K, V> {
 			for (int i = colGetSize() - 1; i >= 0; i--) {
 				final Object key = colGetEntry(i, 0);
 				final Object value = colGetEntry(i, 1);
-				result += ((key == null ? 0 : key.hashCode()) ^
-					   (value == null ? 0 : value.hashCode()));
+				result += ((key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode()));
 			}
 			return result;
 		}

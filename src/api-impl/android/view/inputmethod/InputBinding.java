@@ -57,7 +57,7 @@ public final class InputBinding implements Parcelable {
 	 * @param pid The process id of where the binding came from.
 	 */
 	public InputBinding(InputConnection conn, IBinder connToken,
-			    int uid, int pid) {
+	                    int uid, int pid) {
 		mConnection = conn;
 		mConnectionToken = connToken;
 		mUid = uid;
@@ -81,8 +81,8 @@ public final class InputBinding implements Parcelable {
 	InputBinding(Parcel source) {
 		mConnection = null;
 		mConnectionToken = null; //source.readStrongBinder();
-		mUid = 0; //source.readInt();
-		mPid = 0; //source.readInt();
+		mUid = 0;                //source.readInt();
+		mPid = 0;                //source.readInt();
 	}
 
 	/**

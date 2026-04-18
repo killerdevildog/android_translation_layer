@@ -28,6 +28,6 @@ public final class CharArrayBuffer {
 		data = buf;
 	}
 
-	public char[] data; // In and out parameter
+	public char[] data;    // In and out parameter
 	public int sizeCopied; // Out parameter
 }

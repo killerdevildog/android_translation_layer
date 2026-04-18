@@ -180,8 +180,7 @@ public final class Configuration implements Comparable<Configuration> {
 	/**
 	 * Constant for {@link #screenLayout}: a value indicating that screenLayout is undefined
 	 */
-	public static final int SCREENLAYOUT_UNDEFINED = SCREENLAYOUT_SIZE_UNDEFINED |
-							 SCREENLAYOUT_LONG_UNDEFINED | SCREENLAYOUT_LAYOUTDIR_UNDEFINED;
+	public static final int SCREENLAYOUT_UNDEFINED = SCREENLAYOUT_SIZE_UNDEFINED | SCREENLAYOUT_LONG_UNDEFINED | SCREENLAYOUT_LAYOUTDIR_UNDEFINED;
 
 	/**
 	 * Special flag we generate to indicate that the screen layout requires
@@ -1093,8 +1092,8 @@ public final class Configuration implements Comparable<Configuration> {
 		if (delta.locale != null && (locale == null || !locale.equals(delta.locale))) {
 			changed |= ActivityInfo.CONFIG_LOCALE;
 			locale = delta.locale != null
-				     ? (Locale)delta.locale.clone()
-				     : null;
+			           ? (Locale)delta.locale.clone()
+			           : null;
 			// If locale has changed, then layout direction is also changed ...
 			changed |= ActivityInfo.CONFIG_LAYOUT_DIRECTION;
 			// ... and we need to update the layout direction (represented by the first
@@ -1102,8 +1101,8 @@ public final class Configuration implements Comparable<Configuration> {
 			setLayoutDirection(locale);
 		}
 		final int deltaScreenLayoutDir = delta.screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK;
-		if (deltaScreenLayoutDir != SCREENLAYOUT_LAYOUTDIR_UNDEFINED &&
-		    deltaScreenLayoutDir != (screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK)) {
+		if (deltaScreenLayoutDir != SCREENLAYOUT_LAYOUTDIR_UNDEFINED
+		    && deltaScreenLayoutDir != (screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK)) {
 			screenLayout = (screenLayout & ~SCREENLAYOUT_LAYOUTDIR_MASK) | deltaScreenLayoutDir;
 			changed |= ActivityInfo.CONFIG_LAYOUT_DIRECTION;
 		}
@@ -1139,10 +1138,8 @@ public final class Configuration implements Comparable<Configuration> {
 			changed |= ActivityInfo.CONFIG_ORIENTATION;
 			orientation = delta.orientation;
 		}
-		if (getScreenLayoutNoDirection(delta.screenLayout) !=
-			(SCREENLAYOUT_SIZE_UNDEFINED | SCREENLAYOUT_LONG_UNDEFINED) &&
-		    (getScreenLayoutNoDirection(screenLayout) !=
-		     getScreenLayoutNoDirection(delta.screenLayout))) {
+		if (getScreenLayoutNoDirection(delta.screenLayout) != (SCREENLAYOUT_SIZE_UNDEFINED | SCREENLAYOUT_LONG_UNDEFINED)
+		    && (getScreenLayoutNoDirection(screenLayout) != getScreenLayoutNoDirection(delta.screenLayout))) {
 			changed |= ActivityInfo.CONFIG_SCREEN_LAYOUT;
 			// We need to preserve the previous layout dir bits if they were defined
 			if ((delta.screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK) == 0) {
@@ -1172,8 +1169,8 @@ public final class Configuration implements Comparable<Configuration> {
 			changed |= ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE;
 			smallestScreenWidthDp = delta.smallestScreenWidthDp;
 		}
-		if (delta.densityDpi != DENSITY_DPI_UNDEFINED &&
-		    densityDpi != delta.densityDpi) {
+		if (delta.densityDpi != DENSITY_DPI_UNDEFINED
+		    && densityDpi != delta.densityDpi) {
 			changed |= ActivityInfo.CONFIG_DENSITY;
 			densityDpi = delta.densityDpi;
 		}
@@ -1240,8 +1237,8 @@ public final class Configuration implements Comparable<Configuration> {
 			changed |= ActivityInfo.CONFIG_LAYOUT_DIRECTION;
 		}
 		final int deltaScreenLayoutDir = delta.screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK;
-		if (deltaScreenLayoutDir != SCREENLAYOUT_LAYOUTDIR_UNDEFINED &&
-		    deltaScreenLayoutDir != (screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK)) {
+		if (deltaScreenLayoutDir != SCREENLAYOUT_LAYOUTDIR_UNDEFINED
+		    && deltaScreenLayoutDir != (screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK)) {
 			changed |= ActivityInfo.CONFIG_LAYOUT_DIRECTION;
 		}
 		if (delta.touchscreen != TOUCHSCREEN_UNDEFINED && touchscreen != delta.touchscreen) {
@@ -1265,10 +1262,8 @@ public final class Configuration implements Comparable<Configuration> {
 		if (delta.orientation != ORIENTATION_UNDEFINED && orientation != delta.orientation) {
 			changed |= ActivityInfo.CONFIG_ORIENTATION;
 		}
-		if (getScreenLayoutNoDirection(delta.screenLayout) !=
-			(SCREENLAYOUT_SIZE_UNDEFINED | SCREENLAYOUT_LONG_UNDEFINED) &&
-		    getScreenLayoutNoDirection(screenLayout) !=
-			getScreenLayoutNoDirection(delta.screenLayout)) {
+		if (getScreenLayoutNoDirection(delta.screenLayout) != (SCREENLAYOUT_SIZE_UNDEFINED | SCREENLAYOUT_LONG_UNDEFINED)
+		    && getScreenLayoutNoDirection(screenLayout) != getScreenLayoutNoDirection(delta.screenLayout)) {
 			changed |= ActivityInfo.CONFIG_SCREEN_LAYOUT;
 		}
 		if (delta.uiMode != (UI_MODE_TYPE_UNDEFINED | UI_MODE_NIGHT_UNDEFINED) && uiMode != delta.uiMode) {
@@ -1454,7 +1449,7 @@ public final class Configuration implements Comparable<Configuration> {
 	* @return The locale list.
 	*/
 	public LocaleList getLocales() {
-		return new LocaleList();
+		return LocaleList.getDefault();
 		/*fixUpLocaleList();
 		return mLocaleList;*/
 	}
@@ -1497,8 +1492,8 @@ public final class Configuration implements Comparable<Configuration> {
 	 */
 	public int getLayoutDirection() {
 		return (screenLayout & SCREENLAYOUT_LAYOUTDIR_MASK) == SCREENLAYOUT_LAYOUTDIR_RTL
-		    ? View.LAYOUT_DIRECTION_RTL
-		    : View.LAYOUT_DIRECTION_LTR;
+		         ? View.LAYOUT_DIRECTION_RTL
+		         : View.LAYOUT_DIRECTION_LTR;
 	}
 
 	/**
@@ -1514,11 +1509,12 @@ public final class Configuration implements Comparable<Configuration> {
 		// There is a "1" difference between the configuration values for
 		// layout direction and View constants for layout direction, just add "1".
 		final int layoutDirection = 1 /*+ TextUtils.getLayoutDirectionFromLocale(locale)*/;
-		screenLayout = (screenLayout & ~SCREENLAYOUT_LAYOUTDIR_MASK) |
-			       (layoutDirection << SCREENLAYOUT_LAYOUTDIR_SHIFT);
+		screenLayout = (screenLayout & ~SCREENLAYOUT_LAYOUTDIR_MASK) | (layoutDirection << SCREENLAYOUT_LAYOUTDIR_SHIFT);
 	}
 
 	private static int getScreenLayoutNoDirection(int screenLayout) {
 		return screenLayout & ~SCREENLAYOUT_LAYOUTDIR_MASK;
 	}
+
+	public int fontWeightAdjustment;
 }

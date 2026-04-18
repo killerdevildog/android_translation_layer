@@ -24,13 +24,12 @@ package android.test.suitebuilder;
 @Deprecated
 public class UnitTestSuiteBuilder extends TestSuiteBuilder {
 
-    public UnitTestSuiteBuilder(Class clazz) {
-        this(clazz.getName(), clazz.getClassLoader());
-    }
+	public UnitTestSuiteBuilder(Class clazz) {
+		this(clazz.getName(), clazz.getClassLoader());
+	}
 
-
-    public UnitTestSuiteBuilder(String name, ClassLoader classLoader) {
-        super(name, classLoader);
-        addRequirements(TestPredicates.REJECT_INSTRUMENTATION);
-    }
+	public UnitTestSuiteBuilder(String name, ClassLoader classLoader) {
+		super(name, classLoader);
+		addRequirements(TestPredicates.REJECT_INSTRUMENTATION);
+	}
 }

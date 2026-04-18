@@ -20,5 +20,4 @@ public class DecelerateInterpolator extends BaseInterpolator {
 		}
 		return result;
 	}
-
 }

@@ -303,7 +303,7 @@ public abstract class AbstractCursor implements CrossProcessCursor {
 				Log.d(TAG, "Cannot collect column names for debug purposes", e);
 			}
 			throw new IllegalArgumentException("column '" + columnName
-					+ "' does not exist. Available columns: " + availableColumns);
+			                                   + "' does not exist. Available columns: " + availableColumns);
 		}
 		return index;
 	}
@@ -373,7 +373,7 @@ public abstract class AbstractCursor implements CrossProcessCursor {
 	 * @hide
 	 */
 	public void setNotificationUris(ContentResolver cr, List<Uri> notifyUris, int userHandle,
-			boolean registerSelfObserver) {
+	                                boolean registerSelfObserver) {
 		synchronized (mSelfObserverLock) {
 			mNotifyUris = notifyUris;
 			mNotifyUri = mNotifyUris.get(0);
@@ -388,7 +388,7 @@ public abstract class AbstractCursor implements CrossProcessCursor {
 				for (int i = 0; i < size; ++i) {
 					final Uri notifyUri = mNotifyUris.get(i);
 					mContentResolver.registerContentObserver(
-							notifyUri, true, mSelfObserver, userHandle);
+					    notifyUri, true, mSelfObserver, userHandle);
 				}
 				mSelfObserverRegistered = true;
 			}
@@ -456,9 +456,12 @@ public abstract class AbstractCursor implements CrossProcessCursor {
 			mContentResolver.unregisterContentObserver(mSelfObserver);
 		}
 		try {
-			if (mCloseGuard != null) mCloseGuard.warnIfOpen();
-			if (!mClosed) close();
-		} catch(Exception e) { }
+			if (mCloseGuard != null)
+				mCloseGuard.warnIfOpen();
+			if (!mClosed)
+				close();
+		} catch (Exception e) {
+		}
 	}
 	/**
 	 * Cursors use this class to track changes others make to their URI.

@@ -36,7 +36,8 @@ JNIEXPORT void JNICALL Java_android_widget_PopupMenu_native_1removeItem(JNIEnv *
 	g_menu_remove(G_MENU(_PTR(menu_ptr)), position);
 }
 
-static void popupmenu_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+static void popupmenu_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data)
+{
 	int id = g_variant_get_int32(parameter);
 	JNIEnv *env = get_jni_env();
 	jobject this = (jobject)user_data;
@@ -46,7 +47,7 @@ static void popupmenu_activated(GSimpleAction *action, GVariant *parameter, gpoi
 		(*env)->ExceptionDescribe(env);
 }
 
-static const GActionEntry action_entry = { "clicked", popupmenu_activated, "i", NULL, NULL };
+static const GActionEntry action_entry = {"clicked", popupmenu_activated, "i", NULL, NULL};
 
 JNIEXPORT jlong JNICALL Java_android_widget_PopupMenu_native_1buildPopover(JNIEnv *env, jobject this, jlong menu_ptr)
 {

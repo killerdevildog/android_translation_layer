@@ -24,8 +24,7 @@ import android.view.View;
  * characters of passwords with dots, or keeping the newline characters
  * from causing line breaks in single-line text fields.
  */
-public interface TransformationMethod
-{
+public interface TransformationMethod {
 	/**
 	 * Returns a CharSequence that is a transformation of the source text --
 	 * for example, replacing each character with a dot in a password field.
@@ -42,6 +41,6 @@ public interface TransformationMethod
 	 * TransformationMethod gains or loses focus.
 	 */
 	public void onFocusChanged(View view, CharSequence sourceText,
-							   boolean focused, int direction,
-							   Rect previouslyFocusedRect);
+	                           boolean focused, int direction,
+	                           Rect previouslyFocusedRect);
 }

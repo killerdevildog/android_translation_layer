@@ -23,9 +23,7 @@ package android.database.sqlite;
 import android.database.AbstractWindowedCursor;
 import android.database.CursorWindow;
 import android.database.DatabaseUtils;
-
 import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +75,7 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 	 */
 	@Deprecated
 	public SQLiteCursor(SQLiteDatabase db, SQLiteCursorDriver driver,
-			    String editTable, SQLiteQuery query) {
+	                    String editTable, SQLiteQuery query) {
 		this(driver, editTable, query);
 	}
 
@@ -114,8 +112,8 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 	@Override
 	public boolean onMove(int oldPosition, int newPosition) {
 		// Make sure the row at newPosition is present in the window
-		if (mWindow == null || newPosition < mWindow.getStartPosition() ||
-				newPosition >= (mWindow.getStartPosition() + mWindow.getNumRows())) {
+		if (mWindow == null || newPosition < mWindow.getStartPosition()
+		    || newPosition >= (mWindow.getStartPosition() + mWindow.getNumRows())) {
 			fillWindow(newPosition);
 		}
 
@@ -136,17 +134,17 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 	** class. But, since they are marked with "@hide", the following replacement
 	** versions are required.
 	*/
-	private void awc_clearOrCreateWindow(String name){
-	  CursorWindow win = getWindow();
-	  if( win==null ){
-		win = new CursorWindow(name);
-		setWindow(win);
-	  }else{
-		win.clear();
-	  }
+	private void awc_clearOrCreateWindow(String name) {
+		CursorWindow win = getWindow();
+		if (win == null) {
+			win = new CursorWindow(name);
+			setWindow(win);
+		} else {
+			win.clear();
+		}
 	}
-	private void awc_closeWindow(){
-	  setWindow(null);
+	private void awc_closeWindow() {
+		setWindow(null);
 	}
 
 	private void fillWindow(int requiredPos) {
@@ -162,7 +160,7 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 				}
 			} else {
 				int startPos = DatabaseUtils.cursorPickFillWindowStartPosition(requiredPos,
-						mCursorWindowCapacity);
+				                                                               mCursorWindowCapacity);
 				mQuery.fillWindow(mWindow, startPos, requiredPos, false);
 			}
 		} catch (RuntimeException ex) {

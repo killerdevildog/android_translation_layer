@@ -15,5 +15,4 @@ public class Switch extends CompoundButton {
 
 	public void setTextOn(CharSequence text) {}
 	public void setTextOff(CharSequence text) {}
-
 }

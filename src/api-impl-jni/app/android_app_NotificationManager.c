@@ -1,5 +1,5 @@
-#include <gtk/gtk.h>
 #include <gio/gdesktopappinfo.h>
+#include <gtk/gtk.h>
 
 #include "../defines.h"
 #include "../util.h"
@@ -9,7 +9,7 @@
 #include "../generated_headers/android_app_NotificationManager.h"
 
 #define MPRIS_BUS_NAME_PREFIX "org.mpris.MediaPlayer2."
-#define MPRIS_OBJECT_NAME "/org/mpris/MediaPlayer2"
+#define MPRIS_OBJECT_NAME     "/org/mpris/MediaPlayer2"
 
 /* ongoing notifications to be removed when the app is closed */
 static GHashTable *ongoing_notifications = NULL;
@@ -32,7 +32,7 @@ static gboolean send_notifcation_func(GSource *send_notifcation_timer, GSourceFu
 
 	g_mutex_lock(&pending_notifications_mutex);
 	g_hash_table_iter_init(&iter, pending_notifications);
-	while (g_hash_table_iter_next(&iter, &key, &value)){
+	while (g_hash_table_iter_next(&iter, &key, &value)) {
 		char *id_string = g_strdup_printf("%d", GPOINTER_TO_INT(key));
 		if (value)
 			g_application_send_notification(app, id_string, value);
@@ -54,12 +54,14 @@ static gboolean send_notifcation_func(GSource *send_notifcation_timer, GSourceFu
 static GSourceFuncs send_notifcation_funcs = {
 	.dispatch = send_notifcation_func,
 };
-static void unref_nullsafe(void *data) {
+static void unref_nullsafe(void *data)
+{
 	if (data)
 		g_object_unref(data);
 }
 
-static void queue_notification(int id, GNotification *notification) {
+static void queue_notification(int id, GNotification *notification)
+{
 	g_mutex_lock(&pending_notifications_mutex);
 	if (!pending_notifications) {
 		pending_notifications = g_hash_table_new_full(NULL, NULL, NULL, unref_nullsafe);
@@ -96,9 +98,9 @@ JNIEXPORT void JNICALL Java_android_app_NotificationManager_nativeAddAction(JNIE
 	const char *name = "";
 	if (name_jstr)
 		name = (*env)->GetStringUTFChars(env, name_jstr, NULL);
-        const char *action = intent_actionname_from_type(type);
-        if (action)
-                g_notification_add_button_with_target_value(notification, name, action, intent_serialize(env, intent));
+	const char *action = intent_actionname_from_type(type);
+	if (action)
+		g_notification_add_button_with_target_value(notification, name, action, intent_serialize(env, intent));
 	if (name_jstr)
 		(*env)->ReleaseStringUTFChars(env, name_jstr, name);
 }
@@ -131,9 +133,9 @@ JNIEXPORT void JNICALL Java_android_app_NotificationManager_nativeShowNotificati
 		g_free(icon_path_full);
 		(*env)->ReleaseStringUTFChars(env, icon_jstr, icon_path);
 	}
-        const char *action = intent_actionname_from_type(type);
-        if (action)
-                g_notification_set_default_action_and_target_value(notification, action, intent_serialize(env, intent));
+	const char *action = intent_actionname_from_type(type);
+	if (action)
+		g_notification_set_default_action_and_target_value(notification, action, intent_serialize(env, intent));
 	queue_notification(id, notification);
 	if (ongoing)
 		g_hash_table_add(ongoing_notifications, GINT_TO_POINTER(id));
@@ -193,7 +195,7 @@ JNIEXPORT void JNICALL Java_android_app_NotificationManager_nativeShowMPRIS(JNIE
 	if (!dbus_name_id) {
 		gchar *bus_name = g_strdup_printf("%s%s", MPRIS_BUS_NAME_PREFIX, app_id);
 		dbus_name_id = g_bus_own_name(G_BUS_TYPE_SESSION, bus_name, G_BUS_NAME_OWNER_FLAGS_NONE,
-		               on_bus_acquired, NULL, NULL, mpris, NULL);
+		                              on_bus_acquired, NULL, NULL, mpris, NULL);
 		g_free(bus_name);
 	}
 	media_player2_set_can_raise(mpris, TRUE);
@@ -213,6 +215,6 @@ JNIEXPORT void JNICALL Java_android_app_NotificationManager_nativeCancelMPRIS(JN
 	if (dbus_name_id) {
 		g_dbus_interface_skeleton_unexport(G_DBUS_INTERFACE_SKELETON(mpris));
 		g_dbus_interface_skeleton_unexport(G_DBUS_INTERFACE_SKELETON(mpris_player));
-		g_clear_handle_id (&dbus_name_id, g_bus_unown_name);
+		g_clear_handle_id(&dbus_name_id, g_bus_unown_name);
 	}
 }

@@ -40,8 +40,8 @@ public class Path {
 	}
 
 	private long getBuilder() {
-		if (builder == 0) {
-			builder = native_create_builder(path);
+		if (builder == 0 || path != 0) {
+			builder = native_create_builder(path, builder);
 			path = 0;
 		}
 		return builder;
@@ -51,7 +51,6 @@ public class Path {
 	public long getGskPath() {
 		if (path == 0) {
 			path = native_create_path(builder);
-			builder = 0;
 		}
 		return path;
 	}
@@ -152,7 +151,7 @@ public class Path {
 		native_add_rect(getBuilder(), left, top, right, bottom);
 	}
 
-	public void addRoundRect(float left,  float top, float right, float bottom,
+	public void addRoundRect(float left, float top, float right, float bottom,
 	                         float[] radii, Direction direction) {
 		native_add_round_rect(getBuilder(), left, top, right, bottom, radii);
 	}
@@ -161,20 +160,20 @@ public class Path {
 		addRoundRect(rect.left, rect.top, rect.right, rect.bottom, radii, direction);
 	}
 
-
 	public void addRoundRect(RectF rect, float rx, float ry, Direction direction) {
 		addRoundRect(rect.left, rect.top, rect.right, rect.bottom, rx, ry, direction);
 	}
 
-	public void addRoundRect(float left,  float top, float right, float bottom,
+	public void addRoundRect(float left, float top, float right, float bottom,
 	                         float rx, float ry, Direction direction) {
-		addRoundRect(left, top, right, bottom, new float[]{rx, ry, rx, ry, rx, ry, rx, ry}, direction);
+		addRoundRect(left, top, right, bottom, new float[] {rx, ry, rx, ry, rx, ry, rx, ry}, direction);
 	}
 
 	public void addOval(float left, float top, float right, float bottom, Direction direction) {
-		Log.w("Path", "STUB: addOval");
+		float rx = (right - left) / 2;
+		float ry = (bottom - top) / 2;
+		addRoundRect(left, top, right, bottom, new float[] {rx, ry, rx, ry, rx, ry, rx, ry}, direction);
 	}
-
 
 	public void addOval(RectF rect, Direction direction) {
 		addOval(rect.left, rect.top, rect.right, rect.bottom, direction);
@@ -190,7 +189,7 @@ public class Path {
 	}
 
 	public void transform(Matrix matrix, Path out_path) {
-		if(out_path == null)
+		if (out_path == null)
 			out_path = this;
 
 		out_path.transform(matrix);
@@ -246,7 +245,7 @@ public class Path {
 		}
 	}
 
-	private static native long native_create_builder(long path);
+	private static native long native_create_builder(long path, long builder);
 	private static native long native_create_path(long builder);
 	private static native long native_ref_path(long path);
 	private static native void native_reset(long path, long builder);

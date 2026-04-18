@@ -27,11 +27,9 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
+import com.android.internal.R;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.android.internal.R;
 
 /**
  * A PopupMenu displays a {@link Menu} in a modal popup window anchored to a
@@ -93,7 +91,7 @@ public class PopupMenu {
 	 *        to not look for defaults.
 	 */
 	public PopupMenu(Context context, View anchor, int gravity, int popupStyleAttr,
-			int popupStyleRes) {
+	                 int popupStyleRes) {
 		mContext = context;
 		mAnchor = anchor;
 		menu = new MenuImpl();
@@ -312,7 +310,7 @@ public class PopupMenu {
 		}
 
 		@Override
-		public int addIntentOptions (int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
+		public int addIntentOptions(int groupId, int itemId, int order, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
 			return 0;
 		}
 	}
@@ -340,7 +338,6 @@ public class PopupMenu {
 			// TODO Auto-generated method stub
 			throw new UnsupportedOperationException("Unimplemented method 'setIcon'");
 		}
-
 	}
 
 	private class MenuItemImpl implements MenuItem {
@@ -348,7 +345,7 @@ public class PopupMenu {
 		private MenuImpl parent;
 		private String title;
 		SubMenuImpl subMenu;
-		int position;  // position in list of visible items, or -1 if not visible
+		int position; // position in list of visible items, or -1 if not visible
 
 		private MenuItemImpl(int id, MenuImpl parent, String title, SubMenuImpl subMenu) {
 			this.id = id;
@@ -373,7 +370,7 @@ public class PopupMenu {
 			// GMenu doesn't support invisible items, so we remove them while they're not visible
 			if (!visible && isVisible()) {
 				parent.numVisibleItems--;
-				for (int i = parent.items.size()-1; i >= 0; i--) {
+				for (int i = parent.items.size() - 1; i >= 0; i--) {
 					MenuItemImpl item = parent.items.get(i);
 					if (item != this && item.isVisible())
 						item.position--;
@@ -384,7 +381,7 @@ public class PopupMenu {
 				position = -1;
 			} else if (visible && !isVisible()) {
 				position = parent.numVisibleItems++;
-				for (int i = parent.items.size()-1; i >= 0; i--) {
+				for (int i = parent.items.size() - 1; i >= 0; i--) {
 					MenuItemImpl item = parent.items.get(i);
 					if (item != this && item.isVisible())
 						position = item.position++;
@@ -412,6 +409,11 @@ public class PopupMenu {
 		@Override
 		public MenuItem setCheckable(boolean checkable) {
 			return this;
+		}
+
+		@Override
+		public boolean isCheckable() {
+			return false;
 		}
 
 		@Override
@@ -568,5 +570,4 @@ public class PopupMenu {
 			throw new UnsupportedOperationException("Unimplemented method 'setIntent'");
 		}
 	}
-
 }

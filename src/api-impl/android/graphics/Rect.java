@@ -154,9 +154,9 @@ public final class Rect {
 			return null;
 		}
 		return new Rect(Integer.parseInt(matcher.group(1)),
-				Integer.parseInt(matcher.group(2)),
-				Integer.parseInt(matcher.group(3)),
-				Integer.parseInt(matcher.group(4)));
+		                Integer.parseInt(matcher.group(2)),
+		                Integer.parseInt(matcher.group(3)),
+		                Integer.parseInt(matcher.group(4)));
 	}
 
 	/**

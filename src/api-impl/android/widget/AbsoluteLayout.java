@@ -45,7 +45,7 @@ public class AbsoluteLayout extends ViewGroup {
 	}
 
 	public AbsoluteLayout(Context context, AttributeSet attrs,
-			      int defStyle) {
+	                      int defStyle) {
 		super(context, attrs, defStyle);
 	}
 
@@ -85,7 +85,7 @@ public class AbsoluteLayout extends ViewGroup {
 		maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
 
 		setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, 0),
-				     resolveSizeAndState(maxHeight, heightMeasureSpec, 0));
+		                     resolveSizeAndState(maxHeight, heightMeasureSpec, 0));
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class AbsoluteLayout extends ViewGroup {
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t,
-				int r, int b) {
+	                        int r, int b) {
 		int count = getChildCount();
 
 		for (int i = 0; i < count; i++) {
@@ -114,8 +114,8 @@ public class AbsoluteLayout extends ViewGroup {
 				int childLeft = paddingLeft + lp.x;
 				int childTop = paddingTop + lp.y;
 				child.layout(childLeft, childTop,
-					     childLeft + child.getMeasuredWidth(),
-					     childTop + child.getMeasuredHeight());
+				             childLeft + child.getMeasuredWidth(),
+				             childTop + child.getMeasuredHeight());
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class AbsoluteLayout extends ViewGroup {
 		public LayoutParams(Context c, AttributeSet attrs) {
 			super(c, attrs);
 			TypedArray a = c.obtainStyledAttributes(attrs,
-								com.android.internal.R.styleable.AbsoluteLayout_Layout);
+			                                        com.android.internal.R.styleable.AbsoluteLayout_Layout);
 			x = a.getDimensionPixelOffset(
 			    com.android.internal.R.styleable.AbsoluteLayout_Layout_layout_x, 0);
 			y = a.getDimensionPixelOffset(

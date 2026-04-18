@@ -1,5 +1,7 @@
 package android.view.animation;
 
+import android.os.Handler;
+
 public class Animation {
 
 	public interface AnimationListener {
@@ -29,13 +31,24 @@ public class Animation {
 
 	public void setRepeatMode(int mode) {}
 
+	public void initialize(int width, int height, int parentWidth, int parentHeight) {}
+
+	public void applyTransformation(float interpolatedTime, Transformation t) {}
+
 	public void reset() {}
 
 	public void start() {
-		if (listener != null) {
-			listener.onAnimationStart(this);
-			listener.onAnimationEnd(this);
-		}
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+				initialize(0, 0, 0, 0);
+				if (listener != null)
+					listener.onAnimationStart(Animation.this);
+				applyTransformation(1, new Transformation());
+				if (listener != null)
+					listener.onAnimationEnd(Animation.this);
+			}
+		});
 	}
 
 	public boolean hasStarted() {

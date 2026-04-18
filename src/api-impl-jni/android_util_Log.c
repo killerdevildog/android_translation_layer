@@ -20,19 +20,19 @@
 ** limitations under the License.
 */
 
-JNIEXPORT jint JNICALL Java_android_util_Log_println_1native(JNIEnv* env, jobject this, jint bufID, jint priority, jstring tagObj, jstring msgObj)
+JNIEXPORT jint JNICALL Java_android_util_Log_println_1native(JNIEnv *env, jobject this, jint bufID, jint priority, jstring tagObj, jstring msgObj)
 {
-	const char* tag = NULL;
-	const char* msg = NULL;
+	const char *tag = NULL;
+	const char *msg = NULL;
 
 	if (msgObj == NULL) {
-//		jniThrowNullPointerException(env, "println needs a message");
+		//jniThrowNullPointerException(env, "println needs a message");
 		fprintf(stderr, "Log.println_native: println needs a message\n");
 		return -1;
 	}
 
 	if (bufID < 0 || bufID >= LOG_ID_MAX) {
-//		jniThrowNullPointerException(env, "bad bufID");
+		//jniThrowNullPointerException(env, "bad bufID");
 		fprintf(stderr, "Log.println_native: bad bufID\n");
 		return -1;
 	}

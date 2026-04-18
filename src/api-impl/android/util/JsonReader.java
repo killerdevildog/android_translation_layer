@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
 import libcore.internal.StringPool;
-
 
 /**
  * Reads a JSON (<a href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>)
@@ -327,7 +325,7 @@ public final class JsonReader implements Closeable {
 	 */
 	public JsonToken peek() throws IOException {
 		if (token != null) {
-		  return token;
+			return token;
 		}
 
 		switch (peekStack()) {
@@ -336,7 +334,7 @@ public final class JsonReader implements Closeable {
 				JsonToken firstToken = nextValue();
 				if (!lenient && token != JsonToken.BEGIN_ARRAY && token != JsonToken.BEGIN_OBJECT) {
 					throw new IOException(
-							"Expected JSON document to start with '[' or '{' but was " + token);
+					    "Expected JSON document to start with '[' or '{' but was " + token);
 				}
 				return firstToken;
 			case EMPTY_ARRAY:
@@ -488,8 +486,8 @@ public final class JsonReader implements Closeable {
 			result = Long.parseLong(value);
 		} catch (NumberFormatException ignored) {
 			double asDouble = Double.parseDouble(value); // don't catch this NumberFormatException
-			result = (long) asDouble;
-			if ((double) result != asDouble) {
+			result = (long)asDouble;
+			if ((double)result != asDouble) {
 				throw new NumberFormatException(value);
 			}
 		}
@@ -519,8 +517,8 @@ public final class JsonReader implements Closeable {
 			result = Integer.parseInt(value);
 		} catch (NumberFormatException ignored) {
 			double asDouble = Double.parseDouble(value); // don't catch this NumberFormatException
-			result = (int) asDouble;
-			if ((double) result != asDouble) {
+			result = (int)asDouble;
+			if ((double)result != asDouble) {
 				throw new NumberFormatException(value);
 			}
 		}
@@ -656,7 +654,7 @@ public final class JsonReader implements Closeable {
 			case '\'':
 				checkLenient(); // fall-through
 			case '"':
-				name = nextString((char) quote);
+				name = nextString((char)quote);
 				break;
 			default:
 				checkLenient();
@@ -707,7 +705,7 @@ public final class JsonReader implements Closeable {
 			case '\'':
 				checkLenient(); // fall-through
 			case '"':
-				value = nextString((char) c);
+				value = nextString((char)c);
 				return token = JsonToken.STRING;
 
 			default:
@@ -745,8 +743,8 @@ public final class JsonReader implements Closeable {
 			limit += total;
 
 			// if this is the first read, consume an optional byte order mark (BOM) if it exists
-				if (bufferStartLine == 1 && bufferStartColumn == 1
-						&& limit > 0 && buffer[0] == '\ufeff') {
+			if (bufferStartLine == 1 && bufferStartColumn == 1
+			    && limit > 0 && buffer[0] == '\ufeff') {
 				pos++;
 				bufferStartColumn--;
 			}
@@ -856,7 +854,7 @@ public final class JsonReader implements Closeable {
 	}
 
 	private boolean skipTo(String toFind) throws IOException {
-		outer:
+	outer:
 		for (; pos + toFind.length() <= limit || fillBuffer(toFind.length()); pos++) {
 			for (int c = 0; c < toFind.length(); c++) {
 				if (buffer[pos + c] != toFind.charAt(c)) {
@@ -929,28 +927,28 @@ public final class JsonReader implements Closeable {
 		valueLength = 0;
 		int i = 0;
 
-		findNonLiteralCharacter:
+	findNonLiteralCharacter:
 		while (true) {
 			for (; pos + i < limit; i++) {
 				switch (buffer[pos + i]) {
-				case '/':
-				case '\\':
-				case ';':
-				case '#':
-				case '=':
-					checkLenient(); // fall-through
-				case '{':
-				case '}':
-				case '[':
-				case ']':
-				case ':':
-				case ',':
-				case ' ':
-				case '\t':
-				case '\f':
-				case '\r':
-				case '\n':
-					break findNonLiteralCharacter;
+					case '/':
+					case '\\':
+					case ';':
+					case '#':
+					case '=':
+						checkLenient(); // fall-through
+					case '{':
+					case '}':
+					case '[':
+					case ']':
+					case ':':
+					case ',':
+					case ' ':
+					case '\t':
+					case '\f':
+					case '\r':
+					case '\n':
+						break findNonLiteralCharacter;
 				}
 			}
 
@@ -998,7 +996,8 @@ public final class JsonReader implements Closeable {
 		return result;
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return getClass().getSimpleName() + " near " + getSnippet();
 	}
 
@@ -1024,7 +1023,7 @@ public final class JsonReader implements Closeable {
 				}
 				String hex = stringPool.get(buffer, pos, 4);
 				pos += 4;
-				return (char) Integer.parseInt(hex, 16);
+				return (char)Integer.parseInt(hex, 16);
 
 			case 't':
 				return '\t';
@@ -1059,7 +1058,7 @@ public final class JsonReader implements Closeable {
 		}
 		token = decodeLiteral();
 		if (token == JsonToken.STRING) {
-		  checkLenient();
+			checkLenient();
 		}
 		return token;
 	}
@@ -1072,25 +1071,25 @@ public final class JsonReader implements Closeable {
 			// it was too long to fit in the buffer so it can only be a string
 			return JsonToken.STRING;
 		} else if (valueLength == 4
-				&& ('n' == buffer[valuePos    ] || 'N' == buffer[valuePos    ])
-				&& ('u' == buffer[valuePos + 1] || 'U' == buffer[valuePos + 1])
-				&& ('l' == buffer[valuePos + 2] || 'L' == buffer[valuePos + 2])
-				&& ('l' == buffer[valuePos + 3] || 'L' == buffer[valuePos + 3])) {
+		           && ('n' == buffer[valuePos] || 'N' == buffer[valuePos])
+		           && ('u' == buffer[valuePos + 1] || 'U' == buffer[valuePos + 1])
+		           && ('l' == buffer[valuePos + 2] || 'L' == buffer[valuePos + 2])
+		           && ('l' == buffer[valuePos + 3] || 'L' == buffer[valuePos + 3])) {
 			value = "null";
 			return JsonToken.NULL;
 		} else if (valueLength == 4
-				&& ('t' == buffer[valuePos    ] || 'T' == buffer[valuePos    ])
-				&& ('r' == buffer[valuePos + 1] || 'R' == buffer[valuePos + 1])
-				&& ('u' == buffer[valuePos + 2] || 'U' == buffer[valuePos + 2])
-				&& ('e' == buffer[valuePos + 3] || 'E' == buffer[valuePos + 3])) {
+		           && ('t' == buffer[valuePos] || 'T' == buffer[valuePos])
+		           && ('r' == buffer[valuePos + 1] || 'R' == buffer[valuePos + 1])
+		           && ('u' == buffer[valuePos + 2] || 'U' == buffer[valuePos + 2])
+		           && ('e' == buffer[valuePos + 3] || 'E' == buffer[valuePos + 3])) {
 			value = TRUE;
 			return JsonToken.BOOLEAN;
 		} else if (valueLength == 5
-				&& ('f' == buffer[valuePos    ] || 'F' == buffer[valuePos    ])
-				&& ('a' == buffer[valuePos + 1] || 'A' == buffer[valuePos + 1])
-				&& ('l' == buffer[valuePos + 2] || 'L' == buffer[valuePos + 2])
-				&& ('s' == buffer[valuePos + 3] || 'S' == buffer[valuePos + 3])
-				&& ('e' == buffer[valuePos + 4] || 'E' == buffer[valuePos + 4])) {
+		           && ('f' == buffer[valuePos] || 'F' == buffer[valuePos])
+		           && ('a' == buffer[valuePos + 1] || 'A' == buffer[valuePos + 1])
+		           && ('l' == buffer[valuePos + 2] || 'L' == buffer[valuePos + 2])
+		           && ('s' == buffer[valuePos + 3] || 'S' == buffer[valuePos + 3])
+		           && ('e' == buffer[valuePos + 4] || 'E' == buffer[valuePos + 4])) {
 			value = FALSE;
 			return JsonToken.BOOLEAN;
 		} else {
@@ -1159,7 +1158,7 @@ public final class JsonReader implements Closeable {
 	 */
 	private IOException syntaxError(String message) throws IOException {
 		throw new IOException(message
-				+ " at line " + getLineNumber() + " column " + getColumnNumber());
+		                      + " at line " + getLineNumber() + " column " + getColumnNumber());
 	}
 
 	private CharSequence getSnippet() {

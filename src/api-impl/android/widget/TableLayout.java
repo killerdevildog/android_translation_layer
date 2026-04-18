@@ -451,8 +451,8 @@ public class TableLayout extends LinearLayout {
 	 */
 	@Override
 	void measureChildBeforeLayout(View child, int childIndex,
-				      int widthMeasureSpec, int totalWidth,
-				      int heightMeasureSpec, int totalHeight) {
+	                              int widthMeasureSpec, int totalWidth,
+	                              int heightMeasureSpec, int totalHeight) {
 		// when the measured child is a table row, we force the width of its
 		// children with the widths computed in findLargestCells()
 		if (child instanceof TableRow) {
@@ -460,7 +460,7 @@ public class TableLayout extends LinearLayout {
 		}
 
 		super.measureChildBeforeLayout(child, childIndex,
-					       widthMeasureSpec, totalWidth, heightMeasureSpec, totalHeight);
+		                               widthMeasureSpec, totalWidth, heightMeasureSpec, totalHeight);
 	}
 
 	/**
@@ -521,9 +521,9 @@ public class TableLayout extends LinearLayout {
 						final int[] oldMaxWidths = mMaxWidths;
 						mMaxWidths = new int[newLength];
 						System.arraycopy(oldMaxWidths, 0, mMaxWidths, 0,
-								 oldMaxWidths.length);
+						                 oldMaxWidths.length);
 						System.arraycopy(widths, oldMaxWidths.length,
-								 mMaxWidths, oldMaxWidths.length, difference);
+						                 mMaxWidths, oldMaxWidths.length, difference);
 					}
 
 					// the row is narrower or of the same width as the previous
@@ -576,7 +576,7 @@ public class TableLayout extends LinearLayout {
 	}
 
 	private void mutateColumnsWidth(SparseBooleanArray columns,
-					boolean allColumns, int size, int totalWidth) {
+	                                boolean allColumns, int size, int totalWidth) {
 		int skipped = 0;
 		final int[] maxWidths = mMaxWidths;
 		final int length = maxWidths.length;
@@ -664,7 +664,7 @@ public class TableLayout extends LinearLayout {
 		return new LayoutParams(p);
 	}
 
-/*	@Override
+	/*@Override
 	public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
 		super.onInitializeAccessibilityEvent(event);
 		event.setClassName(TableLayout.class.getName());
@@ -675,7 +675,7 @@ public class TableLayout extends LinearLayout {
 		super.onInitializeAccessibilityNodeInfo(info);
 		info.setClassName(TableLayout.class.getName());
 	}
-*/
+	*/
 	/**
 	 * <p>This set of layout parameters enforces the width of each child to be
 	 * {@link #MATCH_PARENT} and the height of each child to be
@@ -740,7 +740,7 @@ public class TableLayout extends LinearLayout {
 		 */
 		@Override
 		protected void setBaseAttributes(TypedArray a,
-						 int widthAttr, int heightAttr) {
+		                                 int widthAttr, int heightAttr) {
 			this.width = MATCH_PARENT;
 			if (a.hasValue(heightAttr)) {
 				this.height = a.getLayoutDimension(heightAttr, "layout_height");

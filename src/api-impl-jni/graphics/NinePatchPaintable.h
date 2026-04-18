@@ -1,7 +1,6 @@
 #include <gdk/gdk.h>
 
-struct Res_png_9patch
-{
+struct Res_png_9patch {
 	int8_t wasDeserialized;
 	uint8_t numXDivs;
 	uint8_t numYDivs;
@@ -22,12 +21,14 @@ struct Res_png_9patch
 
 struct _NinePatchPaintable {
 	GObject parent_instance;
+	GdkTexture *texture;
 	struct Res_png_9patch *chunk;
 	int width;
 	int height;
 	int strechy_width;
 	int strechy_height;
+	int tint;
 };
 G_DECLARE_FINAL_TYPE(NinePatchPaintable, ninepatch_paintable, NINEPATCH, PAINTABLE, GObject)
 
-GdkPaintable *ninepatch_paintable_new(const char *path);
+GdkPaintable *ninepatch_paintable_new(struct Res_png_9patch *chunk, uint32_t chunk_size, GdkTexture *texture);

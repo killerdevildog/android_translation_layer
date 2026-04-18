@@ -289,7 +289,7 @@ public class ShapeDrawable extends Drawable {
 	public void setTintList(ColorStateList tint) {
 		mShapeState.mTint = tint;
 		mBlendModeColorFilter = updateBlendModeFilter(mBlendModeColorFilter, tint,
-							      mShapeState.mBlendMode);
+		                                              mShapeState.mBlendMode);
 		invalidateSelf();
 	}
 
@@ -297,7 +297,7 @@ public class ShapeDrawable extends Drawable {
 	public void setTintBlendMode(@NonNull BlendMode blendMode) {
 		mShapeState.mBlendMode = blendMode;
 		mBlendModeColorFilter = updateBlendModeFilter(mBlendModeColorFilter, mShapeState.mTint,
-							      blendMode);
+		                                              blendMode);
 		invalidateSelf();
 	}
 
@@ -352,7 +352,7 @@ public class ShapeDrawable extends Drawable {
 		final ShapeState state = mShapeState;
 		if (state.mTint != null && state.mBlendMode != null) {
 			mBlendModeColorFilter = updateBlendModeFilter(mBlendModeColorFilter, state.mTint,
-								      state.mBlendMode);
+			                                              state.mBlendMode);
 			return true;
 		}
 		return false;
@@ -374,11 +374,11 @@ public class ShapeDrawable extends Drawable {
 	 * return true, else return <em>super.inflateTag(...)</em>.
 	 */
 	protected boolean inflateTag(String name, Resources r, XmlPullParser parser,
-				     AttributeSet attrs) {
+	                             AttributeSet attrs) {
 
 		if ("padding".equals(name)) {
 			TypedArray a = r.obtainAttributes(attrs,
-							  com.android.internal.R.styleable.ShapeDrawablePadding);
+			                                  com.android.internal.R.styleable.ShapeDrawablePadding);
 			setPadding(
 			    a.getDimensionPixelOffset(
 				com.android.internal.R.styleable.ShapeDrawablePadding_left, 0),
@@ -414,8 +414,7 @@ public class ShapeDrawable extends Drawable {
 			final String name = parser.getName();
 			// call our subclass
 			if (!inflateTag(name, r, parser, attrs)) {
-				android.util.Log.w("drawable", "Unknown element: " + name +
-								   " for ShapeDrawable " + this);
+				android.util.Log.w("drawable", "Unknown element: " + name + " for ShapeDrawable " + this);
 			}
 		}
 
@@ -622,7 +621,7 @@ public class ShapeDrawable extends Drawable {
 	 */
 	private void updateLocalState() {
 		mBlendModeColorFilter = updateBlendModeFilter(mBlendModeColorFilter, mShapeState.mTint,
-							      mShapeState.mBlendMode);
+		                                              mShapeState.mBlendMode);
 	}
 
 	/**

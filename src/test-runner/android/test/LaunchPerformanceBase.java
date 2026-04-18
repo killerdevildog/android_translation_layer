@@ -20,31 +20,30 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-
 /**
  * Base class for all launch performance Instrumentation classes.
  */
 @Deprecated
 public class LaunchPerformanceBase extends Instrumentation {
 
-    /** @hide */
-    public static final String LOG_TAG = "Launch Performance";
+	/** @hide */
+	public static final String LOG_TAG = "Launch Performance";
 
-    protected Bundle mResults;
-    protected Intent mIntent;
+	protected Bundle mResults;
+	protected Intent mIntent;
 
-    public LaunchPerformanceBase() {
-        mResults = new Bundle();
-        mIntent = new Intent(Intent.ACTION_MAIN);
-        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        setAutomaticPerformanceSnapshots();
-    }
+	public LaunchPerformanceBase() {
+		mResults = new Bundle();
+		mIntent = new Intent(Intent.ACTION_MAIN);
+		mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		setAutomaticPerformanceSnapshots();
+	}
 
-    /**
+	/**
      * Launches intent, and waits for idle before returning.
      */
-    protected void LaunchApp() {
-        startActivitySync(mIntent);
-        waitForIdleSync();
-    }
+	protected void LaunchApp() {
+		startActivitySync(mIntent);
+		waitForIdleSync();
+	}
 }

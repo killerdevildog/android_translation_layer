@@ -43,7 +43,7 @@ public abstract class Observable<T> {
 		if (observer == null) {
 			throw new IllegalArgumentException("The observer is null.");
 		}
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			if (mObservers.contains(observer)) {
 				throw new IllegalStateException("Observer " + observer + " is already registered.");
 			}
@@ -62,7 +62,7 @@ public abstract class Observable<T> {
 		if (observer == null) {
 			throw new IllegalArgumentException("The observer is null.");
 		}
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			int index = mObservers.indexOf(observer);
 			if (index == -1) {
 				throw new IllegalStateException("Observer " + observer + " was not registered.");
@@ -75,9 +75,8 @@ public abstract class Observable<T> {
 	 * Remove all registered observers.
 	 */
 	public void unregisterAll() {
-		synchronized(mObservers) {
+		synchronized (mObservers) {
 			mObservers.clear();
 		}
 	}
-
 }

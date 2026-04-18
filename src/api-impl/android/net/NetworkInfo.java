@@ -23,7 +23,7 @@ public class NetworkInfo {
 	}
 
 	public int getType() {
-		return state == State.CONNECTED ? /*TYPE_WIFI*/0x1 : 0x0;
+		return state == State.CONNECTED ? /*TYPE_WIFI*/ 0x1 : 0x0;
 	}
 
 	public boolean isConnected() {
@@ -35,7 +35,7 @@ public class NetworkInfo {
 	}
 
 	public int getSubtype() {
-		return 0;  // NETWORK_TYPE_UNKNOWN
+		return 0; // NETWORK_TYPE_UNKNOWN
 	}
 
 	public boolean isRoaming() {
@@ -50,7 +50,7 @@ public class NetworkInfo {
 		return "UNKNOWN";
 	}
 
-	public boolean isAvailable () {
+	public boolean isAvailable() {
 		return false;
 	}
 

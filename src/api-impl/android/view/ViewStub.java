@@ -16,14 +16,12 @@
 
 package android.view;
 
-import java.lang.ref.WeakReference;
-
-import com.android.internal.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import com.android.internal.R;
+import java.lang.ref.WeakReference;
 
 /**
  * A ViewStub is an invisible, zero-sized View that can be used to lazily inflate
@@ -101,7 +99,7 @@ public final class ViewStub extends View {
 	public ViewStub(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ViewStub,
-				defStyle, 0);
+		                                              defStyle, 0);
 
 		mInflatedId = a.getResourceId(R.styleable.ViewStub_inflatedId, NO_ID);
 		mLayoutResource = a.getResourceId(R.styleable.ViewStub_layout, 0);
@@ -250,7 +248,7 @@ public final class ViewStub extends View {
 
 		if (viewParent != null && viewParent instanceof ViewGroup) {
 			if (mLayoutResource != 0) {
-				final ViewGroup parent = (ViewGroup) viewParent;
+				final ViewGroup parent = (ViewGroup)viewParent;
 				final LayoutInflater factory;
 				if (mInflater != null) {
 					factory = mInflater;
@@ -258,7 +256,7 @@ public final class ViewStub extends View {
 					factory = LayoutInflater.from(getContext());
 				}
 				final View view = factory.inflate(mLayoutResource, parent,
-						false);
+				                                  false);
 
 				if (mInflatedId != NO_ID) {
 					view.setId(mInflatedId);

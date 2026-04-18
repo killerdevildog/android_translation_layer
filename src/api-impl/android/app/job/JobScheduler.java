@@ -1,20 +1,19 @@
 package android.app.job;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.ContextImpl;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Slog;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JobScheduler {
 	private static final String TAG = "JobScheduler";
 
-	static Map<Integer,JobInfo> pendingJobs = new HashMap<>();
+	static Map<Integer, JobInfo> pendingJobs = new HashMap<>();
 	private static Map<Class<? extends JobService>, JobService> runningServices = new HashMap<>();
 
 	private final Context context;
@@ -47,11 +46,11 @@ public class JobScheduler {
 			public void run() {
 				try {
 					String className = job.getService().getClassName();
-					Class <? extends JobService> cls = Class.forName(className).asSubclass(JobService.class);
+					Class<? extends JobService> cls = Class.forName(className).asSubclass(JobService.class);
 					if (!runningServices.containsKey(cls)) {
 						JobService service = cls.getConstructor().newInstance();
 						service.attachBaseContext(new ContextImpl(
-								context.getResources(), context.getApplicationInfo(), context.getTheme()));
+						    context.getResources(), context.getApplicationInfo(), context.getTheme()));
 						service.onCreate();
 						runningServices.put(cls, service);
 					}

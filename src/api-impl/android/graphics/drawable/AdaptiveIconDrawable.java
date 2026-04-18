@@ -138,8 +138,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 	private boolean mSuspendChildInvalidation;
 	private boolean mChildRequestedInvalidation;
 	private final Canvas mCanvas;
-	private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG |
-					 Paint.FILTER_BITMAP_FLAG);
+	private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.FILTER_BITMAP_FLAG);
 
 	/**
 	 * Constructor used for xml inflation.
@@ -157,8 +156,8 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 		// config_icon_mask from context bound resource may have been chaged using
 		// OverlayManager. Read that one first.
 		Resources r = ActivityThread.currentActivityThread() == null
-				  ? Resources.getSystem()
-				  : ActivityThread.currentActivityThread().getApplication().getResources();
+		                ? Resources.getSystem()
+		                : ActivityThread.currentActivityThread().getApplication().getResources();
 		// TODO: either make sMask update only when config_icon_mask changes OR
 		// get rid of it all-together in layoutlib
 		sMask = PathParser.createPathFromPathData(r.getString(R.string.config_icon_mask));
@@ -189,7 +188,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 	 * @param foregroundDrawable drawable that should be rendered in the foreground
 	 */
 	public AdaptiveIconDrawable(Drawable backgroundDrawable,
-				    Drawable foregroundDrawable) {
+	                            Drawable foregroundDrawable) {
 		this(backgroundDrawable, foregroundDrawable, null);
 	}
 
@@ -201,7 +200,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 	 * @param monochromeDrawable an alternate drawable which can be tinted per system theme color
 	 */
 	public AdaptiveIconDrawable(@Nullable Drawable backgroundDrawable,
-				    @Nullable Drawable foregroundDrawable, @Nullable Drawable monochromeDrawable) {
+	                            @Nullable Drawable foregroundDrawable, @Nullable Drawable monochromeDrawable) {
 		this((LayerState)null, null);
 		if (backgroundDrawable != null) {
 			addLayer(BACKGROUND_ID, createChildDrawable(backgroundDrawable));
@@ -227,7 +226,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 
 	//@Override
 	public void inflate(@NonNull Resources r, @NonNull XmlPullParser parser,
-			    @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                    @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		//super.inflate(r, parser, attrs, theme);
 
@@ -377,7 +376,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 
 	@Override
 	public void draw(Canvas canvas) {
-	/*	if (mLayersBitmap == null) {
+		/*	if (mLayersBitmap == null) {
 			return;
 		}
 		if (mLayersShader == null) {
@@ -495,7 +494,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 	 * Inflates child layers using the specified parser.
 	 */
 	private void inflateLayers(@NonNull Resources r, @NonNull XmlPullParser parser,
-				   @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                           @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		final LayerState state = mLayerState;
 
@@ -528,7 +527,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 
 			final ChildDrawable layer = new ChildDrawable(state.mDensity);
 			final TypedArray a = obtainAttributes(r, theme, attrs,
-							      R.styleable.AdaptiveIconDrawableLayer);
+			                                      R.styleable.AdaptiveIconDrawableLayer);
 			updateLayerFromTypedArray(layer, a);
 			a.recycle();
 
@@ -541,7 +540,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 				}
 				if (type != XmlPullParser.START_TAG) {
 					throw new XmlPullParserException(parser.getPositionDescription() + ": <foreground> or <background> tag requires a 'drawable'"
-									 + "attribute or child tag defining a drawable");
+					                                 + "attribute or child tag defining a drawable");
 				}
 
 				// We found a child drawable. Take ownership.
@@ -565,8 +564,8 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 		// Extract the theme attributes, if any.
 		layer.mThemeAttrs = a.extractThemeAttrs();
 
-//		Drawable dr = a.getDrawableForDensity(R.styleable.AdaptiveIconDrawableLayer_drawable,
-//						      state.mSrcDensityOverride);
+		//Drawable dr = a.getDrawableForDensity(R.styleable.AdaptiveIconDrawableLayer_drawable,
+		//				      state.mSrcDensityOverride);
 		Drawable dr = a.getDrawable(R.styleable.AdaptiveIconDrawableLayer_drawable);
 
 		if (dr != null) {
@@ -940,7 +939,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 		}
 
 		ChildDrawable(@NonNull ChildDrawable orig, @NonNull AdaptiveIconDrawable owner,
-			      @Nullable Resources res) {
+		              @Nullable Resources res) {
 
 			final Drawable dr = orig.mDrawable;
 			final Drawable clone;
@@ -1008,7 +1007,7 @@ public class AdaptiveIconDrawable extends Drawable implements Drawable.Callback 
 		private boolean mAutoMirrored = false;
 
 		LayerState(@Nullable LayerState orig, @NonNull AdaptiveIconDrawable owner,
-			   @Nullable Resources res) {
+		           @Nullable Resources res) {
 			mDensity = Drawable.resolveDensity(res, orig != null ? orig.mDensity : 0);
 			mChildren = new ChildDrawable[N_CHILDREN];
 			if (orig != null) {

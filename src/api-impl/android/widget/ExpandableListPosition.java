@@ -95,8 +95,7 @@ class ExpandableListPosition {
 
 		ExpandableListPosition elp = getRecycledOrCreate();
 		elp.groupPos = ExpandableListView.getPackedPositionGroup(packedPosition);
-		if (ExpandableListView.getPackedPositionType(packedPosition) ==
-		    ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+		if (ExpandableListView.getPackedPositionType(packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 			elp.type = CHILD;
 			elp.childPos = ExpandableListView.getPackedPositionChild(packedPosition);
 		} else {

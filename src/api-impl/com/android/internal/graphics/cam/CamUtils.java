@@ -51,15 +51,17 @@ public final class CamUtils {
 
 	// Transforms XYZ color space coordinates to 'cone'/'RGB' responses in CAM16.
 	static final float[][] XYZ_TO_CAM16RGB = {
-	    {0.401288f, 0.650173f, -0.051461f},
-	    {-0.250268f, 1.204414f, 0.045854f},
-	    {-0.002079f, 0.048952f, 0.953127f}};
+		{ 0.401288f, 0.650173f, -0.051461f},
+		{-0.250268f, 1.204414f,  0.045854f},
+		{-0.002079f, 0.048952f,  0.953127f}
+	};
 
 	// Transforms 'cone'/'RGB' responses in CAM16 to XYZ color space coordinates.
 	static final float[][] CAM16RGB_TO_XYZ = {
-	    {1.86206786f, -1.01125463f, 0.14918677f},
-	    {0.38752654f, 0.62144744f, -0.00897398f},
-	    {-0.01584150f, -0.03412294f, 1.04996444f}};
+		{ 1.86206786f, -1.01125463f,  0.14918677f},
+		{ 0.38752654f,  0.62144744f, -0.00897398f},
+		{-0.01584150f, -0.03412294f,  1.04996444f}
+	};
 
 	// Need this, XYZ coordinates in internal ColorUtils are private
 
@@ -71,31 +73,17 @@ public final class CamUtils {
 	// used. It was derived using Schlomer's technique of transforming the xyY
 	// primaries to XYZ, then applying a correction to ensure mapping from sRGB
 	// 1, 1, 1 to the reference white point, D65.
-	static final double[][] SRGB_TO_XYZ =
-	    new double[][] {
+	static final double[][] SRGB_TO_XYZ = new double[][] {
 		new double[] {0.41233895, 0.35762064, 0.18051042},
-		new double[] {0.2126, 0.7152, 0.0722},
+		new double[] {    0.2126,     0.7152,     0.0722},
 		new double[] {0.01932141, 0.11916382, 0.95034478},
-	    };
+	};
 
-	static final double[][] XYZ_TO_SRGB =
-	    new double[][] {
-		new double[] {
-		    3.2413774792388685,
-		    -1.5376652402851851,
-		    -0.49885366846268053,
-		},
-		new double[] {
-		    -0.9691452513005321,
-		    1.8758853451067872,
-		    0.04156585616912061,
-		},
-		new double[] {
-		    0.05562093689691305,
-		    -0.20395524564742123,
-		    1.0571799111220335,
-		},
-	    };
+	static final double[][] XYZ_TO_SRGB = new double[][] {
+		new double[] { 3.2413774792388685,  -1.5376652402851851, -0.49885366846268053},
+		new double[] {-0.9691452513005321,   1.8758853451067872,  0.04156585616912061},
+		new double[] {0.05562093689691305, -0.20395524564742123,   1.0571799111220335},
+	};
 
 	/**
 	 * The signum function.
@@ -226,7 +214,7 @@ public final class CamUtils {
 		float zT = cubeExceedEpsilon ? fz * fz * fz : (116f * fx - 16f) / kappa;
 
 		return ColorUtils.XYZToColor(xT * CamUtils.WHITE_POINT_D65[0],
-					     yT * CamUtils.WHITE_POINT_D65[1], zT * CamUtils.WHITE_POINT_D65[2]);
+		                             yT * CamUtils.WHITE_POINT_D65[1], zT * CamUtils.WHITE_POINT_D65[2]);
 	}
 
 	/**

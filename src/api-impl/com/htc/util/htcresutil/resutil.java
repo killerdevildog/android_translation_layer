@@ -6,5 +6,4 @@ package com.htc.util.htcresutil;
  */
 
 public class resutil {
-
 }

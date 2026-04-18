@@ -57,10 +57,10 @@ public final class Outline {
 	 */
 	@Retention(RetentionPolicy.SOURCE)
 	@IntDef(flag = false,
-		value = {
-		    MODE_EMPTY,
-		    MODE_ROUND_RECT,
-		    MODE_PATH,
+	        value = {
+			MODE_EMPTY,
+			MODE_ROUND_RECT,
+			MODE_PATH,
 		})
 	public @interface Mode {}
 

@@ -17,6 +17,7 @@
 package android.widget;
 
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
@@ -75,106 +76,106 @@ public class RelativeLayout extends ViewGroup {
 	/**
 	 * Rule that aligns a child's right edge with another child's left edge.
 	 */
-	public static final int LEFT_OF                  = 0;
+	public static final int LEFT_OF = 0;
 	/**
 	 * Rule that aligns a child's left edge with another child's right edge.
 	 */
-	public static final int RIGHT_OF                 = 1;
+	public static final int RIGHT_OF = 1;
 	/**
 	 * Rule that aligns a child's bottom edge with another child's top edge.
 	 */
-	public static final int ABOVE                    = 2;
+	public static final int ABOVE = 2;
 	/**
 	 * Rule that aligns a child's top edge with another child's bottom edge.
 	 */
-	public static final int BELOW                    = 3;
+	public static final int BELOW = 3;
 	/**
 	 * Rule that aligns a child's baseline with another child's baseline.
 	 */
-	public static final int ALIGN_BASELINE           = 4;
+	public static final int ALIGN_BASELINE = 4;
 	/**
 	 * Rule that aligns a child's left edge with another child's left edge.
 	 */
-	public static final int ALIGN_LEFT               = 5;
+	public static final int ALIGN_LEFT = 5;
 	/**
 	 * Rule that aligns a child's top edge with another child's top edge.
 	 */
-	public static final int ALIGN_TOP                = 6;
+	public static final int ALIGN_TOP = 6;
 	/**
 	 * Rule that aligns a child's right edge with another child's right edge.
 	 */
-	public static final int ALIGN_RIGHT              = 7;
+	public static final int ALIGN_RIGHT = 7;
 	/**
 	 * Rule that aligns a child's bottom edge with another child's bottom edge.
 	 */
-	public static final int ALIGN_BOTTOM             = 8;
+	public static final int ALIGN_BOTTOM = 8;
 	/**
 	 * Rule that aligns the child's left edge with its RelativeLayout
 	 * parent's left edge.
 	 */
-	public static final int ALIGN_PARENT_LEFT        = 9;
+	public static final int ALIGN_PARENT_LEFT = 9;
 	/**
 	 * Rule that aligns the child's top edge with its RelativeLayout
 	 * parent's top edge.
 	 */
-	public static final int ALIGN_PARENT_TOP         = 10;
+	public static final int ALIGN_PARENT_TOP = 10;
 	/**
 	 * Rule that aligns the child's right edge with its RelativeLayout
 	 * parent's right edge.
 	 */
-	public static final int ALIGN_PARENT_RIGHT       = 11;
+	public static final int ALIGN_PARENT_RIGHT = 11;
 	/**
 	 * Rule that aligns the child's bottom edge with its RelativeLayout
 	 * parent's bottom edge.
 	 */
-	public static final int ALIGN_PARENT_BOTTOM      = 12;
+	public static final int ALIGN_PARENT_BOTTOM = 12;
 	/**
 	 * Rule that centers the child with respect to the bounds of its
 	 * RelativeLayout parent.
 	 */
-	public static final int CENTER_IN_PARENT         = 13;
+	public static final int CENTER_IN_PARENT = 13;
 	/**
 	 * Rule that centers the child horizontally with respect to the
 	 * bounds of its RelativeLayout parent.
 	 */
-	public static final int CENTER_HORIZONTAL        = 14;
+	public static final int CENTER_HORIZONTAL = 14;
 	/**
 	 * Rule that centers the child vertically with respect to the
 	 * bounds of its RelativeLayout parent.
 	 */
-	public static final int CENTER_VERTICAL          = 15;
+	public static final int CENTER_VERTICAL = 15;
 	/**
 	 * Rule that aligns a child's end edge with another child's start edge.
 	 */
-	public static final int START_OF                 = 16;
+	public static final int START_OF = 16;
 	/**
 	 * Rule that aligns a child's start edge with another child's end edge.
 	 */
-	public static final int END_OF                   = 17;
+	public static final int END_OF = 17;
 	/**
 	 * Rule that aligns a child's start edge with another child's start edge.
 	 */
-	public static final int ALIGN_START              = 18;
+	public static final int ALIGN_START = 18;
 	/**
 	 * Rule that aligns a child's end edge with another child's end edge.
 	 */
-	public static final int ALIGN_END                = 19;
+	public static final int ALIGN_END = 19;
 	/**
 	 * Rule that aligns the child's start edge with its RelativeLayout
 	 * parent's start edge.
 	 */
-	public static final int ALIGN_PARENT_START       = 20;
+	public static final int ALIGN_PARENT_START = 20;
 	/**
 	 * Rule that aligns the child's end edge with its RelativeLayout
 	 * parent's end edge.
 	 */
-	public static final int ALIGN_PARENT_END         = 21;
-	private static final int VERB_COUNT              = 22;
+	public static final int ALIGN_PARENT_END = 21;
+	private static final int VERB_COUNT = 22;
 	private static final int[] RULES_VERTICAL = {
-			ABOVE, BELOW, ALIGN_BASELINE, ALIGN_TOP, ALIGN_BOTTOM
+		ABOVE, BELOW, ALIGN_BASELINE, ALIGN_TOP, ALIGN_BOTTOM
 	};
 	private static final int[] RULES_HORIZONTAL = {
-			LEFT_OF, RIGHT_OF, ALIGN_LEFT, ALIGN_RIGHT, START_OF, END_OF, ALIGN_START, ALIGN_END
+		LEFT_OF, RIGHT_OF, ALIGN_LEFT, ALIGN_RIGHT, START_OF, END_OF, ALIGN_START, ALIGN_END
 	};
 	/**
 	 * Used to indicate left/right/top/bottom should be inferred from constraints
@@ -225,9 +226,9 @@ public class RelativeLayout extends ViewGroup {
 	}
 
 	private void initFromAttributes(
-			Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+	    Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		final TypedArray a = context.obtainStyledAttributes(
-				attrs, R.styleable.RelativeLayout, defStyleAttr, defStyleRes);
+		    attrs, R.styleable.RelativeLayout, defStyleAttr, defStyleRes);
 		mIgnoreGravity = a.getResourceId(R.styleable.RelativeLayout_ignoreGravity, View.NO_ID);
 		mGravity = a.getInt(R.styleable.RelativeLayout_gravity, mGravity);
 		a.recycle();
@@ -403,7 +404,7 @@ public class RelativeLayout extends ViewGroup {
 		// before the computation and then, as a last pass, we will update their real position with
 		// an offset equals to "DEFAULT_WIDTH - width".
 		final int layoutDirection = View.LAYOUT_DIRECTION_LTR;
-		if (/*isLayoutRtl()*/false && myWidth == -1) {
+		if (/*isLayoutRtl()*/ false && myWidth == -1) {
 			myWidth = DEFAULT_WIDTH;
 		}
 		View[] views = mSortedHorizontalChildren;
@@ -411,7 +412,7 @@ public class RelativeLayout extends ViewGroup {
 		for (int i = 0; i < count; i++) {
 			View child = views[i];
 			if (child.getVisibility() != GONE) {
-				LayoutParams params = (LayoutParams) child.getLayoutParams();
+				LayoutParams params = (LayoutParams)child.getLayoutParams();
 				int[] rules = params.getRules(layoutDirection);
 				applyHorizontalSizeRules(params, myWidth, rules);
 				measureChildHorizontal(child, params, myWidth, myHeight);
@@ -426,14 +427,14 @@ public class RelativeLayout extends ViewGroup {
 		for (int i = 0; i < count; i++) {
 			final View child = views[i];
 			if (child.getVisibility() != GONE) {
-				final LayoutParams params = (LayoutParams) child.getLayoutParams();
+				final LayoutParams params = (LayoutParams)child.getLayoutParams();
 				applyVerticalSizeRules(params, myHeight, child.getBaseline());
 				measureChild(child, params, myWidth, myHeight);
 				if (positionChildVertical(child, params, myHeight, isWrapContentHeight)) {
 					offsetVerticalAxis = true;
 				}
 				if (isWrapContentWidth) {
-					if (/*isLayoutRtl()*/false) {
+					if (/*isLayoutRtl()*/ false) {
 						if (targetSdkVersion < Build.VERSION_CODES.KITKAT) {
 							width = Math.max(width, myWidth - params.mLeft);
 						} else {
@@ -471,9 +472,9 @@ public class RelativeLayout extends ViewGroup {
 		for (int i = 0; i < count; i++) {
 			final View child = views[i];
 			if (child.getVisibility() != GONE) {
-				final LayoutParams childParams = (LayoutParams) child.getLayoutParams();
+				final LayoutParams childParams = (LayoutParams)child.getLayoutParams();
 				if (baselineView == null || baselineParams == null
-						|| compareLayoutPosition(childParams, baselineParams) < 0) {
+				    || compareLayoutPosition(childParams, baselineParams) < 0) {
 					baselineView = child;
 					baselineParams = childParams;
 				}
@@ -493,7 +494,7 @@ public class RelativeLayout extends ViewGroup {
 				for (int i = 0; i < count; i++) {
 					final View child = views[i];
 					if (child.getVisibility() != GONE) {
-						final LayoutParams params = (LayoutParams) child.getLayoutParams();
+						final LayoutParams params = (LayoutParams)child.getLayoutParams();
 						final int[] rules = params.getRules(layoutDirection);
 						if (rules[CENTER_IN_PARENT] != 0 || rules[CENTER_HORIZONTAL] != 0) {
 							centerHorizontal(child, params, width);
@@ -519,7 +520,7 @@ public class RelativeLayout extends ViewGroup {
 				for (int i = 0; i < count; i++) {
 					final View child = views[i];
 					if (child.getVisibility() != GONE) {
-						final LayoutParams params = (LayoutParams) child.getLayoutParams();
+						final LayoutParams params = (LayoutParams)child.getLayoutParams();
 						final int[] rules = params.getRules(layoutDirection);
 						if (rules[CENTER_IN_PARENT] != 0 || rules[CENTER_VERTICAL] != 0) {
 							centerVertical(child, params, height);
@@ -535,17 +536,17 @@ public class RelativeLayout extends ViewGroup {
 		if (horizontalGravity || verticalGravity) {
 			final Rect selfBounds = mSelfBounds;
 			selfBounds.set(getPaddingLeft(), getPaddingTop(), width - getPaddingRight(),
-					height - getPaddingBottom());
+			               height - getPaddingBottom());
 			final Rect contentBounds = mContentBounds;
 			Gravity.apply(mGravity, right - left, bottom - top, selfBounds, contentBounds,
-					layoutDirection);
+			              layoutDirection);
 			final int horizontalOffset = contentBounds.left - left;
 			final int verticalOffset = contentBounds.top - top;
 			if (horizontalOffset != 0 || verticalOffset != 0) {
 				for (int i = 0; i < count; i++) {
 					final View child = views[i];
 					if (child.getVisibility() != GONE && child != ignore) {
-						final LayoutParams params = (LayoutParams) child.getLayoutParams();
+						final LayoutParams params = (LayoutParams)child.getLayoutParams();
 						if (horizontalGravity) {
 							params.mLeft += horizontalOffset;
 							params.mRight += horizontalOffset;
@@ -558,12 +559,12 @@ public class RelativeLayout extends ViewGroup {
 				}
 			}
 		}
-		if (/*isLayoutRtl()*/false) {
+		if (/*isLayoutRtl()*/ false) {
 			final int offsetWidth = myWidth - width;
 			for (int i = 0; i < count; i++) {
 				final View child = views[i];
 				if (child.getVisibility() != GONE) {
-					final LayoutParams params = (LayoutParams) child.getLayoutParams();
+					final LayoutParams params = (LayoutParams)child.getLayoutParams();
 					params.mLeft -= offsetWidth;
 					params.mRight -= offsetWidth;
 				}
@@ -598,28 +599,28 @@ public class RelativeLayout extends ViewGroup {
 	 */
 	private void measureChild(View child, LayoutParams params, int myWidth, int myHeight) {
 		int childWidthMeasureSpec = getChildMeasureSpec(params.mLeft,
-				params.mRight, params.width,
-				params.leftMargin, params.rightMargin,
-				getPaddingLeft(), getPaddingRight(),
-				myWidth);
+		                                                params.mRight, params.width,
+		                                                params.leftMargin, params.rightMargin,
+		                                                getPaddingLeft(), getPaddingRight(),
+		                                                myWidth);
 		int childHeightMeasureSpec = getChildMeasureSpec(params.mTop,
-				params.mBottom, params.height,
-				params.topMargin, params.bottomMargin,
-				getPaddingTop(), getPaddingBottom(),
-				myHeight);
+		                                                 params.mBottom, params.height,
+		                                                 params.topMargin, params.bottomMargin,
+		                                                 getPaddingTop(), getPaddingBottom(),
+		                                                 myHeight);
 		child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
 	}
 
 	private void measureChildHorizontal(
-			View child, LayoutParams params, int myWidth, int myHeight) {
+	    View child, LayoutParams params, int myWidth, int myHeight) {
 		final int childWidthMeasureSpec = getChildMeasureSpec(params.mLeft, params.mRight,
-				params.width, params.leftMargin, params.rightMargin, getPaddingLeft(), getPaddingRight(),
-				myWidth);
+		                                                      params.width, params.leftMargin, params.rightMargin, getPaddingLeft(), getPaddingRight(),
+		                                                      myWidth);
 		final int childHeightMeasureSpec;
 		if (myHeight < 0 && !mAllowBrokenMeasureSpecs) {
 			if (params.height >= 0) {
 				childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-						params.height, MeasureSpec.EXACTLY);
+				    params.height, MeasureSpec.EXACTLY);
 			} else {
 				// Negative values in a mySize/myWidth/myWidth value in
 				// RelativeLayout measurement is code for, "we got an
@@ -631,7 +632,7 @@ public class RelativeLayout extends ViewGroup {
 			final int maxHeight;
 			if (mMeasureVerticalWithPaddingMargin) {
 				maxHeight = Math.max(0, myHeight - getPaddingTop() - getPaddingBottom()
-						- params.topMargin - params.bottomMargin);
+				                        - params.topMargin - params.bottomMargin);
 			} else {
 				maxHeight = Math.max(0, myHeight);
 			}
@@ -663,8 +664,8 @@ public class RelativeLayout extends ViewGroup {
 	 * @return MeasureSpec for the child
 	 */
 	private int getChildMeasureSpec(int childStart, int childEnd,
-			int childSize, int startMargin, int endMargin, int startPadding,
-			int endPadding, int mySize) {
+	                                int childSize, int startMargin, int endMargin, int startPadding,
+	                                int endPadding, int mySize) {
 		int childSpecMode = 0;
 		int childSpecSize = 0;
 		// Negative values in a mySize value in RelativeLayout
@@ -739,8 +740,8 @@ public class RelativeLayout extends ViewGroup {
 	}
 
 	private boolean positionChildHorizontal(View child, LayoutParams params, int myWidth,
-			boolean wrapContent) {
-		final int layoutDirection = /*getLayoutDirection()*/View.LAYOUT_DIRECTION_LTR;
+	                                        boolean wrapContent) {
+		final int layoutDirection = /*getLayoutDirection()*/ View.LAYOUT_DIRECTION_LTR;
 		int[] rules = params.getRules(layoutDirection);
 		if (params.mLeft == VALUE_NOT_SET && params.mRight != VALUE_NOT_SET) {
 			// Right is fixed, but left varies
@@ -767,7 +768,7 @@ public class RelativeLayout extends ViewGroup {
 	}
 
 	private void positionAtEdge(View child, LayoutParams params, int myWidth) {
-		if (/*isLayoutRtl()*/false) {
+		if (/*isLayoutRtl()*/ false) {
 			params.mRight = myWidth - getPaddingRight() - params.rightMargin;
 			params.mLeft = params.mRight - child.getMeasuredWidth();
 		} else {
@@ -777,7 +778,7 @@ public class RelativeLayout extends ViewGroup {
 	}
 
 	private boolean positionChildVertical(View child, LayoutParams params, int myHeight,
-			boolean wrapContent) {
+	                                      boolean wrapContent) {
 		int[] rules = params.getRules();
 		if (params.mTop == VALUE_NOT_SET && params.mBottom != VALUE_NOT_SET) {
 			// Bottom is fixed, but top varies
@@ -815,8 +816,7 @@ public class RelativeLayout extends ViewGroup {
 		childParams.mRight = VALUE_NOT_SET;
 		anchorParams = getRelatedViewParams(rules, LEFT_OF);
 		if (anchorParams != null) {
-			childParams.mRight = anchorParams.mLeft - (anchorParams.leftMargin +
-					childParams.rightMargin);
+			childParams.mRight = anchorParams.mLeft - (anchorParams.leftMargin + childParams.rightMargin);
 		} else if (childParams.alignWithParent && rules[LEFT_OF] != 0) {
 			if (myWidth >= 0) {
 				childParams.mRight = myWidth - getPaddingRight() - childParams.rightMargin;
@@ -824,8 +824,7 @@ public class RelativeLayout extends ViewGroup {
 		}
 		anchorParams = getRelatedViewParams(rules, RIGHT_OF);
 		if (anchorParams != null) {
-			childParams.mLeft = anchorParams.mRight + (anchorParams.rightMargin +
-					childParams.leftMargin);
+			childParams.mLeft = anchorParams.mRight + (anchorParams.rightMargin + childParams.leftMargin);
 		} else if (childParams.alignWithParent && rules[RIGHT_OF] != 0) {
 			childParams.mLeft = getPaddingLeft() + childParams.leftMargin;
 		}
@@ -870,8 +869,7 @@ public class RelativeLayout extends ViewGroup {
 		childParams.mBottom = VALUE_NOT_SET;
 		anchorParams = getRelatedViewParams(rules, ABOVE);
 		if (anchorParams != null) {
-			childParams.mBottom = anchorParams.mTop - (anchorParams.topMargin +
-					childParams.bottomMargin);
+			childParams.mBottom = anchorParams.mTop - (anchorParams.topMargin + childParams.bottomMargin);
 		} else if (childParams.alignWithParent && rules[ABOVE] != 0) {
 			if (myHeight >= 0) {
 				childParams.mBottom = myHeight - getPaddingBottom() - childParams.bottomMargin;
@@ -879,8 +877,7 @@ public class RelativeLayout extends ViewGroup {
 		}
 		anchorParams = getRelatedViewParams(rules, BELOW);
 		if (anchorParams != null) {
-			childParams.mTop = anchorParams.mBottom + (anchorParams.bottomMargin +
-					childParams.topMargin);
+			childParams.mTop = anchorParams.mBottom + (anchorParams.bottomMargin + childParams.topMargin);
 		} else if (childParams.alignWithParent && rules[BELOW] != 0) {
 			childParams.mTop = getPaddingTop() + childParams.topMargin;
 		}
@@ -912,14 +909,16 @@ public class RelativeLayout extends ViewGroup {
 		int id = rules[relation];
 		if (id != 0) {
 			DependencyGraph.Node node = mGraph.mKeyNodes.get(id);
-			if (node == null) return null;
+			if (node == null)
+				return null;
 			View v = node.view;
 			// Find the first non-GONE view up the chain
 			while (v.getVisibility() == View.GONE) {
-				rules = ((LayoutParams) v.getLayoutParams()).getRules(/*v.getLayoutDirection()*/View.LAYOUT_DIRECTION_LTR);
+				rules = ((LayoutParams)v.getLayoutParams()).getRules(/*v.getLayoutDirection()*/ View.LAYOUT_DIRECTION_LTR);
 				node = mGraph.mKeyNodes.get((rules[relation]));
 				// ignore self dependency. for more info look in git commit: da3003
-				if (node == null || v == node.view) return null;
+				if (node == null || v == node.view)
+					return null;
 				v = node.view;
 			}
 			return v;
@@ -932,7 +931,7 @@ public class RelativeLayout extends ViewGroup {
 		if (v != null) {
 			ViewGroup.LayoutParams params = v.getLayoutParams();
 			if (params instanceof LayoutParams) {
-				return (LayoutParams) v.getLayoutParams();
+				return (LayoutParams)v.getLayoutParams();
 			}
 		}
 		return null;
@@ -945,7 +944,7 @@ public class RelativeLayout extends ViewGroup {
 			if (baseline != -1) {
 				final ViewGroup.LayoutParams params = v.getLayoutParams();
 				if (params instanceof LayoutParams) {
-					final LayoutParams anchorParams = (LayoutParams) v.getLayoutParams();
+					final LayoutParams anchorParams = (LayoutParams)v.getLayoutParams();
 					return anchorParams.mTop + baseline;
 				}
 			}
@@ -976,7 +975,7 @@ public class RelativeLayout extends ViewGroup {
 			View child = getChildAt(i);
 			if (child.getVisibility() != GONE) {
 				RelativeLayout.LayoutParams st =
-						(RelativeLayout.LayoutParams) child.getLayoutParams();
+				    (RelativeLayout.LayoutParams)child.getLayoutParams();
 				child.layout(st.mLeft, st.mTop, st.mRight, st.mBottom);
 			}
 		}
@@ -1006,11 +1005,11 @@ public class RelativeLayout extends ViewGroup {
 	@Override
 	protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
 		// if (sPreserveMarginParamsInLayoutParamConversion) {
-			if (lp instanceof LayoutParams) {
-				return new LayoutParams((LayoutParams) lp);
-			} else if (lp instanceof MarginLayoutParams) {
-				return new LayoutParams((MarginLayoutParams) lp);
-			}
+		if (lp instanceof LayoutParams) {
+			return new LayoutParams((LayoutParams)lp);
+		} else if (lp instanceof MarginLayoutParams) {
+			return new LayoutParams((MarginLayoutParams)lp);
+		}
 		// }
 		return new LayoutParams(lp);
 	}
@@ -1022,7 +1021,7 @@ public class RelativeLayout extends ViewGroup {
 	/**
 	 * Compares two views in left-to-right and top-to-bottom fashion.
 	 */
-	 private class TopToBottomLeftToRightComparator implements Comparator<View> {
+	private class TopToBottomLeftToRightComparator implements Comparator<View> {
 		public int compare(View first, View second) {
 			// top - bottom
 			int topDifference = first.getTop() - second.getTop();
@@ -1109,10 +1108,10 @@ public class RelativeLayout extends ViewGroup {
 		public LayoutParams(Context c, AttributeSet attrs) {
 			super(c, attrs);
 			TypedArray a = c.obtainStyledAttributes(attrs,
-					com.android.internal.R.styleable.RelativeLayout_Layout);
+			                                        com.android.internal.R.styleable.RelativeLayout_Layout);
 			final int targetSdkVersion = c.getApplicationInfo().targetSdkVersion;
-			mIsRtlCompatibilityMode = (targetSdkVersion < JELLY_BEAN_MR1 ||
-					!c.getApplicationInfo().hasRtlSupport());
+			mIsRtlCompatibilityMode = (targetSdkVersion < JELLY_BEAN_MR1
+			                           || !c.getApplicationInfo().hasRtlSupport());
 			final int[] rules = mRules;
 			//noinspection MismatchedReadAndWriteOfArray
 			final int[] initialRules = mInitialRules;
@@ -1170,7 +1169,7 @@ public class RelativeLayout extends ViewGroup {
 						break;
 					case com.android.internal.R.styleable.RelativeLayout_Layout_layout_centerVertical:
 						rules[CENTER_VERTICAL] = a.getBoolean(attr, false) ? TRUE : 0;
-					   break;
+						break;
 					case com.android.internal.R.styleable.RelativeLayout_Layout_layout_toStartOf:
 						rules[START_OF] = a.getResourceId(attr, 0);
 						break;
@@ -1227,7 +1226,7 @@ public class RelativeLayout extends ViewGroup {
 			this.alignWithParent = source.alignWithParent;
 			System.arraycopy(source.mRules, LEFT_OF, this.mRules, LEFT_OF, VERB_COUNT);
 			System.arraycopy(
-					source.mInitialRules, LEFT_OF, this.mInitialRules, LEFT_OF, VERB_COUNT);
+			    source.mInitialRules, LEFT_OF, this.mInitialRules, LEFT_OF, VERB_COUNT);
 		}
 
 		/**
@@ -1277,7 +1276,7 @@ public class RelativeLayout extends ViewGroup {
 			// If we're removing a relative rule, we'll need to force layout
 			// resolution the next time it's requested.
 			if (!mNeedsLayoutResolution && isRelativeRule(verb)
-					&& mInitialRules[verb] != 0 && subject == 0) {
+			    && mInitialRules[verb] != 0 && subject == 0) {
 				mNeedsLayoutResolution = true;
 			}
 			mRules[verb] = subject;
@@ -1322,15 +1321,15 @@ public class RelativeLayout extends ViewGroup {
 		}
 
 		private boolean hasRelativeRules() {
-			return (mInitialRules[START_OF] != 0 || mInitialRules[END_OF] != 0 ||
-					mInitialRules[ALIGN_START] != 0 || mInitialRules[ALIGN_END] != 0 ||
-					mInitialRules[ALIGN_PARENT_START] != 0 || mInitialRules[ALIGN_PARENT_END] != 0);
+			return (mInitialRules[START_OF] != 0 || mInitialRules[END_OF] != 0
+			        || mInitialRules[ALIGN_START] != 0 || mInitialRules[ALIGN_END] != 0
+			        || mInitialRules[ALIGN_PARENT_START] != 0 || mInitialRules[ALIGN_PARENT_END] != 0);
 		}
 
 		private boolean isRelativeRule(int rule) {
 			return rule == START_OF || rule == END_OF
-					|| rule == ALIGN_START || rule == ALIGN_END
-					|| rule == ALIGN_PARENT_START || rule == ALIGN_PARENT_END;
+			    || rule == ALIGN_START || rule == ALIGN_END
+			    || rule == ALIGN_PARENT_START || rule == ALIGN_PARENT_END;
 		}
 
 		// The way we are resolving rules depends on the layout direction and if we are pre JB MR1
@@ -1402,8 +1401,8 @@ public class RelativeLayout extends ViewGroup {
 				}
 			} else {
 				// JB MR1+ case
-				if ((mRules[ALIGN_START] != 0 || mRules[ALIGN_END] != 0) &&
-						(mRules[ALIGN_LEFT] != 0 || mRules[ALIGN_RIGHT] != 0)) {
+				if ((mRules[ALIGN_START] != 0 || mRules[ALIGN_END] != 0)
+				    && (mRules[ALIGN_LEFT] != 0 || mRules[ALIGN_RIGHT] != 0)) {
 					// "start"/"end" rules take precedence over "left"/"right" rules
 					mRules[ALIGN_LEFT] = 0;
 					mRules[ALIGN_RIGHT] = 0;
@@ -1418,8 +1417,8 @@ public class RelativeLayout extends ViewGroup {
 					mRules[isLayoutRtl ? ALIGN_LEFT : ALIGN_RIGHT] = mRules[ALIGN_END];
 					mRules[ALIGN_END] = 0;
 				}
-				if ((mRules[START_OF] != 0 || mRules[END_OF] != 0) &&
-						(mRules[LEFT_OF] != 0 || mRules[RIGHT_OF] != 0)) {
+				if ((mRules[START_OF] != 0 || mRules[END_OF] != 0)
+				    && (mRules[LEFT_OF] != 0 || mRules[RIGHT_OF] != 0)) {
 					// "start"/"end" rules take precedence over "left"/"right" rules
 					mRules[LEFT_OF] = 0;
 					mRules[RIGHT_OF] = 0;
@@ -1434,8 +1433,8 @@ public class RelativeLayout extends ViewGroup {
 					mRules[isLayoutRtl ? LEFT_OF : RIGHT_OF] = mRules[END_OF];
 					mRules[END_OF] = 0;
 				}
-				if ((mRules[ALIGN_PARENT_START] != 0 || mRules[ALIGN_PARENT_END] != 0) &&
-						(mRules[ALIGN_PARENT_LEFT] != 0 || mRules[ALIGN_PARENT_RIGHT] != 0)) {
+				if ((mRules[ALIGN_PARENT_START] != 0 || mRules[ALIGN_PARENT_END] != 0)
+				    && (mRules[ALIGN_PARENT_LEFT] != 0 || mRules[ALIGN_PARENT_RIGHT] != 0)) {
 					// "start"/"end" rules take precedence over "left"/"right" rules
 					mRules[ALIGN_PARENT_LEFT] = 0;
 					mRules[ALIGN_PARENT_RIGHT] = 0;
@@ -1505,7 +1504,7 @@ public class RelativeLayout extends ViewGroup {
 
 		private boolean shouldResolveLayoutDirection(int layoutDirection) {
 			return (mNeedsLayoutResolution || hasRelativeRules())
-					&& (mRulesChanged || layoutDirection != /*getLayoutDirection()*/View.LAYOUT_DIRECTION_LTR);
+			    && (mRulesChanged || layoutDirection != /*getLayoutDirection()*/ View.LAYOUT_DIRECTION_LTR);
 		}
 	}
 	private static class DependencyGraph {
@@ -1583,7 +1582,7 @@ public class RelativeLayout extends ViewGroup {
 			}
 			if (index < sorted.length) {
 				throw new IllegalStateException("Circular dependencies cannot exist"
-						+ " in RelativeLayout");
+				                                + " in RelativeLayout");
 			}
 		}
 
@@ -1610,7 +1609,7 @@ public class RelativeLayout extends ViewGroup {
 			// Builds up the dependents and dependencies for each node of the graph
 			for (int i = 0; i < count; i++) {
 				final Node node = nodes.get(i);
-				final LayoutParams layoutParams = (LayoutParams) node.view.getLayoutParams();
+				final LayoutParams layoutParams = (LayoutParams)node.view.getLayoutParams();
 				final int[] rules = layoutParams.mRules;
 				final int rulesCount = rulesFilter.length;
 				// Look only the the rules passed in parameter, this way we build only the
@@ -1636,7 +1635,8 @@ public class RelativeLayout extends ViewGroup {
 			// Finds all the roots in the graph: all nodes with no dependencies
 			for (int i = 0; i < count; i++) {
 				final Node node = nodes.get(i);
-				if (node.dependencies.size() == 0) roots.addLast(node);
+				if (node.dependencies.size() == 0)
+					roots.addLast(node);
 			}
 			return roots;
 		}
@@ -1659,7 +1659,7 @@ public class RelativeLayout extends ViewGroup {
 			 * that needs this node to be processed first.
 			 */
 			final ArrayMap<Node, DependencyGraph> dependents =
-					new ArrayMap<Node, DependencyGraph>();
+			    new ArrayMap<Node, DependencyGraph>();
 			/**
 			 * The list of dependencies for this node.
 			 */
@@ -1674,9 +1674,9 @@ public class RelativeLayout extends ViewGroup {
 			//         new SynchronizedPool<Node>(POOL_LIMIT);
 
 			static Node acquire(View view) {
-				Node node;// = sPool.acquire();
-				// if (node == null) {
-					node = new Node();
+				Node node; // = sPool.acquire();
+					   // if (node == null) {
+				node = new Node();
 				// }
 				node.view = view;
 				return node;

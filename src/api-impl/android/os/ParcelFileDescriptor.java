@@ -274,8 +274,10 @@ public class ParcelFileDescriptor implements Closeable {
 		if ((mode & MODE_APPEND) == MODE_APPEND)
 			flags |= O_APPEND;
 		int realMode = S_IRWXU | S_IRWXG;
-		if ((mode & MODE_WORLD_READABLE) != 0) realMode |= S_IROTH;
-		if ((mode & MODE_WORLD_WRITEABLE) != 0) realMode |= S_IWOTH;
+		if ((mode & MODE_WORLD_READABLE) != 0)
+			realMode |= S_IROTH;
+		if ((mode & MODE_WORLD_WRITEABLE) != 0)
+			realMode |= S_IWOTH;
 		try {
 			return android.system.Os.open(file.getPath(), flags, realMode);
 		} catch (ErrnoException e) {
@@ -391,8 +393,9 @@ public class ParcelFileDescriptor implements Closeable {
 		try {
 			final FileDescriptor[] fds = android.system.Os.pipe();
 			return new ParcelFileDescriptor[] {
-			    new ParcelFileDescriptor(fds[0]),
-			    new ParcelFileDescriptor(fds[1])};
+				new ParcelFileDescriptor(fds[0]),
+				new ParcelFileDescriptor(fds[1])
+			};
 		} catch (ErrnoException e) {
 			throw e.rethrowAsIOException();
 		}
@@ -413,8 +416,9 @@ public class ParcelFileDescriptor implements Closeable {
 			final FileDescriptor[] comm = createCommSocketPair();
 			final FileDescriptor[] fds = android.system.Os.pipe();
 			return new ParcelFileDescriptor[] {
-			    new ParcelFileDescriptor(fds[0], comm[0]),
-			    new ParcelFileDescriptor(fds[1], comm[1])};
+				new ParcelFileDescriptor(fds[0], comm[0]),
+				new ParcelFileDescriptor(fds[1], comm[1])
+			};
 		} catch (ErrnoException e) {
 			throw e.rethrowAsIOException();
 		}
@@ -430,8 +434,9 @@ public class ParcelFileDescriptor implements Closeable {
 			final FileDescriptor fd1 = new FileDescriptor();
 			android.system.Os.socketpair(AF_UNIX, SOCK_STREAM, 0, fd0, fd1);
 			return new ParcelFileDescriptor[] {
-			    new ParcelFileDescriptor(fd0),
-			    new ParcelFileDescriptor(fd1)};
+				new ParcelFileDescriptor(fd0),
+				new ParcelFileDescriptor(fd1)
+			};
 		} catch (ErrnoException e) {
 			throw e.rethrowAsIOException();
 		}
@@ -453,8 +458,9 @@ public class ParcelFileDescriptor implements Closeable {
 			final FileDescriptor fd1 = new FileDescriptor();
 			android.system.Os.socketpair(AF_UNIX, SOCK_STREAM, 0, fd0, fd1);
 			return new ParcelFileDescriptor[] {
-			    new ParcelFileDescriptor(fd0, comm[0]),
-			    new ParcelFileDescriptor(fd1, comm[1])};
+				new ParcelFileDescriptor(fd0, comm[0]),
+				new ParcelFileDescriptor(fd1, comm[1])
+			};
 		} catch (ErrnoException e) {
 			throw e.rethrowAsIOException();
 		}

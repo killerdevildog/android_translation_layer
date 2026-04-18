@@ -3,7 +3,6 @@ package android.location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
 import java.lang.Runnable;
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,7 +21,7 @@ public class LocationManager {
 		return null;
 	}
 
-	public void requestLocationUpdates (String provider, long minTimeMs, float minDistanceM, LocationListener listener) {
+	public void requestLocationUpdates(String provider, long minTimeMs, float minDistanceM, LocationListener listener) {
 		listeners.add(listener);
 		nativeGetLocation();
 	}

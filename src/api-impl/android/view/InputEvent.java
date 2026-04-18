@@ -68,7 +68,7 @@ public abstract class InputEvent {
 	 * @return The device, or null if unknown.
 	 */
 	public final InputDevice getDevice() {
-		return InputDevice.getDevice(0/*FIXME*/);
+		return InputDevice.getDevice(0 /*FIXME*/);
 	}
 
 	/**

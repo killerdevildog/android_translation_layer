@@ -1,30 +1,42 @@
 package android.widget;
 
+import android.R;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.database.DataSetObserver;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 public class Spinner extends AbsSpinner {
 	private Observer observer;
+	private Drawable popupBackground;
 
 	public Spinner(Context context) {
-		super(context);
+		this(context, null, 0);
 		haveCustomMeasure = false;
 	}
 
 	public Spinner(Context context, AttributeSet attributeSet) {
-		super(context, attributeSet);
+		this(context, attributeSet, 0);
 		haveCustomMeasure = false;
 	}
 
 	public Spinner(Context context, AttributeSet attributeSet, int defStyle) {
 		super(context, attributeSet, defStyle);
 		haveCustomMeasure = false;
+
+		TypedArray a = context.obtainStyledAttributes(attributeSet, R.styleable.Spinner, defStyle, 0);
+		popupBackground = a.getDrawable(R.styleable.Spinner_popupBackground);
+		a.recycle();
 	}
 
 	@Override
 	protected native long native_constructor(Context context, AttributeSet attrs);
 	protected native void native_setAdapter(long widget, SpinnerAdapter adapter);
+	@Override
+	protected native void native_setBackgroundDrawable(long widget, long paintable);
+	@Override
+	protected native void native_setBackgroundColor(long widget, int color);
 
 	public void setAdapter(SpinnerAdapter adapter) {
 		if (observer == null)
@@ -39,7 +51,7 @@ public class Spinner extends AbsSpinner {
 	}
 
 	public SpinnerAdapter getAdapter() {
-		return (SpinnerAdapter) super.getAdapter();
+		return (SpinnerAdapter)super.getAdapter();
 	}
 
 	@Override
@@ -62,6 +74,5 @@ public class Spinner extends AbsSpinner {
 
 	public int getDropDownWidth() { return 100; }
 
-	public void setDropDownHorizontalOffset(int offset) {};
-
+	public void setDropDownHorizontalOffset(int offset){};
 }

@@ -1,6 +1,7 @@
 package android.app.job;
 
 import android.content.ComponentName;
+import android.net.Uri;
 import android.os.PersistableBundle;
 
 public class JobInfo {
@@ -30,13 +31,13 @@ public class JobInfo {
 
 	public String toString() {
 		return "JobInfo{"
-				+ "jobService=" + service
-				+ ", initialBackoffMillis=" + initialBackoffMillis
-				+ ", backoffPolicy=" + backoffPolicy
-				+ ", extras=" + extras
-				+ ", periodicMillis=" + periodicMillis
-				+ ", id=" + id
-				+ '}';
+		     + "jobService=" + service
+		     + ", initialBackoffMillis=" + initialBackoffMillis
+		     + ", backoffPolicy=" + backoffPolicy
+		     + ", extras=" + extras
+		     + ", periodicMillis=" + periodicMillis
+		     + ", id=" + id
+		     + '}';
 	}
 
 	public static final class Builder {
@@ -98,8 +99,16 @@ public class JobInfo {
 			return this;
 		}
 
+		public Builder addTriggerContentUri(TriggerContentUri triggerContentUri) {
+			return this;
+		}
+
 		public JobInfo build() {
 			return jobInfo;
 		}
+	}
+
+	public static class TriggerContentUri {
+		public TriggerContentUri(Uri uri, int flags) {}
 	}
 }

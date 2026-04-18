@@ -1,12 +1,11 @@
 package android.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPropertyAnimator {
 
@@ -19,14 +18,29 @@ public class ViewPropertyAnimator {
 	private TimeInterpolator interpolator;
 	private List<PropertyValuesHolder> values = new ArrayList<>();
 	private ObjectAnimator animator;
+	private boolean start_pending = false;
 
 	public ViewPropertyAnimator(View view) {
 		this.view = view;
 	}
 
+	private void scheduleAutoStart() {
+		if (!start_pending) {
+			start_pending = true;
+			view.postOnAnimation(new Runnable() {
+				@Override
+				public void run() {
+					if (start_pending)
+						start();
+				}
+			});
+		}
+	}
+
 	public void cancel() {
 		if (animator != null)
 			animator.cancel();
+		start_pending = false;
 	}
 
 	public ViewPropertyAnimator setInterpolator(TimeInterpolator interpolator) {
@@ -41,6 +55,7 @@ public class ViewPropertyAnimator {
 
 	public ViewPropertyAnimator alpha(float alpha) {
 		values.add(PropertyValuesHolder.ofFloat(View.ALPHA, alpha));
+		scheduleAutoStart();
 		return this;
 	}
 
@@ -56,50 +71,60 @@ public class ViewPropertyAnimator {
 
 	public ViewPropertyAnimator x(float x) {
 		values.add(PropertyValuesHolder.ofFloat("x", x));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator y(float y) {
 		values.add(PropertyValuesHolder.ofFloat("y", y));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator rotation(float rotation) {
 		values.add(PropertyValuesHolder.ofFloat("rotation", rotation));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator translationX(float translationX) {
 		values.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_X, translationX));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator translationY(float translationY) {
 		values.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, translationY));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator scaleX(float scaleX) {
 		values.add(PropertyValuesHolder.ofFloat(View.SCALE_X, scaleX));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator scaleY(float scaleY) {
 		values.add(PropertyValuesHolder.ofFloat(View.SCALE_Y, scaleY));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator translationXBy(float translationX) {
 		values.add(PropertyValuesHolder.ofFloat(View.TRANSLATION_X, view.getTranslationX() + translationX));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public ViewPropertyAnimator rotationBy(float rotation) {
 		values.add(PropertyValuesHolder.ofFloat("rotation", view.getRotation() + rotation));
+		scheduleAutoStart();
 		return this;
 	}
 
 	public void start() {
+		start_pending = false;
 		if (animator != null)
 			animator.cancel();
 		animator = ObjectAnimator.ofPropertyValuesHolder(view, values.toArray(new PropertyValuesHolder[0]));
@@ -138,6 +163,10 @@ public class ViewPropertyAnimator {
 
 	public ViewPropertyAnimator withStartAction(Runnable runnable) {
 		this.startAction = runnable;
+		return this;
+	}
+
+	public ViewPropertyAnimator withLayer() {
 		return this;
 	}
 }

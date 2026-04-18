@@ -28,6 +28,5 @@ public class ResolveInfo {
 	public static class DisplayNameComparator {
 
 		public DisplayNameComparator(PackageManager pm) {}
-
 	}
 }

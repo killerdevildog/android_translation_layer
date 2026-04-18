@@ -16,6 +16,7 @@
 
 package android.content;
 
+import android.os.Parcelable;
 import java.io.PrintWriter;
 import java.lang.Comparable;
 
@@ -29,7 +30,7 @@ import java.lang.Comparable;
  * name inside of that package.
  *
  */
-public final class ComponentName implements Cloneable, Comparable<ComponentName> {
+public final class ComponentName implements Cloneable, Comparable<ComponentName>, Parcelable {
 	private final String mPackage;
 	private final String mClass;
 
@@ -112,7 +113,7 @@ public final class ComponentName implements Cloneable, Comparable<ComponentName>
 	}
 
 	private static void appendShortClassName(StringBuilder sb, String packageName,
-						 String className) {
+	                                         String className) {
 		if (className.startsWith(packageName)) {
 			int PN = packageName.length();
 			int CN = className.length();
@@ -125,7 +126,7 @@ public final class ComponentName implements Cloneable, Comparable<ComponentName>
 	}
 
 	private static void printShortClassName(PrintWriter pw, String packageName,
-						String className) {
+	                                        String className) {
 		if (className.startsWith(packageName)) {
 			int PN = packageName.length();
 			int CN = className.length();

@@ -46,5 +46,4 @@ public class HtcAlertDialog extends AlertDialog {
 	public HtcAlertDialog(Context context) {
 		super(context);
 	}
-
 }

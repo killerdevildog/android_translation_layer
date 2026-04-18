@@ -209,7 +209,7 @@ abstract class ThemedResourceCache<T> {
 	}
 
 	private boolean pruneEntriesLocked(@Nullable LongSparseArray<WeakReference<T>> entries,
-					   int configChanges) {
+	                                   int configChanges) {
 		if (entries == null) {
 			return true;
 		}

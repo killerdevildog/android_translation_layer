@@ -56,7 +56,7 @@ public abstract class Property<T, V> {
 	 * exception.
 	 */
 	public void set(T object, V value) {
-		throw new UnsupportedOperationException("Property " + getName() +" is read-only");
+		throw new UnsupportedOperationException("Property " + getName() + " is read-only");
 	}
 
 	/**

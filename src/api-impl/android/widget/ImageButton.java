@@ -23,5 +23,6 @@ public class ImageButton extends ImageView {
 	protected native void native_setDrawable(long widget, long paintable);
 	@Override
 	protected native void nativeSetOnClickListener(long widget);
-
+	@Override
+	protected void native_setScaleType(long widget, int scale_type) {}
 }

@@ -1,7 +1,7 @@
 package android.view;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InputDevice {
 
@@ -11,7 +11,6 @@ public class InputDevice {
 	public static final int SOURCE_CLASS_GAMEPAD = 0x00000400 | SOURCE_CLASS_BUTTON;
 	public static final int SOURCE_KEYBOARD = 0x00000100 | SOURCE_CLASS_BUTTON;
 	public static final int SOURCE_TOUCHSCREEN = 0x00001000 | SOURCE_CLASS_POINTER;
-
 
 	public static int[] getDeviceIds() {
 		return new int[] {0}; // might work?
@@ -61,7 +60,7 @@ public class InputDevice {
 		return ret;
 	}
 
-	public List<InputDevice.MotionRange>getMotionRanges() {
+	public List<InputDevice.MotionRange> getMotionRanges() {
 		MotionRange[] ranges = new MotionRange[32];
 
 		for (int i = 0; i < ranges.length; i++) {

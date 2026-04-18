@@ -24,6 +24,8 @@ public interface MenuItem {
 
 	public MenuItem setCheckable(boolean checkable);
 
+	public boolean isCheckable();
+
 	public MenuItem setTitleCondensed(CharSequence titleCondensed);
 
 	public MenuItem setTitle(CharSequence title);

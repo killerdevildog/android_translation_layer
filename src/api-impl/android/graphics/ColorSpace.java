@@ -9,5 +9,4 @@ public class ColorSpace {
 	public static ColorSpace get(Named named) {
 		return new ColorSpace();
 	}
-
 }

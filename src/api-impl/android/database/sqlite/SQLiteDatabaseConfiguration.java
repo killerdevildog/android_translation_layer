@@ -42,7 +42,7 @@ public final class SQLiteDatabaseConfiguration {
 	// The pattern we use to strip email addresses from database paths
 	// when constructing a label to use in log messages.
 	private static final Pattern EMAIL_IN_DB_PATTERN =
-			Pattern.compile("[\\w\\.\\-]+@[\\w\\.\\-]+");
+	    Pattern.compile("[\\w\\.\\-]+@[\\w\\.\\-]+");
 
 	/**
 	 * Special path used by in-memory databases.
@@ -91,7 +91,7 @@ public final class SQLiteDatabaseConfiguration {
 	 * The custom functions to register.
 	 */
 	public final ArrayList<SQLiteCustomFunction> customFunctions =
-			new ArrayList<SQLiteCustomFunction>();
+	    new ArrayList<SQLiteCustomFunction>();
 
 	/**
 	 * Creates a database configuration with the required parameters for opening a
@@ -141,7 +141,7 @@ public final class SQLiteDatabaseConfiguration {
 		}
 		if (!path.equals(other.path)) {
 			throw new IllegalArgumentException("other configuration must refer to "
-					+ "the same database.");
+			                                   + "the same database.");
 		}
 
 		openFlags = other.openFlags;
@@ -165,8 +165,8 @@ public final class SQLiteDatabaseConfiguration {
 		 * opened with the password specified as a URI parameter. We do not
 		 * want the password to appear in any log files.  */
 		int iIdx = path.indexOf('?');
-		if( iIdx>=0 ){
-			path = (String) path.subSequence(0, iIdx);
+		if (iIdx >= 0) {
+			path = (String)path.subSequence(0, iIdx);
 		}
 
 		if (path.indexOf('@') == -1) {

@@ -98,20 +98,20 @@ public class CompatibilityInfo {
 	public final float applicationInvertedScale;
 
 	public CompatibilityInfo(ApplicationInfo appInfo, int screenLayout, int sw,
-				 boolean forceCompat) {
+	                         boolean forceCompat) {
 		int compatFlags = 0;
 
 		if (appInfo.requiresSmallestWidthDp != 0 || appInfo.compatibleWidthLimitDp != 0 || appInfo.largestWidthLimitDp != 0) {
 			// New style screen requirements spec.
 			int required = appInfo.requiresSmallestWidthDp != 0
-					   ? appInfo.requiresSmallestWidthDp
-					   : appInfo.compatibleWidthLimitDp;
+			                 ? appInfo.requiresSmallestWidthDp
+			                 : appInfo.compatibleWidthLimitDp;
 			if (required == 0) {
 				required = appInfo.largestWidthLimitDp;
 			}
 			int compat = appInfo.compatibleWidthLimitDp != 0
-					 ? appInfo.compatibleWidthLimitDp
-					 : required;
+			               ? appInfo.compatibleWidthLimitDp
+			               : required;
 			if (compat < required) {
 				compat = required;
 			}
@@ -246,7 +246,7 @@ public class CompatibilityInfo {
 	}
 
 	private CompatibilityInfo(int compFlags,
-				  int dens, float scale, float invertedScale) {
+	                          int dens, float scale, float invertedScale) {
 		mCompatibilityFlags = compFlags;
 		applicationDensity = dens;
 		applicationScale = scale;

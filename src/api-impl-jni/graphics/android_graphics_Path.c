@@ -4,9 +4,11 @@
 
 #include "../generated_headers/android_graphics_Path.h"
 
-JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1create_1builder(JNIEnv *env, jclass this, jlong path_ptr)
+JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1create_1builder(JNIEnv *env, jclass this, jlong path_ptr, jlong builder_ptr)
 {
-	GskPathBuilder *builder = gsk_path_builder_new();
+	GskPathBuilder *builder = _PTR(builder_ptr);
+	if (!builder)
+		builder = gsk_path_builder_new();
 	if (path_ptr) {
 		GskPath *path = _PTR(path_ptr);
 		gsk_path_builder_add_path(builder, path);
@@ -20,7 +22,7 @@ JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1create_1path(JNIEnv *
 	GskPathBuilder *builder = _PTR(builder_ptr);
 	if (!builder)
 		builder = gsk_path_builder_new();
-	return _INTPTR(gsk_path_builder_free_to_path(builder));
+	return _INTPTR(gsk_path_builder_to_path(builder));
 }
 
 JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1ref_1path(JNIEnv *env, jclass this, jlong path_ptr)
@@ -59,22 +61,22 @@ void Java_android_graphics_Path_native_1arc_1to(JNIEnv *env, jclass this, jlong 
 
 	/* compute ellipse center and radii */
 	const graphene_point_t center = GRAPHENE_POINT_INIT((left + right) / 2.0,
-	                                                    (top  + bottom) / 2.0);
+	                                                    (top + bottom) / 2.0);
 	const double rx = fabs(right - left) / 2.0;
 	const double ry = fabs(bottom - top) / 2.0;
 
 	/* compute points on the ellipse from angles */
 	const double start_angle = DEG2RAD(start_angle_deg);
-	const double end_angle   = DEG2RAD(start_angle_deg + sweep_angle_deg);
+	const double end_angle = DEG2RAD(start_angle_deg + sweep_angle_deg);
 
 	graphene_point_t p1;
 	graphene_point_t p2;
 	graphene_point_init(&p1,
-	                     center.x + rx * cos(start_angle),
-	                     center.y + ry * sin(start_angle));
+	                    center.x + rx * cos(start_angle),
+	                    center.y + ry * sin(start_angle));
 	graphene_point_init(&p2,
-	                     center.x + rx * cos(end_angle),
-	                     center.y + ry * sin(end_angle));
+	                    center.x + rx * cos(end_angle),
+	                    center.y + ry * sin(end_angle));
 
 	/* handle force_move_to */
 	if (force_move_to)
@@ -84,7 +86,7 @@ void Java_android_graphics_Path_native_1arc_1to(JNIEnv *env, jclass this, jlong 
 
 	/* compute flags */
 	const gboolean large_arc_flag = (fabs(sweep_angle_deg) >= 180.0);
-	const gboolean sweep_flag     = (sweep_angle_deg > 0.0);
+	const gboolean sweep_flag = (sweep_angle_deg > 0.0);
 
 	gsk_path_builder_svg_arc_to(builder, rx, ry, 0.0, large_arc_flag, sweep_flag, p2.x, p2.y);
 }
@@ -124,7 +126,7 @@ struct path_foreach_data {
 	graphene_matrix_t *matrix;
 	graphene_point_t tmp_pts[4];
 };
-static gboolean path_foreach_transform(GskPathOperation op, const graphene_point_t* pts, gsize n_pts, float weight, gpointer user_data)
+static gboolean path_foreach_transform(GskPathOperation op, const graphene_point_t *pts, gsize n_pts, float weight, gpointer user_data)
 {
 	struct path_foreach_data *data = user_data;
 	for (gsize i = 0; i < n_pts; i++) {
@@ -195,7 +197,7 @@ JNIEXPORT jlong JNICALL Java_android_graphics_Path_native_1transform(JNIEnv *env
 
 JNIEXPORT void JNICALL Java_android_graphics_Path_native_1add_1rect(JNIEnv *env, jclass this, jlong builder_ptr, jfloat left, jfloat top, jfloat right, jfloat bottom)
 {
-	gsk_path_builder_add_rect(_PTR(builder_ptr), &GRAPHENE_RECT_INIT(left, top, right-left, bottom-top));
+	gsk_path_builder_add_rect(_PTR(builder_ptr), &GRAPHENE_RECT_INIT(left, top, right - left, bottom - top));
 }
 
 JNIEXPORT void JNICALL Java_android_graphics_Path_native_1add_1round_1rect(JNIEnv *env, jclass this, jlong builder_ptr, jfloat left, jfloat top, jfloat right, jfloat bottom, jfloatArray radii_jobj)

@@ -86,16 +86,17 @@ public class StateSet {
 	public static final int VIEW_STATE_DRAG_HOVERED = 1 << 9;
 
 	static final int[] VIEW_STATE_IDS = new int[] {
-	    R.attr.state_window_focused, VIEW_STATE_WINDOW_FOCUSED,
-	    R.attr.state_selected, VIEW_STATE_SELECTED,
-	    R.attr.state_focused, VIEW_STATE_FOCUSED,
-	    R.attr.state_enabled, VIEW_STATE_ENABLED,
-	    R.attr.state_pressed, VIEW_STATE_PRESSED,
-	    R.attr.state_activated, VIEW_STATE_ACTIVATED,
-	    R.attr.state_accelerated, VIEW_STATE_ACCELERATED,
-	    R.attr.state_hovered, VIEW_STATE_HOVERED,
-	    R.attr.state_drag_can_accept, VIEW_STATE_DRAG_CAN_ACCEPT,
-	    R.attr.state_drag_hovered, VIEW_STATE_DRAG_HOVERED};
+		R.attr.state_window_focused, VIEW_STATE_WINDOW_FOCUSED,
+		R.attr.state_selected, VIEW_STATE_SELECTED,
+		R.attr.state_focused, VIEW_STATE_FOCUSED,
+		R.attr.state_enabled, VIEW_STATE_ENABLED,
+		R.attr.state_pressed, VIEW_STATE_PRESSED,
+		R.attr.state_activated, VIEW_STATE_ACTIVATED,
+		R.attr.state_accelerated, VIEW_STATE_ACCELERATED,
+		R.attr.state_hovered, VIEW_STATE_HOVERED,
+		R.attr.state_drag_can_accept, VIEW_STATE_DRAG_CAN_ACCEPT,
+		R.attr.state_drag_hovered, VIEW_STATE_DRAG_HOVERED
+	};
 
 	static {
 		if ((VIEW_STATE_IDS.length / 2) != R.styleable.ViewDrawableStates.length) {

@@ -12,4 +12,8 @@ public class ShortcutManager {
 	}
 	public void removeLongLivedShortcuts(List<String> shortcutIds) {
 	}
+
+	public boolean setDynamicShortcuts(List<ShortcutInfo> shortcutInfoList) {
+		return true;
+	}
 }

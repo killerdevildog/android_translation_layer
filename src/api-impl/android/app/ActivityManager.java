@@ -8,15 +8,14 @@ import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Process;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public class ActivityManager {
 
-	public static class RunningAppProcessInfo{
+	public static class RunningAppProcessInfo {
 		public int importance;
 		public int pid;
 		public int uid;
@@ -37,7 +36,7 @@ public class ActivityManager {
 		return Arrays.asList(new RunningAppProcessInfo(Process.myPid(), Context.this_application.getPackageName()));
 	}
 
-	public boolean isLowRamDevice() {return false;}
+	public boolean isLowRamDevice() { return false; }
 
 	public static class MemoryInfo {
 		/* For now, just always report there's 10GB free RAM */
@@ -50,8 +49,7 @@ public class ActivityManager {
 		public boolean lowMemory = false;
 	}
 
-	public void getMemoryInfo(MemoryInfo outInfo)
-	{
+	public void getMemoryInfo(MemoryInfo outInfo) {
 		outInfo = new MemoryInfo();
 	}
 
@@ -59,12 +57,12 @@ public class ActivityManager {
 		return new ConfigurationInfo();
 	}
 
-	public int getMemoryClass() {return 20;}  // suggested heap size in MB
-	public int getLargeMemoryClass() {return 60;} // value chosen arbitrarily
+	public int getMemoryClass() { return 20; }      // suggested heap size in MB
+	public int getLargeMemoryClass() { return 60; } // value chosen arbitrarily
 
 	public static void getMyMemoryState(RunningAppProcessInfo outInfo) {}
 
-	public boolean clearApplicationUserData() {return false;}
+	public boolean clearApplicationUserData() { return false; }
 
 	public static class AppTask {}
 	public List<ActivityManager.AppTask> getAppTasks() {
@@ -88,17 +86,16 @@ public class ActivityManager {
 		}
 	}
 
-
 	public List<RunningServiceInfo> getRunningServices(int maxNum)
-		throws SecurityException {
-			return new ArrayList<>();
+	    throws SecurityException {
+		return new ArrayList<>();
 	}
 
 	public List<ApplicationExitInfo> getHistoricalProcessExitReasons(String pkgname, int pid, int maxNum) {
 		return Collections.emptyList();
 	}
 
-	public static boolean isUserAMonkey() {return false;}
+	public static boolean isUserAMonkey() { return false; }
 
 	public void moveTaskToFront(int taskId, int flags, Bundle options) {
 	}

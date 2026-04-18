@@ -67,7 +67,7 @@ public class GridView extends AbsListView {
 		super(context, attrs, defStyle);
 
 		TypedArray a = context.obtainStyledAttributes(attrs,
-							      com.android.internal.R.styleable.GridView, defStyle, 0);
+		                                              com.android.internal.R.styleable.GridView, defStyle, 0);
 
 		int hSpacing = a.getDimensionPixelOffset(
 		    com.android.internal.R.styleable.GridView_horizontalSpacing, 0);
@@ -372,7 +372,7 @@ public class GridView extends AbsListView {
 			adjustViewsUpOrDown();
 		} else {
 			final int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom,
-										 fadingEdgeLength, numColumns, rowStart);
+			                                                         fadingEdgeLength, numColumns, rowStart);
 			final int offset = bottomSelectionPixel - referenceView.getBottom();
 			offsetChildrenTopAndBottom(offset);
 			fillUp(rowStart - 1, referenceView.getTop() - verticalSpacing);
@@ -571,7 +571,7 @@ public class GridView extends AbsListView {
 					// Fill the gap that was opened below the last position with more rows, if
 					// possible
 					fillDown(lastPosition + (!mStackFromBottom ? 1 : numColumns),
-						 lastChild.getBottom() + verticalSpacing);
+					         lastChild.getBottom() + verticalSpacing);
 					// Close up the remaining gap
 					adjustViewsUpOrDown();
 				}
@@ -612,7 +612,7 @@ public class GridView extends AbsListView {
 
 		int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
 		int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength,
-								   numColumns, rowStart);
+		                                                   numColumns, rowStart);
 
 		sel = makeRow(mStackFromBottom ? rowEnd : rowStart, selectedTop, true);
 		// Possibly changed again in fillUp if we add rows above this one.
@@ -645,7 +645,7 @@ public class GridView extends AbsListView {
 	 * @return The bottom-most pixel we can draw the selection into
 	 */
 	private int getBottomSelectionPixel(int childrenBottom, int fadingEdgeLength,
-					    int numColumns, int rowStart) {
+	                                    int numColumns, int rowStart) {
 		// Last pixel we can draw the selection into
 		int bottomSelectionPixel = childrenBottom;
 		if (rowStart + numColumns - 1 < mItemCount - 1) {
@@ -681,7 +681,7 @@ public class GridView extends AbsListView {
 	 *        selection into
 	 */
 	private void adjustForBottomFadingEdge(View childInSelectedRow,
-					       int topSelectionPixel, int bottomSelectionPixel) {
+	                                       int topSelectionPixel, int bottomSelectionPixel) {
 		// Some of the newly selected item extends below the bottom of the
 		// list
 		if (childInSelectedRow.getBottom() > bottomSelectionPixel) {
@@ -710,7 +710,7 @@ public class GridView extends AbsListView {
 	 *        selection into
 	 */
 	private void adjustForTopFadingEdge(View childInSelectedRow,
-					    int topSelectionPixel, int bottomSelectionPixel) {
+	                                    int topSelectionPixel, int bottomSelectionPixel) {
 		// Some of the newly selected item extends above the top of the list
 		if (childInSelectedRow.getTop() < topSelectionPixel) {
 			// Find space required to bring the top of the selected item
@@ -769,7 +769,7 @@ public class GridView extends AbsListView {
 
 		final int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
 		final int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength,
-									 numColumns, rowStart);
+		                                                         numColumns, rowStart);
 
 		// Possibly changed again in fillUp if we add rows above this one.
 		mFirstPosition = rowStart;
@@ -829,8 +829,7 @@ public class GridView extends AbsListView {
 		if (mRequestedNumColumns == AUTO_FIT) {
 			if (requestedColumnWidth > 0) {
 				// Client told us to pick the number of columns
-				mNumColumns = (availableSpace + requestedHorizontalSpacing) /
-					      (requestedColumnWidth + requestedHorizontalSpacing);
+				mNumColumns = (availableSpace + requestedHorizontalSpacing) / (requestedColumnWidth + requestedHorizontalSpacing);
 			} else {
 				// Just make up a number if we don't have enough info
 				mNumColumns = 2;
@@ -852,8 +851,7 @@ public class GridView extends AbsListView {
 				break;
 
 			default:
-				int spaceLeftOver = availableSpace - (mNumColumns * requestedColumnWidth) -
-						    ((mNumColumns - 1) * requestedHorizontalSpacing);
+				int spaceLeftOver = availableSpace - (mNumColumns * requestedColumnWidth) - ((mNumColumns - 1) * requestedHorizontalSpacing);
 				switch (stretchMode) {
 					case STRETCH_COLUMN_WIDTH:
 						// Stretch the columns
@@ -865,8 +863,7 @@ public class GridView extends AbsListView {
 						// Stretch the spacing between columns
 						mColumnWidth = requestedColumnWidth;
 						if (mNumColumns > 1) {
-							mHorizontalSpacing = requestedHorizontalSpacing +
-									     spaceLeftOver / (mNumColumns - 1);
+							mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver / (mNumColumns - 1);
 						} else {
 							mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
 						}
@@ -910,13 +907,13 @@ public class GridView extends AbsListView {
 			AbsListView.LayoutParams lp = (AbsListView.LayoutParams)child.getLayoutParams();
 			if (lp == null) {
 				lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-								  ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+				                                  ViewGroup.LayoutParams.WRAP_CONTENT, 0);
 				child.setLayoutParams(lp);
 			}
 			lp.viewType = childViewType;
 
 			final int childWidthSpec = ViewGroup.getChildMeasureSpec(widthMeasureSpec,
-										 mListPadding.left + mListPadding.right, lp.width);
+			                                                         mListPadding.left + mListPadding.right, lp.width);
 
 			int lpHeight = lp.height;
 
@@ -936,8 +933,7 @@ public class GridView extends AbsListView {
 		}
 
 		if (heightMode == MeasureSpec.UNSPECIFIED) {
-			heightSize = mListPadding.top + mListPadding.bottom + childHeight +
-				     getVerticalFadingEdgeLength() * 2;
+			heightSize = mListPadding.top + mListPadding.bottom + childHeight + getVerticalFadingEdgeLength() * 2;
 		}
 
 		if (heightMode == MeasureSpec.AT_MOST) {
@@ -1070,7 +1066,7 @@ public class GridView extends AbsListView {
 
 			if (dataChanged) {
 				for (int i = 0; i < childCount; i++) {
-					recycleBin.addScrapView(getChildAt(i), firstPosition+i);
+					recycleBin.addScrapView(getChildAt(i), firstPosition + i);
 				}
 			} else {
 				recycleBin.fillActiveViews(childCount, firstPosition);
@@ -1079,7 +1075,7 @@ public class GridView extends AbsListView {
 			// Clear out old views
 			// removeAllViewsInLayout();
 			//detachAllViewsFromParent();
-			for (int i=getChildCount() - 1; i >= 0; i--) {
+			for (int i = getChildCount() - 1; i >= 0; i--) {
 				detachViewFromParent(i);
 			}
 
@@ -1177,7 +1173,7 @@ public class GridView extends AbsListView {
 	 * @return View that was added
 	 */
 	private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,
-				    boolean selected, int where) {
+	                            boolean selected, int where) {
 		View child;
 
 		if (!mDataChanged) {
@@ -1218,7 +1214,7 @@ public class GridView extends AbsListView {
 	 *
 	 */
 	private void setupChild(View child, int position, int y, boolean flow, int childrenLeft,
-				boolean selected, boolean recycled, int where) {
+	                        boolean selected, boolean recycled, int where) {
 		boolean isSelected = selected && shouldShowSelector();
 
 		final boolean updateChildSelected = isSelected != child.isSelected();
@@ -1229,7 +1225,7 @@ public class GridView extends AbsListView {
 		AbsListView.LayoutParams p = (AbsListView.LayoutParams)child.getLayoutParams();
 		if (p == null) {
 			p = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-							 ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+			                                 ViewGroup.LayoutParams.WRAP_CONTENT, 0);
 		}
 		p.viewType = mAdapter.getItemViewType(position);
 
@@ -1507,7 +1503,7 @@ public class GridView extends AbsListView {
 				return rowEnd == count - 1;
 			default:
 				throw new IllegalArgumentException("direction must be one of "
-								   + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
+				                                   + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
 		}
 	}
 

@@ -439,7 +439,7 @@ public class DateFormat {
 				case 'c':
 				case 'E':
 					replacement = getDayOfWeekString(localeData,
-									 inDate.get(Calendar.DAY_OF_WEEK), count, c);
+					                                 inDate.get(Calendar.DAY_OF_WEEK), count, c);
 					break;
 				case 'K': // hour in am/pm (0-11)
 				case 'h': // hour in am/pm (1-12)
@@ -465,7 +465,7 @@ public class DateFormat {
 				case 'L':
 				case 'M':
 					replacement = getMonthString(localeData,
-								     inDate.get(Calendar.MONTH), count, c);
+					                             inDate.get(Calendar.MONTH), count, c);
 					break;
 				case 'm':
 					replacement = zeroPad(inDate.get(Calendar.MINUTE), count);
@@ -526,9 +526,8 @@ public class DateFormat {
 	private static String getTimeZoneString(Calendar inDate, int count) {
 		TimeZone tz = inDate.getTimeZone();
 		if (count < 2) { // FIXME: shouldn't this be <= 2 ?
-			return formatZoneOffset(inDate.get(Calendar.DST_OFFSET) +
-						    inDate.get(Calendar.ZONE_OFFSET),
-						count);
+			return formatZoneOffset(inDate.get(Calendar.DST_OFFSET) + inDate.get(Calendar.ZONE_OFFSET),
+			                        count);
 		} else {
 			boolean dst = inDate.get(Calendar.DST_OFFSET) != 0;
 			return tz.getDisplayName(dst, TimeZone.SHORT);
@@ -556,7 +555,7 @@ public class DateFormat {
 
 	private static String getYearString(int year, int count) {
 		return (count <= 2) ? zeroPad(year % 100, 2)
-				    : String.format(Locale.getDefault(), "%d", year);
+		                    : String.format(Locale.getDefault(), "%d", year);
 	}
 
 	private static int appendQuotedText(SpannableStringBuilder s, int i, int len) {

@@ -178,7 +178,7 @@ public class Region {
 	 * guarantee that the rectangle is contained by this region.
 	 */
 	public native boolean quickContains(int left, int top, int right,
-					    int bottom);
+	                                    int bottom);
 	/**
 	 * Return true if the region is empty, or if the specified rectangle does
 	 * not intersect the region. Returning false is not a guarantee that they
@@ -245,7 +245,7 @@ public class Region {
 	 */
 	public boolean op(int left, int top, int right, int bottom, Op op) {
 		return nativeOp(mNativeRegion, left, top, right, bottom,
-				op.nativeInt);
+		                op.nativeInt);
 	}
 	/**
 	 * Perform the specified Op on this region and the specified region. Return
@@ -260,7 +260,7 @@ public class Region {
 	 */
 	public boolean op(Rect rect, Region region, Op op) {
 		return nativeOp(mNativeRegion, rect, region.mNativeRegion,
-				op.nativeInt);
+		                op.nativeInt);
 	}
 	/**
 	 * Set this region to the result of performing the Op on the specified
@@ -337,21 +337,21 @@ public class Region {
 		return mNativeRegion;
 	}
 	private static native boolean nativeEquals(int native_r1, int native_r2);
-	private static int nativeConstructor() {return -1;}
+	private static int nativeConstructor() { return -1; }
 	private static native void nativeDestructor(int native_region);
 	private static native void nativeSetRegion(int native_dst, int native_src);
 	private static native boolean nativeSetRect(int native_dst, int left,
-						    int top, int right, int bottom);
+	                                            int top, int right, int bottom);
 	private static native boolean nativeSetPath(int native_dst, long native_path,
-						    int native_clip);
+	                                            int native_clip);
 	private static native boolean nativeGetBounds(int native_region, Rect rect);
 	private static native boolean nativeGetBoundaryPath(int native_region,
-							    long native_path);
+	                                                    long native_path);
 	private static native boolean nativeOp(int native_dst, int left, int top,
-					       int right, int bottom, int op);
+	                                       int right, int bottom, int op);
 	private static native boolean nativeOp(int native_dst, Rect rect,
-					       int native_region, int op);
+	                                       int native_region, int op);
 	private static native boolean nativeOp(int native_dst, int native_region1,
-					       int native_region2, int op);
+	                                       int native_region2, int op);
 	private static native String nativeToString(int native_region);
 }

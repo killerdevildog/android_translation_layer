@@ -16,7 +16,6 @@
 
 package android.widget;
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -53,7 +52,7 @@ public class ViewAnimator extends FrameLayout {
 
 		TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.ViewAnimator);
 		saveAttributeDataForStyleable(context, com.android.internal.R.styleable.ViewAnimator,
-				attrs, a, 0, 0);
+		                              attrs, a, 0, 0);
 
 		int resource = a.getResourceId(com.android.internal.R.styleable.ViewAnimator_inAnimation, 0);
 		if (resource > 0) {
@@ -87,11 +86,11 @@ public class ViewAnimator extends FrameLayout {
 		// For compatibility, default to measure children, but allow XML
 		// attribute to override.
 		final TypedArray a = context.obtainStyledAttributes(attrs,
-				com.android.internal.R.styleable.FrameLayout);
+		                                                    com.android.internal.R.styleable.FrameLayout);
 		saveAttributeDataForStyleable(context, com.android.internal.R.styleable.FrameLayout,
-				attrs, a, 0, 0);
+		                              attrs, a, 0, 0);
 		final boolean measureAllChildren = a.getBoolean(
-				com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
+		    com.android.internal.R.styleable.FrameLayout_measureAllChildren, true);
 		setMeasureAllChildren(measureAllChildren);
 		a.recycle();
 	}

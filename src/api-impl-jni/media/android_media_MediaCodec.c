@@ -9,24 +9,24 @@
 #include <libavutil/pixfmt.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
+#include <drm_fourcc.h>
 #include <libavcodec/avcodec.h>
 #include <libavutil/hwcontext_drm.h>
 #include <libavutil/pixdesc.h>
-#include <drm_fourcc.h>
 #include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
 
 #include <stdlib.h>
 
-#include "jni.h"
-#include "../generated_headers/android_media_MediaCodec.h"
-#include "../util.h"
 #include "../defines.h"
+#include "../util.h"
+#include "../generated_headers/android_media_MediaCodec.h"
 #include "../../libandroid/native_window.h"
 #include "../widgets/android_view_SurfaceView.h"
+#include "jni.h"
 
 struct ATL_codec_context {
 	AVCodecContext *codec;
@@ -36,7 +36,7 @@ struct ATL_codec_context {
 			int sample_rate;
 		} audio;
 		struct {
-			struct SwsContext *sws;  // for software decoding
+			struct SwsContext *sws; // for software decoding
 			SurfaceViewWidget *surface_view_widget;
 			size_t extradata_size;
 			uint8_t *extradata;
@@ -75,9 +75,9 @@ JNIEXPORT void JNICALL Java_android_media_MediaCodec_native_1configure_1audio(JN
 	ctx->audio.sample_rate = sample_rate;
 	codec_ctx->sample_rate = sample_rate;
 	if (nb_channels == 1)
-		codec_ctx->ch_layout = (AVChannelLayout) AV_CHANNEL_LAYOUT_MONO;
+		codec_ctx->ch_layout = (AVChannelLayout)AV_CHANNEL_LAYOUT_MONO;
 	else if (nb_channels == 2)
-		codec_ctx->ch_layout = (AVChannelLayout) AV_CHANNEL_LAYOUT_STEREO;
+		codec_ctx->ch_layout = (AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO;
 	else {
 		printf("MediaCodec: Unsupported number of channels %d\n", nb_channels);
 		exit(0);
@@ -105,7 +105,7 @@ static const struct {
 	int nb_layers;
 	uint32_t layers[AV_DRM_MAX_PLANES];
 } drm_format_map[] = {
-	{ DRM_FORMAT_NV12, 2, { DRM_FORMAT_R8, DRM_FORMAT_GR88 } },
+	{DRM_FORMAT_NV12, 2, {DRM_FORMAT_R8, DRM_FORMAT_GR88}},
 };
 
 static uint32_t get_drm_frame_format(const AVDRMFrameDescriptor *drm_frame_desc)
@@ -129,7 +129,7 @@ static uint32_t get_drm_frame_format(const AVDRMFrameDescriptor *drm_frame_desc)
 }
 
 static enum AVPixelFormat get_hw_format(AVCodecContext *ctx,
-		const enum AVPixelFormat *pix_fmts)
+                                        const enum AVPixelFormat *pix_fmts)
 {
 	size_t i;
 	for (i = 0; pix_fmts[i] != AV_PIX_FMT_NONE; i++) {
@@ -141,14 +141,14 @@ static enum AVPixelFormat get_hw_format(AVCodecContext *ctx,
 	fprintf(stderr, "Failed to find HW pixel format\n");
 	if (i > 0) {
 		printf("falling back to software decode\n");
-		return pix_fmts[i-1];  // last pixel format should be for software decoding
+		return pix_fmts[i - 1]; // last pixel format should be for software decoding
 	}
 	return AV_PIX_FMT_NONE;
 }
 
 struct render_frame_data {
 	AVFrame *frame;
-	GdkTexture *texture;  // for software decoding
+	GdkTexture *texture; // for software decoding
 	SurfaceViewWidget *surface_view_widget;
 };
 
@@ -167,7 +167,7 @@ static GdkTexture *import_drm_frame_desc_as_texture(const AVDRMFrameDescriptor *
 		fprintf(stderr, "Failed to get DRM frame format\n");
 		return NULL;
 	}
-	GdkDmabufTextureBuilder* builder = gdk_dmabuf_texture_builder_new();
+	GdkDmabufTextureBuilder *builder = gdk_dmabuf_texture_builder_new();
 	gdk_dmabuf_texture_builder_set_display(builder, gdk_display_get_default());
 	int k = 0;
 	for (int i = 0; i < drm_frame_desc->nb_layers; i++) {
@@ -176,7 +176,7 @@ static GdkTexture *import_drm_frame_desc_as_texture(const AVDRMFrameDescriptor *
 		for (int j = 0; j < drm_layer->nb_planes; j++) {
 			const AVDRMPlaneDescriptor *drm_plane = &drm_layer->planes[j];
 			const AVDRMObjectDescriptor *drm_object =
-				&drm_frame_desc->objects[drm_plane->object_index];
+			    &drm_frame_desc->objects[drm_plane->object_index];
 
 			gdk_dmabuf_texture_builder_set_modifier(builder, drm_object->format_modifier);
 			gdk_dmabuf_texture_builder_set_offset(builder, k, drm_plane->offset);
@@ -240,12 +240,11 @@ JNIEXPORT void JNICALL Java_android_media_MediaCodec_native_1configure_1video(JN
 		const AVCodecHWConfig *config = avcodec_get_hw_config(codec_ctx->codec, i);
 		if (!config) {
 			fprintf(stderr, "Decoder %s doesn't support pixel format VAAPI or DRM_PRIME\n",
-				codec_ctx->codec->name);
+			        codec_ctx->codec->name);
 			break;
 		}
 
-		if ((config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) &&
-				(config->pix_fmt == AV_PIX_FMT_VAAPI || config->pix_fmt == AV_PIX_FMT_DRM_PRIME)) {
+		if ((config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) && (config->pix_fmt == AV_PIX_FMT_VAAPI || config->pix_fmt == AV_PIX_FMT_DRM_PRIME)) {
 			fprintf(stderr, "Selected pixel format %s\n", av_get_pix_fmt_name(config->pix_fmt));
 			codec_ctx->get_format = get_hw_format;
 
@@ -269,7 +268,7 @@ JNIEXPORT void JNICALL Java_android_media_MediaCodec_native_1start(JNIEnv *env, 
 	struct ATL_codec_context *ctx = _PTR(codec);
 	AVCodecContext *codec_ctx = ctx->codec;
 
-	if(avcodec_open2(codec_ctx, codec_ctx->codec, NULL)<0){
+	if (avcodec_open2(codec_ctx, codec_ctx->codec, NULL) < 0) {
 		printf("Codec cannot be found");
 	}
 }
@@ -284,7 +283,7 @@ JNIEXPORT jint JNICALL Java_android_media_MediaCodec_native_1queueInputBuffer(JN
 	struct ATL_codec_context *ctx = _PTR(codec);
 	AVCodecContext *codec_ctx = ctx->codec;
 	AVPacket *pkt = NULL;
-	if (buffer) {  // buffer can be null if we're sending EOF
+	if (buffer) { // buffer can be null if we're sending EOF
 		pkt = av_packet_alloc();
 		pkt->size = get_nio_buffer_size(env, buffer);
 		pkt->data = get_nio_buffer(env, buffer, &array_ref, &array);
@@ -349,21 +348,21 @@ JNIEXPORT jint JNICALL Java_android_media_MediaCodec_native_1dequeueOutputBuffer
 			printf("ctx->sample_fmt = %d\n", codec_ctx->sample_fmt);
 
 			int ret = swr_alloc_set_opts2(&ctx->audio.swr,
-				&codec_ctx->ch_layout,
-				AV_SAMPLE_FMT_S16,
-				ctx->audio.sample_rate,
-				&codec_ctx->ch_layout,
-				codec_ctx->sample_fmt,
-				codec_ctx->sample_rate,
-				0,
-				NULL);
+			                              &codec_ctx->ch_layout,
+			                              AV_SAMPLE_FMT_S16,
+			                              ctx->audio.sample_rate,
+			                              &codec_ctx->ch_layout,
+			                              codec_ctx->sample_fmt,
+			                              codec_ctx->sample_rate,
+			                              0,
+			                              NULL);
 			if (ret != 0) {
 				fprintf(stderr, "FFmpegDecoder error: Swresampler alloc fail\n");
 			}
 			swr_init(ctx->audio.swr);
 		}
 		uint8_t *raw_buffer = get_nio_buffer(env, buffer, &array_ref, &array);
-		int outSamples = swr_convert(ctx->audio.swr, &raw_buffer, frame->nb_samples, (uint8_t const **) (frame->data), frame->nb_samples);
+		int outSamples = swr_convert(ctx->audio.swr, &raw_buffer, frame->nb_samples, (uint8_t const **)(frame->data), frame->nb_samples);
 		release_nio_buffer(env, array_ref, array);
 		_SET_INT_FIELD(buffer_info, "offset", 0);
 		_SET_INT_FIELD(buffer_info, "size", outSamples * 2 * codec_ctx->ch_layout.nb_channels);
@@ -407,16 +406,17 @@ static gboolean render_frame(void *data)
 	AVDRMFrameDescriptor *drm_frame_desc = (void *)drm_frame->data[0];
 
 	GdkTexture *texture = import_drm_frame_desc_as_texture(drm_frame_desc, drm_frame->width, drm_frame->height, drm_frame);
-	surface_view_widget_set_texture(d->surface_view_widget, texture);
+	surface_view_widget_set_texture(d->surface_view_widget, texture, FALSE);
 	free(d);
 
 	return G_SOURCE_REMOVE;
 }
 
-static gboolean render_texture(void *data) {
+static gboolean render_texture(void *data)
+{
 	struct render_frame_data *d = (struct render_frame_data *)data;
 
-	surface_view_widget_set_texture(d->surface_view_widget, d->texture);
+	surface_view_widget_set_texture(d->surface_view_widget, d->texture, FALSE);
 
 	free(d);
 	return G_SOURCE_REMOVE;
@@ -461,10 +461,10 @@ JNIEXPORT void JNICALL Java_android_media_MediaCodec_native_1releaseOutputBuffer
 
 			// use swscale to convert YUV to RGB
 			ctx->video.sws = sws_getCachedContext(ctx->video.sws, frame->width, frame->height, frame->format,
-						frame->width, frame->height, gdk_pix_fmt, 0, NULL, NULL, NULL);
+			                                      frame->width, frame->height, gdk_pix_fmt, 0, NULL, NULL, NULL);
 			guchar *data_rgb = g_try_malloc0(frame->height * stride);
-			sws_scale(ctx->video.sws, (const uint8_t * const *)frame->data, frame->linesize, 0,
-						frame->height, (uint8_t *[1]) { data_rgb }, (int[1]) { stride });
+			sws_scale(ctx->video.sws, (const uint8_t *const *)frame->data, frame->linesize, 0,
+			          frame->height, (uint8_t *[1]){data_rgb}, (int[1]){stride});
 
 			GBytes *bytes = g_bytes_new_take(data_rgb, frame->height * stride);
 			GdkTexture *texture = gdk_memory_texture_new(frame->width, frame->height, gdk_mem_fmt, bytes, stride);
@@ -472,7 +472,7 @@ JNIEXPORT void JNICALL Java_android_media_MediaCodec_native_1releaseOutputBuffer
 			data->texture = texture;
 			data->surface_view_widget = ctx->video.surface_view_widget;
 			g_idle_add(render_texture, data);
-			g_bytes_unref (bytes);
+			g_bytes_unref(bytes);
 			av_frame_free(&frame);
 			return;
 		}

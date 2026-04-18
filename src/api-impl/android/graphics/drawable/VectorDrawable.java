@@ -14,16 +14,6 @@
 
 package android.graphics.drawable;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Stack;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.android.internal.R;
-
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.content.res.ColorStateList;
@@ -52,6 +42,13 @@ import android.util.Log;
 import android.util.MathUtils;
 // import android.util.PathParser;
 import android.util.Xml;
+import com.android.internal.R;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 class PathParser {
 	static final String LOGTAG = PathParser.class.getSimpleName();
@@ -107,7 +104,7 @@ class PathParser {
 			return null;
 		}
 		PathDataNode[] copy = new PathParser.PathDataNode[source.length];
-		for (int i = 0; i < source.length; i ++) {
+		for (int i = 0; i < source.length; i++) {
 			copy[i] = new PathDataNode(source[i]);
 		}
 		return copy;
@@ -124,9 +121,9 @@ class PathParser {
 		if (nodesFrom.length != nodesTo.length) {
 			return false;
 		}
-		for (int i = 0; i < nodesFrom.length; i ++) {
+		for (int i = 0; i < nodesFrom.length; i++) {
 			if (nodesFrom[i].mType != nodesTo[i].mType
-					|| nodesFrom[i].mParams.length != nodesTo[i].mParams.length) {
+			    || nodesFrom[i].mParams.length != nodesTo[i].mParams.length) {
 				return false;
 			}
 		}
@@ -140,9 +137,9 @@ class PathParser {
 	 * @param source The source path represented in an array of PathDataNode
 	 */
 	public static void updateNodes(PathDataNode[] target, PathDataNode[] source) {
-		for (int i = 0; i < source.length; i ++) {
+		for (int i = 0; i < source.length; i++) {
 			target[i].mType = source[i].mType;
-			for (int j = 0; j < source[i].mParams.length; j ++) {
+			for (int j = 0; j < source[i].mParams.length; j++) {
 				target[i].mParams[j] = source[i].mParams[j];
 			}
 		}
@@ -156,7 +153,7 @@ class PathParser {
 			// Therefore, when searching for next command, we should ignore 'e'
 			// and 'E'.
 			if ((((c - 'A') * (c - 'Z') <= 0) || ((c - 'a') * (c - 'z') <= 0))
-					&& c != 'e' && c != 'E') {
+			    && c != 'e' && c != 'E') {
 				return end;
 			}
 			end++;
@@ -198,7 +195,7 @@ class PathParser {
 				endPosition = result.mEndPosition;
 				if (startPosition < endPosition) {
 					results[count++] = Float.parseFloat(
-							s.substring(startPosition, endPosition));
+					    s.substring(startPosition, endPosition));
 				}
 				if (result.mEndWithNegOrDot) {
 					// Keep the '-' or '.' sign with next number.
@@ -304,14 +301,14 @@ class PathParser {
 		 * @param fraction The fraction to interpolate.
 		 */
 		public void interpolatePathDataNode(PathDataNode nodeFrom,
-				PathDataNode nodeTo, float fraction) {
+		                                    PathDataNode nodeTo, float fraction) {
 			for (int i = 0; i < nodeFrom.mParams.length; i++) {
 				mParams[i] = nodeFrom.mParams[i] * (1 - fraction)
-						+ nodeTo.mParams[i] * fraction;
+				           + nodeTo.mParams[i] * fraction;
 			}
 		}
 		private static void addCommand(Path path, float[] current,
-				char previousCmd, char cmd, float[] val) {
+		                               char previousCmd, char cmd, float[] val) {
 			int incr = 2;
 			float currentX = current[0];
 			float currentY = current[1];
@@ -407,7 +404,7 @@ class PathParser {
 						break;
 					case 'c': // curveto - Draws a cubic Bézier curve (relative)
 						path.rCubicTo(val[k + 0], val[k + 1], val[k + 2], val[k + 3],
-								val[k + 4], val[k + 5]);
+						              val[k + 4], val[k + 5]);
 						ctrlPointX = currentX + val[k + 2];
 						ctrlPointY = currentY + val[k + 3];
 						currentX += val[k + 4];
@@ -415,7 +412,7 @@ class PathParser {
 						break;
 					case 'C': // curveto - Draws a cubic Bézier curve
 						path.cubicTo(val[k + 0], val[k + 1], val[k + 2], val[k + 3],
-								val[k + 4], val[k + 5]);
+						             val[k + 4], val[k + 5]);
 						currentX = val[k + 4];
 						currentY = val[k + 5];
 						ctrlPointX = val[k + 2];
@@ -425,13 +422,13 @@ class PathParser {
 						reflectiveCtrlPointX = 0;
 						reflectiveCtrlPointY = 0;
 						if (previousCmd == 'c' || previousCmd == 's'
-								|| previousCmd == 'C' || previousCmd == 'S') {
+						    || previousCmd == 'C' || previousCmd == 'S') {
 							reflectiveCtrlPointX = currentX - ctrlPointX;
 							reflectiveCtrlPointY = currentY - ctrlPointY;
 						}
 						path.rCubicTo(reflectiveCtrlPointX, reflectiveCtrlPointY,
-								val[k + 0], val[k + 1],
-								val[k + 2], val[k + 3]);
+						              val[k + 0], val[k + 1],
+						              val[k + 2], val[k + 3]);
 						ctrlPointX = currentX + val[k + 0];
 						ctrlPointY = currentY + val[k + 1];
 						currentX += val[k + 2];
@@ -441,12 +438,12 @@ class PathParser {
 						reflectiveCtrlPointX = currentX;
 						reflectiveCtrlPointY = currentY;
 						if (previousCmd == 'c' || previousCmd == 's'
-								|| previousCmd == 'C' || previousCmd == 'S') {
+						    || previousCmd == 'C' || previousCmd == 'S') {
 							reflectiveCtrlPointX = 2 * currentX - ctrlPointX;
 							reflectiveCtrlPointY = 2 * currentY - ctrlPointY;
 						}
 						path.cubicTo(reflectiveCtrlPointX, reflectiveCtrlPointY,
-								val[k + 0], val[k + 1], val[k + 2], val[k + 3]);
+						             val[k + 0], val[k + 1], val[k + 2], val[k + 3]);
 						ctrlPointX = val[k + 0];
 						ctrlPointY = val[k + 1];
 						currentX = val[k + 2];
@@ -470,12 +467,12 @@ class PathParser {
 						reflectiveCtrlPointX = 0;
 						reflectiveCtrlPointY = 0;
 						if (previousCmd == 'q' || previousCmd == 't'
-								|| previousCmd == 'Q' || previousCmd == 'T') {
+						    || previousCmd == 'Q' || previousCmd == 'T') {
 							reflectiveCtrlPointX = currentX - ctrlPointX;
 							reflectiveCtrlPointY = currentY - ctrlPointY;
 						}
 						path.rQuadTo(reflectiveCtrlPointX, reflectiveCtrlPointY,
-								val[k + 0], val[k + 1]);
+						             val[k + 0], val[k + 1]);
 						ctrlPointX = currentX + reflectiveCtrlPointX;
 						ctrlPointY = currentY + reflectiveCtrlPointY;
 						currentX += val[k + 0];
@@ -485,12 +482,12 @@ class PathParser {
 						reflectiveCtrlPointX = currentX;
 						reflectiveCtrlPointY = currentY;
 						if (previousCmd == 'q' || previousCmd == 't'
-								|| previousCmd == 'Q' || previousCmd == 'T') {
+						    || previousCmd == 'Q' || previousCmd == 'T') {
 							reflectiveCtrlPointX = 2 * currentX - ctrlPointX;
 							reflectiveCtrlPointY = 2 * currentY - ctrlPointY;
 						}
 						path.quadTo(reflectiveCtrlPointX, reflectiveCtrlPointY,
-								val[k + 0], val[k + 1]);
+						            val[k + 0], val[k + 1]);
 						ctrlPointX = reflectiveCtrlPointX;
 						ctrlPointY = reflectiveCtrlPointY;
 						currentX = val[k + 0];
@@ -499,15 +496,15 @@ class PathParser {
 					case 'a': // Draws an elliptical arc
 						// (rx ry x-axis-rotation large-arc-flag sweep-flag x y)
 						drawArc(path,
-								currentX,
-								currentY,
-								val[k + 5] + currentX,
-								val[k + 6] + currentY,
-								val[k + 0],
-								val[k + 1],
-								val[k + 2],
-								val[k + 3] != 0,
-								val[k + 4] != 0);
+						        currentX,
+						        currentY,
+						        val[k + 5] + currentX,
+						        val[k + 6] + currentY,
+						        val[k + 0],
+						        val[k + 1],
+						        val[k + 2],
+						        val[k + 3] != 0,
+						        val[k + 4] != 0);
 						currentX += val[k + 5];
 						currentY += val[k + 6];
 						ctrlPointX = currentX;
@@ -515,15 +512,15 @@ class PathParser {
 						break;
 					case 'A': // Draws an elliptical arc
 						drawArc(path,
-								currentX,
-								currentY,
-								val[k + 5],
-								val[k + 6],
-								val[k + 0],
-								val[k + 1],
-								val[k + 2],
-								val[k + 3] != 0,
-								val[k + 4] != 0);
+						        currentX,
+						        currentY,
+						        val[k + 5],
+						        val[k + 6],
+						        val[k + 0],
+						        val[k + 1],
+						        val[k + 2],
+						        val[k + 3] != 0,
+						        val[k + 4] != 0);
 						currentX = val[k + 5];
 						currentY = val[k + 6];
 						ctrlPointX = currentX;
@@ -540,15 +537,15 @@ class PathParser {
 			current[5] = currentSegmentStartY;
 		}
 		private static void drawArc(Path p,
-				float x0,
-				float y0,
-				float x1,
-				float y1,
-				float a,
-				float b,
-				float theta,
-				boolean isMoreThanHalf,
-				boolean isPositiveArc) {
+		                            float x0,
+		                            float y0,
+		                            float x1,
+		                            float y1,
+		                            float a,
+		                            float b,
+		                            float theta,
+		                            boolean isMoreThanHalf,
+		                            boolean isPositiveArc) {
 			/* Convert rotation angle from degrees to radians */
 			double thetaD = Math.toRadians(theta);
 			/* Pre-compute rotation matrix entries */
@@ -574,9 +571,9 @@ class PathParser {
 			double disc = 1.0 / dsq - 1.0 / 4.0;
 			if (disc < 0.0) {
 				Log.w(LOGTAG, "Points are too far apart " + dsq);
-				float adjust = (float) (Math.sqrt(dsq) / 1.99999);
+				float adjust = (float)(Math.sqrt(dsq) / 1.99999);
 				drawArc(p, x0, y0, x1, y1, a * adjust,
-						b * adjust, theta, isMoreThanHalf, isPositiveArc);
+				        b * adjust, theta, isMoreThanHalf, isPositiveArc);
 				return; /* Points are too far apart */
 			}
 			double s = Math.sqrt(disc);
@@ -623,19 +620,19 @@ class PathParser {
 		 * @param sweep The angle (positive or negative) of the sweep of the arc on the ellipse
 		 */
 		private static void arcToBezier(Path p,
-				double cx,
-				double cy,
-				double a,
-				double b,
-				double e1x,
-				double e1y,
-				double theta,
-				double start,
-				double sweep) {
+		                                double cx,
+		                                double cy,
+		                                double a,
+		                                double b,
+		                                double e1x,
+		                                double e1y,
+		                                double theta,
+		                                double start,
+		                                double sweep) {
 			// Taken from equations at: http://spaceroots.org/documents/ellipse/node8.html
 			// and http://www.spaceroots.org/documents/ellipse/node22.html
 			// Maximum of 45 degrees per cubic Bezier segment
-			int numSegments = Math.abs((int) Math.ceil(sweep * 4 / Math.PI));
+			int numSegments = Math.abs((int)Math.ceil(sweep * 4 / Math.PI));
 			double eta1 = start;
 			double cosTheta = Math.cos(theta);
 			double sinTheta = Math.sin(theta);
@@ -654,17 +651,17 @@ class PathParser {
 				double ep2y = -a * sinTheta * sinEta2 + b * cosTheta * cosEta2;
 				double tanDiff2 = Math.tan((eta2 - eta1) / 2);
 				double alpha =
-						Math.sin(eta2 - eta1) * (Math.sqrt(4 + (3 * tanDiff2 * tanDiff2)) - 1) / 3;
+				    Math.sin(eta2 - eta1) * (Math.sqrt(4 + (3 * tanDiff2 * tanDiff2)) - 1) / 3;
 				double q1x = e1x + alpha * ep1x;
 				double q1y = e1y + alpha * ep1y;
 				double q2x = e2x - alpha * ep2x;
 				double q2y = e2y - alpha * ep2y;
-				p.cubicTo((float) q1x,
-						(float) q1y,
-						(float) q2x,
-						(float) q2y,
-						(float) e2x,
-						(float) e2y);
+				p.cubicTo((float)q1x,
+				          (float)q1y,
+				          (float)q2x,
+				          (float)q2y,
+				          (float)e2x,
+				          (float)e2y);
 				eta1 = eta2;
 				e1x = e2x;
 				e1y = e2y;
@@ -918,8 +915,8 @@ public class VectorDrawable extends Drawable {
 		mTmpMatrix.getValues(mTmpFloats);
 		float canvasScaleX = Math.abs(mTmpFloats[Matrix.MSCALE_X]);
 		float canvasScaleY = Math.abs(mTmpFloats[Matrix.MSCALE_Y]);
-		int scaledWidth = (int) (mTmpBounds.width() * canvasScaleX);
-		int scaledHeight = (int) (mTmpBounds.height() * canvasScaleY);
+		int scaledWidth = (int)(mTmpBounds.width() * canvasScaleX);
+		int scaledHeight = (int)(mTmpBounds.height() * canvasScaleY);
 		scaledWidth = Math.min(MAX_CACHED_BITMAP_SIZE, scaledWidth);
 		scaledHeight = Math.min(MAX_CACHED_BITMAP_SIZE, scaledHeight);
 
@@ -1003,8 +1000,7 @@ public class VectorDrawable extends Drawable {
 
 	@Override
 	public boolean isStateful() {
-		return super.isStateful() || (mVectorState != null && mVectorState.mTint != null
-				&& mVectorState.mTint.isStateful());
+		return super.isStateful() || (mVectorState != null && mVectorState.mTint != null && mVectorState.mTint.isStateful());
 	}
 
 	@Override
@@ -1075,8 +1071,8 @@ public class VectorDrawable extends Drawable {
 		// For all the other cases, like either res is null, constant state is not initialized or
 		// target density is the same as the constant state, we will just use the constant state
 		// dimensions.
-		mDpiScaledWidth = (int) mVectorState.mVPathRenderer.mBaseWidth;
-		mDpiScaledHeight = (int) mVectorState.mVPathRenderer.mBaseHeight;
+		mDpiScaledWidth = (int)mVectorState.mVPathRenderer.mBaseWidth;
+		mDpiScaledHeight = (int)mVectorState.mVPathRenderer.mBaseHeight;
 		// mDpiScaleInsets = mVectorState.mVPathRenderer.mOpticalInsets;
 	}
 
@@ -1129,11 +1125,11 @@ public class VectorDrawable extends Drawable {
 	 * @hide
 	 */
 	public float getPixelSize() {
-		if (mVectorState == null || mVectorState.mVPathRenderer == null ||
-				mVectorState.mVPathRenderer.mBaseWidth == 0 ||
-				mVectorState.mVPathRenderer.mBaseHeight == 0 ||
-				mVectorState.mVPathRenderer.mViewportHeight == 0 ||
-				mVectorState.mVPathRenderer.mViewportWidth == 0) {
+		if (mVectorState == null || mVectorState.mVPathRenderer == null
+		    || mVectorState.mVPathRenderer.mBaseWidth == 0
+		    || mVectorState.mVPathRenderer.mBaseHeight == 0
+		    || mVectorState.mVPathRenderer.mViewportHeight == 0
+		    || mVectorState.mVPathRenderer.mViewportWidth == 0) {
 			return 1; // fall back to 1:1 pixel mapping.
 		}
 		float intrinsicWidth = mVectorState.mVPathRenderer.mBaseWidth;
@@ -1151,8 +1147,8 @@ public class VectorDrawable extends Drawable {
 			final XmlPullParser parser = resources.getXml(rid);
 			final AttributeSet attrs = Xml.asAttributeSet(parser);
 			int type;
-			while ((type=parser.next()) != XmlPullParser.START_TAG &&
-					type != XmlPullParser.END_DOCUMENT) {
+			while ((type = parser.next()) != XmlPullParser.START_TAG
+			       && type != XmlPullParser.END_DOCUMENT) {
 				// Empty loop
 			}
 			if (type != XmlPullParser.START_TAG) {
@@ -1174,12 +1170,12 @@ public class VectorDrawable extends Drawable {
 	private static int applyAlpha(int color, float alpha) {
 		int alphaBytes = Color.alpha(color);
 		color &= 0x00FFFFFF;
-		color |= ((int) (alphaBytes * alpha)) << 24;
+		color |= ((int)(alphaBytes * alpha)) << 24;
 		return color;
 	}
 
 	public void inflate(Resources res, XmlPullParser parser, AttributeSet attrs, Theme theme)
-			throws XmlPullParserException, IOException {
+	    throws XmlPullParserException, IOException {
 		final VectorDrawableState state = mVectorState;
 		final VPathRenderer pathRenderer = new VPathRenderer();
 		state.mVPathRenderer = pathRenderer;
@@ -1216,32 +1212,28 @@ public class VectorDrawable extends Drawable {
 		}
 
 		state.mAutoMirrored = a.getBoolean(
-				R.styleable.VectorDrawable_autoMirrored, state.mAutoMirrored);
+		    R.styleable.VectorDrawable_autoMirrored, state.mAutoMirrored);
 
 		pathRenderer.mViewportWidth = a.getFloat(
-				R.styleable.VectorDrawable_viewportWidth, pathRenderer.mViewportWidth);
+		    R.styleable.VectorDrawable_viewportWidth, pathRenderer.mViewportWidth);
 		pathRenderer.mViewportHeight = a.getFloat(
-				R.styleable.VectorDrawable_viewportHeight, pathRenderer.mViewportHeight);
+		    R.styleable.VectorDrawable_viewportHeight, pathRenderer.mViewportHeight);
 
 		if (pathRenderer.mViewportWidth <= 0) {
-			throw new XmlPullParserException(a.getPositionDescription() +
-					"<vector> tag requires viewportWidth > 0");
+			throw new XmlPullParserException(a.getPositionDescription() + "<vector> tag requires viewportWidth > 0");
 		} else if (pathRenderer.mViewportHeight <= 0) {
-			throw new XmlPullParserException(a.getPositionDescription() +
-					"<vector> tag requires viewportHeight > 0");
+			throw new XmlPullParserException(a.getPositionDescription() + "<vector> tag requires viewportHeight > 0");
 		}
 
 		pathRenderer.mBaseWidth = a.getDimension(
-				R.styleable.VectorDrawable_width, pathRenderer.mBaseWidth);
+		    R.styleable.VectorDrawable_width, pathRenderer.mBaseWidth);
 		pathRenderer.mBaseHeight = a.getDimension(
-				R.styleable.VectorDrawable_height, pathRenderer.mBaseHeight);
+		    R.styleable.VectorDrawable_height, pathRenderer.mBaseHeight);
 
 		if (pathRenderer.mBaseWidth <= 0) {
-			throw new XmlPullParserException(a.getPositionDescription() +
-					"<vector> tag requires width > 0");
+			throw new XmlPullParserException(a.getPositionDescription() + "<vector> tag requires width > 0");
 		} else if (pathRenderer.mBaseHeight <= 0) {
-			throw new XmlPullParserException(a.getPositionDescription() +
-					"<vector> tag requires height > 0");
+			throw new XmlPullParserException(a.getPositionDescription() + "<vector> tag requires height > 0");
 		}
 
 		// final int insetLeft = a.getDimensionPixelSize(
@@ -1255,7 +1247,7 @@ public class VectorDrawable extends Drawable {
 		// pathRenderer.mOpticalInsets = Insets.of(insetLeft, insetTop, insetRight, insetBottom);
 
 		final float alphaInFloat = a.getFloat(R.styleable.VectorDrawable_alpha,
-				pathRenderer.getAlpha());
+		                                      pathRenderer.getAlpha());
 		pathRenderer.setAlpha(alphaInFloat);
 
 		final String name = a.getString(R.styleable.VectorDrawable_name);
@@ -1266,7 +1258,7 @@ public class VectorDrawable extends Drawable {
 	}
 
 	private void inflateInternal(Resources res, XmlPullParser parser, AttributeSet attrs,
-			Theme theme) throws XmlPullParserException, IOException {
+	                             Theme theme) throws XmlPullParserException, IOException {
 		final VectorDrawableState state = mVectorState;
 		final VPathRenderer pathRenderer = state.mVPathRenderer;
 		boolean noPathTag = true;
@@ -1306,7 +1298,7 @@ public class VectorDrawable extends Drawable {
 					groupStack.push(newChildGroup);
 					if (newChildGroup.getGroupName() != null) {
 						pathRenderer.mVGTargetsMap.put(newChildGroup.getGroupName(),
-								newChildGroup);
+						                               newChildGroup);
 					}
 					state.mChangingConfigurations |= newChildGroup.mChangingConfigurations;
 				}
@@ -1343,13 +1335,13 @@ public class VectorDrawable extends Drawable {
 		}
 		// Print the current node
 		Log.v(LOGTAG, indent + "current group is :" + currentGroup.getGroupName()
-				+ " rotation is " + currentGroup.mRotate);
+		              + " rotation is " + currentGroup.mRotate);
 		Log.v(LOGTAG, indent + "matrix is :" + currentGroup.getLocalMatrix().toString());
 		// Then print all the children groups
 		for (int i = 0; i < currentGroup.mChildren.size(); i++) {
 			Object child = currentGroup.mChildren.get(i);
 			if (child instanceof VGroup) {
-				printGroupTree((VGroup) child, level + 1);
+				printGroupTree((VGroup)child, level + 1);
 			}
 		}
 	}
@@ -1417,7 +1409,7 @@ public class VectorDrawable extends Drawable {
 		}
 
 		public void drawCachedBitmapWithRootAlpha(Canvas canvas, ColorFilter filter,
-				Rect originalBounds) {
+		                                          Rect originalBounds) {
 			// The bitmap's size is the same as the bounds.
 			final Paint p = getPaint(filter);
 			canvas.drawBitmap(mCachedBitmap, null, originalBounds, p);
@@ -1453,15 +1445,14 @@ public class VectorDrawable extends Drawable {
 		public void createCachedBitmapIfNeeded(int width, int height) {
 			if (mCachedBitmap == null || !canReuseBitmap(width, height)) {
 				mCachedBitmap = Bitmap.createBitmap(width, height,
-						Bitmap.Config.ARGB_8888);
+				                                    Bitmap.Config.ARGB_8888);
 				mCacheDirty = true;
 			}
-
 		}
 
 		public boolean canReuseBitmap(int width, int height) {
 			if (width == mCachedBitmap.getWidth()
-					&& height == mCachedBitmap.getHeight()) {
+			    && height == mCachedBitmap.getHeight()) {
 				return true;
 			}
 			return false;
@@ -1469,11 +1460,11 @@ public class VectorDrawable extends Drawable {
 
 		public boolean canReuseCache() {
 			if (!mCacheDirty
-					&& mCachedThemeAttrs == mThemeAttrs
-					&& mCachedTint == mTint
-					&& mCachedTintMode == mTintMode
-					&& mCachedAutoMirrored == mAutoMirrored
-					&& mCachedRootAlpha == mVPathRenderer.getRootAlpha()) {
+			    && mCachedThemeAttrs == mThemeAttrs
+			    && mCachedTint == mTint
+			    && mCachedTintMode == mTintMode
+			    && mCachedAutoMirrored == mAutoMirrored
+			    && mCachedRootAlpha == mVPathRenderer.getRootAlpha()) {
 				return true;
 			}
 			return false;
@@ -1515,7 +1506,7 @@ public class VectorDrawable extends Drawable {
 		@Override
 		public int getChangingConfigurations() {
 			return mChangingConfigurations
-					| (mTint != null ? mTint.getChangingConfigurations() : 0);
+			     | (mTint != null ? mTint.getChangingConfigurations() : 0);
 		}
 	}
 
@@ -1575,7 +1566,7 @@ public class VectorDrawable extends Drawable {
 		// setAlpha() and getAlpha() are used mostly for animation purpose, since
 		// Animator like to use alpha from 0 to 1.
 		public void setAlpha(float alpha) {
-			setRootAlpha((int) (alpha * 255));
+			setRootAlpha((int)(alpha * 255));
 		}
 
 		@SuppressWarnings("unused")
@@ -1614,13 +1605,13 @@ public class VectorDrawable extends Drawable {
 			for (int i = 0; i < children.size(); i++) {
 				Object child = children.get(i);
 				if (child instanceof VGroup) {
-					VGroup childGroup = (VGroup) child;
+					VGroup childGroup = (VGroup)child;
 					if (childGroup.canApplyTheme()
-							|| recursiveCanApplyTheme(childGroup)) {
+					    || recursiveCanApplyTheme(childGroup)) {
 						return true;
 					}
 				} else if (child instanceof VPath) {
-					VPath childPath = (VPath) child;
+					VPath childPath = (VPath)child;
 					if (childPath.canApplyTheme()) {
 						return true;
 					}
@@ -1641,13 +1632,13 @@ public class VectorDrawable extends Drawable {
 			for (int i = 0; i < children.size(); i++) {
 				Object child = children.get(i);
 				if (child instanceof VGroup) {
-					VGroup childGroup = (VGroup) child;
+					VGroup childGroup = (VGroup)child;
 					if (childGroup.canApplyTheme()) {
 						childGroup.applyTheme(t);
 					}
 					recursiveApplyTheme(childGroup, t);
 				} else if (child instanceof VPath) {
-					VPath childPath = (VPath) child;
+					VPath childPath = (VPath)child;
 					if (childPath.canApplyTheme()) {
 						childPath.applyTheme(t);
 					}
@@ -1656,7 +1647,7 @@ public class VectorDrawable extends Drawable {
 		}
 
 		private void drawGroupTree(VGroup currentGroup, Matrix currentMatrix,
-				Canvas canvas, int w, int h, ColorFilter filter) {
+		                           Canvas canvas, int w, int h, ColorFilter filter) {
 			// Calculate current group's matrix by preConcat the parent's and
 			// and the current one on the top of the stack.
 			// Basically the Mfinal = Mviewport * M0 * M1 * M2;
@@ -1670,11 +1661,11 @@ public class VectorDrawable extends Drawable {
 			for (int i = 0; i < currentGroup.mChildren.size(); i++) {
 				Object child = currentGroup.mChildren.get(i);
 				if (child instanceof VGroup) {
-					VGroup childGroup = (VGroup) child;
+					VGroup childGroup = (VGroup)child;
 					drawGroupTree(childGroup, currentGroup.mStackedMatrix,
-							canvas, w, h, filter);
+					              canvas, w, h, filter);
 				} else if (child instanceof VPath) {
-					VPath childPath = (VPath) child;
+					VPath childPath = (VPath)child;
 					drawPath(currentGroup, childPath, canvas, w, h, filter);
 				}
 			}
@@ -1687,7 +1678,7 @@ public class VectorDrawable extends Drawable {
 		}
 
 		private void drawPath(VGroup vGroup, VPath vPath, Canvas canvas, int w, int h,
-				ColorFilter filter) {
+		                      ColorFilter filter) {
 			final float scaleX = w / mViewportWidth;
 			final float scaleY = h / mViewportHeight;
 			final float minScale = Math.min(scaleX, scaleY);
@@ -1710,7 +1701,7 @@ public class VectorDrawable extends Drawable {
 				mRenderPath.addPath(path, mFinalPathMatrix);
 				canvas.clipPath(mRenderPath);
 			} else {
-				VFullPath fullPath = (VFullPath) vPath;
+				VFullPath fullPath = (VFullPath)vPath;
 				if (fullPath.mTrimPathStart != 0.0f || fullPath.mTrimPathEnd != 1.0f) {
 					float start = (fullPath.mTrimPathStart + fullPath.mTrimPathOffset) % 1.0f;
 					float end = (fullPath.mTrimPathEnd + fullPath.mTrimPathOffset) % 1.0f;
@@ -1789,7 +1780,7 @@ public class VectorDrawable extends Drawable {
 			float scaleX = MathUtils.mag(unitVectors[0], unitVectors[1]);
 			float scaleY = MathUtils.mag(unitVectors[2], unitVectors[3]);
 			float crossProduct = MathUtils.cross(unitVectors[0], unitVectors[1],
-					unitVectors[2], unitVectors[3]);
+			                                     unitVectors[2], unitVectors[3]);
 			float maxScale = MathUtils.max(scaleX, scaleY);
 
 			float matrixScale = 0;
@@ -1848,14 +1839,14 @@ public class VectorDrawable extends Drawable {
 			for (int i = 0; i < children.size(); i++) {
 				Object copyChild = children.get(i);
 				if (copyChild instanceof VGroup) {
-					VGroup copyGroup = (VGroup) copyChild;
+					VGroup copyGroup = (VGroup)copyChild;
 					mChildren.add(new VGroup(copyGroup, targetsMap));
 				} else {
 					VPath newPath = null;
 					if (copyChild instanceof VFullPath) {
-						newPath = new VFullPath((VFullPath) copyChild);
+						newPath = new VFullPath((VFullPath)copyChild);
 					} else if (copyChild instanceof VClipPath) {
-						newPath = new VClipPath((VClipPath) copyChild);
+						newPath = new VClipPath((VClipPath)copyChild);
 					} else {
 						throw new IllegalStateException("Unknown object in the tree!");
 					}
@@ -1880,7 +1871,7 @@ public class VectorDrawable extends Drawable {
 
 		public void inflate(Resources res, AttributeSet attrs, Theme theme) {
 			final TypedArray a = Resources.obtainAttributes(res, theme, attrs,
-					R.styleable.VectorDrawableGroup);
+			                                                R.styleable.VectorDrawableGroup);
 			updateStateFromTypedArray(a);
 			a.recycle();
 		}
@@ -2096,7 +2087,7 @@ public class VectorDrawable extends Drawable {
 
 		public void inflate(Resources r, AttributeSet attrs, Theme theme) {
 			final TypedArray a = Resources.obtainAttributes(r, theme, attrs,
-					R.styleable.VectorDrawableClipPath);
+			                                                R.styleable.VectorDrawableClipPath);
 			updateStateFromTypedArray(a);
 			a.recycle();
 		}
@@ -2201,7 +2192,7 @@ public class VectorDrawable extends Drawable {
 
 		public void inflate(Resources r, AttributeSet attrs, Theme theme) {
 			final TypedArray a = Resources.obtainAttributes(r, theme, attrs,
-					R.styleable.VectorDrawablePath);
+			                                                R.styleable.VectorDrawablePath);
 			updateStateFromTypedArray(a);
 			a.recycle();
 		}
@@ -2227,26 +2218,28 @@ public class VectorDrawable extends Drawable {
 			if (fillColor != null)
 				mFillColor = fillColor.getDefaultColor();
 			mFillAlpha = a.getFloat(R.styleable.VectorDrawablePath_fillAlpha,
-					mFillAlpha);
+			                        mFillAlpha);
 			mStrokeLineCap = getStrokeLineCap(a.getInt(
-					R.styleable.VectorDrawablePath_strokeLineCap, -1), mStrokeLineCap);
+							      R.styleable.VectorDrawablePath_strokeLineCap, -1),
+			                                  mStrokeLineCap);
 			mStrokeLineJoin = getStrokeLineJoin(a.getInt(
-					R.styleable.VectorDrawablePath_strokeLineJoin, -1), mStrokeLineJoin);
+								R.styleable.VectorDrawablePath_strokeLineJoin, -1),
+			                                    mStrokeLineJoin);
 			mStrokeMiterlimit = a.getFloat(
-					R.styleable.VectorDrawablePath_strokeMiterLimit, mStrokeMiterlimit);
+			    R.styleable.VectorDrawablePath_strokeMiterLimit, mStrokeMiterlimit);
 			ComplexColor strokeColor = a.getComplexColor(R.styleable.VectorDrawablePath_strokeColor);
 			if (strokeColor != null)
 				mStrokeColor = strokeColor.getDefaultColor();
 			mStrokeAlpha = a.getFloat(R.styleable.VectorDrawablePath_strokeAlpha,
-					mStrokeAlpha);
+			                          mStrokeAlpha);
 			mStrokeWidth = a.getFloat(R.styleable.VectorDrawablePath_strokeWidth,
-					mStrokeWidth);
+			                          mStrokeWidth);
 			mTrimPathEnd = a.getFloat(R.styleable.VectorDrawablePath_trimPathEnd,
-					mTrimPathEnd);
+			                          mTrimPathEnd);
 			mTrimPathOffset = a.getFloat(
-					R.styleable.VectorDrawablePath_trimPathOffset, mTrimPathOffset);
+			    R.styleable.VectorDrawablePath_trimPathOffset, mTrimPathOffset);
 			mTrimPathStart = a.getFloat(
-					R.styleable.VectorDrawablePath_trimPathStart, mTrimPathStart);
+			    R.styleable.VectorDrawablePath_trimPathStart, mTrimPathStart);
 		}
 
 		@Override

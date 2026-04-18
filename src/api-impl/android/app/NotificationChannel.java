@@ -1,7 +1,7 @@
 package android.app;
 
-import android.net.Uri;
 import android.media.AudioAttributes;
+import android.net.Uri;
 
 public class NotificationChannel {
 
@@ -20,4 +20,5 @@ public class NotificationChannel {
 	public boolean shouldVibrate() { return false; }
 	public Uri getSound() { return null; }
 	public void setDescription(String description) {}
+	public void setBypassDnd(boolean bypassDnd) {}
 }

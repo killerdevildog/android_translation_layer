@@ -16,6 +16,9 @@
 
 package android.content.pm;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Slog;
 import com.android.internal.util.ArrayUtils;
 import java.io.ByteArrayInputStream;
 import java.lang.ref.SoftReference;
@@ -29,11 +32,28 @@ import java.util.Arrays;
  * Opaque, immutable representation of a signature associated with an
  * application package.
  */
-public class Signature {
+public class Signature implements Parcelable {
 	private final byte[] mSignature;
 	private int mHashCode;
 	private boolean mHaveHashCode;
 	private SoftReference<String> mStringRef;
+
+	public static final Parcelable.Creator<Signature> CREATOR = new Parcelable.Creator<Signature>() {
+		@Override
+		public Signature createFromParcel(Parcel in) {
+			return new Signature(in.createByteArray());
+		}
+
+		@Override
+		public Signature[] newArray(int size) {
+			return new Signature[size];
+		}
+	};
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeByteArray(mSignature);
+	}
 
 	/**
 	 * Create Signature from an existing raw byte array.
@@ -64,10 +84,11 @@ public class Signature {
 	 */
 	public Signature(String text) {
 		final byte[] input = text.getBytes();
-		final int N = input.length;
+		int N = input.length;
 
 		if (N % 2 != 0) {
-			throw new IllegalArgumentException("text size " + N + " is not even");
+			Slog.w("Signature", "text size " + N + " is not even");
+			N--;
 		}
 
 		final byte[] sig = new byte[N / 2];
@@ -104,8 +125,8 @@ public class Signature {
 		final int N = sig.length;
 		final int N2 = N * 2;
 		char[] text = existingArray == null || N2 > existingArray.length
-				  ? new char[N2]
-				  : existingArray;
+		                ? new char[N2]
+		                : existingArray;
 		for (int j = 0; j < N; j++) {
 			byte v = sig[j];
 			int d = (v >> 4) & 0xf;

@@ -336,7 +336,7 @@ public final class LocaleList implements Parcelable {
 	}
 	private static final Locale EN_LATN = Locale.forLanguageTag("en-Latn");
 	private int computeFirstMatchIndex(Collection<String> supportedLocales,
-					   boolean assumeEnglishIsSupported) {
+	                                   boolean assumeEnglishIsSupported) {
 		if (mList.length == 1) { // just one locale, perhaps the most common scenario
 			return 0;
 		}
@@ -372,7 +372,7 @@ public final class LocaleList implements Parcelable {
 		}
 	}
 	private Locale computeFirstMatch(Collection<String> supportedLocales,
-					 boolean assumeEnglishIsSupported) {
+	                                 boolean assumeEnglishIsSupported) {
 		int bestIndex = computeFirstMatchIndex(supportedLocales, assumeEnglishIsSupported);
 		return bestIndex == -1 ? null : mList[bestIndex];
 	}
@@ -385,14 +385,14 @@ public final class LocaleList implements Parcelable {
 	 */
 	public Locale getFirstMatch(String[] supportedLocales) {
 		return computeFirstMatch(Arrays.asList(supportedLocales),
-					 false /* assume English is not supported */);
+		                         false /* assume English is not supported */);
 	}
 	/**
 	 * {@hide}
 	 */
 	public int getFirstMatchIndex(String[] supportedLocales) {
 		return computeFirstMatchIndex(Arrays.asList(supportedLocales),
-					      false /* assume English is not supported */);
+		                              false /* assume English is not supported */);
 	}
 	/**
 	 * Same as getFirstMatch(), but with English assumed to be supported, even if it's not.
@@ -400,7 +400,7 @@ public final class LocaleList implements Parcelable {
 	 */
 	public Locale getFirstMatchWithEnglishSupported(String[] supportedLocales) {
 		return computeFirstMatch(Arrays.asList(supportedLocales),
-					 true /* assume English is supported */);
+		                         true /* assume English is supported */);
 	}
 	/**
 	 * {@hide}

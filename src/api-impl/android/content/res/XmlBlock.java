@@ -306,7 +306,7 @@ final class XmlBlock {
 		}
 
 		public int getAttributeListValue(String namespace, String attribute,
-						 String[] options, int defaultValue) {
+		                                 String[] options, int defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeListValue(idx, options, defaultValue);
@@ -314,7 +314,7 @@ final class XmlBlock {
 			return defaultValue;
 		}
 		public boolean getAttributeBooleanValue(String namespace, String attribute,
-							boolean defaultValue) {
+		                                        boolean defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeBooleanValue(idx, defaultValue);
@@ -322,7 +322,7 @@ final class XmlBlock {
 			return defaultValue;
 		}
 		public int getAttributeResourceValue(String namespace, String attribute,
-						     int defaultValue) {
+		                                     int defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeResourceValue(idx, defaultValue);
@@ -330,7 +330,7 @@ final class XmlBlock {
 			return defaultValue;
 		}
 		public int getAttributeIntValue(String namespace, String attribute,
-						int defaultValue) {
+		                                int defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeIntValue(idx, defaultValue);
@@ -338,7 +338,7 @@ final class XmlBlock {
 			return defaultValue;
 		}
 		public int getAttributeUnsignedIntValue(String namespace, String attribute,
-							int defaultValue) {
+		                                        int defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeUnsignedIntValue(idx, defaultValue);
@@ -346,7 +346,7 @@ final class XmlBlock {
 			return defaultValue;
 		}
 		public float getAttributeFloatValue(String namespace, String attribute,
-						    float defaultValue) {
+		                                    float defaultValue) {
 			int idx = nativeGetAttributeIndex(mParseState, namespace, attribute);
 			if (idx >= 0) {
 				return getAttributeFloatValue(idx, defaultValue);
@@ -355,7 +355,7 @@ final class XmlBlock {
 		}
 
 		public int getAttributeListValue(int idx,
-						 String[] options, int defaultValue) {
+		                                 String[] options, int defaultValue) {
 			int t = nativeGetAttributeDataType(mParseState, idx);
 			int v = nativeGetAttributeData(mParseState, idx);
 			if (t == TypedValue.TYPE_STRING) {
@@ -365,12 +365,12 @@ final class XmlBlock {
 			return v;
 		}
 		public boolean getAttributeBooleanValue(int idx,
-							boolean defaultValue) {
+		                                        boolean defaultValue) {
 			int t = nativeGetAttributeDataType(mParseState, idx);
 			// Note: don't attempt to convert any other types, because
 			// we want to count on appt doing the conversion for us.
-			if (t >= TypedValue.TYPE_FIRST_INT &&
-			    t <= TypedValue.TYPE_LAST_INT) {
+			if (t >= TypedValue.TYPE_FIRST_INT
+			    && t <= TypedValue.TYPE_LAST_INT) {
 				return nativeGetAttributeData(mParseState, idx) != 0;
 			}
 			return defaultValue;
@@ -388,8 +388,8 @@ final class XmlBlock {
 			int t = nativeGetAttributeDataType(mParseState, idx);
 			// Note: don't attempt to convert any other types, because
 			// we want to count on appt doing the conversion for us.
-			if (t >= TypedValue.TYPE_FIRST_INT &&
-			    t <= TypedValue.TYPE_LAST_INT) {
+			if (t >= TypedValue.TYPE_FIRST_INT
+			    && t <= TypedValue.TYPE_LAST_INT) {
 				return nativeGetAttributeData(mParseState, idx);
 			}
 			return defaultValue;
@@ -398,8 +398,8 @@ final class XmlBlock {
 			int t = nativeGetAttributeDataType(mParseState, idx);
 			// Note: don't attempt to convert any other types, because
 			// we want to count on appt doing the conversion for us.
-			if (t >= TypedValue.TYPE_FIRST_INT &&
-			    t <= TypedValue.TYPE_LAST_INT) {
+			if (t >= TypedValue.TYPE_FIRST_INT
+			    && t <= TypedValue.TYPE_LAST_INT) {
 				return nativeGetAttributeData(mParseState, idx);
 			}
 			return defaultValue;
@@ -484,8 +484,8 @@ final class XmlBlock {
 	private int mOpenCount = 1;
 
 	private static final native int nativeCreate(byte[] data,
-						     int offset,
-						     int size);
+	                                             int offset,
+	                                             int size);
 	private static final native int nativeGetStringBlock(long obj);
 
 	private static final native long nativeCreateParseState(long obj);

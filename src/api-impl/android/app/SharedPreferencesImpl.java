@@ -59,8 +59,8 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 	private Map<String, Object> mMap;    // guarded by 'this'
 	private int mDiskWritesInFlight = 0; // guarded by 'this'
 	private boolean mLoaded = false;     // guarded by 'this'
-	private long mStatTimestamp;	     // guarded by 'this'
-	private long mStatSize;		     // guarded by 'this'
+	private long mStatTimestamp;         // guarded by 'this'
+	private long mStatSize;              // guarded by 'this'
 
 	private final Object mWritingToDiskLock = new Object();
 	private static final Object mContent = new Object();
@@ -250,7 +250,7 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 	}
 	public boolean getBoolean(String key, boolean defValue) {
 		synchronized (this) {
-			Slog.v(TAG, "android.app.SharedPreferencesImpl.getBoolean("+key+", "+defValue+")");
+			Slog.v(TAG, "android.app.SharedPreferencesImpl.getBoolean(" + key + ", " + defValue + ")");
 			awaitLoadedLocked();
 			Boolean v = (Boolean)mMap.get(key);
 			return v != null ? v : defValue;
@@ -281,8 +281,8 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 
 	// Return value from EditorImpl#commitToMemory()
 	private static class MemoryCommitResult {
-		public boolean changesMade;				// any keys different?
-		public List<String> keysModified;			// may be null
+		public boolean changesMade;                             // any keys different?
+		public List<String> keysModified;                       // may be null
 		public Set<OnSharedPreferenceChangeListener> listeners; // may be null
 		public Map<?, ?> mapToWriteToDisk;
 		public final CountDownLatch writtenToDiskLatch = new CountDownLatch(1);
@@ -307,7 +307,7 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 		public Editor putStringSet(String key, Set<String> values) {
 			synchronized (this) {
 				mModified.put(key,
-					      (values == null) ? null : new HashSet<String>(values));
+				              (values == null) ? null : new HashSet<String>(values));
 				return this;
 			}
 		}
@@ -459,8 +459,8 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 		}
 
 		private void notifyListeners(final MemoryCommitResult mcr) { /*
-		     if (mcr.listeners == null || mcr.keysModified == null ||
-			 mcr.keysModified.size() == 0) {
+		     if (mcr.listeners == null || mcr.keysModified == null
+|| mcr.keysModified.size() == 0) {
 			 return;
 		     }
 		     if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -501,7 +501,7 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 	 *   them where possible to apply() ...)
 	 */
 	private void enqueueDiskWrite(final MemoryCommitResult mcr,
-				      final Runnable postWriteRunnable) {
+	                              final Runnable postWriteRunnable) {
 		final Runnable writeToDiskRunnable = new Runnable() {
 			public void run() {
 				synchronized (mWritingToDiskLock) {
@@ -590,9 +590,10 @@ public final class SharedPreferencesImpl implements SharedPreferences {
 				return;
 			}
 			XmlUtils.writeMapXml(mcr.mapToWriteToDisk, str);
-//			FileUtils.sync(str);
+
+			//FileUtils.sync(str);
 			str.close();
-//			ContextImpl.setFilePermissionsFromMode(mFile.getPath(), mMode, 0);
+			//ContextImpl.setFilePermissionsFromMode(mFile.getPath(), mMode, 0);
 			try {
 				final StructStat stat = Os.stat(mFile.getPath());
 				synchronized (this) {

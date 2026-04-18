@@ -92,7 +92,7 @@ public class GestureDetector {
 		* @return true if the event is consumed, else false
 		*/
 		boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-				float distanceY);
+		                 float distanceY);
 
 		/**
 		 * Notified when a long press occurs with the initial on down {@link MotionEvent}
@@ -117,7 +117,7 @@ public class GestureDetector {
 		* @return true if the event is consumed, else false
 		*/
 		boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY);
+		                float velocityY);
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class GestureDetector {
 	* but does nothing and return {@code false} for all applicable methods.
 	*/
 	public static class SimpleOnGestureListener implements OnGestureListener, OnDoubleTapListener,
-			OnContextClickListener {
+							       OnContextClickListener {
 
 		public boolean onSingleTapUp(MotionEvent e) {
 			return false;
@@ -188,12 +188,12 @@ public class GestureDetector {
 		}
 
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
-				float distanceX, float distanceY) {
+		                        float distanceX, float distanceY) {
 			return false;
 		}
 
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
+		                       float velocityY) {
 			return false;
 		}
 
@@ -387,10 +387,10 @@ public class GestureDetector {
 		}
 		mListener = listener;
 		if (listener instanceof OnDoubleTapListener) {
-			setOnDoubleTapListener((OnDoubleTapListener) listener);
+			setOnDoubleTapListener((OnDoubleTapListener)listener);
 		}
 		if (listener instanceof OnContextClickListener) {
-			setContextClickListener((OnContextClickListener) listener);
+			setContextClickListener((OnContextClickListener)listener);
 		}
 		init(context);
 	}
@@ -430,7 +430,8 @@ public class GestureDetector {
 			mMinimumFlingVelocity = ViewConfiguration.getMinimumFlingVelocity();
 			mMaximumFlingVelocity = ViewConfiguration.getMaximumFlingVelocity();
 			mAmbiguousGestureMultiplier = ViewConfiguration.getAmbiguousGestureMultiplier();
-		} else*/ {
+		} else*/
+		{
 			final ViewConfiguration configuration = ViewConfiguration.get(context);
 			touchSlop = configuration.getScaledTouchSlop();
 			doubleTapTouchSlop = configuration.getScaledTouchSlop(); // configuration.getScaledDoubleTapTouchSlop();
@@ -507,16 +508,17 @@ public class GestureDetector {
 		mVelocityTracker.addMovement(ev);
 
 		final boolean pointerUp =
-				(action & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP;
+		    (action & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP;
 		final int skipIndex = pointerUp ? ev.getActionIndex() : -1;
 		final boolean isGeneratedGesture = false;
-				// (ev.getFlags() & MotionEvent.FLAG_IS_GENERATED_GESTURE) != 0;
+		// (ev.getFlags() & MotionEvent.FLAG_IS_GENERATED_GESTURE) != 0;
 
 		// Determine focal point
 		float sumX = 0, sumY = 0;
 		final int count = ev.getPointerCount();
 		for (int i = 0; i < count; i++) {
-			if (skipIndex == i) continue;
+			if (skipIndex == i)
+				continue;
 			sumX += ev.getX(i);
 			sumY += ev.getY(i);
 		}
@@ -546,7 +548,8 @@ public class GestureDetector {
 				final float x1 = mVelocityTracker.getXVelocity(id1);
 				final float y1 = mVelocityTracker.getYVelocity(id1);
 				for (int i = 0; i < count; i++) {
-					if (i == upIndex) continue;
+					if (i == upIndex)
+						continue;
 
 					final int id2 = ev.getPointerId(i);
 					final float x = x1 * mVelocityTracker.getXVelocity(id2);
@@ -563,10 +566,11 @@ public class GestureDetector {
 			case MotionEvent.ACTION_DOWN:
 				if (mDoubleTapListener != null) {
 					boolean hadTapMessage = mHandler.hasMessages(TAP);
-					if (hadTapMessage) mHandler.removeMessages(TAP);
+					if (hadTapMessage)
+						mHandler.removeMessages(TAP);
 					if ((mCurrentDownEvent != null) && (mPreviousUpEvent != null)
-							&& hadTapMessage
-							&& isConsideredDoubleTap(mCurrentDownEvent, mPreviousUpEvent, ev)) {
+					    && hadTapMessage
+					    && isConsideredDoubleTap(mCurrentDownEvent, mPreviousUpEvent, ev)) {
 						// This is a second tap
 						mIsDoubleTapping = true;
 						// Give a callback with the first tap of the double-tap
@@ -594,12 +598,12 @@ public class GestureDetector {
 				if (mIsLongpressEnabled) {
 					mHandler.removeMessages(LONG_PRESS);
 					mHandler.sendMessageAtTime(
-							mHandler.obtainMessage(LONG_PRESS),
-							mCurrentDownEvent/*.getDownTime()*/.getEventTime()
-									+ ViewConfiguration.getLongPressTimeout());
+					    mHandler.obtainMessage(LONG_PRESS),
+					    mCurrentDownEvent /*.getDownTime()*/.getEventTime()
+					    + ViewConfiguration.getLongPressTimeout());
 				}
 				mHandler.sendEmptyMessageAtTime(SHOW_PRESS,
-						mCurrentDownEvent/*.getDownTime()*/.getEventTime() + TAP_TIMEOUT);
+				                                mCurrentDownEvent /*.getDownTime()*/.getEventTime() + TAP_TIMEOUT);
 				handled |= mListener.onDown(ev);
 				break;
 
@@ -617,15 +621,15 @@ public class GestureDetector {
 					// Give the move events of the double-tap
 					handled |= mDoubleTapListener.onDoubleTapEvent(ev);
 				} else if (mAlwaysInTapRegion) {
-					final int deltaX = (int) (focusX - mDownFocusX);
-					final int deltaY = (int) (focusY - mDownFocusY);
+					final int deltaX = (int)(focusX - mDownFocusX);
+					final int deltaY = (int)(focusY - mDownFocusY);
 					int distance = (deltaX * deltaX) + (deltaY * deltaY);
 					int slopSquare = isGeneratedGesture ? 0 : mTouchSlopSquare;
 
 					final boolean ambiguousGesture = false;
-							// motionClassification == MotionEvent.CLASSIFICATION_AMBIGUOUS_GESTURE;
+					// motionClassification == MotionEvent.CLASSIFICATION_AMBIGUOUS_GESTURE;
 					final boolean shouldInhibitDefaultAction =
-							hasPendingLongPress && ambiguousGesture;
+					    hasPendingLongPress && ambiguousGesture;
 					if (shouldInhibitDefaultAction) {
 						// Inhibit default long press
 						if (distance > slopSquare) {
@@ -637,9 +641,9 @@ public class GestureDetector {
 							mHandler.removeMessages(LONG_PRESS);
 							final long longPressTimeout = ViewConfiguration.getLongPressTimeout();
 							mHandler.sendMessageAtTime(
-									mHandler.obtainMessage(LONG_PRESS),
-									ev.getDownTime()
-										+ (long) (longPressTimeout * mAmbiguousGestureMultiplier));
+							    mHandler.obtainMessage(LONG_PRESS),
+							    ev.getDownTime()
+							    + (long)(longPressTimeout * mAmbiguousGestureMultiplier));
 						}
 						// Inhibit default scroll. If a gesture is ambiguous, we prevent scroll
 						// until the gesture is resolved.
@@ -702,7 +706,7 @@ public class GestureDetector {
 					final float velocityX = velocityTracker.getXVelocity(pointerId);
 
 					if ((Math.abs(velocityY) > mMinimumFlingVelocity)
-							|| (Math.abs(velocityX) > mMinimumFlingVelocity)) {
+					    || (Math.abs(velocityX) > mMinimumFlingVelocity)) {
 						handled = mListener.onFling(mCurrentDownEvent, ev, velocityX, velocityY);
 					}
 				}
@@ -808,10 +812,10 @@ public class GestureDetector {
 			return false;
 		}
 
-		int deltaX = (int) firstDown.getX() - (int) secondDown.getX();
-		int deltaY = (int) firstDown.getY() - (int) secondDown.getY();
+		int deltaX = (int)firstDown.getX() - (int)secondDown.getX();
+		int deltaY = (int)firstDown.getY() - (int)secondDown.getY();
 		final boolean isGeneratedGesture = false;
-				// (firstDown.getFlags() & MotionEvent.FLAG_IS_GENERATED_GESTURE) != 0;
+		// (firstDown.getFlags() & MotionEvent.FLAG_IS_GENERATED_GESTURE) != 0;
 		int slopSquare = isGeneratedGesture ? 0 : mDoubleTapSlopSquare;
 		return (deltaX * deltaX + deltaY * deltaY < slopSquare);
 	}
@@ -822,5 +826,4 @@ public class GestureDetector {
 		mInLongPress = true;
 		mListener.onLongPress(mCurrentDownEvent);
 	}
-
 }

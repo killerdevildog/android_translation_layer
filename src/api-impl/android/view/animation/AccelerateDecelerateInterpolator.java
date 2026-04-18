@@ -6,5 +6,4 @@ public class AccelerateDecelerateInterpolator implements Interpolator {
 	public float getInterpolation(float input) {
 		return input;
 	}
-
 }

@@ -1,13 +1,11 @@
 package android.content;
 
+import android.net.Uri;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import android.net.Uri;
-
-import java.util.Iterator;
 
 public class IntentFilter {
 
@@ -83,14 +81,14 @@ public class IntentFilter {
 	public int match(String action, String type, String scheme, Uri data, Set<String> categories, String logTag) {
 		int ret = 0;
 		if (!matchAction(action)) {
-			ret = -3/*NO_MATCH_ACTION*/;
+			ret = -3 /*NO_MATCH_ACTION*/;
 		}
 		if (scheme == null) {
-			ret = 0x00100000/*MATCH_CATEGORY_EMPTY*/ | 0x00008000/*MATCH_ADJUSTMENT_NORMAL*/;
+			ret = 0x00100000 /*MATCH_CATEGORY_EMPTY*/ | 0x00008000 /*MATCH_ADJUSTMENT_NORMAL*/;
 		} else if (hasDataScheme(scheme)) {
-			ret = 0x00200000/*MATCH_CATEGORY_SCHEME*/ | 0x00008000/*MATCH_ADJUSTMENT_NORMAL*/;
+			ret = 0x00200000 /*MATCH_CATEGORY_SCHEME*/ | 0x00008000 /*MATCH_ADJUSTMENT_NORMAL*/;
 		} else {
-			ret = -2/*NO_MATCH_DATA*/;
+			ret = -2 /*NO_MATCH_DATA*/;
 		}
 		return ret;
 	}

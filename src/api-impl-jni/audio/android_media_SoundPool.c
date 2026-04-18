@@ -19,7 +19,7 @@ static void on_prepared(GtkMediaStream *media_stream)
 JNIEXPORT jint JNICALL Java_android_media_SoundPool_nativeLoad(JNIEnv *env, jclass, jlong pool, jstring path)
 {
 	GArray *sound_pool_array = _PTR(pool);
-	const char* nativePath = (*env)->GetStringUTFChars(env, path, NULL);
+	const char *nativePath = (*env)->GetStringUTFChars(env, path, NULL);
 	GtkMediaStream *media_stream = gtk_media_file_new_for_filename(nativePath);
 	g_signal_connect(media_stream, "notify::prepared", G_CALLBACK(on_prepared), NULL);
 	(*env)->ReleaseStringUTFChars(env, path, nativePath);

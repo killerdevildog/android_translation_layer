@@ -16,10 +16,9 @@
 
 package android.content;
 
+import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.net.Uri;
 
 /**
 Utility class to aid in matching URIs in content providers.
@@ -118,24 +117,21 @@ instead of:
 	}
 </pre>
 */
-public class UriMatcher
-{
+public class UriMatcher {
 	public static final int NO_MATCH = -1;
 	/**
 	 * Creates the root node of the URI tree.
 	 *
 	 * @param code the code to match for the root URI
 	 */
-	public UriMatcher(int code)
-	{
+	public UriMatcher(int code) {
 		mCode = code;
 		mWhich = -1;
 		mChildren = new ArrayList<UriMatcher>();
 		mText = null;
 	}
 
-	private UriMatcher(int which, String text)
-	{
+	private UriMatcher(int which, String text) {
 		mCode = NO_MATCH;
 		mWhich = which;
 		mChildren = new ArrayList<UriMatcher>();
@@ -157,8 +153,7 @@ public class UriMatcher
 	 * @param code the code that is returned when a URI is matched
 	 * against the given components. Must be positive.
 	 */
-	public void addURI(String authority, String path, int code)
-	{
+	public void addURI(String authority, String path, int code) {
 		if (code < 0) {
 			throw new IllegalArgumentException("code " + code + " is invalid: it must be positive");
 		}
@@ -217,8 +212,7 @@ public class UriMatcher
 	 * @return  The code for the matched node (added using addURI),
 	 * or -1 if there is no matched node.
 	 */
-	public int match(Uri uri)
-	{
+	public int match(Uri uri) {
 		final List<String> pathSegments = uri.getPathSegments();
 		final int li = pathSegments.size();
 
@@ -228,7 +222,7 @@ public class UriMatcher
 			return this.mCode;
 		}
 
-		for (int i=-1; i<li; i++) {
+		for (int i = -1; i < li; i++) {
 			String u = i < 0 ? uri.getAuthority() : pathSegments.get(i);
 			ArrayList<UriMatcher> list = node.mChildren;
 			if (list == null) {
@@ -236,9 +230,9 @@ public class UriMatcher
 			}
 			node = null;
 			int lj = list.size();
-			for (int j=0; j<lj; j++) {
+			for (int j = 0; j < lj; j++) {
 				UriMatcher n = list.get(j);
-		  which_switch:
+			which_switch:
 				switch (n.mWhich) {
 					case EXACT:
 						if (n.mText.equals(u)) {
@@ -247,7 +241,7 @@ public class UriMatcher
 						break;
 					case NUMBER:
 						int lk = u.length();
-						for (int k=0; k<lk; k++) {
+						for (int k = 0; k < lk; k++) {
 							char c = u.charAt(k);
 							if (c < '0' || c > '9') {
 								break which_switch;

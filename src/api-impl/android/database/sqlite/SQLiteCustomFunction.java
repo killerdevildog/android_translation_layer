@@ -39,7 +39,7 @@ public final class SQLiteCustomFunction {
 	 * @param callback The callback to invoke when the function is executed.
 	 */
 	public SQLiteCustomFunction(String name, int numArgs,
-			SQLiteDatabase.CustomFunction callback) {
+	                            SQLiteDatabase.CustomFunction callback) {
 		if (name == null) {
 			throw new IllegalArgumentException("name must not be null.");
 		}

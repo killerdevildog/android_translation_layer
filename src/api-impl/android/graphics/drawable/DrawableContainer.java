@@ -12,7 +12,7 @@ public class DrawableContainer extends Drawable {
 	protected native void native_selectChild(long container, long child);
 
 	public DrawableContainer() {
-		paintable = native_constructor();
+		setPaintable(native_constructor());
 	}
 
 	public boolean selectDrawable(int idx) {
@@ -52,6 +52,10 @@ public class DrawableContainer extends Drawable {
 			return childCount;
 		}
 
+		public Drawable[] getChildren() {
+			return drawables;
+		}
+
 		public Drawable getChild(int idx) {
 			return drawables[idx];
 		}
@@ -65,9 +69,9 @@ public class DrawableContainer extends Drawable {
 		}
 
 		public void growArray(int oldSize, int newSize) {
-				Drawable[] newDrawables = new Drawable[newSize];
-				System.arraycopy(drawables, 0, newDrawables, 0, oldSize);
-				drawables = newDrawables;
+			Drawable[] newDrawables = new Drawable[newSize];
+			System.arraycopy(drawables, 0, newDrawables, 0, oldSize);
+			drawables = newDrawables;
 		}
 
 		@Override
@@ -111,5 +115,4 @@ public class DrawableContainer extends Drawable {
 	public void setEnterFadeDuration(int duration) {}
 
 	public void setExitFadeDuration(int duration) {}
-
 }

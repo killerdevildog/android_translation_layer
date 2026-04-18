@@ -27,14 +27,13 @@ import junit.framework.TestResult;
 @Deprecated
 class NoExecTestResult extends TestResult {
 
-    /**
+	/**
      * Override parent to just inform listeners of test,
      * and skip test execution.
      */
-    @Override
-    protected void run(final TestCase test) {
-        startTest(test);
-        endTest(test);
-    }
-
+	@Override
+	protected void run(final TestCase test) {
+		startTest(test);
+		endTest(test);
+	}
 }

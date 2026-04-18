@@ -1,12 +1,11 @@
 package android.hardware;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import java.util.Arrays;
+import java.util.List;
 
 public class SensorManager {
 
@@ -21,12 +20,12 @@ public class SensorManager {
 	}
 
 	public boolean registerListener(final SensorEventListener listener, final Sensor sensor, int samplingPeriodUs) {
-		switch(sensor.getType()) {
+		switch (sensor.getType()) {
 			case Sensor.TYPE_ORIENTATION:
 				new LocationManager().requestLocationUpdates(null, 0, 0, new LocationListener() {
 					@Override
 					public void onLocationChanged(Location location) {
-						listener.onSensorChanged(new SensorEvent(new float[]{location.getBearing()}, sensor));
+						listener.onSensorChanged(new SensorEvent(new float[] {location.getBearing()}, sensor));
 					}
 				});
 				return true;

@@ -14,8 +14,16 @@ extern "C" {
  * Method:    native_drawBitmap
  * Signature: (JJIIIIJ)V
  */
-JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1drawBitmap
+JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1drawBitmap__JJIIIIJ
   (JNIEnv *, jobject, jlong, jlong, jint, jint, jint, jint, jlong);
+
+/*
+ * Class:     android_atl_GskCanvas
+ * Method:    native_drawBitmap
+ * Signature: (JJIIIIIIIIJ)V
+ */
+JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1drawBitmap__JJIIIIIIIIJ
+  (JNIEnv *, jobject, jlong, jlong, jint, jint, jint, jint, jint, jint, jint, jint, jlong);
 
 /*
  * Class:     android_atl_GskCanvas
@@ -128,6 +136,14 @@ JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1clipRect
  */
 JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1pop
   (JNIEnv *, jobject, jlong, jint);
+
+/*
+ * Class:     android_atl_GskCanvas
+ * Method:    native_drawRenderNode
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_android_atl_GskCanvas_native_1drawRenderNode
+  (JNIEnv *, jobject, jlong, jlong);
 
 #ifdef __cplusplus
 }

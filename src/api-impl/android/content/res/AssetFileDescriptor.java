@@ -53,7 +53,7 @@ public class AssetFileDescriptor implements Closeable {
 	 *            {@link #UNKNOWN_LENGTH} if it extends to the end of the file.
 	 */
 	public AssetFileDescriptor(ParcelFileDescriptor fd, long startOffset,
-				   long length) {
+	                           long length) {
 		this(fd, startOffset, length, null);
 	}
 
@@ -69,7 +69,7 @@ public class AssetFileDescriptor implements Closeable {
 	 *            underlying file descriptor. May be null.
 	 */
 	public AssetFileDescriptor(ParcelFileDescriptor fd, long startOffset,
-				   long length, Bundle extras) {
+	                           long length, Bundle extras) {
 		if (fd == null) {
 			throw new IllegalArgumentException("fd must not be null");
 		}
@@ -207,8 +207,8 @@ public class AssetFileDescriptor implements Closeable {
 		@Override
 		public int available() throws IOException {
 			return mRemaining >= 0
-			    ? (mRemaining < 0x7fffffff ? (int)mRemaining : 0x7fffffff)
-			    : super.available();
+			         ? (mRemaining < 0x7fffffff ? (int)mRemaining : 0x7fffffff)
+			         : super.available();
 		}
 
 		@Override

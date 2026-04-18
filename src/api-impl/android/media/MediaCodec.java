@@ -1,11 +1,12 @@
 package android.media;
 
+import android.media.MediaCodec.BufferInfo;
+import android.view.Surface;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayDeque;
 import java.util.Queue;
-import android.view.Surface;
 
 public class MediaCodec {
 
@@ -36,7 +37,7 @@ public class MediaCodec {
 	}
 
 	public void configure(MediaFormat format, Surface surface, MediaCrypto crypto, int flags) {
-		System.out.println("MediaCodec.configure(" + format + ", " + surface + ", " + crypto +	", " + flags + "): codecName=" + codecName);
+		System.out.println("MediaCodec.configure(" + format + ", " + surface + ", " + crypto + ", " + flags + "): codecName=" + codecName);
 		this.mediaFormat = format;
 
 		int maxInputSize = 262144;
@@ -130,7 +131,7 @@ public class MediaCodec {
 		Integer index = queuedInputBuffers.peek();
 		if (index != null) {
 			int ret;
-			if (index == -1) {  // end of stream
+			if (index == -1) { // end of stream
 				ret = native_queueInputBuffer(native_codec, null, 0);
 			} else {
 				ret = native_queueInputBuffer(native_codec, inputBuffers[index], inputBufferTimestamps[index]);
@@ -174,7 +175,7 @@ public class MediaCodec {
 		System.out.println("MediaCodec.release(): codecName=" + codecName);
 		if (native_codec != 0) {
 			if (outputBuffers != null) {
-				for (int i=0; i<outputBuffers.length; i++) {
+				for (int i = 0; i < outputBuffers.length; i++) {
 					if (!freeOutputBuffers.contains(i))
 						releaseOutputBuffer(i, false);
 				}
@@ -203,7 +204,30 @@ public class MediaCodec {
 	private native void native_releaseOutputBuffer(long codec, ByteBuffer buffer, boolean render);
 	private native void native_release(long codec);
 
-	public static final class CryptoInfo {}
+	public static final class CryptoInfo {
+		public static final class Pattern {
+			private int blocksToEncrypt;
+			private int blocksToSkip;
+
+			public Pattern(int blocksToEncrypt, int blocksToSkip) {
+				this.blocksToEncrypt = blocksToEncrypt;
+				this.blocksToSkip = blocksToSkip;
+			}
+
+			public void set(int blocksToEncrypt, int blocksToSkip) {
+				this.blocksToEncrypt = blocksToEncrypt;
+				this.blocksToSkip = blocksToSkip;
+			}
+
+			public int getEncryptBlocks() {
+				return blocksToEncrypt;
+			}
+
+			public int getSkipBlocks() {
+				return blocksToSkip;
+			}
+		}
+	}
 
 	public static final class BufferInfo {
 		public int size;
@@ -213,5 +237,4 @@ public class MediaCodec {
 	}
 
 	public static interface OnFrameRenderedListener {}
-
 }

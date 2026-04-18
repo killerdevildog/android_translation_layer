@@ -98,7 +98,7 @@ public abstract class Filter {
 		synchronized (mLock) {
 			if (mThreadHandler == null) {
 				HandlerThread thread = new HandlerThread(
-						THREAD_NAME, android.os.Process.THREAD_PRIORITY_BACKGROUND);
+				    THREAD_NAME, android.os.Process.THREAD_PRIORITY_BACKGROUND);
 				thread.start();
 				mThreadHandler = new RequestHandler(thread.getLooper());
 			}
@@ -152,7 +152,7 @@ public abstract class Filter {
 	 * @see android.widget.Filter.FilterResults
 	 */
 	protected abstract void publishResults(CharSequence constraint,
-			FilterResults results);
+	                                       FilterResults results);
 	/**
 	 * <p>Converts a value from the filtered set into a CharSequence. Subclasses
 	 * should override this method to convert their results. The default
@@ -217,7 +217,7 @@ public abstract class Filter {
 			Message message;
 			switch (what) {
 				case FILTER_TOKEN:
-					RequestArguments args = (RequestArguments) msg.obj;
+					RequestArguments args = (RequestArguments)msg.obj;
 					try {
 						args.results = performFiltering(args.constraint);
 					} catch (Exception e) {
@@ -263,7 +263,7 @@ public abstract class Filter {
 		 */
 		@Override
 		public void handleMessage(Message msg) {
-			RequestArguments args = (RequestArguments) msg.obj;
+			RequestArguments args = (RequestArguments)msg.obj;
 			publishResults(args.constraint, args.results);
 			if (args.listener != null) {
 				int count = args.results != null ? args.results.count : -1;

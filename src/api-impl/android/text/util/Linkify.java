@@ -11,4 +11,5 @@ public class Linkify {
 	public static final boolean addLinks(TextView text, int mask) { return true; }
 
 	public interface MatchFilter {}
+	public interface TransformFilter {}
 }

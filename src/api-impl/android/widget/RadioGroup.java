@@ -22,9 +22,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.android.internal.R;
-
 
 /**
  * <p>This class is used to create a multiple-exclusion scope for a set of radio
@@ -79,7 +77,7 @@ public class RadioGroup extends LinearLayout {
 		// retrieve selected radio button as requested by the user in the
 		// XML layout file
 		TypedArray attributes = context.obtainStyledAttributes(
-				attrs, com.android.internal.R.styleable.RadioGroup, com.android.internal.R.attr.radioButtonStyle, 0);
+		    attrs, com.android.internal.R.styleable.RadioGroup, com.android.internal.R.attr.radioButtonStyle, 0);
 
 		int value = attributes.getResourceId(R.styleable.RadioGroup_checkedButton, View.NO_ID);
 		if (value != View.NO_ID) {
@@ -126,7 +124,7 @@ public class RadioGroup extends LinearLayout {
 	@Override
 	public void addView(View child, int index, ViewGroup.LayoutParams params) {
 		if (child instanceof RadioButton) {
-			final RadioButton button = (RadioButton) child;
+			final RadioButton button = (RadioButton)child;
 			if (button.isChecked()) {
 				mProtectFromCheckedChange = true;
 				if (mCheckedId != -1) {
@@ -178,7 +176,7 @@ public class RadioGroup extends LinearLayout {
 	private void setCheckedStateForView(int viewId, boolean checked) {
 		View checkedView = findViewById(viewId);
 		if (checkedView != null && checkedView instanceof RadioButton) {
-			((RadioButton) checkedView).setChecked(checked);
+			((RadioButton)checkedView).setChecked(checked);
 		}
 	}
 
@@ -302,7 +300,7 @@ public class RadioGroup extends LinearLayout {
 		* @param heightAttr the height attribute to fetch
 		*/
 		protected void setBaseAttributes(TypedArray a,
-				int widthAttr, int heightAttr) {
+		                                 int widthAttr, int heightAttr) {
 
 			if (a.hasValue(widthAttr)) {
 				width = a.getLayoutDimension(widthAttr, "layout_width");
@@ -357,8 +355,7 @@ public class RadioGroup extends LinearLayout {
 	* to another listener. This allows the table layout to set its own internal
 	* hierarchy change listener without preventing the user to setup this.</p>
 	*/
-	private class PassThroughHierarchyChangeListener implements
-			ViewGroup.OnHierarchyChangeListener {
+	private class PassThroughHierarchyChangeListener implements ViewGroup.OnHierarchyChangeListener {
 		private ViewGroup.OnHierarchyChangeListener mOnHierarchyChangeListener;
 
 		/**
@@ -373,8 +370,7 @@ public class RadioGroup extends LinearLayout {
 					id = View.generateViewId();
 					child.setId(id);
 				}
-				((RadioButton) child).setOnCheckedChangeListener(
-						mChildOnCheckedChangeListener);
+				((RadioButton)child).setOnCheckedChangeListener(mChildOnCheckedChangeListener);
 			}
 
 			if (mOnHierarchyChangeListener != null) {
@@ -388,7 +384,7 @@ public class RadioGroup extends LinearLayout {
 		@Override
 		public void onChildViewRemoved(View parent, View child) {
 			if (parent == RadioGroup.this && child instanceof RadioButton) {
-				((RadioButton) child).setOnCheckedChangeListener(null);
+				((RadioButton)child).setOnCheckedChangeListener(null);
 			}
 
 			if (mOnHierarchyChangeListener != null) {
@@ -404,7 +400,7 @@ public class RadioGroup extends LinearLayout {
 		int index = 0;
 		for (int i = 0; i < getChildCount(); i++) {
 			if (this.getChildAt(i) instanceof RadioButton) {
-				RadioButton button = (RadioButton) this.getChildAt(i);
+				RadioButton button = (RadioButton)this.getChildAt(i);
 				if (button == child) {
 					return index;
 				}

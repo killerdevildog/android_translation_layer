@@ -31,26 +31,27 @@ public class PlaybackState {
 			return this;
 		}
 
-		public Builder setBufferedPosition(long bufferedPosition) {return this;}
+		public Builder setBufferedPosition(long bufferedPosition) { return this; }
 
 		public Builder setActions(long actions) {
 			state.actions = actions;
 			return this;
 		}
 
-		public Builder setErrorMessage(CharSequence errorMessage) {return this;}
+		public Builder setErrorMessage(CharSequence errorMessage) { return this; }
 
 		public Builder setActiveQueueItemId(long activeQueueItemId) {
 			state.activeQueueItemId = activeQueueItemId;
 			return this;
 		}
 
-		public Builder addCustomAction(CustomAction action) {return this;}
+		public Builder addCustomAction(CustomAction action) { return this; }
+
+		public Builder setExtras(Bundle bundle) { return this; }
 
 		public PlaybackState build() {
 			return state;
 		}
-
 	}
 
 	public static class CustomAction {
@@ -58,10 +59,9 @@ public class PlaybackState {
 		public static class Builder {
 			public Builder(String action, CharSequence label, int icon) {}
 
-			public Builder setExtras(Bundle extras) {return this;}
+			public Builder setExtras(Bundle extras) { return this; }
 
-			public CustomAction build() {return new CustomAction();}
+			public CustomAction build() { return new CustomAction(); }
 		}
 	}
-
 }

@@ -31,7 +31,7 @@ public class ViewConfiguration {
 		return 400;
 	}
 
-	public int getScaledPagingTouchSlop(){
+	public int getScaledPagingTouchSlop() {
 		return 16;
 	}
 

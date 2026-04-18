@@ -16,6 +16,7 @@
 
 package android.view;
 
+import android.os.Parcelable;
 //import android.text.method.MetaKeyKeyListener;
 import android.util.Log;
 import android.util.Slog;
@@ -78,7 +79,7 @@ import android.view.KeyCharacterMap.KeyData;
  * input devices and sources represent keys and buttons.
  * </p>
  */
-public class KeyEvent extends InputEvent {
+public class KeyEvent extends InputEvent implements Parcelable {
 	/**
 	 * Key code constant: Unknown key code.
 	 */
@@ -1327,38 +1328,38 @@ public class KeyEvent extends InputEvent {
 	// Symbolic names of all metakeys in bit order from least significant to most significant.
 	// Accordingly there are exactly 32 values in this table.
 	private static final String[] META_SYMBOLIC_NAMES = new String[] {
-	    "META_SHIFT_ON",
-	    "META_ALT_ON",
-	    "META_SYM_ON",
-	    "META_FUNCTION_ON",
-	    "META_ALT_LEFT_ON",
-	    "META_ALT_RIGHT_ON",
-	    "META_SHIFT_LEFT_ON",
-	    "META_SHIFT_RIGHT_ON",
-	    "META_CAP_LOCKED",
-	    "META_ALT_LOCKED",
-	    "META_SYM_LOCKED",
-	    "0x00000800",
-	    "META_CTRL_ON",
-	    "META_CTRL_LEFT_ON",
-	    "META_CTRL_RIGHT_ON",
-	    "0x00008000",
-	    "META_META_ON",
-	    "META_META_LEFT_ON",
-	    "META_META_RIGHT_ON",
-	    "0x00080000",
-	    "META_CAPS_LOCK_ON",
-	    "META_NUM_LOCK_ON",
-	    "META_SCROLL_LOCK_ON",
-	    "0x00800000",
-	    "0x01000000",
-	    "0x02000000",
-	    "0x04000000",
-	    "0x08000000",
-	    "0x10000000",
-	    "0x20000000",
-	    "0x40000000",
-	    "0x80000000",
+		"META_SHIFT_ON",
+		"META_ALT_ON",
+		"META_SYM_ON",
+		"META_FUNCTION_ON",
+		"META_ALT_LEFT_ON",
+		"META_ALT_RIGHT_ON",
+		"META_SHIFT_LEFT_ON",
+		"META_SHIFT_RIGHT_ON",
+		"META_CAP_LOCKED",
+		"META_ALT_LOCKED",
+		"META_SYM_LOCKED",
+		"0x00000800",
+		"META_CTRL_ON",
+		"META_CTRL_LEFT_ON",
+		"META_CTRL_RIGHT_ON",
+		"0x00008000",
+		"META_META_ON",
+		"META_META_LEFT_ON",
+		"META_META_RIGHT_ON",
+		"0x00080000",
+		"META_CAPS_LOCK_ON",
+		"META_NUM_LOCK_ON",
+		"META_SCROLL_LOCK_ON",
+		"0x00800000",
+		"0x01000000",
+		"0x02000000",
+		"0x04000000",
+		"0x08000000",
+		"0x10000000",
+		"0x20000000",
+		"0x40000000",
+		"0x80000000",
 	};
 
 	/**
@@ -1737,7 +1738,7 @@ public class KeyEvent extends InputEvent {
 	private long mEventTime;
 	private String mCharacters;
 
-	int unicodeValue;  // set from native code using gdk_keyval_to_unicode
+	int unicodeValue; // set from native code using gdk_keyval_to_unicode
 
 	public interface Callback {
 		/**
@@ -1831,7 +1832,7 @@ public class KeyEvent extends InputEvent {
 	 * initial down) or event count for multiple events.
 	 */
 	public KeyEvent(long downTime, long eventTime, int action,
-			int code, int repeat) {
+	                int code, int repeat) {
 		mDownTime = downTime;
 		mEventTime = eventTime;
 		mAction = action;
@@ -1855,7 +1856,7 @@ public class KeyEvent extends InputEvent {
 	 * @param metaState Flags indicating which meta keys are currently pressed.
 	 */
 	public KeyEvent(long downTime, long eventTime, int action,
-			int code, int repeat, int metaState) {
+	                int code, int repeat, int metaState) {
 		mDownTime = downTime;
 		mEventTime = eventTime;
 		mAction = action;
@@ -1882,8 +1883,8 @@ public class KeyEvent extends InputEvent {
 	 * @param scancode Raw device scan code of the event.
 	 */
 	public KeyEvent(long downTime, long eventTime, int action,
-			int code, int repeat, int metaState,
-			int deviceId, int scancode) {
+	                int code, int repeat, int metaState,
+	                int deviceId, int scancode) {
 		mDownTime = downTime;
 		mEventTime = eventTime;
 		mAction = action;
@@ -1912,8 +1913,8 @@ public class KeyEvent extends InputEvent {
 	 * @param flags The flags for this key event
 	 */
 	public KeyEvent(long downTime, long eventTime, int action,
-			int code, int repeat, int metaState,
-			int deviceId, int scancode, int flags) {
+	                int code, int repeat, int metaState,
+	                int deviceId, int scancode, int flags) {
 		mDownTime = downTime;
 		mEventTime = eventTime;
 		mAction = action;
@@ -1944,8 +1945,8 @@ public class KeyEvent extends InputEvent {
 	 * @param source The input source such as {@link InputDevice#SOURCE_KEYBOARD}.
 	 */
 	public KeyEvent(long downTime, long eventTime, int action,
-			int code, int repeat, int metaState,
-			int deviceId, int scancode, int flags, int source) {
+	                int code, int repeat, int metaState,
+	                int deviceId, int scancode, int flags, int source) {
 		mDownTime = downTime;
 		mEventTime = eventTime;
 		mAction = action;
@@ -2046,8 +2047,8 @@ public class KeyEvent extends InputEvent {
 	 * @hide
 	 */
 	public static KeyEvent obtain(long downTime, long eventTime, int action,
-				      int code, int repeat, int metaState,
-				      int deviceId, int scancode, int flags, int source, String characters) {
+	                              int code, int repeat, int metaState,
+	                              int deviceId, int scancode, int flags, int source, String characters) {
 		KeyEvent ev = obtain();
 		ev.mDownTime = downTime;
 		ev.mEventTime = eventTime;
@@ -2131,7 +2132,7 @@ public class KeyEvent extends InputEvent {
 	 * @param newRepeat The new repeat count of the event.
 	 */
 	public static KeyEvent changeTimeRepeat(KeyEvent event, long eventTime,
-						int newRepeat) {
+	                                        int newRepeat) {
 		return new KeyEvent(event, eventTime, newRepeat);
 	}
 
@@ -2147,7 +2148,7 @@ public class KeyEvent extends InputEvent {
 	 * in the original event.
 	 */
 	public static KeyEvent changeTimeRepeat(KeyEvent event, long eventTime,
-						int newRepeat, int newFlags) {
+	                                        int newRepeat, int newFlags) {
 		KeyEvent ret = new KeyEvent(event);
 		ret.mEventTime = eventTime;
 		ret.mRepeatCount = newRepeat;
@@ -2508,7 +2509,7 @@ public class KeyEvent extends InputEvent {
 		if ((metaState & (META_META_LEFT_ON | META_META_RIGHT_ON)) != 0) {
 			metaState |= META_META_ON;
 		}
-/*		if ((metaState & MetaKeyKeyListener.META_CAP_LOCKED) != 0) {
+		/*if ((metaState & MetaKeyKeyListener.META_CAP_LOCKED) != 0) {
 			metaState |= META_CAPS_LOCK_ON;
 		}
 		if ((metaState & MetaKeyKeyListener.META_ALT_LOCKED) != 0) {
@@ -2574,25 +2575,25 @@ public class KeyEvent extends InputEvent {
 		//       are not valid modifiers.
 		if ((modifiers & META_INVALID_MODIFIER_MASK) != 0) {
 			throw new IllegalArgumentException("modifiers must not contain "
-							   + "META_CAPS_LOCK_ON, META_NUM_LOCK_ON, META_SCROLL_LOCK_ON, "
-							   + "META_CAP_LOCKED, META_ALT_LOCKED, META_SYM_LOCKED, "
-							   + "or META_SELECTING");
+			                                   + "META_CAPS_LOCK_ON, META_NUM_LOCK_ON, META_SCROLL_LOCK_ON, "
+			                                   + "META_CAP_LOCKED, META_ALT_LOCKED, META_SYM_LOCKED, "
+			                                   + "or META_SELECTING");
 		}
 
 		metaState = normalizeMetaState(metaState) & META_MODIFIER_MASK;
 		metaState = metaStateFilterDirectionalModifiers(metaState, modifiers,
-								META_SHIFT_ON, META_SHIFT_LEFT_ON, META_SHIFT_RIGHT_ON);
+		                                                META_SHIFT_ON, META_SHIFT_LEFT_ON, META_SHIFT_RIGHT_ON);
 		metaState = metaStateFilterDirectionalModifiers(metaState, modifiers,
-								META_ALT_ON, META_ALT_LEFT_ON, META_ALT_RIGHT_ON);
+		                                                META_ALT_ON, META_ALT_LEFT_ON, META_ALT_RIGHT_ON);
 		metaState = metaStateFilterDirectionalModifiers(metaState, modifiers,
-								META_CTRL_ON, META_CTRL_LEFT_ON, META_CTRL_RIGHT_ON);
+		                                                META_CTRL_ON, META_CTRL_LEFT_ON, META_CTRL_RIGHT_ON);
 		metaState = metaStateFilterDirectionalModifiers(metaState, modifiers,
-								META_META_ON, META_META_LEFT_ON, META_META_RIGHT_ON);
+		                                                META_META_ON, META_META_LEFT_ON, META_META_RIGHT_ON);
 		return metaState == modifiers;
 	}
 
 	private static int metaStateFilterDirectionalModifiers(int metaState,
-							       int modifiers, int basic, int left, int right) {
+	                                                       int modifiers, int basic, int left, int right) {
 		final boolean wantBasic = (modifiers & basic) != 0;
 		final int directional = left | right;
 		final boolean wantLeftOrRight = (modifiers & directional) != 0;
@@ -3086,7 +3087,7 @@ public class KeyEvent extends InputEvent {
 	 * @return The return value from the Callback method that was called.
 	 */
 	public final boolean dispatch(Callback receiver, DispatcherState state,
-				      Object target) {
+	                              Object target) {
 		switch (mAction) {
 			case ACTION_DOWN: {
 				mFlags &= ~FLAG_START_TRACKING;

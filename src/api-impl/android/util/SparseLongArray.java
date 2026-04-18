@@ -18,7 +18,6 @@ package android.util;
 
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
-
 import libcore.util.EmptyArray;
 
 /**
@@ -76,7 +75,7 @@ public class SparseLongArray implements Cloneable {
 	public SparseLongArray clone() {
 		SparseLongArray clone = null;
 		try {
-			clone = (SparseLongArray) super.clone();
+			clone = (SparseLongArray)super.clone();
 			clone.mKeys = mKeys.clone();
 			clone.mValues = mValues.clone();
 		} catch (CloneNotSupportedException cnse) {
@@ -243,7 +242,7 @@ public class SparseLongArray implements Cloneable {
 
 		StringBuilder buffer = new StringBuilder(mSize * 28);
 		buffer.append('{');
-		for (int i=0; i<mSize; i++) {
+		for (int i = 0; i < mSize; i++) {
 			if (i > 0) {
 				buffer.append(", ");
 			}

@@ -74,12 +74,12 @@ public class TableRow extends LinearLayout {
 	}
 
 	private void initTableRow() {
-//		OnHierarchyChangeListener oldListener = mOnHierarchyChangeListener;
+		//OnHierarchyChangeListener oldListener = mOnHierarchyChangeListener;
 		mChildrenTracker = new ChildrenTracker();
-/*		if (oldListener != null) {
+		/*if (oldListener != null) {
 			mChildrenTracker.setOnHierarchyChangeListener(oldListener);
-		}
-*/
+		}*/
+
 		super.setOnHierarchyChangeListener(mChildrenTracker);
 	}
 
@@ -189,8 +189,8 @@ public class TableRow extends LinearLayout {
 	 */
 	@Override
 	void measureChildBeforeLayout(View child, int childIndex,
-				      int widthMeasureSpec, int totalWidth,
-				      int heightMeasureSpec, int totalHeight) {
+	                              int widthMeasureSpec, int totalWidth,
+	                              int heightMeasureSpec, int totalHeight) {
 		if (mConstrainedColumnWidths != null) {
 			final LayoutParams lp = (LayoutParams)child.getLayoutParams();
 
@@ -216,9 +216,8 @@ public class TableRow extends LinearLayout {
 			int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
 			    Math.max(0, columnWidth - lp.leftMargin - lp.rightMargin), measureMode);
 			int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec,
-									paddingTop +paddingBottom + lp.topMargin +
-									     lp.bottomMargin + totalHeight,
-									 lp.height);
+			                                                 paddingTop + paddingBottom + lp.topMargin + lp.bottomMargin + totalHeight,
+			                                                 lp.height);
 
 			child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
 
@@ -245,7 +244,7 @@ public class TableRow extends LinearLayout {
 		} else {
 			// fail silently when column widths are not available
 			super.measureChildBeforeLayout(child, childIndex, widthMeasureSpec,
-						       totalWidth, heightMeasureSpec, totalHeight);
+			                               totalWidth, heightMeasureSpec, totalHeight);
 		}
 	}
 
@@ -311,8 +310,7 @@ public class TableRow extends LinearLayout {
 					}
 					child.measure(spec, spec);
 
-					final int width = child.getMeasuredWidth() + layoutParams.leftMargin +
-							  layoutParams.rightMargin;
+					final int width = child.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
 					columnWidths[i] = width;
 				} else {
 					columnWidths[i] = 0;
@@ -378,7 +376,7 @@ public class TableRow extends LinearLayout {
 	protected LinearLayout.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
 		return new LayoutParams(p);
 	}
-/*
+	/*
 	@Override
 	public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
 		super.onInitializeAccessibilityEvent(event);
@@ -403,13 +401,13 @@ public class TableRow extends LinearLayout {
 		/**
 		 * <p>The column index of the cell represented by the widget.</p>
 		 */
-//		@ViewDebug.ExportedProperty(category = "layout")
+		//@ViewDebug.ExportedProperty(category = "layout")
 		public int column;
 
 		/**
 		 * <p>The number of columns the widgets spans over.</p>
 		 */
-//		@ViewDebug.ExportedProperty(category = "layout")
+		//@ViewDebug.ExportedProperty(category = "layout")
 		public int span;
 
 		private static final int LOCATION = 0;
@@ -425,7 +423,7 @@ public class TableRow extends LinearLayout {
 
 			TypedArray a =
 			    c.obtainStyledAttributes(attrs,
-						     com.android.internal.R.styleable.TableRow_Cell);
+			                             com.android.internal.R.styleable.TableRow_Cell);
 
 			column = a.getInt(com.android.internal.R.styleable.TableRow_Cell_layout_column, -1);
 			span = a.getInt(com.android.internal.R.styleable.TableRow_Cell_layout_span, 1);

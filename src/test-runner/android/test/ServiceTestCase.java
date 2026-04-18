@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.test.mock.MockApplication;
-
 import android.test.mock.MockService;
 import java.util.Random;
 
@@ -102,78 +101,77 @@ import java.util.Random;
 @Deprecated
 public abstract class ServiceTestCase<T extends Service> extends AndroidTestCase {
 
-    Class<T> mServiceClass;
+	Class<T> mServiceClass;
 
-    private Context mSystemContext;
-    private Application mApplication;
+	private Context mSystemContext;
+	private Application mApplication;
 
-    /**
+	/**
      * Constructor
      * @param serviceClass The type of the service under test.
      */
-    public ServiceTestCase(Class<T> serviceClass) {
-        mServiceClass = serviceClass;
-    }
+	public ServiceTestCase(Class<T> serviceClass) {
+		mServiceClass = serviceClass;
+	}
 
-    private T mService;
-    private boolean mServiceAttached = false;
-    private boolean mServiceCreated = false;
-    private boolean mServiceStarted = false;
-    private boolean mServiceBound = false;
-    private Intent mServiceIntent = null;
-    private int mServiceId;
+	private T mService;
+	private boolean mServiceAttached = false;
+	private boolean mServiceCreated = false;
+	private boolean mServiceStarted = false;
+	private boolean mServiceBound = false;
+	private Intent mServiceIntent = null;
+	private int mServiceId;
 
-    /**
+	/**
      * @return An instance of the service under test. This instance is created automatically when
      * a test calls {@link #startService} or {@link #bindService}.
      */
-    public T getService() {
-        return mService;
-    }
+	public T getService() {
+		return mService;
+	}
 
-    /**
+	/**
      * Gets the current system context and stores it.
      *
      * Extend this method to do your own test initialization. If you do so, you
      * must call <code>super.setUp()</code> as the first statement in your override. The method is
      * called before each test method is executed.
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        // get the real context, before the individual tests have a chance to muck with it
-        mSystemContext = getContext();
+		// get the real context, before the individual tests have a chance to muck with it
+		mSystemContext = getContext();
+	}
 
-    }
-
-    /**
+	/**
      * Creates the service under test and attaches all injected dependencies
      * (Context, Application) to it.  This is called automatically by {@link #startService} or
      * by {@link #bindService}.
      * If you need to call {@link AndroidTestCase#setContext(Context) setContext()} or
      * {@link #setApplication setApplication()}, do so before calling this method.
      */
-    protected void setupService() {
-        mService = null;
-        try {
-            mService = mServiceClass.newInstance();
-        } catch (Exception e) {
-            assertNotNull(mService);
-        }
-        if (getApplication() == null) {
-            setApplication(new MockApplication());
-        }
-        MockService.attachForTesting(
-                mService, getContext(), mServiceClass.getName(), getApplication());
+	protected void setupService() {
+		mService = null;
+		try {
+			mService = mServiceClass.newInstance();
+		} catch (Exception e) {
+			assertNotNull(mService);
+		}
+		if (getApplication() == null) {
+			setApplication(new MockApplication());
+		}
+		MockService.attachForTesting(
+		    mService, getContext(), mServiceClass.getName(), getApplication());
 
-        assertNotNull(mService);
+		assertNotNull(mService);
 
-        mServiceId = new Random().nextInt();
-        mServiceAttached = true;
-    }
+		mServiceId = new Random().nextInt();
+		mServiceAttached = true;
+	}
 
-    /**
+	/**
      * Starts the service under test, in the same way as if it were started by
      * {@link android.content.Context#startService(Intent) Context.startService(Intent)} with
      * an {@link android.content.Intent} that identifies a service.
@@ -183,22 +181,22 @@ public abstract class ServiceTestCase<T extends Service> extends AndroidTestCase
      * @param intent An Intent that identifies a service, of the same form as the Intent passed to
      * {@link android.content.Context#startService(Intent) Context.startService(Intent)}.
      */
-    protected void startService(Intent intent) {
-        if (!mServiceAttached) {
-            setupService();
-        }
-        assertNotNull(mService);
+	protected void startService(Intent intent) {
+		if (!mServiceAttached) {
+			setupService();
+		}
+		assertNotNull(mService);
 
-        if (!mServiceCreated) {
-            mService.onCreate();
-            mServiceCreated = true;
-        }
-        mService.onStartCommand(intent, 0, mServiceId);
+		if (!mServiceCreated) {
+			mService.onCreate();
+			mServiceCreated = true;
+		}
+		mService.onStartCommand(intent, 0, mServiceId);
 
-        mServiceStarted = true;
-    }
+		mServiceStarted = true;
+	}
 
-    /**
+	/**
      * <p>
      *      Starts the service under test, in the same way as if it were started by
      *      {@link android.content.Context#bindService(Intent, ServiceConnection, int)
@@ -228,44 +226,44 @@ public abstract class ServiceTestCase<T extends Service> extends AndroidTestCase
      * @return An object whose type is a subclass of IBinder, for making further calls into
      * the service.
      */
-    protected IBinder bindService(Intent intent) {
-        if (!mServiceAttached) {
-            setupService();
-        }
-        assertNotNull(mService);
+	protected IBinder bindService(Intent intent) {
+		if (!mServiceAttached) {
+			setupService();
+		}
+		assertNotNull(mService);
 
-        if (!mServiceCreated) {
-            mService.onCreate();
-            mServiceCreated = true;
-        }
-        // no extras are expected by unbind
-        mServiceIntent = intent.cloneFilter();
-        IBinder result = mService.onBind(intent);
+		if (!mServiceCreated) {
+			mService.onCreate();
+			mServiceCreated = true;
+		}
+		// no extras are expected by unbind
+		mServiceIntent = intent.cloneFilter();
+		IBinder result = mService.onBind(intent);
 
-        mServiceBound = true;
-        return result;
-    }
+		mServiceBound = true;
+		return result;
+	}
 
-    /**
+	/**
      * Makes the necessary calls to stop (or unbind) the service under test, and
      * calls onDestroy().  Ordinarily this is called automatically (by {@link #tearDown}, but
      * you can call it directly from your test in order to check for proper shutdown behavior.
      */
-    protected void shutdownService() {
-        if (mServiceStarted) {
-            mService.stopSelf();
-            mServiceStarted = false;
-        } else if (mServiceBound) {
-            mService.onUnbind(mServiceIntent);
-            mServiceBound = false;
-        }
-        if (mServiceCreated) {
-            mService.onDestroy();
-            mServiceCreated = false;
-        }
-    }
+	protected void shutdownService() {
+		if (mServiceStarted) {
+			mService.stopSelf();
+			mServiceStarted = false;
+		} else if (mServiceBound) {
+			mService.onUnbind(mServiceIntent);
+			mServiceBound = false;
+		}
+		if (mServiceCreated) {
+			mService.onDestroy();
+			mServiceCreated = false;
+		}
+	}
 
-    /**
+	/**
      * <p>
      *      Shuts down the service under test.  Ensures all resources are cleaned up and
      *      garbage collected before moving on to the next test. This method is called after each
@@ -278,20 +276,20 @@ public abstract class ServiceTestCase<T extends Service> extends AndroidTestCase
      *
      * @throws Exception
      */
-    @Override
-    protected void tearDown() throws Exception {
-        shutdownService();
-        mService = null;
+	@Override
+	protected void tearDown() throws Exception {
+		shutdownService();
+		mService = null;
 
-        // Scrub out members - protects against memory leaks in the case where someone
-        // creates a non-static inner class (thus referencing the test case) and gives it to
-        // someone else to hold onto
-        scrubClass(ServiceTestCase.class);
+		// Scrub out members - protects against memory leaks in the case where someone
+		// creates a non-static inner class (thus referencing the test case) and gives it to
+		// someone else to hold onto
+		scrubClass(ServiceTestCase.class);
 
-        super.tearDown();
-    }
+		super.tearDown();
+	}
 
-    /**
+	/**
      * Sets the application that is used during the test.  If you do not call this method,
      * a new {@link android.test.mock.MockApplication MockApplication} object is used.
      *
@@ -299,40 +297,40 @@ public abstract class ServiceTestCase<T extends Service> extends AndroidTestCase
      *
      * @see #getApplication()
      */
-    public void setApplication(Application application) {
-        mApplication = application;
-    }
+	public void setApplication(Application application) {
+		mApplication = application;
+	}
 
-    /**
+	/**
      * Returns the Application object in use by the service under test.
      *
      * @return The application object.
      *
      * @see #setApplication
      */
-    public Application getApplication() {
-        return mApplication;
-    }
+	public Application getApplication() {
+		return mApplication;
+	}
 
-    /**
+	/**
      * Returns the real system context that is saved by {@link #setUp()}. Use it to create
      * mock or other types of context objects for the service under test.
      *
      * @return A normal system context.
      */
-    public Context getSystemContext() {
-        return mSystemContext;
-    }
+	public Context getSystemContext() {
+		return mSystemContext;
+	}
 
-    /**
+	/**
      * Tests that {@link #setupService()} runs correctly and issues an
      * {@link junit.framework.Assert#assertNotNull(String, Object)} if it does.
      * You can override this test method if you wish.
      *
      * @throws Exception
      */
-    public void testServiceTestCaseSetUpProperly() throws Exception {
-        setupService();
-        assertNotNull("service should be launched successfully", mService);
-    }
+	public void testServiceTestCaseSetUpProperly() throws Exception {
+		setupService();
+		assertNotNull("service should be launched successfully", mService);
+	}
 }

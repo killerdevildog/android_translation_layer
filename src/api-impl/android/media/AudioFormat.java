@@ -2,7 +2,7 @@ package android.media;
 
 public class AudioFormat {
 
-	int sampleRate;
+	int sampleRate = 44100;
 	int channelMask;
 	int encoding;
 

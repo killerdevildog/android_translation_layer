@@ -98,7 +98,7 @@ public interface SurfaceHolder {
 		 * @param height The new height of the surface.
 		 */
 		public void surfaceChanged(SurfaceHolder holder, int format, int width,
-					   int height);
+		                           int height);
 
 		/**
 		 * This is called immediately before a surface is being destroyed. After

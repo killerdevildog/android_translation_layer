@@ -32,6 +32,7 @@
 // a long time.
 static const int SOFT_HEAP_LIMIT = 8 * 1024 * 1024;
 
-JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteGlobal_nativeReleaseMemory(JNIEnv* env, jclass clazz) {
+JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteGlobal_nativeReleaseMemory(JNIEnv *env, jclass clazz)
+{
 	return sqlite3_release_memory(SOFT_HEAP_LIMIT);
 }

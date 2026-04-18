@@ -51,6 +51,22 @@ JNIEXPORT void JNICALL Java_android_view_Window_set_1layout
 JNIEXPORT void JNICALL Java_android_view_Window_set_1jobject
   (JNIEnv *, jclass, jlong, jobject);
 
+/*
+ * Class:     android_view_Window
+ * Method:    remove_gtk_background
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_android_view_Window_remove_1gtk_1background
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     android_view_Window
+ * Method:    set_screen_brightness
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_android_view_Window_set_1screen_1brightness
+  (JNIEnv *, jobject, jfloat);
+
 #ifdef __cplusplus
 }
 #endif

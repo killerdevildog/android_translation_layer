@@ -111,7 +111,7 @@ public class PorterDuffColorFilter extends ColorFilter {
 		if (object == null || getClass() != object.getClass()) {
 			return false;
 		}
-		final PorterDuffColorFilter other = (PorterDuffColorFilter) object;
+		final PorterDuffColorFilter other = (PorterDuffColorFilter)object;
 		if (mColor != other.mColor || mMode != other.mMode) {
 			return false;
 		}
@@ -120,7 +120,7 @@ public class PorterDuffColorFilter extends ColorFilter {
 
 	@Override
 	public int hashCode() {
-		return 31 *  mMode.hashCode() + mColor;
+		return 31 * mMode.hashCode() + mColor;
 	}
 
 	private static native long native_CreatePorterDuffFilter(int srcColor, int porterDuffMode);

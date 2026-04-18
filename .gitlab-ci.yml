@@ -1,4 +1,5 @@
 stages:
+  - lint
   - build
   - cts
 
@@ -17,7 +18,6 @@ build_trigger_job:
     branch: atl-nightlies-atl
     strategy: depend
 
-
 cts_trigger_job:
   rules:
     - if: ($CI_PIPELINE_SOURCE != "merge_request_event") && ($CI_COMMIT_BRANCH == 'master')
@@ -25,3 +25,15 @@ cts_trigger_job:
   trigger:
     project: android_translation_layer/android_translation_layer.gitlab.io
     branch: master
+
+lint:
+  stage: lint
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event")
+  script:
+    - mkdir clang_format_artifact
+    - curl -Lo clang_format_artifact/clang_format_artifact.zip https://gitlab.com/android_translation_layer/clang-format/-/jobs/artifacts/atl_changes/download?job=build-x86_64
+    - unzip -d clang_format_artifact/ clang_format_artifact/clang_format_artifact.zip
+    - find src/ -type f -exec clang_format_artifact/build/bin/clang-format -Werror --dry-run {} +
+  tags:
+    - saas-linux-small-amd64

@@ -268,10 +268,10 @@ public final class ViewTreeObserver {
 				return false;
 
 			InternalInsetsInfo other = (InternalInsetsInfo)o;
-			return mTouchableInsets == other.mTouchableInsets &&
-			    contentInsets.equals(other.contentInsets) &&
-			    visibleInsets.equals(other.visibleInsets) &&
-			    touchableRegion.equals(other.touchableRegion);
+			return mTouchableInsets == other.mTouchableInsets
+			    && contentInsets.equals(other.contentInsets)
+			    && visibleInsets.equals(other.visibleInsets)
+			    && touchableRegion.equals(other.touchableRegion);
 		}
 
 		void set(InternalInsetsInfo other) {
@@ -303,7 +303,7 @@ public final class ViewTreeObserver {
 	}
 
 	ViewTreeObserver(Window window) {
-		if(window != null)
+		if (window != null)
 			this.window = window.native_window;
 	}
 
@@ -340,7 +340,7 @@ public final class ViewTreeObserver {
 		}
 
 		if (observer.mOnGlobalLayoutListeners != null && observer.mOnGlobalLayoutListeners.size() > 0) {
-			if(mOnGlobalLayoutListeners == null || mOnGlobalLayoutListeners.size() == 0)
+			if (mOnGlobalLayoutListeners == null || mOnGlobalLayoutListeners.size() == 0)
 				native_set_have_global_layout_listeners(true);
 
 			if (mOnGlobalLayoutListeners != null) {
@@ -541,7 +541,7 @@ public final class ViewTreeObserver {
 		}
 		mOnGlobalLayoutListeners.remove(victim);
 
-		if(mOnGlobalLayoutListeners.size() == 0)
+		if (mOnGlobalLayoutListeners.size() == 0)
 			native_set_have_global_layout_listeners(false);
 	}
 
@@ -734,7 +734,7 @@ public final class ViewTreeObserver {
 	private void checkIsAlive() {
 		if (!mAlive) {
 			throw new IllegalStateException("This ViewTreeObserver is not alive, call "
-							+ "getViewTreeObserver() again");
+			                                + "getViewTreeObserver() again");
 		}
 	}
 

@@ -6,7 +6,7 @@ typedef void AAssetManager;
 /**
  * Create a new AConfiguration, initialized with no values set.
  */
-AConfiguration* AConfiguration_new()
+AConfiguration *AConfiguration_new()
 {
 	return 0;
 }
@@ -15,7 +15,7 @@ AConfiguration* AConfiguration_new()
  * Free an AConfiguration that was previously created with
  * AConfiguration_new().
  */
-void AConfiguration_delete(AConfiguration* config)
+void AConfiguration_delete(AConfiguration *config)
 {
 	return;
 }
@@ -24,7 +24,7 @@ void AConfiguration_delete(AConfiguration* config)
  * Create and return a new AConfiguration based on the current configuration in
  * use in the given {@link AAssetManager}.
  */
-void AConfiguration_fromAssetManager(AConfiguration* out, AAssetManager* am)
+void AConfiguration_fromAssetManager(AConfiguration *out, AAssetManager *am)
 {
 	return;
 }
@@ -32,7 +32,7 @@ void AConfiguration_fromAssetManager(AConfiguration* out, AAssetManager* am)
 /**
  * Copy the contents of 'src' to 'dest'.
  */
-void AConfiguration_copy(AConfiguration* dest, AConfiguration* src)
+void AConfiguration_copy(AConfiguration *dest, AConfiguration *src)
 {
 	return;
 }
@@ -40,7 +40,7 @@ void AConfiguration_copy(AConfiguration* dest, AConfiguration* src)
 /**
  * Return the current MCC set in the configuration.  0 if not set.
  */
-int32_t AConfiguration_getMcc(AConfiguration* config)
+int32_t AConfiguration_getMcc(AConfiguration *config)
 {
 	return -1;
 }
@@ -48,7 +48,7 @@ int32_t AConfiguration_getMcc(AConfiguration* config)
 /**
  * Set the current MCC in the configuration.  0 to clear.
  */
-void AConfiguration_setMcc(AConfiguration* config, int32_t mcc)
+void AConfiguration_setMcc(AConfiguration *config, int32_t mcc)
 {
 	return;
 }
@@ -56,7 +56,7 @@ void AConfiguration_setMcc(AConfiguration* config, int32_t mcc)
 /**
  * Return the current MNC set in the configuration.  0 if not set.
  */
-int32_t AConfiguration_getMnc(AConfiguration* config)
+int32_t AConfiguration_getMnc(AConfiguration *config)
 {
 	return -1;
 }
@@ -64,7 +64,7 @@ int32_t AConfiguration_getMnc(AConfiguration* config)
 /**
  * Set the current MNC in the configuration.  0 to clear.
  */
-void AConfiguration_setMnc(AConfiguration* config, int32_t mnc)
+void AConfiguration_setMnc(AConfiguration *config, int32_t mnc)
 {
 	return;
 }
@@ -74,7 +74,8 @@ void AConfiguration_setMnc(AConfiguration* config, int32_t mnc)
  * be filled with an array of two characters.  They are not 0-terminated.  If
  * a language is not set, they will be 0.
  */
-void AConfiguration_getLanguage(AConfiguration* config, char* outLanguage) {
+void AConfiguration_getLanguage(AConfiguration *config, char *outLanguage)
+{
 	/* Assume not set. */
 	outLanguage[0] = 0;
 	outLanguage[1] = 0;
@@ -84,7 +85,7 @@ void AConfiguration_getLanguage(AConfiguration* config, char* outLanguage) {
  * Set the current language code in the configuration, from the first two
  * characters in the string.
  */
-void AConfiguration_setLanguage(AConfiguration* config, const char* language)
+void AConfiguration_setLanguage(AConfiguration *config, const char *language)
 {
 	return;
 }
@@ -94,7 +95,8 @@ void AConfiguration_setLanguage(AConfiguration* config, const char* language)
  * be filled with an array of two characters.  They are not 0-terminated.  If
  * a country is not set, they will be 0.
  */
-void AConfiguration_getCountry(AConfiguration* config, char* outCountry) {
+void AConfiguration_getCountry(AConfiguration *config, char *outCountry)
+{
 	/* Assume not set. */
 	outCountry[0] = 0;
 	outCountry[1] = 0;
@@ -104,7 +106,7 @@ void AConfiguration_getCountry(AConfiguration* config, char* outCountry) {
  * Set the current country code in the configuration, from the first two
  * characters in the string.
  */
-void AConfiguration_setCountry(AConfiguration* config, const char* country)
+void AConfiguration_setCountry(AConfiguration *config, const char *country)
 {
 	return;
 }
@@ -112,7 +114,7 @@ void AConfiguration_setCountry(AConfiguration* config, const char* country)
 /**
  * Return the current ACONFIGURATION_ORIENTATION_* set in the configuration.
  */
-int32_t AConfiguration_getOrientation(AConfiguration* config)
+int32_t AConfiguration_getOrientation(AConfiguration *config)
 {
 	return -1;
 }
@@ -120,7 +122,7 @@ int32_t AConfiguration_getOrientation(AConfiguration* config)
 /**
  * Set the current orientation in the configuration.
  */
-void AConfiguration_setOrientation(AConfiguration* config, int32_t orientation)
+void AConfiguration_setOrientation(AConfiguration *config, int32_t orientation)
 {
 	return;
 }
@@ -128,7 +130,7 @@ void AConfiguration_setOrientation(AConfiguration* config, int32_t orientation)
 /**
  * Return the current ACONFIGURATION_TOUCHSCREEN_* set in the configuration.
  */
-int32_t AConfiguration_getTouchscreen(AConfiguration* config)
+int32_t AConfiguration_getTouchscreen(AConfiguration *config)
 {
 	return -1;
 }
@@ -136,7 +138,7 @@ int32_t AConfiguration_getTouchscreen(AConfiguration* config)
 /**
  * Set the current touchscreen in the configuration.
  */
-void AConfiguration_setTouchscreen(AConfiguration* config, int32_t touchscreen)
+void AConfiguration_setTouchscreen(AConfiguration *config, int32_t touchscreen)
 {
 	return;
 }
@@ -144,7 +146,7 @@ void AConfiguration_setTouchscreen(AConfiguration* config, int32_t touchscreen)
 /**
  * Return the current ACONFIGURATION_DENSITY_* set in the configuration.
  */
-int32_t AConfiguration_getDensity(AConfiguration* config)
+int32_t AConfiguration_getDensity(AConfiguration *config)
 {
 	return -1;
 }
@@ -152,7 +154,7 @@ int32_t AConfiguration_getDensity(AConfiguration* config)
 /**
  * Set the current density in the configuration.
  */
-void AConfiguration_setDensity(AConfiguration* config, int32_t density)
+void AConfiguration_setDensity(AConfiguration *config, int32_t density)
 {
 	return;
 }
@@ -160,7 +162,7 @@ void AConfiguration_setDensity(AConfiguration* config, int32_t density)
 /**
  * Return the current ACONFIGURATION_KEYBOARD_* set in the configuration.
  */
-int32_t AConfiguration_getKeyboard(AConfiguration* config)
+int32_t AConfiguration_getKeyboard(AConfiguration *config)
 {
 	return -1;
 }
@@ -168,7 +170,7 @@ int32_t AConfiguration_getKeyboard(AConfiguration* config)
 /**
  * Set the current keyboard in the configuration.
  */
-void AConfiguration_setKeyboard(AConfiguration* config, int32_t keyboard)
+void AConfiguration_setKeyboard(AConfiguration *config, int32_t keyboard)
 {
 	return;
 }
@@ -176,7 +178,7 @@ void AConfiguration_setKeyboard(AConfiguration* config, int32_t keyboard)
 /**
  * Return the current ACONFIGURATION_NAVIGATION_* set in the configuration.
  */
-int32_t AConfiguration_getNavigation(AConfiguration* config)
+int32_t AConfiguration_getNavigation(AConfiguration *config)
 {
 	return -1;
 }
@@ -184,7 +186,7 @@ int32_t AConfiguration_getNavigation(AConfiguration* config)
 /**
  * Set the current navigation in the configuration.
  */
-void AConfiguration_setNavigation(AConfiguration* config, int32_t navigation)
+void AConfiguration_setNavigation(AConfiguration *config, int32_t navigation)
 {
 	return;
 }
@@ -192,7 +194,7 @@ void AConfiguration_setNavigation(AConfiguration* config, int32_t navigation)
 /**
  * Return the current ACONFIGURATION_KEYSHIDDEN_* set in the configuration.
  */
-int32_t AConfiguration_getKeysHidden(AConfiguration* config)
+int32_t AConfiguration_getKeysHidden(AConfiguration *config)
 {
 	return -1;
 }
@@ -200,7 +202,7 @@ int32_t AConfiguration_getKeysHidden(AConfiguration* config)
 /**
  * Set the current keys hidden in the configuration.
  */
-void AConfiguration_setKeysHidden(AConfiguration* config, int32_t keysHidden)
+void AConfiguration_setKeysHidden(AConfiguration *config, int32_t keysHidden)
 {
 	return;
 }
@@ -208,7 +210,7 @@ void AConfiguration_setKeysHidden(AConfiguration* config, int32_t keysHidden)
 /**
  * Return the current ACONFIGURATION_NAVHIDDEN_* set in the configuration.
  */
-int32_t AConfiguration_getNavHidden(AConfiguration* config)
+int32_t AConfiguration_getNavHidden(AConfiguration *config)
 {
 	return -1;
 }
@@ -216,7 +218,7 @@ int32_t AConfiguration_getNavHidden(AConfiguration* config)
 /**
  * Set the current nav hidden in the configuration.
  */
-void AConfiguration_setNavHidden(AConfiguration* config, int32_t navHidden)
+void AConfiguration_setNavHidden(AConfiguration *config, int32_t navHidden)
 {
 	return;
 }
@@ -224,7 +226,7 @@ void AConfiguration_setNavHidden(AConfiguration* config, int32_t navHidden)
 /**
  * Return the current SDK (API) version set in the configuration.
  */
-int32_t AConfiguration_getSdkVersion(AConfiguration* config)
+int32_t AConfiguration_getSdkVersion(AConfiguration *config)
 {
 	return -1;
 }
@@ -232,7 +234,7 @@ int32_t AConfiguration_getSdkVersion(AConfiguration* config)
 /**
  * Set the current SDK version in the configuration.
  */
-void AConfiguration_setSdkVersion(AConfiguration* config, int32_t sdkVersion)
+void AConfiguration_setSdkVersion(AConfiguration *config, int32_t sdkVersion)
 {
 	return;
 }
@@ -240,7 +242,7 @@ void AConfiguration_setSdkVersion(AConfiguration* config, int32_t sdkVersion)
 /**
  * Return the current ACONFIGURATION_SCREENSIZE_* set in the configuration.
  */
-int32_t AConfiguration_getScreenSize(AConfiguration* config)
+int32_t AConfiguration_getScreenSize(AConfiguration *config)
 {
 	return -1;
 }
@@ -248,7 +250,7 @@ int32_t AConfiguration_getScreenSize(AConfiguration* config)
 /**
  * Set the current screen size in the configuration.
  */
-void AConfiguration_setScreenSize(AConfiguration* config, int32_t screenSize)
+void AConfiguration_setScreenSize(AConfiguration *config, int32_t screenSize)
 {
 	return;
 }
@@ -256,7 +258,7 @@ void AConfiguration_setScreenSize(AConfiguration* config, int32_t screenSize)
 /**
  * Return the current ACONFIGURATION_SCREENLONG_* set in the configuration.
  */
-int32_t AConfiguration_getScreenLong(AConfiguration* config)
+int32_t AConfiguration_getScreenLong(AConfiguration *config)
 {
 	return -1;
 }
@@ -264,7 +266,7 @@ int32_t AConfiguration_getScreenLong(AConfiguration* config)
 /**
  * Set the current screen long in the configuration.
  */
-void AConfiguration_setScreenLong(AConfiguration* config, int32_t screenLong)
+void AConfiguration_setScreenLong(AConfiguration *config, int32_t screenLong)
 {
 	return;
 }
@@ -272,7 +274,7 @@ void AConfiguration_setScreenLong(AConfiguration* config, int32_t screenLong)
 /**
  * Return the current ACONFIGURATION_SCREENROUND_* set in the configuration.
  */
-int32_t AConfiguration_getScreenRound(AConfiguration* config)
+int32_t AConfiguration_getScreenRound(AConfiguration *config)
 {
 	return -1;
 }
@@ -280,7 +282,7 @@ int32_t AConfiguration_getScreenRound(AConfiguration* config)
 /**
  * Set the current screen round in the configuration.
  */
-void AConfiguration_setScreenRound(AConfiguration* config, int32_t screenRound)
+void AConfiguration_setScreenRound(AConfiguration *config, int32_t screenRound)
 {
 	return;
 }
@@ -288,7 +290,7 @@ void AConfiguration_setScreenRound(AConfiguration* config, int32_t screenRound)
 /**
  * Return the current ACONFIGURATION_UI_MODE_TYPE_* set in the configuration.
  */
-int32_t AConfiguration_getUiModeType(AConfiguration* config)
+int32_t AConfiguration_getUiModeType(AConfiguration *config)
 {
 	return -1;
 }
@@ -296,7 +298,7 @@ int32_t AConfiguration_getUiModeType(AConfiguration* config)
 /**
  * Set the current UI mode type in the configuration.
  */
-void AConfiguration_setUiModeType(AConfiguration* config, int32_t uiModeType)
+void AConfiguration_setUiModeType(AConfiguration *config, int32_t uiModeType)
 {
 	return;
 }
@@ -304,7 +306,7 @@ void AConfiguration_setUiModeType(AConfiguration* config, int32_t uiModeType)
 /**
  * Return the current ACONFIGURATION_UI_MODE_NIGHT_* set in the configuration.
  */
-int32_t AConfiguration_getUiModeNight(AConfiguration* config)
+int32_t AConfiguration_getUiModeNight(AConfiguration *config)
 {
 	return -1;
 }
@@ -312,7 +314,7 @@ int32_t AConfiguration_getUiModeNight(AConfiguration* config)
 /**
  * Set the current UI mode night in the configuration.
  */
-void AConfiguration_setUiModeNight(AConfiguration* config, int32_t uiModeNight)
+void AConfiguration_setUiModeNight(AConfiguration *config, int32_t uiModeNight)
 {
 	return;
 }
@@ -322,7 +324,7 @@ void AConfiguration_setUiModeNight(AConfiguration* config, int32_t uiModeNight)
  * Return the current configuration screen width in dp units, or
  * ACONFIGURATION_SCREEN_WIDTH_DP_ANY if not set.
  */
-int32_t AConfiguration_getScreenWidthDp(AConfiguration* config)
+int32_t AConfiguration_getScreenWidthDp(AConfiguration *config)
 {
 	return -1;
 }
@@ -330,7 +332,7 @@ int32_t AConfiguration_getScreenWidthDp(AConfiguration* config)
 /**
  * Set the configuration's current screen width in dp units.
  */
-void AConfiguration_setScreenWidthDp(AConfiguration* config, int32_t value)
+void AConfiguration_setScreenWidthDp(AConfiguration *config, int32_t value)
 {
 	return;
 }
@@ -339,7 +341,7 @@ void AConfiguration_setScreenWidthDp(AConfiguration* config, int32_t value)
  * Return the current configuration screen height in dp units, or
  * ACONFIGURATION_SCREEN_HEIGHT_DP_ANY if not set.
  */
-int32_t AConfiguration_getScreenHeightDp(AConfiguration* config)
+int32_t AConfiguration_getScreenHeightDp(AConfiguration *config)
 {
 	return -1;
 }
@@ -347,7 +349,7 @@ int32_t AConfiguration_getScreenHeightDp(AConfiguration* config)
 /**
  * Set the configuration's current screen width in dp units.
  */
-void AConfiguration_setScreenHeightDp(AConfiguration* config, int32_t value)
+void AConfiguration_setScreenHeightDp(AConfiguration *config, int32_t value)
 {
 	return;
 }
@@ -356,7 +358,7 @@ void AConfiguration_setScreenHeightDp(AConfiguration* config, int32_t value)
  * Return the configuration's smallest screen width in dp units, or
  * ACONFIGURATION_SMALLEST_SCREEN_WIDTH_DP_ANY if not set.
  */
-int32_t AConfiguration_getSmallestScreenWidthDp(AConfiguration* config)
+int32_t AConfiguration_getSmallestScreenWidthDp(AConfiguration *config)
 {
 	return -1;
 }
@@ -364,7 +366,7 @@ int32_t AConfiguration_getSmallestScreenWidthDp(AConfiguration* config)
 /**
  * Set the configuration's smallest screen width in dp units.
  */
-void AConfiguration_setSmallestScreenWidthDp(AConfiguration* config, int32_t value)
+void AConfiguration_setSmallestScreenWidthDp(AConfiguration *config, int32_t value)
 {
 	return;
 }
@@ -375,7 +377,7 @@ void AConfiguration_setSmallestScreenWidthDp(AConfiguration* config, int32_t val
  * Return the configuration's layout direction, or
  * ACONFIGURATION_LAYOUTDIR_ANY if not set.
  */
-int32_t AConfiguration_getLayoutDirection(AConfiguration* config)
+int32_t AConfiguration_getLayoutDirection(AConfiguration *config)
 {
 	return -1;
 }
@@ -383,7 +385,7 @@ int32_t AConfiguration_getLayoutDirection(AConfiguration* config)
 /**
  * Set the configuration's layout direction.
  */
-void AConfiguration_setLayoutDirection(AConfiguration* config, int32_t value)
+void AConfiguration_setLayoutDirection(AConfiguration *config, int32_t value)
 {
 	return;
 }
@@ -394,7 +396,7 @@ void AConfiguration_setLayoutDirection(AConfiguration* config, int32_t value)
  * ACONFIGURATION_* constants, each bit set meaning that configuration element
  * is different between them.
  */
-int32_t AConfiguration_diff(AConfiguration* config1, AConfiguration* config2)
+int32_t AConfiguration_diff(AConfiguration *config1, AConfiguration *config2)
 {
 	return -1;
 }
@@ -404,7 +406,7 @@ int32_t AConfiguration_diff(AConfiguration* config1, AConfiguration* config2)
  * environment 'requested'.  Returns 0 if there are any values in 'base'
  * that conflict with 'requested'.  Returns 1 if it does not conflict.
  */
-int32_t AConfiguration_match(AConfiguration* base, AConfiguration* requested)
+int32_t AConfiguration_match(AConfiguration *base, AConfiguration *requested)
 {
 	return -1;
 }
@@ -419,5 +421,5 @@ int32_t AConfiguration_match(AConfiguration* base, AConfiguration* requested)
  * This assumes you have already filtered the configurations with
  * AConfiguration_match().
  */
-int32_t AConfiguration_isBetterThan(AConfiguration* base, AConfiguration* test,
-        AConfiguration* requested);
+int32_t AConfiguration_isBetterThan(AConfiguration *base, AConfiguration *test,
+                                    AConfiguration *requested);

@@ -1,0 +1,54 @@
+---
+BasedOnStyle: LLVM
+AlignOperands: AlignAfterOperator
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AlignArrayOfStructures: Right
+BinPackLongBracedList: true
+BreakAfterOpenBracketFunction: false
+BreakAfterOpenBracketIf: false
+BreakAfterOpenBracketLoop: false
+BreakAfterOpenBracketSwitch: false
+BreakBeforeCloseBracketBracedList: true
+BreakBeforeBinaryOperators: NonAssignment
+BracedInitializerIndentWidth: 8
+ColumnLimit: 0
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 4
+IndentCaseLabels: true
+IndentWidth: 8
+InsertNewlineAtEOF: true
+LineEnding: LF
+ReflowComments: Never
+UseTab: AlignWithSpaces
+OneLineFormatOffRegex: ^// NOLINT
+# C specific but doesn't apply to Java so can be in common
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: false
+IncludeCategories:
+  - Regex:           '("|/)(defines.h|util.h)"'
+    Priority:        0
+  - Regex:           '("|/)generated_headers/'
+    Priority:        1
+  - Regex:           '.*'
+    Priority:        2
+IndentPPDirectives: BeforeHash
+# only format known filetypes
+DisableFormat: true
+# custom
+AlignAfterReturn: Align
+AlignBinaryOperatorsInArguments: true
+---
+Language: Java
+DisableFormat: false
+# these fail to ihnerit from common
+AlignAfterReturn: Align
+BreakBeforeCloseBracketBracedList: true
+---
+Language: C
+DisableFormat: false
+BreakBeforeBraces: Linux
+# this fails to ihnerit from common
+BreakBeforeCloseBracketBracedList: true

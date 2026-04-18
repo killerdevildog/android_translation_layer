@@ -25,11 +25,11 @@ public class MediaFormat {
 	}
 
 	public ByteBuffer getByteBuffer(String name) {
-		return (ByteBuffer) map.get(name);
+		return (ByteBuffer)map.get(name);
 	}
 
 	public int getInteger(String name) {
-		return (int) map.get(name);
+		return (int)map.get(name);
 	}
 
 	public boolean containsKey(String name) {
@@ -41,10 +41,10 @@ public class MediaFormat {
 	}
 
 	public String getString(String name) {
-		return (String) map.get(name);
+		return (String)map.get(name);
 	}
 
 	public long getLong(String name) {
-		return (long) map.get(name);
+		return (long)map.get(name);
 	}
 }

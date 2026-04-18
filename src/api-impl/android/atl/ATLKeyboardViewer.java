@@ -3,7 +3,6 @@ package android.atl;
 import android.app.Activity;
 import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
-
 import java.lang.reflect.Constructor;
 
 public class ATLKeyboardViewer extends Activity {
@@ -25,7 +24,7 @@ public class ATLKeyboardViewer extends Activity {
 			Constructor<? extends InputMethodService> constructor = cls.getConstructor();
 			ims = constructor.newInstance();
 		} catch (ReflectiveOperationException e) {
-			System.err.println("ATLKeyboardViewer: failed to instantiate InputMethodService (kb_class: "+kb_class+")");
+			System.err.println("ATLKeyboardViewer: failed to instantiate InputMethodService (kb_class: " + kb_class + ")");
 			e.printStackTrace();
 			System.exit(1);
 		}

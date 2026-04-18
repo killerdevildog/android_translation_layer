@@ -21,31 +21,31 @@
 ** Rewritten from C++ to C for Android Translation Layer:
 */
 
-#include <stdlib.h>
-#include <string.h>
+#include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <sqlite3.h>
 
-#include "android_database_SQLiteCommon.h"
-#include "../generated_headers/android_database_sqlite_SQLiteConnection.h"
 #include "../defines.h"
 #include "../util.h"
+#include "../generated_headers/android_database_sqlite_SQLiteConnection.h"
+#include "android_database_SQLiteCommon.h"
 
 enum {
 	// Open flags.
 	// Must be kept in sync with the constants defined in SQLiteDatabase.java.
-	OPEN_READWRITE          = 0x00000000,
-	OPEN_READONLY           = 0x00000001,
-	OPEN_READ_MASK          = 0x00000001,
-	NO_LOCALIZED_COLLATORS  = 0x00000010,
-	CREATE_IF_NECESSARY     = 0x10000000,
+	OPEN_READWRITE = 0x00000000,
+	OPEN_READONLY = 0x00000001,
+	OPEN_READ_MASK = 0x00000001,
+	NO_LOCALIZED_COLLATORS = 0x00000010,
+	CREATE_IF_NECESSARY = 0x10000000,
 };
 
 struct SQLiteConnection {
-	sqlite3* db;
+	sqlite3 *db;
 	int openFlags;
 	char *path;
 	char *label;
@@ -73,41 +73,44 @@ static const int BUSY_TIMEOUT_MS = 2500;
 **
 ** Stock Android uses a modified version of sqlite3.c that calls out to a module
 ** named "sqlite3_android" to add extra built-in collations and functions to
-** all database handles. Specifically, collation sequence "LOCALIZED". For now,
+** all database handles. Specifically, collation sequence "LOCALIZED" and "UNICODE". For now,
 ** this module does not include sqlite3_android (since it is difficult to build
-** with the NDK only). Instead, this function is registered as "LOCALIZED" for all
+** with the NDK only). Instead, this function is registered as "LOCALIZED" and "UNICODE" for all
 ** new database handles.
 */
 static int coll_localized(
-	void *not_used,
-	int nKey1, const void *pKey1,
-	int nKey2, const void *pKey2
-){
+    void *not_used,
+    int nKey1, const void *pKey1,
+    int nKey2, const void *pKey2)
+{
 	int rc, n;
-	n = nKey1<nKey2 ? nKey1 : nKey2;
+	n = nKey1 < nKey2 ? nKey1 : nKey2;
 	rc = memcmp(pKey1, pKey2, n);
-	if( rc==0 ){
-	rc = nKey1 - nKey2;
+	if (rc == 0) {
+		rc = nKey1 - nKey2;
 	}
 	return rc;
 }
 
 // Called each time a statement begins execution, when tracing is enabled.
-static void sqliteTraceCallback(void *data, const char *sql) {
+static void sqliteTraceCallback(void *data, const char *sql)
+{
 	// struct SQLiteConnection* connection = data;
 	// printf(SQLITE_TRACE_TAG " %s: \"%s\"\n",
 	// 		connection->label, sql);
 }
 
 // Called each time a statement finishes execution, when profiling is enabled.
-static void sqliteProfileCallback(void *data, const char *sql, sqlite3_uint64 tm) {
+static void sqliteProfileCallback(void *data, const char *sql, sqlite3_uint64 tm)
+{
 	// struct SQLiteConnection* connection = data;
 	// printf(SQLITE_PROFILE_TAG " %s: \"%s\" took %0.3f ms\n",
 	// 		connection->label, sql, tm * 0.000001f);
 }
 
 JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeOpen(JNIEnv *env, jclass clazz, jstring pathStr, jint openFlags,
-		jstring labelStr, jboolean enableTrace, jboolean enableProfile) {
+                                                                                 jstring labelStr, jboolean enableTrace, jboolean enableProfile)
+{
 	int sqliteFlags;
 	if (openFlags & CREATE_IF_NECESSARY) {
 		sqliteFlags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
@@ -117,21 +120,29 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeOpen
 		sqliteFlags = SQLITE_OPEN_READWRITE;
 	}
 
-	const char* pathChars = (*env)->GetStringUTFChars(env, pathStr, NULL);
+	const char *pathChars = (*env)->GetStringUTFChars(env, pathStr, NULL);
 	char *path = strdup(pathChars);
 	(*env)->ReleaseStringUTFChars(env, pathStr, pathChars);
 
-	const char* labelChars = (*env)->GetStringUTFChars(env, labelStr, NULL);
+	const char *labelChars = (*env)->GetStringUTFChars(env, labelStr, NULL);
 	char *label = strdup(labelChars);
 	(*env)->ReleaseStringUTFChars(env, labelStr, labelChars);
 
-	sqlite3* db;
+	sqlite3 *db;
 	int err = sqlite3_open_v2(path, &db, sqliteFlags, NULL);
 	if (err != SQLITE_OK) {
 		throw_sqlite3_exception_errcode(env, err, "Could not open database");
 		return 0;
 	}
 	err = sqlite3_create_collation(db, "localized", SQLITE_UTF8, 0, coll_localized);
+	if (err != SQLITE_OK) {
+		throw_sqlite3_exception_errcode(env, err, "Could not register collation");
+		sqlite3_close(db);
+		return 0;
+	}
+
+	err = sqlite3_create_collation(db, "UNICODE", SQLITE_UTF8, 0, coll_localized);
+
 	if (err != SQLITE_OK) {
 		throw_sqlite3_exception_errcode(env, err, "Could not register collation");
 		sqlite3_close(db);
@@ -154,7 +165,7 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeOpen
 	}
 
 	// Create wrapper object.
-	struct SQLiteConnection* connection = malloc(sizeof(struct SQLiteConnection));
+	struct SQLiteConnection *connection = malloc(sizeof(struct SQLiteConnection));
 	connection->db = db;
 	connection->openFlags = openFlags;
 	connection->path = path;
@@ -172,8 +183,9 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeOpen
 	return _INTPTR(connection);
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeClose(JNIEnv *env, jclass clazz, jlong connectionPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeClose(JNIEnv *env, jclass clazz, jlong connectionPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 
 	if (connection) {
 		// printf("Closing connection %p", connection->db);
@@ -192,8 +204,9 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeClose
 }
 
 // Called each time a custom function is evaluated.
-static void sqliteCustomFunctionCallback(sqlite3_context *context, int argc, sqlite3_value **argv) {
-	JNIEnv* env = get_jni_env();
+static void sqliteCustomFunctionCallback(sqlite3_context *context, int argc, sqlite3_value **argv)
+{
+	JNIEnv *env = get_jni_env();
 
 	// Get the callback function object.
 	// Create a new local reference to it in case the callback tries to do something
@@ -204,7 +217,7 @@ static void sqliteCustomFunctionCallback(sqlite3_context *context, int argc, sql
 	jobjectArray argsArray = (*env)->NewObjectArray(env, argc, (*env)->FindClass(env, "java/lang/String"), NULL);
 	if (argsArray) {
 		for (int i = 0; i < argc; i++) {
-			const jchar* arg = sqlite3_value_text16(argv[i]);
+			const jchar *arg = sqlite3_value_text16(argv[i]);
 			if (!arg) {
 				fprintf(stderr, "NULL argument in custom_function_callback.  This should not happen.");
 			} else {
@@ -221,9 +234,9 @@ static void sqliteCustomFunctionCallback(sqlite3_context *context, int argc, sql
 		jclass custom_function_class = (*env)->FindClass(env, "android/database/sqlite/SQLiteCustomFunction");
 		// TODO: Support functions that return values.
 		(*env)->CallVoidMethod(env, functionObj,
-				_METHOD(custom_function_class, "dispatchCallback", "([Ljava/lang/String;)V"), argsArray);
+		                       _METHOD(custom_function_class, "dispatchCallback", "([Ljava/lang/String;)V"), argsArray);
 
-error:
+	error:
 		(*env)->DeleteLocalRef(env, argsArray);
 	}
 
@@ -237,14 +250,16 @@ error:
 }
 
 // Called when a custom function is destroyed.
-static void sqliteCustomFunctionDestructor(void* data) {
+static void sqliteCustomFunctionDestructor(void *data)
+{
 	jobject functionObjGlobal = data;
-	JNIEnv* env = get_jni_env();
+	JNIEnv *env = get_jni_env();
 	(*env)->DeleteGlobalRef(env, functionObjGlobal);
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegisterCustomFunction(JNIEnv* env, jclass clazz, jlong connectionPtr, jobject functionObj) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegisterCustomFunction(JNIEnv *env, jclass clazz, jlong connectionPtr, jobject functionObj)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 
 	jclass custom_function_class = (*env)->FindClass(env, "android/database/sqlite/SQLiteCustomFunction");
 
@@ -253,9 +268,9 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegis
 
 	jobject functionObjGlobal = (*env)->NewGlobalRef(env, functionObj);
 
-	const char* name = (*env)->GetStringUTFChars(env, nameStr, NULL);
+	const char *name = (*env)->GetStringUTFChars(env, nameStr, NULL);
 	int err = sqlite3_create_function_v2(connection->db, name, numArgs, SQLITE_UTF16, functionObjGlobal,
-			&sqliteCustomFunctionCallback, NULL, NULL, &sqliteCustomFunctionDestructor);
+	                                     &sqliteCustomFunctionCallback, NULL, NULL, &sqliteCustomFunctionDestructor);
 	(*env)->ReleaseStringUTFChars(env, nameStr, name);
 
 	if (err != SQLITE_OK) {
@@ -266,18 +281,20 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegis
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegisterLocalizedCollators(JNIEnv* env, jclass clazz, jlong connectionPtr, jstring localeStr) {
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeRegisterLocalizedCollators(JNIEnv *env, jclass clazz, jlong connectionPtr, jstring localeStr)
+{
 	/* Localized collators are not supported. */
 }
 
-JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativePrepareStatement(JNIEnv* env, jclass clazz, jlong connectionPtr, jstring sqlString) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativePrepareStatement(JNIEnv *env, jclass clazz, jlong connectionPtr, jstring sqlString)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 
 	jsize sqlLength = (*env)->GetStringLength(env, sqlString);
-	const jchar* sql = (*env)->GetStringCritical(env, sqlString, NULL);
-	sqlite3_stmt* statement;
+	const jchar *sql = (*env)->GetStringCritical(env, sqlString, NULL);
+	sqlite3_stmt *statement;
 	int err = sqlite3_prepare16_v2(connection->db,
-			sql, sqlLength * sizeof(jchar), &statement, NULL);
+	                               sql, sqlLength * sizeof(jchar), &statement, NULL);
 	(*env)->ReleaseStringCritical(env, sqlString, sql);
 
 	if (err != SQLITE_OK) {
@@ -285,7 +302,7 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativePrep
 		// always helpful enough, so construct an error string that
 		// includes the query itself.
 		const char *query = (*env)->GetStringUTFChars(env, sqlString, NULL);
-		char *message = (char*) malloc(strlen(query) + 50);
+		char *message = (char *)malloc(strlen(query) + 50);
 		if (message) {
 			strcpy(message, ", while compiling: "); // less than 50 chars
 			strcat(message, query);
@@ -300,9 +317,10 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativePrep
 	return _INTPTR(statement);
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeFinalizeStatement(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeFinalizeStatement(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
 	// struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	// We ignore the result of sqlite3_finalize because it is really telling us about
 	// whether any errors occurred while executing the statement.  The statement itself
@@ -311,28 +329,32 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeFinal
 	sqlite3_finalize(statement);
 }
 
-JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetParameterCount(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetParameterCount(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	return sqlite3_bind_parameter_count(statement);
 }
 
-JNIEXPORT jboolean JNICALL Java_android_database_sqlite_SQLiteConnection_nativeIsReadOnly(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jboolean JNICALL Java_android_database_sqlite_SQLiteConnection_nativeIsReadOnly(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	return sqlite3_stmt_readonly(statement) != 0;
 }
 
-JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetColumnCount(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetColumnCount(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	return sqlite3_column_count(statement);
 }
 
-JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetColumnName(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index) {
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetColumnName(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index)
+{
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
-	const jchar* name = (sqlite3_column_name16(statement, index));
+	const jchar *name = (sqlite3_column_name16(statement, index));
 	if (name) {
 		size_t length = 0;
 		while (name[length]) {
@@ -343,9 +365,10 @@ JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGe
 	return NULL;
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindNull(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindNull(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = sqlite3_bind_null(statement, index);
 	if (err != SQLITE_OK) {
@@ -353,9 +376,10 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindN
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindLong(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jlong value) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindLong(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jlong value)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = sqlite3_bind_int64(statement, index, value);
 	if (err != SQLITE_OK) {
@@ -363,9 +387,10 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindL
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindDouble(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jdouble value) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindDouble(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jdouble value)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = sqlite3_bind_double(statement, index, value);
 	if (err != SQLITE_OK) {
@@ -373,26 +398,28 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindD
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindString(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jstring valueString) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindString(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jstring valueString)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	jsize valueLength = (*env)->GetStringLength(env, valueString);
-	const jchar* value = (*env)->GetStringCritical(env, valueString, NULL);
+	const jchar *value = (*env)->GetStringCritical(env, valueString, NULL);
 	int err = sqlite3_bind_text16(statement, index, value, valueLength * sizeof(jchar),
-			SQLITE_TRANSIENT);
+	                              SQLITE_TRANSIENT);
 	(*env)->ReleaseStringCritical(env, valueString, value);
 	if (err != SQLITE_OK) {
 		throw_sqlite3_exception_handle_message(env, connection->db, NULL);
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindBlob(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jbyteArray valueArray) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindBlob(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr, jint index, jbyteArray valueArray)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	jsize valueLength = (*env)->GetArrayLength(env, valueArray);
-	jbyte* value = ((*env)->GetPrimitiveArrayCritical(env, valueArray, NULL));
+	jbyte *value = ((*env)->GetPrimitiveArrayCritical(env, valueArray, NULL));
 	int err = sqlite3_bind_blob(statement, index, value, valueLength, SQLITE_TRANSIENT);
 	(*env)->ReleasePrimitiveArrayCritical(env, valueArray, value, JNI_ABORT);
 	if (err != SQLITE_OK) {
@@ -400,9 +427,10 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeBindB
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeResetStatementAndClearBindings(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeResetStatementAndClearBindings(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = sqlite3_reset(statement);
 	if (err == SQLITE_OK) {
@@ -413,23 +441,27 @@ JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeReset
 	}
 }
 
-static int executeNonQuery(JNIEnv* env, struct SQLiteConnection* connection, sqlite3_stmt* statement) {
+static int executeNonQuery(JNIEnv *env, struct SQLiteConnection *connection, sqlite3_stmt *statement)
+{
 	int err;
-	while( SQLITE_ROW==(err=sqlite3_step(statement)) );
-	if( err!=SQLITE_DONE ){
-	  throw_sqlite3_exception_handle(env, connection->db);
+	while (SQLITE_ROW == (err = sqlite3_step(statement)))
+		;
+	if (err != SQLITE_DONE) {
+		throw_sqlite3_exception_handle(env, connection->db);
 	}
 	return err;
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecute(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecute(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	executeNonQuery(env, connection, statement);
 }
 
-static int executeOneRowQuery(JNIEnv* env, struct SQLiteConnection* connection, sqlite3_stmt* statement) {
+static int executeOneRowQuery(JNIEnv *env, struct SQLiteConnection *connection, sqlite3_stmt *statement)
+{
 	int err = sqlite3_step(statement);
 	if (err != SQLITE_ROW) {
 		throw_sqlite3_exception_handle(env, connection->db);
@@ -437,9 +469,10 @@ static int executeOneRowQuery(JNIEnv* env, struct SQLiteConnection* connection, 
 	return err;
 }
 
-JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForLong(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForLong(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = executeOneRowQuery(env, connection, statement);
 	if (err == SQLITE_ROW && sqlite3_column_count(statement) >= 1) {
@@ -448,13 +481,14 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 	return -1;
 }
 
-JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForString(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForString(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = executeOneRowQuery(env, connection, statement);
 	if (err == SQLITE_ROW && sqlite3_column_count(statement) >= 1) {
-		const jchar* text = (sqlite3_column_text16(statement, 0));
+		const jchar *text = (sqlite3_column_text16(statement, 0));
 		if (text) {
 			size_t length = sqlite3_column_bytes16(statement, 0) / sizeof(jchar);
 			return (*env)->NewString(env, text, length);
@@ -463,21 +497,24 @@ JNIEXPORT jstring JNICALL Java_android_database_sqlite_SQLiteConnection_nativeEx
 	return NULL;
 }
 
-JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForChangedRowCount(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForChangedRowCount(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = executeNonQuery(env, connection, statement);
 	return err == SQLITE_DONE ? sqlite3_changes(connection->db) : -1;
 }
 
-JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForLastInsertedRowId(JNIEnv* env, jclass clazz, jlong connectionPtr, jlong statementPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
-	sqlite3_stmt* statement = _PTR(statementPtr);
+JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForLastInsertedRowId(JNIEnv *env, jclass clazz, jlong connectionPtr, jlong statementPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
+	sqlite3_stmt *statement = _PTR(statementPtr);
 
 	int err = executeNonQuery(env, connection, statement);
 	return err == SQLITE_DONE && sqlite3_changes(connection->db) > 0
-			? sqlite3_last_insert_rowid(connection->db) : -1;
+	         ? sqlite3_last_insert_rowid(connection->db)
+	         : -1;
 }
 
 /*
@@ -485,24 +522,24 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 ** elements in the aMethod[] array in function nativeExecuteForCursorWindow().
 */
 enum CWMethodNames {
-	CW_CLEAR         = 0,
+	CW_CLEAR = 0,
 	CW_SETNUMCOLUMNS = 1,
-	CW_ALLOCROW      = 2,
-	CW_FREELASTROW   = 3,
-	CW_PUTNULL       = 4,
-	CW_PUTLONG       = 5,
-	CW_PUTDOUBLE     = 6,
-	CW_PUTSTRING     = 7,
-	CW_PUTBLOB       = 8
+	CW_ALLOCROW = 2,
+	CW_FREELASTROW = 3,
+	CW_PUTNULL = 4,
+	CW_PUTLONG = 5,
+	CW_PUTDOUBLE = 6,
+	CW_PUTSTRING = 7,
+	CW_PUTBLOB = 8
 };
 
 /*
 ** An instance of this structure represents a single CursorWindow java method.
 */
 struct CWMethod {
-	jmethodID id;                   /* Method id */
-	const char *zName;              /* Method name */
-	const char *zSig;               /* Method JNI signature */
+	jmethodID id;      /* Method id */
+	const char *zName; /* Method name */
+	const char *zSig;  /* Method JNI signature */
 };
 
 /*
@@ -512,19 +549,19 @@ struct CWMethod {
 ** occurs.
 */
 static jboolean copyRowToWindow(
-	JNIEnv *env,
-	jobject win,
-	int iRow,
-	sqlite3_stmt *pStmt,
-	struct CWMethod *aMethod
-){
+    JNIEnv *env,
+    jobject win,
+    int iRow,
+    sqlite3_stmt *pStmt,
+    struct CWMethod *aMethod)
+{
 	int nCol = sqlite3_column_count(pStmt);
 	int i;
 	jboolean bOk;
 
 	bOk = (*env)->CallBooleanMethod(env, win, aMethod[CW_ALLOCROW].id);
-	for(i=0; bOk && i<nCol; i++){
-		switch( sqlite3_column_type(pStmt, i) ){
+	for (i = 0; bOk && i < nCol; i++) {
+		switch (sqlite3_column_type(pStmt, i)) {
 			case SQLITE_NULL: {
 				bOk = (*env)->CallBooleanMethod(env, win, aMethod[CW_PUTNULL].id, iRow, i);
 				break;
@@ -543,7 +580,7 @@ static jboolean copyRowToWindow(
 			}
 
 			case SQLITE_TEXT: {
-				jchar *pStr = (jchar*)sqlite3_column_text16(pStmt, i);
+				jchar *pStr = (jchar *)sqlite3_column_text16(pStmt, i);
 				int nStr = sqlite3_column_bytes16(pStmt, i) / sizeof(jchar);
 				jstring val = (*env)->NewString(env, pStr, nStr);
 				bOk = (*env)->CallBooleanMethod(env, win, aMethod[CW_PUTSTRING].id, val, iRow, i);
@@ -552,8 +589,8 @@ static jboolean copyRowToWindow(
 			}
 
 			default: {
-				assert( sqlite3_column_type(pStmt, i)==SQLITE_BLOB );
-				const jbyte *p = (const jbyte*)sqlite3_column_blob(pStmt, i);
+				assert(sqlite3_column_type(pStmt, i) == SQLITE_BLOB);
+				const jbyte *p = (const jbyte *)sqlite3_column_blob(pStmt, i);
 				int n = sqlite3_column_bytes(pStmt, i);
 				jbyteArray val = (*env)->NewByteArray(env, n);
 				(*env)->SetByteArrayRegion(env, val, 0, n, p);
@@ -563,7 +600,7 @@ static jboolean copyRowToWindow(
 			}
 		}
 
-		if( bOk==0 ){
+		if (bOk == 0) {
 			(*env)->CallVoidMethod(env, win, aMethod[CW_FREELASTROW].id);
 		}
 	}
@@ -572,11 +609,11 @@ static jboolean copyRowToWindow(
 }
 
 static jboolean setWindowNumColumns(
-	JNIEnv *env,
-	jobject win,
-	sqlite3_stmt *pStmt,
-	struct CWMethod *aMethod
-){
+    JNIEnv *env,
+    jobject win,
+    sqlite3_stmt *pStmt,
+    struct CWMethod *aMethod)
+{
 	int nCol;
 
 	(*env)->CallVoidMethod(env, win, aMethod[CW_CLEAR].id);
@@ -611,39 +648,39 @@ static jboolean setWindowNumColumns(
 ** the last row copied into the CursorWindow.
 */
 JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExecuteForCursorWindow(
-	JNIEnv *env,
-	jclass clazz,
-	jlong connectionPtr,            /* Pointer to SQLiteConnection C++ object */
-	jlong statementPtr,             /* Pointer to sqlite3_stmt object */
-	jobject win,                    /* The CursorWindow object to populate */
-	jint startPos,                  /* First row to add (advisory) */
-	jint iRowRequired,              /* Required row */
-	jboolean countAllRows
-) {
+    JNIEnv *env,
+    jclass clazz,
+    jlong connectionPtr, /* Pointer to SQLiteConnection C++ object */
+    jlong statementPtr,  /* Pointer to sqlite3_stmt object */
+    jobject win,         /* The CursorWindow object to populate */
+    jint startPos,       /* First row to add (advisory) */
+    jint iRowRequired,   /* Required row */
+    jboolean countAllRows)
+{
 	sqlite3_stmt *pStmt = _PTR(statementPtr);
 
 	struct CWMethod aMethod[] = {
-		{0, "clear",         "()V"},
-		{0, "setNumColumns", "(I)Z"},
-		{0, "allocRow",      "()Z"},
-		{0, "freeLastRow",   "()V"},
-		{0, "putNull",       "(II)Z"},
-		{0, "putLong",       "(JII)Z"},
-		{0, "putDouble",     "(DII)Z"},
-		{0, "putString",     "(Ljava/lang/String;II)Z"},
-		{0, "putBlob",       "([BII)Z"},
+		{0,         "clear",                     "()V"},
+		{0, "setNumColumns",                    "(I)Z"},
+		{0,      "allocRow",                     "()Z"},
+		{0,   "freeLastRow",                     "()V"},
+		{0,       "putNull",                   "(II)Z"},
+		{0,       "putLong",                  "(JII)Z"},
+		{0,     "putDouble",                  "(DII)Z"},
+		{0,     "putString", "(Ljava/lang/String;II)Z"},
+		{0,       "putBlob",                 "([BII)Z"},
 	};
-	jclass cls;                     /* Class android.database.CursorWindow */
-	int i;                          /* Iterator variable */
+	jclass cls; /* Class android.database.CursorWindow */
+	int i;      /* Iterator variable */
 	int nRow;
 	jboolean bOk;
-	int iStart;                     /* First row copied to CursorWindow */
+	int iStart; /* First row copied to CursorWindow */
 
 	/* Locate all required CursorWindow methods. */
 	cls = (*env)->FindClass(env, "android/database/CursorWindow");
-	for(i=0; i<(sizeof(aMethod)/sizeof(struct CWMethod)); i++){
+	for (i = 0; i < (sizeof(aMethod) / sizeof(struct CWMethod)); i++) {
 		aMethod[i].id = (*env)->GetMethodID(env, cls, aMethod[i].zName, aMethod[i].zSig);
-		if( aMethod[i].id==NULL ){
+		if (aMethod[i].id == NULL) {
 			char msgBuf[512];
 			snprintf(msgBuf, sizeof(msgBuf), "Failed to find method CursorWindow.%s()", aMethod[i].zName);
 			(*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/Exception"), msgBuf);
@@ -651,24 +688,24 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 		}
 	}
 
-
 	/* Set the number of columns in the window */
 	bOk = setWindowNumColumns(env, win, pStmt, aMethod);
-	if( bOk==0 ) return 0;
+	if (bOk == 0)
+		return 0;
 
 	nRow = 0;
 	iStart = startPos;
-	while( sqlite3_step(pStmt)==SQLITE_ROW ){
+	while (sqlite3_step(pStmt) == SQLITE_ROW) {
 		/* Only copy in rows that occur at or after row index iStart. */
-		if( nRow>=iStart && bOk ){
+		if (nRow >= iStart && bOk) {
 			bOk = copyRowToWindow(env, win, (nRow - iStart), pStmt, aMethod);
-			if( bOk==0 ){
+			if (bOk == 0) {
 				/* The CursorWindow object ran out of memory. If row iRowRequired was
 				** not successfully added before this happened, clear the CursorWindow
 				** and try to add the current row again.  */
-				if( nRow<=iRowRequired ){
+				if (nRow <= iRowRequired) {
 					bOk = setWindowNumColumns(env, win, pStmt, aMethod);
-					if( bOk==0 ){
+					if (bOk == 0) {
 						sqlite3_reset(pStmt);
 						return 0;
 					}
@@ -679,7 +716,8 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 				/* If the CursorWindow is still full and the countAllRows flag is not
 				** set, break out of the loop here. If countAllRows is set, continue
 				** so as to set variable nRow correctly.  */
-				if( bOk==0 && countAllRows==0 ) break;
+				if (bOk == 0 && countAllRows == 0)
+					break;
 			}
 		}
 
@@ -689,7 +727,7 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 	/* Finalize the statement. If this indicates an error occurred, throw an
 	** SQLiteException exception.  */
 	int rc = sqlite3_reset(pStmt);
-	if( rc!=SQLITE_OK ){
+	if (rc != SQLITE_OK) {
 		throw_sqlite3_exception_handle(env, sqlite3_db_handle(pStmt));
 		return 0;
 	}
@@ -698,8 +736,9 @@ JNIEXPORT jlong JNICALL Java_android_database_sqlite_SQLiteConnection_nativeExec
 	return lRet;
 }
 
-JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetDbLookaside(JNIEnv* env, jobject clazz, jlong connectionPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetDbLookaside(JNIEnv *env, jobject clazz, jlong connectionPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 
 	int cur = -1;
 	int unused;
@@ -707,30 +746,34 @@ JNIEXPORT jint JNICALL Java_android_database_sqlite_SQLiteConnection_nativeGetDb
 	return cur;
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeCancel(JNIEnv* env, jobject clazz, jlong connectionPtr) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeCancel(JNIEnv *env, jobject clazz, jlong connectionPtr)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 	connection->canceled = true;
 }
 
 // Called after each SQLite VM instruction when cancelation is enabled.
-static int sqliteProgressHandlerCallback(void* data) {
-	struct SQLiteConnection* connection = (data);
+static int sqliteProgressHandlerCallback(void *data)
+{
+	struct SQLiteConnection *connection = (data);
 	return connection->canceled;
 }
 
-JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeResetCancel(JNIEnv* env, jobject clazz, jlong connectionPtr, jboolean cancelable) {
-	struct SQLiteConnection* connection = _PTR(connectionPtr);
+JNIEXPORT void JNICALL Java_android_database_sqlite_SQLiteConnection_nativeResetCancel(JNIEnv *env, jobject clazz, jlong connectionPtr, jboolean cancelable)
+{
+	struct SQLiteConnection *connection = _PTR(connectionPtr);
 	connection->canceled = false;
 
 	if (cancelable) {
 		sqlite3_progress_handler(connection->db, 4, sqliteProgressHandlerCallback,
-				connection);
+		                         connection);
 	} else {
 		sqlite3_progress_handler(connection->db, 0, NULL, NULL);
 	}
 }
 
-JNIEXPORT jboolean JNICALL Java_android_database_sqlite_SQLiteConnection_nativeHasCodec(JNIEnv* env, jobject clazz){
+JNIEXPORT jboolean JNICALL Java_android_database_sqlite_SQLiteConnection_nativeHasCodec(JNIEnv *env, jobject clazz)
+{
 #ifdef SQLITE_HAS_CODEC
 	return true;
 #else

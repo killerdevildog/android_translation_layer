@@ -16,12 +16,6 @@
 
 package android.widget;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.ref.WeakReference;
-
-import com.android.internal.R;
-
 import android.content.Context;
 import android.content.res.Resources.Theme;
 import android.content.res.TypedArray;
@@ -42,6 +36,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import com.android.internal.R;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
 
 /**
  * <p>An editable text view that shows completion suggestions automatically
@@ -188,7 +186,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 *                    Can be 0 to not look for defaults.
 	 */
 	public AutoCompleteTextView(
-			Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+	    Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		this(context, attrs, defStyleAttr, defStyleRes, null);
 	}
 
@@ -215,19 +213,19 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 *                   {@link android.R.styleable#AutoCompleteTextView_popupTheme}.
 	 */
 	public AutoCompleteTextView(Context context, AttributeSet attrs, int defStyleAttr,
-			int defStyleRes, Theme popupTheme) {
+	                            int defStyleRes, Theme popupTheme) {
 		super(context, attrs, defStyleAttr, defStyleRes);
 
 		final TypedArray a = context.obtainStyledAttributes(
-				attrs, R.styleable.AutoCompleteTextView, defStyleAttr, defStyleRes);
-		saveAttributeDataForStyleable(context,  R.styleable.AutoCompleteTextView,
-				attrs, a, defStyleAttr, defStyleRes);
+		    attrs, R.styleable.AutoCompleteTextView, defStyleAttr, defStyleRes);
+		saveAttributeDataForStyleable(context, R.styleable.AutoCompleteTextView,
+		                              attrs, a, defStyleAttr, defStyleRes);
 
 		if (popupTheme != null) {
 			mPopupContext = new ContextThemeWrapper(context, popupTheme);
 		} else {
 			final int popupThemeResId = a.getResourceId(
-					R.styleable.AutoCompleteTextView_popupTheme, 0);
+			    R.styleable.AutoCompleteTextView_popupTheme, 0);
 			if (popupThemeResId != 0) {
 				mPopupContext = new ContextThemeWrapper(context, popupThemeResId);
 			} else {
@@ -239,23 +237,23 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		final TypedArray pa;
 		if (mPopupContext != context) {
 			pa = mPopupContext.obtainStyledAttributes(
-					attrs, R.styleable.AutoCompleteTextView, defStyleAttr, defStyleRes);
+			    attrs, R.styleable.AutoCompleteTextView, defStyleAttr, defStyleRes);
 			saveAttributeDataForStyleable(context, R.styleable.AutoCompleteTextView,
-					attrs, a, defStyleAttr, defStyleRes);
+			                              attrs, a, defStyleAttr, defStyleRes);
 		} else {
 			pa = a;
 		}
 
 		final Drawable popupListSelector = pa.getDrawable(
-				R.styleable.AutoCompleteTextView_dropDownSelector);
+		    R.styleable.AutoCompleteTextView_dropDownSelector);
 		final int popupWidth = pa.getLayoutDimension(
-				R.styleable.AutoCompleteTextView_dropDownWidth, LayoutParams.WRAP_CONTENT);
+		    R.styleable.AutoCompleteTextView_dropDownWidth, LayoutParams.WRAP_CONTENT);
 		final int popupHeight = pa.getLayoutDimension(
-				R.styleable.AutoCompleteTextView_dropDownHeight, LayoutParams.WRAP_CONTENT);
+		    R.styleable.AutoCompleteTextView_dropDownHeight, LayoutParams.WRAP_CONTENT);
 		final int popupHintLayoutResId = pa.getResourceId(
-				R.styleable.AutoCompleteTextView_completionHintView, R.layout.simple_dropdown_hint);
+		    R.styleable.AutoCompleteTextView_completionHintView, R.layout.simple_dropdown_hint);
 		final CharSequence popupHintText = pa.getText(
-				R.styleable.AutoCompleteTextView_completionHint);
+		    R.styleable.AutoCompleteTextView_completionHint);
 
 		if (pa != a) {
 			pa.recycle();
@@ -268,7 +266,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 				unregisterOnBackInvokedCallback();
 			}
 		});
-		mPopup.setSoftInputMode(/*WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE*/0x00000010);
+		mPopup.setSoftInputMode(/*WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE*/ 0x00000010);
 		mPopup.setPromptPosition(ListPopupWindow.POSITION_PROMPT_BELOW);
 		mPopup.setListSelector(popupListSelector);
 		mPopup.setOnItemClickListener(new DropDownItemClickListener());
@@ -289,7 +287,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		// getDropDownAnchorView method will simply return this TextView, as a
 		// default anchoring point.
 		mDropDownAnchorId = a.getResourceId(
-				R.styleable.AutoCompleteTextView_dropDownAnchor, View.NO_ID);
+		    R.styleable.AutoCompleteTextView_dropDownAnchor, View.NO_ID);
 
 		mThreshold = a.getInt(R.styleable.AutoCompleteTextView_completionThreshold, 2);
 
@@ -298,8 +296,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		// Always turn on the auto complete input type flag, since it
 		// makes no sense to use this widget without it.
 		int inputType = getInputType();
-		if ((inputType & /*EditorInfo.TYPE_MASK_CLASS*/0x0000f) == /*EditorInfo.TYPE_CLASS_TEXT*/0x00001) {
-			inputType |= /*EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE*/0x10000;
+		if ((inputType & /*EditorInfo.TYPE_MASK_CLASS*/ 0x0000f) == /*EditorInfo.TYPE_CLASS_TEXT*/ 0x00001) {
+			inputType |= /*EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE*/ 0x10000;
 			setRawInputType(inputType);
 		}
 
@@ -343,8 +341,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		mHintText = hint;
 		if (hint != null) {
 			if (mHintView == null) {
-				final TextView hintView = (TextView) LayoutInflater.from(mPopupContext).inflate(
-						mHintResource, null).findViewById(R.id.text1);
+				final TextView hintView = (TextView)LayoutInflater.from(mPopupContext).inflate(mHintResource, null).findViewById(R.id.text1);
 				hintView.setText(mHintText);
 				mHintView = hintView;
 				mPopup.setPromptView(hintView);
@@ -532,7 +529,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		return mPopup.getHorizontalOffset();
 	}
 
-	 /**
+	/**
 	 * <p>Sets the animation style of the auto-complete drop-down list.</p>
 	 *
 	 * <p>If the drop-down is showing, calling this method will take effect only
@@ -718,7 +715,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		PopupWindow.OnDismissListener wrappedListener = null;
 		if (dismissListener != null) {
 			wrappedListener = new PopupWindow.OnDismissListener() {
-				@Override public void onDismiss() {
+				@Override
+				public void onDismiss() {
 					dismissListener.onDismiss();
 					unregisterOnBackInvokedCallback();
 				}
@@ -764,7 +762,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		mAdapter = adapter;
 		if (mAdapter != null) {
 			//noinspection unchecked
-			mFilter = ((Filterable) mAdapter).getFilter();
+			mFilter = ((Filterable)mAdapter).getFilter();
 			adapter.registerDataSetObserver(mObserver);
 		} else {
 			mFilter = null;
@@ -775,7 +773,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 
 	public boolean onKeyPreIme(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE)
-				&& isPopupShowing() && !mPopup.isDropDownAlwaysVisible()) {
+		    && isPopupShowing() && !mPopup.isDropDownAlwaysVisible()) {
 			// special case for the back key, we do not even try to send it
 			// to the drop down list but instead, consume it immediately
 			if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
@@ -802,17 +800,17 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		boolean consumed = mPopup.onKeyUp(keyCode, event);
 		if (consumed) {
 			switch (keyCode) {
-			// if the list accepts the key events and the key event
-			// was a click, the text view gets the selected item
-			// from the drop down as its content
-			case KeyEvent.KEYCODE_ENTER:
-			case KeyEvent.KEYCODE_NUMPAD_ENTER:
-			case KeyEvent.KEYCODE_DPAD_CENTER:
-			case KeyEvent.KEYCODE_TAB:
-				if (event.hasNoModifiers()) {
-					performCompletion();
-				}
-				return true;
+				// if the list accepts the key events and the key event
+				// was a click, the text view gets the selected item
+				// from the drop down as its content
+				case KeyEvent.KEYCODE_ENTER:
+				case KeyEvent.KEYCODE_NUMPAD_ENTER:
+				case KeyEvent.KEYCODE_DPAD_CENTER:
+				case KeyEvent.KEYCODE_TAB:
+					if (event.hasNoModifiers()) {
+						performCompletion();
+					}
+					return true;
 			}
 		}
 
@@ -830,11 +828,11 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		}
 
 		if (!isPopupShowing()) {
-			switch(keyCode) {
-			case KeyEvent.KEYCODE_DPAD_DOWN:
-				if (event.hasNoModifiers()) {
-					performValidation();
-				}
+			switch (keyCode) {
+				case KeyEvent.KEYCODE_DPAD_DOWN:
+					if (event.hasNoModifiers()) {
+						performValidation();
+					}
 			}
 		}
 
@@ -860,38 +858,41 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 * triggered.
 	 */
 	public boolean enoughToFilter() {
-		if (DEBUG) Log.v(TAG, "Enough to filter: len=" + getText().length()
-				+ " threshold=" + mThreshold);
+		if (DEBUG)
+			Log.v(TAG, "Enough to filter: len=" + getText().length()
+			           + " threshold=" + mThreshold);
 		return getText().length() >= mThreshold;
 	}
-
-
 
 	/** This is used to watch for edits to the text view. */
 	private class MyWatcher implements TextWatcher {
 		private boolean mOpenBefore;
 
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			if (mBlockCompletion) return;
+			if (mBlockCompletion)
+				return;
 
 			// when text is changed, inserted or deleted, we attempt to show
 			// the drop down
 			mOpenBefore = isPopupShowing();
-			if (DEBUG) Log.v(TAG, "before text changed: open=" + mOpenBefore);
+			if (DEBUG)
+				Log.v(TAG, "before text changed: open=" + mOpenBefore);
 		}
 
 		public void afterTextChanged(Editable s) {
-			if (mBlockCompletion) return;
+			if (mBlockCompletion)
+				return;
 
 			// if the list was open before the keystroke, but closed afterwards,
 			// then something in the keystroke processing (an input filter perhaps)
 			// called performCompletion() and we shouldn't do any more processing.
 			if (DEBUG) {
 				Log.v(TAG, "after text changed: openBefore=" + mOpenBefore
-						+ " open=" + isPopupShowing());
+				           + " open=" + isPopupShowing());
 			}
 
-			if (mOpenBefore && !isPopupShowing()) return;
+			if (mOpenBefore && !isPopupShowing())
+				return;
 
 			refreshAutoCompleteResults();
 		}
@@ -1004,7 +1005,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 * @param keyCode the last character inserted in the edit box; beware that
 	 * this will be null when text is being added through a soft input method.
 	 */
-	@SuppressWarnings({ "UnusedDeclaration" })
+	@SuppressWarnings({"UnusedDeclaration"})
 	protected void performFiltering(CharSequence text, int keyCode) {
 		mFilter.filter(text, this);
 	}
@@ -1106,7 +1107,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 
 	private void updateDropDownForFilter(int count) {
 		// Not attached to window, don't update drop-down
-		if (getWindowVisibility() == View.GONE) return;
+		if (getWindowVisibility() == View.GONE)
+			return;
 
 		/*
 		 * This checks enoughToFilter() again because filtering requests
@@ -1224,7 +1226,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 */
 	public void ensureImeVisible(boolean visible) {
 		mPopup.setInputMethodMode(visible
-				? ListPopupWindow.INPUT_METHOD_NEEDED : ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
+		                              ? ListPopupWindow.INPUT_METHOD_NEEDED
+		                              : ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
 		if (mPopup.isDropDownAlwaysVisible() || (mFilter != null && enoughToFilter())) {
 			showDropDown();
 		}
@@ -1284,7 +1287,7 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		if (!mPopup.isDropDownAlwaysVisible()) {
 			registerOnBackInvokedCallback();
 		}
-		mPopup.getListView().setOverScrollMode(/*View.OVER_SCROLL_ALWAYS*/0x00000000);
+		mPopup.getListView().setOverScrollMode(/*View.OVER_SCROLL_ALWAYS*/ 0x00000000);
 	}
 
 	/**
@@ -1359,7 +1362,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 	 * @see #setValidator(android.widget.AutoCompleteTextView.Validator)
 	 */
 	public void performValidation() {
-		if (mValidator == null) return;
+		if (mValidator == null)
+			return;
 
 		CharSequence text = getText();
 
@@ -1470,7 +1474,8 @@ public class AutoCompleteTextView extends EditText implements Filter.FilterListe
 		public void onClick(View v) {
 			onClickImpl();
 
-			if (mWrapped != null) mWrapped.onClick(v);
+			if (mWrapped != null)
+				mWrapped.onClick(v);
 		}
 	}
 

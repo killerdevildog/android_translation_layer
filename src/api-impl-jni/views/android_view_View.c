@@ -6,11 +6,11 @@
 #include "../defines.h"
 #include "../util.h"
 
-#include "../widgets/WrapperWidget.h"
 #include "../views/AndroidLayout.h"
+#include "../widgets/WrapperWidget.h"
 
-#include "../generated_headers/android_view_View.h"
 #include "../generated_headers/android_view_MotionEvent.h"
+#include "../generated_headers/android_view_View.h"
 
 #define JAVA_ENUM_CLASS android_view_MotionEvent
 enum {
@@ -22,13 +22,17 @@ enum {
 	JAVA_ENUM(ACTION_POINTER_DOWN),
 	JAVA_ENUM(ACTION_POINTER_UP),
 
+	JAVA_ENUM(ACTION_HOVER_MOVE),
 	JAVA_ENUM(ACTION_SCROLL),
+	JAVA_ENUM(ACTION_HOVER_ENTER),
+	JAVA_ENUM(ACTION_HOVER_EXIT),
 };
 #undef JAVA_ENUM_CLASS
 
-#define SOURCE_TOUCHSCREEN 0x1002
+#define SOURCE_TOUCHSCREEN   0x1002
+#define SOURCE_CLASS_POINTER 0x2
 
-#define MAX_POINTERS 50
+#define MAX_POINTERS         50
 
 struct pointer {
 	int id;
@@ -47,7 +51,8 @@ int canceled_action = 0;
 
 static struct pointer pointers[MAX_POINTERS] = {};
 
-bool view_dispatch_motionevent(JNIEnv *env, WrapperWidget *wrapper, GtkPropagationPhase phase, jobject motion_event, gpointer event, int action) {
+bool view_dispatch_motionevent(JNIEnv *env, WrapperWidget *wrapper, GtkPropagationPhase phase, jobject motion_event, gpointer event, int action)
+{
 	int ret;
 
 	jobject this = wrapper->jobj;
@@ -62,6 +67,10 @@ bool view_dispatch_motionevent(JNIEnv *env, WrapperWidget *wrapper, GtkPropagati
 
 	if (wrapper->custom_dispatch_touch) {
 		ret = (*env)->CallBooleanMethod(env, this, handle_cache.view.dispatchTouchEvent, motion_event);
+	} else if (phase == GTK_PHASE_CAPTURE && _GET_BOOL_FIELD(this, "disallowIntercept")) {
+		if (action == ACTION_UP || action == ACTION_CANCEL)
+			_SET_BOOL_FIELD(this, "disallowIntercept", false);
+		ret = false;
 	} else if (phase == GTK_PHASE_CAPTURE && !wrapper->intercepting_touch) {
 		wrapper->intercepting_touch = (*env)->CallBooleanMethod(env, this, handle_cache.view.onInterceptTouchEvent, motion_event);
 		if (wrapper->intercepting_touch) {
@@ -78,9 +87,8 @@ bool view_dispatch_motionevent(JNIEnv *env, WrapperWidget *wrapper, GtkPropagati
 		ret = (*env)->CallBooleanMethod(env, this, handle_cache.view.onTouchEventInternal, motion_event, (jboolean)is_synthetic);
 	}
 
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
-
 
 	if (action == ACTION_UP || action == ACTION_CANCEL)
 		wrapper->intercepting_touch = false;
@@ -114,7 +122,17 @@ static bool call_ontouch_callback(WrapperWidget *wrapper, int action, struct poi
 
 	return ret;
 }
-static void gdk_event_get_widget_relative_position(GdkEvent *event, GtkWidget *widget, double *x, double *y)
+
+static void call_hover_callback(jobject this, int action, float x, float y, float raw_x, float raw_y)
+{
+	JNIEnv *env = get_jni_env();
+	jobject motion_event = (*env)->NewObject(env, handle_cache.motion_event.class, handle_cache.motion_event.constructor_single, SOURCE_CLASS_POINTER, action, 0, x, y, x, y);
+	(*env)->CallBooleanMethod(env, this, handle_cache.view.dispatchHoverEvent, motion_event);
+	if ((*env)->ExceptionCheck(env))
+		(*env)->ExceptionDescribe(env);
+}
+
+static void transform_coords_to_widget_relative(GtkWidget *widget, double *x, double *y)
 {
 	int ret;
 
@@ -122,7 +140,6 @@ static void gdk_event_get_widget_relative_position(GdkEvent *event, GtkWidget *w
 	double off_x;
 	double off_y;
 
-	gdk_event_get_position(event, x, y);
 	GtkWidget *window = GTK_WIDGET(gtk_widget_get_native(widget));
 	gtk_native_get_surface_transform(GTK_NATIVE(window), &off_x, &off_y);
 	ret = gtk_widget_compute_point(window, widget, &GRAPHENE_POINT_INIT(*x - off_x, *y - off_y), &p);
@@ -135,7 +152,7 @@ static void gdk_event_get_widget_relative_position(GdkEvent *event, GtkWidget *w
 void remove_pointer_fast(GPtrArray *pointer_indices, struct pointer *pointer)
 {
 	g_ptr_array_remove_index_fast(pointer_indices, pointer->index);
-	if(pointer->index != pointer_indices->len) {
+	if (pointer->index != pointer_indices->len) {
 		/* update the index field of the pointer that was moved in to fill the empty space */
 		struct pointer *replacement_pointer = (struct pointer *)g_ptr_array_index(pointer_indices, pointer->index);
 		replacement_pointer->index = pointer->index;
@@ -147,7 +164,7 @@ void remove_pointer_fast(GPtrArray *pointer_indices, struct pointer *pointer)
 static bool action_up_already_handled = false;
 
 // TODO: find a way to reconcile this with libandroid/input.c?
-static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *event, gpointer user_data)
+static gboolean on_pointer_event(GtkEventControllerLegacy *event_controller, GdkEvent *event, gpointer user_data)
 {
 	double x;
 	double y;
@@ -158,16 +175,16 @@ static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *e
 	}
 
 	uintptr_t id = (uintptr_t)gdk_event_get_event_sequence(event);
-	if (id > MAX_POINTERS-1)  // sequence id is a real pointer for drag and drop events
+	if (id > MAX_POINTERS - 1) // sequence id is a real pointer for drag and drop events
 		return false;
 
 	/* FIXME: this will clash with touchscreen */
-	if(id == 0)
+	if (id == 0)
 		id = 1;
 
 	int pointer_index;
 
-	if(pointers[id].id) {
+	if (pointers[id].id) {
 		pointer_index = pointers[id].index;
 	} else {
 		/* index of a hypothetical next appended element */
@@ -176,7 +193,7 @@ static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *e
 
 	int action;
 	GdkEventType event_type = gdk_event_get_event_type(event);
-	switch(event_type) {
+	switch (event_type) {
 		case GDK_BUTTON_PRESS:
 		case GDK_TOUCH_BEGIN:
 			action = pointer_index > 0 ? (ACTION_POINTER_DOWN | (pointer_index << 8)) : ACTION_DOWN;
@@ -208,9 +225,10 @@ static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *e
 	double raw_x;
 	double raw_y;
 	gdk_event_get_position(event, &raw_x, &raw_y);
-	gdk_event_get_widget_relative_position(event, widget, &x, &y);
+	x = raw_x, y = raw_y;
+	transform_coords_to_widget_relative(widget, &x, &y);
 
-	if(!pointers[id].id) {
+	if (!pointers[id].id) {
 		/* if this is a new sequence, add a slot for it */
 		g_ptr_array_add(pointer_indices, &pointers[id]);
 		/* we appended a single element, so it must be at pointer_index */
@@ -220,8 +238,8 @@ static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *e
 
 	pointers[id].coord_x = x;
 	pointers[id].coord_y = y;
-	pointers[id].raw_x = x;
-	pointers[id].raw_y = y;
+	pointers[id].raw_x = raw_x;
+	pointers[id].raw_y = raw_y;
 
 	if (event == canceled_event && cancel_triggerer != wrapper) {
 		action = ACTION_CANCEL;
@@ -231,7 +249,27 @@ static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *e
 	if (event_type == GDK_BUTTON_RELEASE || event_type == GDK_TOUCH_END) {
 		remove_pointer_fast(pointer_indices, &pointers[id]);
 	}
+	if (pointer_indices->len == 0 && wrapper->hover_exit_pending) {
+		wrapper->hover_exit_pending = FALSE;
+		call_hover_callback(wrapper->jobj, ACTION_HOVER_EXIT, x, y, raw_x, raw_y);
+	}
 	return ret;
+}
+
+static gboolean on_event(GtkEventControllerLegacy *event_controller, GdkEvent *event, gpointer user_data)
+{
+	GdkEventType event_type = gdk_event_get_event_type(event);
+	switch (event_type) {
+		case GDK_BUTTON_PRESS:
+		case GDK_TOUCH_BEGIN:
+		case GDK_BUTTON_RELEASE:
+		case GDK_TOUCH_END:
+		case GDK_MOTION_NOTIFY:
+		case GDK_TOUCH_UPDATE:
+			return on_pointer_event(event_controller, event, user_data);
+		default: // not a touch or mouse event, nothing to do here
+			return false;
+	}
 }
 
 static void on_click(GtkGestureClick *gesture, int n_press, double x, double y, gpointer user_data)
@@ -242,7 +280,7 @@ static void on_click(GtkGestureClick *gesture, int n_press, double x, double y, 
 
 	jboolean handled = (*env)->CallBooleanMethod(env, wrapper->jobj, handle_cache.view.performClick);
 
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 
 	if (handled) {
@@ -255,35 +293,100 @@ static void on_click(GtkGestureClick *gesture, int n_press, double x, double y, 
 	}
 }
 
-#define SOURCE_CLASS_POINTER 0x2
-
 #define MAGIC_SCROLL_FACTOR 32
 
-static gboolean scroll_cb(GtkEventControllerScroll* self, gdouble dx, gdouble dy, jobject this)
+/* Gtk4 for whatever reason doesn't report cursor position for GtkEventControllerScroll, thankfully
+ * it's not too annoying to get it ourselves */
+gboolean hacky_get_cursor_position(GtkWidget *widget, double *x, double *y)
 {
+	GdkSeat *seat;
+	GdkSurface *surface;
+	GdkDevice *device_pointer;
+
+	seat = gdk_display_get_default_seat(gtk_widget_get_display(widget));
+
+	device_pointer = gdk_seat_get_pointer(seat);
+	surface = gtk_native_get_surface(gtk_widget_get_native(widget));
+
+	return gdk_surface_get_device_position(surface,
+	                                       device_pointer,
+	                                       x, y, NULL);
+}
+
+static gboolean scroll_cb(GtkEventControllerScroll *controller, gdouble dx, gdouble dy, jobject this)
+{
+	double x;
+	double y;
+	double raw_x;
+	double raw_y;
+
 	JNIEnv *env = get_jni_env();
-	GdkScrollUnit scroll_unit = gtk_event_controller_scroll_get_unit (self);
+	GdkScrollUnit scroll_unit = gtk_event_controller_scroll_get_unit(controller);
+	GdkEvent *event = gtk_event_controller_get_current_event(GTK_EVENT_CONTROLLER(controller));
+	GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(controller));
+	WrapperWidget *wrapper = WRAPPER_WIDGET(widget);
+	hacky_get_cursor_position(widget, &raw_x, &raw_y);
+	x = raw_x, y = raw_y;
+	transform_coords_to_widget_relative(widget, &x, &y);
 
 	if (scroll_unit == GDK_SCROLL_UNIT_SURFACE) {
 		dx /= MAGIC_SCROLL_FACTOR;
 		dy /= MAGIC_SCROLL_FACTOR;
 	}
-	jobject motion_event = (*env)->NewObject(env, handle_cache.motion_event.class, handle_cache.motion_event.constructor_single, SOURCE_CLASS_POINTER, ACTION_SCROLL, 0, dx, -dy, 0.f, 0.f);
+	jobject motion_event = (*env)->NewObject(env, handle_cache.motion_event.class,
+	                                         handle_cache.motion_event.constructor_scroll,
+	                                         SOURCE_CLASS_POINTER, ACTION_SCROLL,
+	                                         gdk_event_get_time(event), x, y, raw_x, raw_y, dx, -dy);
 
-	gboolean ret = (*env)->CallBooleanMethod(env, this, handle_cache.view.onGenericMotionEvent, motion_event);
-	if((*env)->ExceptionCheck(env))
+	gboolean ret = (*env)->CallBooleanMethod(env, this, handle_cache.view.dispatchGenericMotionEvent, motion_event);
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 
+	// HACK: replay last hover event to work around scrolling issues in composeUI apps
+	if (wrapper->hover_x && wrapper->hover_y)
+		call_hover_callback(this, ACTION_HOVER_MOVE, wrapper->hover_x, wrapper->hover_y, wrapper->hover_x, wrapper->hover_y);
+
 	return ret;
+}
+
+static void hover_enter_cb(GtkEventControllerMotion *controller, double x, double y, WrapperWidget *wrapper)
+{
+	double raw_x;
+	double raw_y;
+	GdkEvent *event = gtk_event_controller_get_current_event(GTK_EVENT_CONTROLLER(controller));
+	gdk_event_get_position(event, &raw_x, &raw_y);
+	wrapper->hover_exit_pending = FALSE;
+	wrapper->hover_x = x;
+	wrapper->hover_y = y;
+	call_hover_callback(wrapper->jobj, ACTION_HOVER_ENTER, x, y, raw_x, raw_y);
+}
+
+static void hover_leave_cb(GtkEventControllerMotion *controller, WrapperWidget *wrapper)
+{
+	if (pointer_indices->len) // composeUI apps don't like ACTION_HOVER_EXIT events while a pointer is down
+		wrapper->hover_exit_pending = TRUE;
+	else
+		call_hover_callback(wrapper->jobj, ACTION_HOVER_EXIT, 0, 0, 0, 0);
+}
+
+static void hover_motion_cb(GtkEventControllerMotion *controller, double x, double y, WrapperWidget *wrapper)
+{
+	double raw_x;
+	double raw_y;
+	GdkEvent *event = gtk_event_controller_get_current_event(GTK_EVENT_CONTROLLER(controller));
+	gdk_event_get_position(event, &raw_x, &raw_y);
+	wrapper->hover_x = x;
+	wrapper->hover_y = y;
+	call_hover_callback(wrapper->jobj, ACTION_HOVER_MOVE, x, y, raw_x, raw_y);
 }
 
 void _setOnTouchListener(JNIEnv *env, jobject this, GtkWidget *widget)
 {
 	GtkEventController *old_controller = g_object_get_data(G_OBJECT(widget), "on_touch_listener");
-	if(old_controller)
+	if (old_controller)
 		return;
 
-	if(!pointer_indices)
+	if (!pointer_indices)
 		pointer_indices = g_ptr_array_new_full(20, NULL);
 
 	GtkEventController *controller = GTK_EVENT_CONTROLLER(gtk_event_controller_legacy_new());
@@ -297,7 +400,7 @@ void _setOnTouchListener(JNIEnv *env, jobject this, GtkWidget *widget)
 	jmethodID onintercepttouchevent_method = _METHOD(_CLASS(this), "onInterceptTouchEvent", "(Landroid/view/MotionEvent;)Z");
 	if (onintercepttouchevent_method != handle_cache.view.onInterceptTouchEvent || wrapper->custom_dispatch_touch) {
 		GtkEventController *old_controller = g_object_get_data(G_OBJECT(widget), "on_intercept_touch_listener");
-		if(old_controller)
+		if (old_controller)
 			gtk_widget_remove_controller(widget, old_controller);
 
 		GtkEventController *controller = GTK_EVENT_CONTROLLER(gtk_event_controller_legacy_new());
@@ -327,7 +430,7 @@ JNIEXPORT void JNICALL Java_android_view_View_nativeSetOnClickListener(JNIEnv *e
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	GtkEventController *old_controller = g_object_get_data(G_OBJECT(widget), "on_click_listener");
-	if(old_controller)
+	if (old_controller)
 		return;
 
 	GtkEventController *controller = GTK_EVENT_CONTROLLER(gtk_gesture_click_new());
@@ -360,20 +463,20 @@ JNIEXPORT jint JNICALL Java_android_view_View_getHeight(JNIEnv *env, jobject thi
 	return gtk_widget_get_height(widget);
 }
 
-#define GRAVITY_TOP (1<<5)//0x30
-#define GRAVITY_BOTTOM (1<<6)//0x50
-#define GRAVITY_LEFT (1<<1)//0x3
-#define GRAVITY_RIGHT (1<<2)//0x5
+#define GRAVITY_TOP               (1 << 5) //0x30
+#define GRAVITY_BOTTOM            (1 << 6) //0x50
+#define GRAVITY_LEFT              (1 << 1) //0x3
+#define GRAVITY_RIGHT             (1 << 2) //0x5
 
-#define GRAVITY_CENTER_VERTICAL 0x10
+#define GRAVITY_CENTER_VERTICAL   0x10
 #define GRAVITY_CENTER_HORIZONTAL 0x01
 
-#define GRAVITY_CENTER (GRAVITY_CENTER_VERTICAL | GRAVITY_CENTER_HORIZONTAL)
+#define GRAVITY_CENTER            (GRAVITY_CENTER_VERTICAL | GRAVITY_CENTER_HORIZONTAL)
 
-#define MATCH_PARENT (-1)
+#define MATCH_PARENT              (-1)
 
 JNIEXPORT void JNICALL Java_android_view_View_native_1setLayoutParams(JNIEnv *env, jobject this, jlong widget_ptr, jint width, jint height, jint gravity, jfloat weight,
-		jint leftMargin, jint topMargin, jint rightMargin, jint bottomMargin)
+                                                                      jint leftMargin, jint topMargin, jint rightMargin, jint bottomMargin)
 {
 	GtkWidget *widget = gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr)));
 
@@ -383,25 +486,25 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setLayoutParams(JNIEnv *en
 	gboolean vexpand = FALSE;
 
 	if (gravity != -1) {
-		if(gravity & GRAVITY_BOTTOM)
+		if (gravity & GRAVITY_BOTTOM)
 			valign = GTK_ALIGN_END;
-		else if(gravity & GRAVITY_TOP)
+		else if (gravity & GRAVITY_TOP)
 			valign = GTK_ALIGN_START;
 		else
 			valign = GTK_ALIGN_FILL;
 
-		if(gravity & GRAVITY_RIGHT)
+		if (gravity & GRAVITY_RIGHT)
 			halign = GTK_ALIGN_END;
-		else if(gravity & GRAVITY_LEFT)
+		else if (gravity & GRAVITY_LEFT)
 			halign = GTK_ALIGN_START;
 		else
 			halign = GTK_ALIGN_FILL;
 
-		if(gravity == GRAVITY_CENTER) {
+		if (gravity == GRAVITY_CENTER) {
 			valign = GTK_ALIGN_CENTER; // GTK_ALIGN_CENTER doesn't seem to be the right one?
 			halign = GTK_ALIGN_CENTER; // ditto (GTK_ALIGN_CENTER)
-			hexpand = TRUE; // haxx or not?
-			vexpand = TRUE; // seems to be the deciding factor for whether to expand, guess I should try on android
+			hexpand = TRUE;            // haxx or not?
+			vexpand = TRUE;            // seems to be the deciding factor for whether to expand, guess I should try on android
 		}
 	}
 
@@ -424,9 +527,9 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setLayoutParams(JNIEnv *en
 	gtk_widget_set_halign(widget, halign);
 	gtk_widget_set_valign(widget, valign);
 
-	if(width > 0)
+	if (width > 0)
 		g_object_set(G_OBJECT(widget), "width-request", width, NULL);
-	if(height > 0)
+	if (height > 0)
 		g_object_set(G_OBJECT(widget), "height-request", height, NULL);
 
 	GtkWidget *parent = gtk_widget_get_parent(widget);
@@ -449,7 +552,8 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setLayoutParams(JNIEnv *en
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-JNIEXPORT void JNICALL Java_android_view_View_native_1setPadding(JNIEnv *env, jobject this, jlong widget_ptr, jint left, jint top, jint right, jint bottom) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1setPadding(JNIEnv *env, jobject this, jlong widget_ptr, jint left, jint top, jint right, jint bottom)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	if (ATL_IS_ANDROID_LAYOUT(gtk_widget_get_layout_manager(widget))) {
 		return;
@@ -457,7 +561,7 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setPadding(JNIEnv *env, jo
 
 	GtkStyleContext *style_context = gtk_widget_get_style_context(widget);
 	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "padding_style_provider");
-	if(old_provider)
+	if (old_provider)
 		gtk_style_context_remove_provider(style_context, GTK_STYLE_PROVIDER(old_provider));
 	GtkCssProvider *css_provider = gtk_css_provider_new();
 
@@ -469,7 +573,8 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setPadding(JNIEnv *env, jo
 	g_object_set_data(G_OBJECT(widget), "padding_style_provider", css_provider);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1setVisibility(JNIEnv *env, jobject this, jlong widget_ptr, jint visibility, jfloat alpha) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1setVisibility(JNIEnv *env, jobject this, jlong widget_ptr, jint visibility, jfloat alpha)
+{
 	GtkWidget *widget = gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr)));
 
 	atl_safe_gtk_widget_set_visible(widget, visibility != android_view_View_GONE);
@@ -482,7 +587,9 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setVisibility(JNIEnv *env,
  * Drawing will be overwritten by WrapperWidget.
  * If it holds children, they will be laid out by AndroidLayout
  */
-struct _JavaWidget {GtkWidget parent_instance;};
+struct _JavaWidget {
+	GtkWidget parent_instance;
+};
 G_DECLARE_FINAL_TYPE(JavaWidget, java_widget, JAVA, WIDGET, GtkWidget)
 static void java_widget_dispose(GObject *java_widget)
 {
@@ -495,17 +602,11 @@ static void java_widget_dispose(GObject *java_widget)
 	}
 }
 static void java_widget_init(JavaWidget *java_widget) {}
-static void java_widget_class_init(JavaWidgetClass *class) {
+static void java_widget_class_init(JavaWidgetClass *class)
+{
 	G_OBJECT_CLASS(class)->dispose = java_widget_dispose;
 }
 G_DEFINE_TYPE(JavaWidget, java_widget, GTK_TYPE_WIDGET)
-
-static void java_method_cb(WrapperWidget *wrapper, jmethodID method) {
-	JNIEnv *env = get_jni_env();
-	(*env)->CallVoidMethod(env, wrapper->jobj, method);
-	if ((*env)->ExceptionCheck(env))
-		(*env)->ExceptionDescribe(env);
-}
 
 JNIEXPORT jlong JNICALL Java_android_view_View_native_1constructor(JNIEnv *env, jobject this, jobject context, jobject attrs)
 {
@@ -522,20 +623,27 @@ JNIEXPORT jlong JNICALL Java_android_view_View_native_1constructor(JNIEnv *env, 
 	gtk_widget_set_name(widget, name);
 	(*env)->ReleaseStringUTFChars(env, nameObj, name);
 
-	if (_METHOD(_CLASS(this), "onGenericMotionEvent", "(Landroid/view/MotionEvent;)Z") != handle_cache.view.onGenericMotionEvent) {
+	if (_METHOD(class, "onGenericMotionEvent", "(Landroid/view/MotionEvent;)Z") != handle_cache.view.onGenericMotionEvent
+	    || _METHOD(class, "dispatchGenericMotionEvent", "(Landroid/view/MotionEvent;)Z") != handle_cache.view.dispatchGenericMotionEvent) {
 		GtkEventController *controller = gtk_event_controller_scroll_new(GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
 
 		g_signal_connect(controller, "scroll", G_CALLBACK(scroll_cb), wrapper->jobj);
-		gtk_widget_add_controller(widget, controller);
+		gtk_widget_add_controller(GTK_WIDGET(wrapper), controller);
 	}
+	if (_METHOD(class, "dispatchHoverEvent", "(Landroid/view/MotionEvent;)Z") != handle_cache.view.dispatchHoverEvent) {
+		GtkEventController *controller = gtk_event_controller_motion_new();
 
-	g_signal_connect(wrapper, "map", G_CALLBACK(java_method_cb), handle_cache.view.onAttachedToWindow);
-	g_signal_connect(wrapper, "unmap", G_CALLBACK(java_method_cb), handle_cache.view.onDetachedFromWindow);
+		g_signal_connect(controller, "enter", G_CALLBACK(hover_enter_cb), wrapper);
+		g_signal_connect(controller, "leave", G_CALLBACK(hover_leave_cb), wrapper);
+		g_signal_connect(controller, "motion", G_CALLBACK(hover_motion_cb), wrapper);
+		gtk_widget_add_controller(GTK_WIDGET(wrapper), controller);
+	}
 
 	return _INTPTR(widget);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_nativeInvalidate(JNIEnv *env, jclass class, jlong widget_ptr) {
+JNIEXPORT void JNICALL Java_android_view_View_nativeInvalidate(JNIEnv *env, jclass class, jlong widget_ptr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	wrapper_widget_queue_draw(WRAPPER_WIDGET(gtk_widget_get_parent(widget)));
@@ -547,11 +655,12 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1destructor(JNIEnv *env, jo
 }
 
 #define MEASURE_SPEC_UNSPECIFIED (0 << 30)
-#define MEASURE_SPEC_EXACTLY (1 << 30)
-#define MEASURE_SPEC_AT_MOST (2 << 30)
-#define MEASURE_SPEC_MASK (0x3 << 30)
+#define MEASURE_SPEC_EXACTLY     (1 << 30)
+#define MEASURE_SPEC_AT_MOST     (2 << 30)
+#define MEASURE_SPEC_MASK        (0x3 << 30)
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1measure(JNIEnv *env, jobject this, jlong widget_ptr, jint width_spec, jint height_spec) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1measure(JNIEnv *env, jobject this, jlong widget_ptr, jint width_spec, jint height_spec)
+{
 	int width = -1;
 	int height = -1;
 	GtkWidget *widget = gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr)));
@@ -590,15 +699,16 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1measure(JNIEnv *env, jobje
 	(*env)->CallVoidMethod(env, this, handle_cache.view.setMeasuredDimension, width, height);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1layout(JNIEnv *env, jobject this, jlong widget_ptr, jint l, jint t, jint r, jint b) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1layout(JNIEnv *env, jobject this, jlong widget_ptr, jint l, jint t, jint r, jint b)
+{
 	GtkWidget *widget = gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr)));
 
 	GtkAllocation allocation = {
-		.x=l,
-		.y=t,
+		.x = l,
+		.y = t,
 	};
-	int width = r-l;
-	int height = b-t;
+	int width = r - l;
+	int height = b - t;
 	WrapperWidget *wrapper = WRAPPER_WIDGET(widget);
 	if (wrapper->real_width != width || wrapper->real_height != height) {
 		wrapper->real_width = width;
@@ -619,7 +729,8 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1layout(JNIEnv *env, jobjec
 	gtk_widget_size_allocate(widget, &allocation, -1);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1requestLayout(JNIEnv *env, jobject this, jlong widget_ptr) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1requestLayout(JNIEnv *env, jobject this, jlong widget_ptr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	atl_safe_gtk_widget_queue_resize(widget);
@@ -628,14 +739,16 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1requestLayout(JNIEnv *env,
 /* we kinda need per-widget css */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-JNIEXPORT void JNICALL Java_android_view_View_setBackgroundColor(JNIEnv *env, jobject this, jint color)
+JNIEXPORT void JNICALL Java_android_view_View_native_1setBackgroundColor(JNIEnv *env, jobject this, long widget_ptr, jint color)
 {
-	GtkWidget *widget = GTK_WIDGET(_PTR(_GET_LONG_FIELD(this, "widget")));
+	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
+	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_widget_get_parent(widget));
+	wrapper_widget_set_background(wrapper, NULL);
 
 	GtkStyleContext *style_context = gtk_widget_get_style_context(widget);
 
-	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "background_color_style_provider");
-	if(old_provider)
+	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "background_style_provider");
+	if (old_provider)
 		gtk_style_context_remove_provider(style_context, GTK_STYLE_PROVIDER(old_provider));
 
 	GtkCssProvider *css_provider = gtk_css_provider_new();
@@ -645,35 +758,37 @@ JNIEXPORT void JNICALL Java_android_view_View_setBackgroundColor(JNIEnv *env, jo
 	g_free(css_string);
 
 	gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	g_object_set_data(G_OBJECT(widget), "background_color_style_provider", css_provider);
+	g_object_set_data(G_OBJECT(widget), "background_style_provider", css_provider);
 	if (((color >> 24) & 0xFF) != 0)
 		widget_set_needs_allocation(widget);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1setBackgroundDrawable(JNIEnv *env, jobject this, jlong widget_ptr, jlong paintable_ptr) {
+JNIEXPORT void JNICALL Java_android_view_View_native_1setBackgroundDrawable(JNIEnv *env, jobject this, jlong widget_ptr, jlong paintable_ptr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	GdkPaintable *paintable = GDK_PAINTABLE(_PTR(paintable_ptr));
 	wrapper_widget_set_background(WRAPPER_WIDGET(gtk_widget_get_parent(widget)), paintable);
 	GtkStyleContext *style_context = gtk_widget_get_style_context(widget);
 
-	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "background_paintable_style_provider");
-	if(old_provider)
+	GtkCssProvider *old_provider = g_object_get_data(G_OBJECT(widget), "background_style_provider");
+	if (old_provider)
 		gtk_style_context_remove_provider(style_context, GTK_STYLE_PROVIDER(old_provider));
 
 	GtkCssProvider *css_provider = gtk_css_provider_new();
 
-	char *css_string = g_markup_printf_escaped("* { background-image: none; }");
+	char *css_string = g_markup_printf_escaped("* { background-image: none; background-color: #00000000; }");
 	gtk_css_provider_load_from_string(css_provider, css_string);
 	g_free(css_string);
 
 	gtk_style_context_add_provider(style_context, GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-	g_object_set_data(G_OBJECT(widget), "background_paintable_style_provider", css_provider);
+	g_object_set_data(G_OBJECT(widget), "background_style_provider", css_provider);
 	if (paintable)
 		widget_set_needs_allocation(widget);
 }
 #pragma GCC diagnostic pop
 
-JNIEXPORT jboolean JNICALL Java_android_view_View_native_1getGlobalVisibleRect(JNIEnv *env, jobject this, jlong widget_ptr, jobject rect) {
+JNIEXPORT jboolean JNICALL Java_android_view_View_native_1getGlobalVisibleRect(JNIEnv *env, jobject this, jlong widget_ptr, jobject rect)
+{
 	GtkWidget *widget = gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr)));
 	graphene_point_t point_in = {0, 0};
 	graphene_point_t point_out;
@@ -702,16 +817,16 @@ static void on_long_click(GtkGestureLongPress *gesture, double x, double y, gpoi
 	GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture));
 	WrapperWidget *wrapper = WRAPPER_WIDGET(gtk_widget_get_parent(widget));
 
-	bool ret =(*env)->CallBooleanMethod(env, wrapper->jobj, handle_cache.view.performLongClick, x, y);
+	bool ret = (*env)->CallBooleanMethod(env, wrapper->jobj, handle_cache.view.performLongClick, x, y);
 
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 
 	if (ret)
 		gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 }
 
-static void on_long_click_update(GtkGesture *gesture, GdkEventSequence* sequence, gpointer user_data)
+static void on_long_click_update(GtkGesture *gesture, GdkEventSequence *sequence, gpointer user_data)
 {
 	GdkEvent *event = gtk_gesture_get_last_event(gesture, sequence);
 	if (event == canceled_event) {
@@ -723,7 +838,7 @@ JNIEXPORT void JNICALL Java_android_view_View_nativeSetOnLongClickListener(JNIEn
 {
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	GtkEventController *old_controller = g_object_get_data(G_OBJECT(widget), "on_long_click_listener");
-	if(old_controller)
+	if (old_controller)
 		return;
 
 	GtkEventController *controller = GTK_EVENT_CONTROLLER(gtk_gesture_long_press_new());
@@ -779,6 +894,8 @@ JNIEXPORT void JNICALL Java_android_view_View_nativeSetFullscreen(JNIEnv *env, j
 				if (layout->real_width <= geometry.width && layout->real_width > geometry.width - 200 && layout->real_height <= geometry.height && layout->real_height > geometry.height - 200) {
 					layout->real_width = geometry.width;
 					layout->real_height = geometry.height;
+					_SET_INT_FIELD(this, "right", geometry.width);
+					_SET_INT_FIELD(this, "bottom", geometry.height);
 				}
 			}
 		} else {
@@ -789,8 +906,8 @@ JNIEXPORT void JNICALL Java_android_view_View_nativeSetFullscreen(JNIEnv *env, j
 	}
 }
 
-
-JNIEXPORT void JNICALL Java_android_view_View_native_1addClass(JNIEnv *env, jobject this, jlong widget_ptr, jstring class_name_jstr){
+JNIEXPORT void JNICALL Java_android_view_View_native_1addClass(JNIEnv *env, jobject this, jlong widget_ptr, jstring class_name_jstr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	const char *class_name = (*env)->GetStringUTFChars(env, class_name_jstr, NULL);
@@ -799,7 +916,8 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1addClass(JNIEnv *env, jobj
 	(*env)->ReleaseStringUTFChars(env, class_name_jstr, class_name);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1removeClass(JNIEnv *env, jobject this, jlong widget_ptr, jstring class_name_jstr){
+JNIEXPORT void JNICALL Java_android_view_View_native_1removeClass(JNIEnv *env, jobject this, jlong widget_ptr, jstring class_name_jstr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	const char *class_name = (*env)->GetStringUTFChars(env, class_name_jstr, NULL);
@@ -808,13 +926,14 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1removeClass(JNIEnv *env, j
 	(*env)->ReleaseStringUTFChars(env, class_name_jstr, class_name);
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1addClasses(JNIEnv *env, jobject this, jlong widget_ptr, jobjectArray class_names_jarray){
+JNIEXPORT void JNICALL Java_android_view_View_native_1addClasses(JNIEnv *env, jobject this, jlong widget_ptr, jobjectArray class_names_jarray)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	int length = (*env)->GetArrayLength(env, class_names_jarray);
 
-	for(int i = 0; i < length; i++){
-		jstring class_name_jstr = (jstring) ((*env)->GetObjectArrayElement(env, class_names_jarray, i));
+	for (int i = 0; i < length; i++) {
+		jstring class_name_jstr = (jstring)((*env)->GetObjectArrayElement(env, class_names_jarray, i));
 
 		const char *class_name = (*env)->GetStringUTFChars(env, class_name_jstr, NULL);
 		gtk_widget_add_css_class(widget, class_name);
@@ -823,13 +942,14 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1addClasses(JNIEnv *env, jo
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_native_1removeClasses(JNIEnv *env, jobject this, jlong widget_ptr, jobjectArray class_names_jarray){
+JNIEXPORT void JNICALL Java_android_view_View_native_1removeClasses(JNIEnv *env, jobject this, jlong widget_ptr, jobjectArray class_names_jarray)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 
 	int length = (*env)->GetArrayLength(env, class_names_jarray);
 
-	for(int i = 0; i < length; i++){
-		jstring class_name_jstr = (jstring) ((*env)->GetObjectArrayElement(env, class_names_jarray, i));
+	for (int i = 0; i < length; i++) {
+		jstring class_name_jstr = (jstring)((*env)->GetObjectArrayElement(env, class_names_jarray, i));
 
 		const char *class_name = (*env)->GetStringUTFChars(env, class_name_jstr, NULL);
 		gtk_widget_remove_css_class(widget, class_name);
@@ -838,7 +958,8 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1removeClasses(JNIEnv *env,
 	}
 }
 
-JNIEXPORT void JNICALL Java_android_view_View_nativeRequestFocus(JNIEnv *env, jobject this, jlong widget_ptr, jint direction) {
+JNIEXPORT void JNICALL Java_android_view_View_nativeRequestFocus(JNIEnv *env, jobject this, jlong widget_ptr, jint direction)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	GtkWidget *wrapper = gtk_widget_get_parent(widget);
 	if (gtk_widget_get_focusable(widget))
@@ -847,7 +968,8 @@ JNIEXPORT void JNICALL Java_android_view_View_nativeRequestFocus(JNIEnv *env, jo
 		gtk_widget_grab_focus(wrapper);
 }
 
-JNIEXPORT jboolean JNICALL Java_android_view_View_nativeIsFocused(JNIEnv *env, jobject this, jlong widget_ptr) {
+JNIEXPORT jboolean JNICALL Java_android_view_View_nativeIsFocused(JNIEnv *env, jobject this, jlong widget_ptr)
+{
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	GtkWidget *wrapper = gtk_widget_get_parent(widget);
 	return gtk_widget_has_focus(widget) || gtk_widget_has_focus(wrapper);
@@ -869,15 +991,27 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1keep_1screen_1on(JNIEnv *e
 	}
 }
 
-
 JNIEXPORT jboolean JNICALL Java_android_view_View_nativeIsAttachedToWindow(JNIEnv *env, jobject this, jlong widget_ptr)
 {
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
-	return gtk_widget_get_mapped(widget);
+	return currently_unmapping == widget || gtk_widget_get_mapped(widget);
 }
 
 JNIEXPORT jobject JNICALL Java_android_view_View_native_1get_1window(JNIEnv *env, jobject this, jlong widget_ptr)
 {
 	GtkWidget *widget = GTK_WIDGET(_PTR(widget_ptr));
 	return g_object_get_data(G_OBJECT(gtk_widget_get_root(widget)), "jobject");
+}
+
+extern GtkWindow *window;
+
+JNIEXPORT void JNICALL Java_android_view_View_getWindowVisibleDisplayFrame(JNIEnv *env, jobject this, jobject rect)
+{
+	int width;
+	int height;
+	gtk_window_get_default_size(window, &width, &height);
+	_SET_INT_FIELD(rect, "left", 0);
+	_SET_INT_FIELD(rect, "top", 0);
+	_SET_INT_FIELD(rect, "right", width);
+	_SET_INT_FIELD(rect, "bottom", height);
 }

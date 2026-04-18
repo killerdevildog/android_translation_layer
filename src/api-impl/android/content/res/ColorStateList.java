@@ -267,7 +267,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 	 */
 	@NonNull
 	public static ColorStateList createFromXml(@NonNull Resources r, @NonNull XmlPullParser parser,
-						   @Nullable Theme theme) throws XmlPullParserException, IOException {
+	                                           @Nullable Theme theme) throws XmlPullParserException, IOException {
 		final AttributeSet attrs = Xml.asAttributeSet(parser);
 
 		int type;
@@ -291,7 +291,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 	 */
 	@NonNull
 	static ColorStateList createFromXmlInner(@NonNull Resources r,
-						 @NonNull XmlPullParser parser, @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                                         @NonNull XmlPullParser parser, @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		final String name = parser.getName();
 		if (!name.equals("selector")) {
@@ -344,7 +344,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 	 * Fill in this object based on the contents of an XML "selector" element.
 	 */
 	private void inflate(@NonNull Resources r, @NonNull XmlPullParser parser,
-			     @NonNull AttributeSet attrs, @Nullable Theme theme)
+	                     @NonNull AttributeSet attrs, @Nullable Theme theme)
 	    throws XmlPullParserException, IOException {
 		final int innerDepth = parser.getDepth() + 1;
 		int depth;
@@ -367,7 +367,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 			}
 
 			final TypedArray a = Resources.obtainAttributes(r, theme, attrs,
-									R.styleable.ColorStateListItem);
+			                                                R.styleable.ColorStateListItem);
 			final int[] themeAttrs = a.extractThemeAttrs();
 			final int baseColor = a.getColor(R.styleable.ColorStateListItem_color, Color.MAGENTA);
 			final float alphaMod = a.getFloat(R.styleable.ColorStateListItem_alpha, 1.0f);
@@ -394,8 +394,8 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 						break;
 					default:
 						stateSpec[j++] = attrs.getAttributeBooleanValue(i, false)
-								     ? stateResId
-								     : -stateResId;
+						                   ? stateResId
+						                   : -stateResId;
 				}
 			}
 			stateSpec = StateSet.trimStateSet(stateSpec, j);
@@ -473,7 +473,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 		for (int i = 0; i < N; i++) {
 			if (themeAttrsList[i] != null) {
 				final TypedArray a = t.resolveAttributes(themeAttrsList[i],
-									 R.styleable.ColorStateListItem);
+				                                         R.styleable.ColorStateListItem);
 
 				final float defaultAlphaMod;
 				if (themeAttrsList[i][R.styleable.ColorStateListItem_color] != 0) {
@@ -689,12 +689,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 	@Override
 	public String toString() {
 		return "ColorStateList{"
-		    +
-		    "mThemeAttrs=" + Arrays.deepToString(mThemeAttrs) +
-		    "mChangingConfigurations=" + mChangingConfigurations +
-		    "mStateSpecs=" + Arrays.deepToString(mStateSpecs) +
-		    "mColors=" + Arrays.toString(mColors) +
-		    "mDefaultColor=" + mDefaultColor + '}';
+		     + "mThemeAttrs=" + Arrays.deepToString(mThemeAttrs) + "mChangingConfigurations=" + mChangingConfigurations + "mStateSpecs=" + Arrays.deepToString(mStateSpecs) + "mColors=" + Arrays.toString(mColors) + "mDefaultColor=" + mDefaultColor + '}';
 	}
 
 	/**

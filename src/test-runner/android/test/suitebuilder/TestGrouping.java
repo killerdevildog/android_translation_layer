@@ -19,8 +19,6 @@ package android.test.suitebuilder;
 import android.test.ClassPathPackageInfoSource;
 import android.util.Log;
 import com.android.internal.util.Predicate;
-import junit.framework.TestCase;
-
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -33,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import junit.framework.TestCase;
 
 /**
  * Represents a collection of test classes present on the classpath. You can add individual classes
@@ -44,186 +43,181 @@ import java.util.TreeSet;
  */
 class TestGrouping {
 
-    private static final String LOG_TAG = "TestGrouping";
+	private static final String LOG_TAG = "TestGrouping";
 
-    private final SortedSet<Class<? extends TestCase>> testCaseClasses;
+	private final SortedSet<Class<? extends TestCase>> testCaseClasses;
 
-    static final Comparator<Class<? extends TestCase>> SORT_BY_SIMPLE_NAME
-            = new SortBySimpleName();
+	static final Comparator<Class<? extends TestCase>> SORT_BY_SIMPLE_NAME = new SortBySimpleName();
 
-    static final Comparator<Class<? extends TestCase>> SORT_BY_FULLY_QUALIFIED_NAME
-            = new SortByFullyQualifiedName();
+	static final Comparator<Class<? extends TestCase>> SORT_BY_FULLY_QUALIFIED_NAME = new SortByFullyQualifiedName();
 
-    private final ClassLoader classLoader;
+	private final ClassLoader classLoader;
 
-    TestGrouping(Comparator<Class<? extends TestCase>> comparator, ClassLoader classLoader) {
-        testCaseClasses = new TreeSet<Class<? extends TestCase>>(comparator);
-        this.classLoader = classLoader;
-    }
+	TestGrouping(Comparator<Class<? extends TestCase>> comparator, ClassLoader classLoader) {
+		testCaseClasses = new TreeSet<Class<? extends TestCase>>(comparator);
+		this.classLoader = classLoader;
+	}
 
-    /**
+	/**
      * @return A list of all tests in the package, including small, medium, large,
      *         flaky, and suppressed tests. Includes sub-packages recursively.
      */
-    public List<TestMethod> getTests() {
-        List<TestMethod> testMethods = new ArrayList<TestMethod>();
-        for (Class<? extends TestCase> testCase : testCaseClasses) {
-            for (Method testMethod : getTestMethods(testCase)) {
-                testMethods.add(new TestMethod(testMethod, testCase));
-            }
-        }
-        return testMethods;
-    }
+	public List<TestMethod> getTests() {
+		List<TestMethod> testMethods = new ArrayList<TestMethod>();
+		for (Class<? extends TestCase> testCase : testCaseClasses) {
+			for (Method testMethod : getTestMethods(testCase)) {
+				testMethods.add(new TestMethod(testMethod, testCase));
+			}
+		}
+		return testMethods;
+	}
 
-    private List<Method> getTestMethods(Class<? extends TestCase> testCaseClass) {
-        List<Method> methods = Arrays.asList(testCaseClass.getMethods());
-        return select(methods, new TestMethodPredicate());
-    }
+	private List<Method> getTestMethods(Class<? extends TestCase> testCaseClass) {
+		List<Method> methods = Arrays.asList(testCaseClass.getMethods());
+		return select(methods, new TestMethodPredicate());
+	}
 
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TestGrouping other = (TestGrouping) o;
-        if (!this.testCaseClasses.equals(other.testCaseClasses)) {
-            return false;
-        }
-        return this.testCaseClasses.comparator().equals(other.testCaseClasses.comparator());
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		TestGrouping other = (TestGrouping)o;
+		if (!this.testCaseClasses.equals(other.testCaseClasses)) {
+			return false;
+		}
+		return this.testCaseClasses.comparator().equals(other.testCaseClasses.comparator());
+	}
 
-    public int hashCode() {
-        return testCaseClasses.hashCode();
-    }
+	public int hashCode() {
+		return testCaseClasses.hashCode();
+	}
 
-    /**
+	/**
      * Include all tests in the given packages and all their sub-packages, unless otherwise
      * specified. Each of the given packages must contain at least one test class, either directly
      * or in a sub-package.
      *
      * @param packageNames Names of packages to add.
      */
-    void addPackagesRecursive(String... packageNames) {
-        for (String packageName : packageNames) {
-            List<Class<? extends TestCase>> addedClasses = testCaseClassesInPackage(packageName);
-            if (addedClasses.isEmpty()) {
-                Log.w(LOG_TAG, "Invalid Package: '" + packageName
-                        + "' could not be found or has no tests");
-            }
-            testCaseClasses.addAll(addedClasses);
-        }
-    }
+	void addPackagesRecursive(String... packageNames) {
+		for (String packageName : packageNames) {
+			List<Class<? extends TestCase>> addedClasses = testCaseClassesInPackage(packageName);
+			if (addedClasses.isEmpty()) {
+				Log.w(LOG_TAG, "Invalid Package: '" + packageName
+				               + "' could not be found or has no tests");
+			}
+			testCaseClasses.addAll(addedClasses);
+		}
+	}
 
-    /**
+	/**
      * Exclude all tests in the given packages and all their sub-packages, unless otherwise
      * specified.
      *
      * @param packageNames Names of packages to remove.
      */
-    void removePackagesRecursive(String... packageNames) {
-        for (String packageName : packageNames) {
-            testCaseClasses.removeAll(testCaseClassesInPackage(packageName));
-        }
-    }
+	void removePackagesRecursive(String... packageNames) {
+		for (String packageName : packageNames) {
+			testCaseClasses.removeAll(testCaseClassesInPackage(packageName));
+		}
+	}
 
-    private List<Class<? extends TestCase>> testCaseClassesInPackage(String packageName) {
-        ClassPathPackageInfoSource source = ClassPathPackageInfoSource.forClassPath(classLoader);
+	private List<Class<? extends TestCase>> testCaseClassesInPackage(String packageName) {
+		ClassPathPackageInfoSource source = ClassPathPackageInfoSource.forClassPath(classLoader);
 
-        return selectTestClasses(source.getTopLevelClassesRecursive(packageName));
-    }
+		return selectTestClasses(source.getTopLevelClassesRecursive(packageName));
+	}
 
-    @SuppressWarnings("unchecked")
-    private List<Class<? extends TestCase>> selectTestClasses(Set<Class<?>> allClasses) {
-        List<Class<? extends TestCase>> testClasses = new ArrayList<Class<? extends TestCase>>();
-        for (Class<?> testClass : select(allClasses,
-                new TestCasePredicate())) {
-            testClasses.add((Class<? extends TestCase>) testClass);
-        }
-        return testClasses;
-    }
+	@SuppressWarnings("unchecked")
+	private List<Class<? extends TestCase>> selectTestClasses(Set<Class<?>> allClasses) {
+		List<Class<? extends TestCase>> testClasses = new ArrayList<Class<? extends TestCase>>();
+		for (Class<?> testClass : select(allClasses,
+		                                 new TestCasePredicate())) {
+	    testClasses.add((Class<? extends TestCase>) testClass);
+		}
+		return testClasses;
+	}
 
-    private <T> List<T> select(Collection<T> items, Predicate<T> predicate) {
-        ArrayList<T> selectedItems = new ArrayList<T>();
-        for (T item : items) {
-            if (predicate.apply(item)) {
-                selectedItems.add(item);
-            }
-        }
-        return selectedItems;
-    }
+	private <T> List<T> select(Collection<T> items, Predicate<T> predicate) {
+		ArrayList<T> selectedItems = new ArrayList<T>();
+		for (T item : items) {
+			if (predicate.apply(item)) {
+				selectedItems.add(item);
+			}
+		}
+		return selectedItems;
+	}
 
-    /**
+	/**
      * Sort classes by their simple names (i.e. without the package prefix), using
      * their packages to sort classes with the same name.
      */
-    private static class SortBySimpleName
-            implements Comparator<Class<? extends TestCase>>, Serializable {
+	private static class SortBySimpleName
+	    implements Comparator<Class<? extends TestCase>>, Serializable {
 
-        public int compare(Class<? extends TestCase> class1,
-                Class<? extends TestCase> class2) {
-            int result = class1.getSimpleName().compareTo(class2.getSimpleName());
-            if (result != 0) {
-                return result;
-            }
-            return class1.getName().compareTo(class2.getName());
-        }
-    }
+		public int compare(Class<? extends TestCase> class1,
+		                   Class<? extends TestCase> class2) {
+			int result = class1.getSimpleName().compareTo(class2.getSimpleName());
+			if (result != 0) {
+				return result;
+			}
+			return class1.getName().compareTo(class2.getName());
+		}
+	}
 
-    /**
+	/**
      * Sort classes by their fully qualified names (i.e. with the package
      * prefix).
      */
-    private static class SortByFullyQualifiedName
-            implements Comparator<Class<? extends TestCase>>, Serializable {
+	private static class SortByFullyQualifiedName
+	    implements Comparator<Class<? extends TestCase>>, Serializable {
 
-        public int compare(Class<? extends TestCase> class1,
-                Class<? extends TestCase> class2) {
-            return class1.getName().compareTo(class2.getName());
-        }
-    }
+		public int compare(Class<? extends TestCase> class1,
+		                   Class<? extends TestCase> class2) {
+			return class1.getName().compareTo(class2.getName());
+		}
+	}
 
-    private static class TestCasePredicate implements Predicate<Class<?>> {
+	private static class TestCasePredicate implements Predicate<Class<?>> {
 
-        public boolean apply(Class aClass) {
-            int modifiers = ((Class<?>) aClass).getModifiers();
-            return TestCase.class.isAssignableFrom((Class<?>) aClass)
-                    && Modifier.isPublic(modifiers)
-                    && !Modifier.isAbstract(modifiers)
-                    && hasValidConstructor((Class<?>) aClass);
-        }
+		public boolean apply(Class aClass) {
+			int modifiers = ((Class<?>)aClass).getModifiers();
+			return TestCase.class.isAssignableFrom((Class<?>)aClass)
+			    && Modifier.isPublic(modifiers)
+			    && !Modifier.isAbstract(modifiers)
+			    && hasValidConstructor((Class<?>)aClass);
+		}
 
-        @SuppressWarnings("unchecked")
-        private boolean hasValidConstructor(java.lang.Class<?> aClass) {
-            // The cast below is not necessary with the Java 5 compiler, but necessary with the Java 6 compiler,
-            // where the return type of Class.getDeclaredConstructors() was changed
-            // from Constructor<T>[] to Constructor<?>[]
-            Constructor<? extends TestCase>[] constructors
+		@SuppressWarnings("unchecked")
+		private boolean hasValidConstructor(java.lang.Class<?> aClass) {
+			// The cast below is not necessary with the Java 5 compiler, but necessary with the Java 6 compiler,
+			// where the return type of Class.getDeclaredConstructors() was changed
+			// from Constructor<T>[] to Constructor<?>[]
+	    Constructor<? extends TestCase>[] constructors
                     = (Constructor<? extends TestCase>[]) aClass.getConstructors();
-            for (Constructor<? extends TestCase> constructor : constructors) {
-                if (Modifier.isPublic(constructor.getModifiers())) {
-                    java.lang.Class[] parameterTypes = constructor.getParameterTypes();
-                    if (parameterTypes.length == 0 ||
-                            (parameterTypes.length == 1 && parameterTypes[0] == String.class)) {
-                        return true;
-                    }
-                }
-            }
-            Log.i(LOG_TAG, String.format(
-                    "TestCase class %s is missing a public constructor with no parameters " +
-                    "or a single String parameter - skipping",
-                    aClass.getName()));
-            return false;
-        }
-    }
+	    for (Constructor<? extends TestCase> constructor : constructors) {
+		    if (Modifier.isPublic(constructor.getModifiers())) {
+			    java.lang.Class[] parameterTypes = constructor.getParameterTypes();
+			    if (parameterTypes.length == 0 || (parameterTypes.length == 1 && parameterTypes[0] == String.class)) {
+				    return true;
+			    }
+		    }
+	    }
+	    Log.i(LOG_TAG, String.format(
+			       "TestCase class %s is missing a public constructor with no parameters "
+			       + "or a single String parameter - skipping",
+			       aClass.getName()));
+	    return false;
+		}
+	}
 
-    private static class TestMethodPredicate implements Predicate<Method> {
+	private static class TestMethodPredicate implements Predicate<Method> {
 
-        public boolean apply(Method method) {
-            return ((method.getParameterTypes().length == 0) &&
-                    (method.getName().startsWith("test")) &&
-                    (method.getReturnType().getSimpleName().equals("void")));
-        }
-    }
+		public boolean apply(Method method) {
+			return ((method.getParameterTypes().length == 0) && (method.getName().startsWith("test")) && (method.getReturnType().getSimpleName().equals("void")));
+		}
+	}
 }

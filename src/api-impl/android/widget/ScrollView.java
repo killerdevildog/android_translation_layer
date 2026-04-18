@@ -38,4 +38,8 @@ public class ScrollView extends ViewGroup {
 	}
 
 	public void setFillViewport(boolean fillViewport) {}
+
+	public boolean fullScroll(int direction) {
+		return true;
+	}
 }

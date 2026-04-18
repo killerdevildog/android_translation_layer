@@ -403,7 +403,7 @@ public class RectF {
 	 *              no event is this rectangle modified.
 	 */
 	public boolean intersects(float left, float top, float right,
-				  float bottom) {
+	                          float bottom) {
 		return this.left < right && left < this.right && this.top < bottom && top < this.bottom;
 	}
 
@@ -427,7 +427,7 @@ public class RectF {
 	 */
 	public void round(Rect dst) {
 		dst.set(/*Fast*/ Math.round(left), /*Fast*/ Math.round(top),
-			/*Fast*/ Math.round(right), /*Fast*/ Math.round(bottom));
+		        /*Fast*/ Math.round(right), /*Fast*/ Math.round(bottom));
 	}
 	/**
 	 * Set the dst integer Rect by rounding "out" this rectangle, choosing the
@@ -435,7 +435,7 @@ public class RectF {
 	 */
 	public void roundOut(Rect dst) {
 		dst.set((int)/*Float*/ Math.floor(left), (int)/*Float*/ Math.floor(top),
-			(int)/*Float*/ Math.ceil(right), (int)/*Float*/ Math.ceil(bottom));
+		        (int)/*Float*/ Math.ceil(right), (int)/*Float*/ Math.ceil(bottom));
 	}
 	/**
 	 * Update this Rect to enclose itself and the specified rectangle. If the

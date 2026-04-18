@@ -16,10 +16,9 @@
 
 package android.test.suitebuilder.annotation;
 
-import java.lang.annotation.Annotation;
-
 import android.test.suitebuilder.TestMethod;
 import com.android.internal.util.Predicate;
+import java.lang.annotation.Annotation;
 
 /**
  * A predicate that checks to see if a {@link android.test.suitebuilder.TestMethod} has a specific annotation on the
@@ -29,13 +28,13 @@ import com.android.internal.util.Predicate;
  */
 class HasClassAnnotation implements Predicate<TestMethod> {
 
-    private Class<? extends Annotation> annotationClass;
+	private Class<? extends Annotation> annotationClass;
 
-    public HasClassAnnotation(Class<? extends Annotation> annotationClass) {
-        this.annotationClass = annotationClass;
-    }
+	public HasClassAnnotation(Class<? extends Annotation> annotationClass) {
+		this.annotationClass = annotationClass;
+	}
 
-    public boolean apply(TestMethod testMethod) {
-        return testMethod.getEnclosingClass().getAnnotation(annotationClass) != null;
-    }
+	public boolean apply(TestMethod testMethod) {
+		return testMethod.getEnclosingClass().getAnnotation(annotationClass) != null;
+	}
 }

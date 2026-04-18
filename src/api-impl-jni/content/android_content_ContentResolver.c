@@ -9,7 +9,7 @@ JNIEXPORT void JNICALL Java_android_content_ContentResolver_native_1query_1file_
 	const char *path = (*env)->GetStringUTFChars(env, path_jstr, NULL);
 	GFile *file = g_file_new_for_path(path);
 	GString *attrs = g_string_new("");
-	for (int i = 0; i < (*env)->GetArrayLength(env, attributes); i++,g_string_append(attrs, ",")) {
+	for (int i = 0; i < (*env)->GetArrayLength(env, attributes); i++, g_string_append(attrs, ",")) {
 		const char *attr = (*env)->GetStringUTFChars(env, (*env)->GetObjectArrayElement(env, attributes, i), NULL);
 		if (!strcmp(attr, "_display_name")) {
 			g_string_append(attrs, G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME);

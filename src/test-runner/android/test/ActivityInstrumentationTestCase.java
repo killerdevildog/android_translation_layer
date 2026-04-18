@@ -32,23 +32,23 @@ import android.app.Activity;
  */
 @Deprecated
 public abstract class ActivityInstrumentationTestCase<T extends Activity>
-        extends ActivityTestCase {
-    String mPackage;
-    Class<T> mActivityClass;
-    boolean mInitialTouchMode = false;
+    extends ActivityTestCase {
+	String mPackage;
+	Class<T> mActivityClass;
+	boolean mInitialTouchMode = false;
 
-    /**
+	/**
      * Creates an {@link ActivityInstrumentationTestCase} in non-touch mode.
      *
      * @param pkg ignored - no longer in use.
      * @param activityClass The activity to test. This must be a class in the instrumentation
      * targetPackage specified in the AndroidManifest.xml
      */
-    public ActivityInstrumentationTestCase(String pkg, Class<T> activityClass) {
-        this(pkg, activityClass, false);
-    }
+	public ActivityInstrumentationTestCase(String pkg, Class<T> activityClass) {
+		this(pkg, activityClass, false);
+	}
 
-    /**
+	/**
      * Creates an {@link ActivityInstrumentationTestCase}.
      *
      * @param pkg ignored - no longer in use.
@@ -56,40 +56,40 @@ public abstract class ActivityInstrumentationTestCase<T extends Activity>
      * targetPackage specified in the AndroidManifest.xml
      * @param initialTouchMode true = in touch mode
      */
-    public ActivityInstrumentationTestCase(String pkg, Class<T> activityClass,
-            boolean initialTouchMode) {
-        mActivityClass = activityClass;
-        mInitialTouchMode = initialTouchMode;
-    }
+	public ActivityInstrumentationTestCase(String pkg, Class<T> activityClass,
+	                                       boolean initialTouchMode) {
+		mActivityClass = activityClass;
+		mInitialTouchMode = initialTouchMode;
+	}
 
-    @Override
-    public T getActivity() {
-        return (T) super.getActivity();
-    }
+	@Override
+	public T getActivity() {
+		return (T)super.getActivity();
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        // set initial touch mode
-        getInstrumentation().setInTouchMode(mInitialTouchMode);
-        final String targetPackageName = getInstrumentation().getTargetContext().getPackageName();
-        setActivity(launchActivity(targetPackageName, mActivityClass, null));
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		// set initial touch mode
+		getInstrumentation().setInTouchMode(mInitialTouchMode);
+		final String targetPackageName = getInstrumentation().getTargetContext().getPackageName();
+		setActivity(launchActivity(targetPackageName, mActivityClass, null));
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        getActivity().finish();
-        setActivity(null);
+	@Override
+	protected void tearDown() throws Exception {
+		getActivity().finish();
+		setActivity(null);
 
-        // Scrub out members - protects against memory leaks in the case where someone
-        // creates a non-static inner class (thus referencing the test case) and gives it to
-        // someone else to hold onto
-        scrubClass(ActivityInstrumentationTestCase.class);
+		// Scrub out members - protects against memory leaks in the case where someone
+		// creates a non-static inner class (thus referencing the test case) and gives it to
+		// someone else to hold onto
+		scrubClass(ActivityInstrumentationTestCase.class);
 
-        super.tearDown();
-    }
+		super.tearDown();
+	}
 
-    public void testActivityTestCaseSetUpProperly() throws Exception {
-        assertNotNull("activity should be launched successfully", getActivity());
-    }
+	public void testActivityTestCaseSetUpProperly() throws Exception {
+		assertNotNull("activity should be launched successfully", getActivity());
+	}
 }

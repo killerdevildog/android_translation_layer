@@ -16,13 +16,6 @@
 
 package android.content.pm;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
 import android.annotation.NonNull;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
@@ -42,6 +35,12 @@ import android.os.UserHandle;
 import android.util.AndroidException;
 import android.util.DisplayMetrics;
 import android.util.Slog;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 class IPackageInstallObserver {}
 class VerificationParams {}
@@ -1266,6 +1265,15 @@ public class PackageManager {
 	@SdkConstant(SdkConstantType.FEATURE)
 	public static final String FEATURE_TELEVISION = "android.hardware.type.television";
 
+	@SdkConstant(SdkConstantType.FEATURE)
+	public static final String FEATURE_LEANBACK = "android.software.leanback";
+
+	@SdkConstant(SdkConstantType.FEATURE)
+	public static final String FEATURE_AUTOMOTIVE = "android.hardware.type.automotive";
+
+	@SdkConstant(SdkConstantType.FEATURE)
+	public static final String FEATURE_WATCH = "android.hardware.type.watch";
+
 	/**
 	 * Action to external storage service to clean out removed apps.
 	 * @hide
@@ -1392,7 +1400,7 @@ public class PackageManager {
 		} else if (packageName.equals("atl") || packageName.equals("android")) {
 			PackageInfo info = new PackageInfo();
 			info.packageName = packageName;
-			info.signatures = new Signature[] { new Signature(new byte[0]) };
+			info.signatures = new Signature[] {new Signature(new byte[0])};
 			return info;
 		} else {
 			throw new NameNotFoundException(packageName);
@@ -1440,8 +1448,8 @@ public class PackageManager {
 	public Intent getLaunchIntentForPackage(String packageName) {
 		if (!Context.this_application.getPackageName().equals(packageName))
 			return null;
-		for (PackageParser.Activity activity: Context.pkg.activities) {
-			for (PackageParser.IntentInfo intent: activity.intents) {
+		for (PackageParser.Activity activity : Context.pkg.activities) {
+			for (PackageParser.IntentInfo intent : activity.intents) {
 				Slog.i(TAG, intent.toString());
 				if (intent.hasCategory("android.intent.category.LAUNCHER")) {
 					return new Intent("android.intent.action.MAIN", null).setComponent(new ComponentName(packageName, activity.className));
@@ -1522,7 +1530,7 @@ public class PackageManager {
 	 * about all of the permissions in the given group.
 	 */
 	public List<PermissionInfo> queryPermissionsByGroup(String group,
-							    int flags) throws NameNotFoundException {
+	                                                    int flags) throws NameNotFoundException {
 		return null;
 	}
 
@@ -1542,7 +1550,7 @@ public class PackageManager {
 	 * about the permission.
 	 */
 	public PermissionGroupInfo getPermissionGroupInfo(String name,
-							  int flags) throws NameNotFoundException {
+	                                                  int flags) throws NameNotFoundException {
 		return null;
 	}
 
@@ -1587,7 +1595,7 @@ public class PackageManager {
 	 * @see #GET_UNINSTALLED_PACKAGES
 	 */
 	public ApplicationInfo getApplicationInfo(String packageName,
-						  int flags) throws NameNotFoundException {
+	                                          int flags) throws NameNotFoundException {
 		if (package_info.packageName.equals(packageName))
 			return package_info.applicationInfo;
 		else
@@ -1615,13 +1623,19 @@ public class PackageManager {
 	 * @see #GET_SHARED_LIBRARY_FILES
 	 */
 	public ActivityInfo getActivityInfo(ComponentName component,
-					    int flags) throws NameNotFoundException {
-		ActivityInfo info = new ActivityInfo();
-		/* Breeze Weather tries to override the night mode setting, but we don't implement configuration overriding yet.
-		 * AppCompatDelegateImpl.updateAppConfiguration() checks if the setting is correctly overridden and otherwise recreates the activity.
-		 * To prevent infinite recreation, we set the CONFIG_UI_MODE flag, indicating that the activity can handle night mode change without recreation. */
-		info.configChanges = ActivityInfo.CONFIG_UI_MODE;
-		return info;
+	                                    int flags) throws NameNotFoundException {
+
+		PackageInfo packageInfo = getPackageInfo(component.getPackageName(), PackageManager.GET_ACTIVITIES);
+		for (ActivityInfo info : packageInfo.activities) {
+			if (info.name.equals(component.getClassName())) {
+				/* Breeze Weather tries to override the night mode setting, but we don't implement configuration overriding yet.
+				 * AppCompatDelegateImpl.updateAppConfiguration() checks if the setting is correctly overridden and otherwise recreates the activity.
+				 * To prevent infinite recreation, we set the CONFIG_UI_MODE flag, indicating that the activity can handle night mode change without recreation. */
+				info.configChanges = ActivityInfo.CONFIG_UI_MODE;
+				return info;
+			}
+		}
+		throw new NameNotFoundException();
 	}
 
 	/**
@@ -1645,7 +1659,7 @@ public class PackageManager {
 	 * @see #GET_SHARED_LIBRARY_FILES
 	 */
 	public ActivityInfo getReceiverInfo(ComponentName component,
-					    int flags) throws NameNotFoundException {
+	                                    int flags) throws NameNotFoundException {
 		return null;
 	}
 
@@ -1669,7 +1683,7 @@ public class PackageManager {
 	 * @see #GET_SHARED_LIBRARY_FILES
 	 */
 	public ServiceInfo getServiceInfo(ComponentName component,
-					  int flags) throws NameNotFoundException {
+	                                  int flags) throws NameNotFoundException {
 		for (PackageParser.Service s : Context.pkg.services) {
 			if (s.className.equals(component.getClassName())) {
 				return s.info;
@@ -1699,7 +1713,7 @@ public class PackageManager {
 	 * @see #GET_SHARED_LIBRARY_FILES
 	 */
 	public ProviderInfo getProviderInfo(ComponentName component,
-					    int flags) throws Exception {
+	                                    int flags) throws Exception {
 		for (PackageParser.Provider p : Context.pkg.providers) {
 			if (p.className.equals(component.getClassName())) {
 				return p.info;
@@ -1853,7 +1867,12 @@ public class PackageManager {
 			// (until we find apps that refuse to launch without being lied to anyway)
 			case "android.permission.ACCESS_FINE_LOCATION":
 			case "android.permission.ACCESS_COARSE_LOCATION":
-				if(System.getenv("ATL_UGLY_ENABLE_LOCATION") != null)
+				if (System.getenv("ATL_UGLY_ENABLE_LOCATION") != null)
+					return PERMISSION_GRANTED;
+				else
+					return PERMISSION_DENIED;
+			case "android.permission.RECORD_AUDIO":
+				if (System.getenv("ATL_UGLY_ENABLE_MICROPHONE") != null)
 					return PERMISSION_GRANTED;
 				else
 					return PERMISSION_DENIED;
@@ -2154,6 +2173,13 @@ public class PackageManager {
 		switch (name) {
 			case "android.hardware.touchscreen.multitouch.distinct":
 				return true;
+			case FEATURE_AUTOMOTIVE:
+				return System.getenv("ATL_IS_AUTOMOTIVE") != null;
+			case FEATURE_LEANBACK:
+			case FEATURE_TELEVISION:
+				return System.getenv("ATL_IS_TELEVISION") != null;
+			case FEATURE_WATCH:
+				return System.getenv("ATL_IS_WATCH") != null;
 			default:
 				Slog.e(TAG, "!!!!!!! hasSystemFeature: case >" + name + "< is not implemented yet");
 				return false;
@@ -2193,13 +2219,13 @@ public class PackageManager {
 		ActivityInfo activity_info = null;
 
 		if (intent.getComponent() != null) {
-			for (PackageParser.Activity activity: Context.pkg.activities) {
+			for (PackageParser.Activity activity : Context.pkg.activities) {
 				if (intent.getComponent().getClassName() == activity.className)
 					activity_info = activity.info;
 			}
 		} else {
-			for (PackageParser.Activity activity: Context.pkg.activities) {
-				for (PackageParser.IntentInfo intentInfo: activity.intents) {
+			for (PackageParser.Activity activity : Context.pkg.activities) {
+				for (PackageParser.IntentInfo intentInfo : activity.intents) {
 					if (intentInfo.matchAction(intent.getAction())) {
 						activity_info = activity.info;
 						break;
@@ -2273,7 +2299,7 @@ public class PackageManager {
 	 * @see #GET_RESOLVED_FILTER
 	 */
 	public List<ResolveInfo> queryIntentActivities(Intent intent,
-						       int flags) {
+	                                               int flags) {
 		if ("android.intent.action.VIEW".equals(intent.getAction()) && intent.getData() != null
 		    && ("http".equals(intent.getData().getScheme()) || "https".equals(intent.getData().getScheme()))) {
 			ResolveInfo ri = new ResolveInfo();
@@ -2314,7 +2340,7 @@ public class PackageManager {
 	 * @hide
 	 */
 	public List<ResolveInfo> queryIntentActivitiesAsUser(Intent intent,
-							     int flags, int userId) {
+	                                                     int flags, int userId) {
 		return new ArrayList<ResolveInfo>();
 	}
 
@@ -2367,7 +2393,7 @@ public class PackageManager {
 	 * @see #GET_RESOLVED_FILTER
 	 */
 	public List<ResolveInfo> queryBroadcastReceivers(Intent intent,
-							 int flags) {
+	                                                 int flags) {
 		if ("org.unifiedpush.android.distributor.REGISTER".equals(intent.getAction())) {
 			ResolveInfo ri = new ResolveInfo();
 			ri.activityInfo.exported = true;
@@ -2394,7 +2420,7 @@ public class PackageManager {
 	 * @hide
 	 */
 	public List<ResolveInfo> queryBroadcastReceivers(Intent intent,
-							 int flags, int userId) {
+	                                                 int flags, int userId) {
 		return null;
 	}
 
@@ -2432,10 +2458,10 @@ public class PackageManager {
 	 * @see #GET_RESOLVED_FILTER
 	 */
 	public List<ResolveInfo> queryIntentServices(Intent intent,
-						     int flags) {
+	                                             int flags) {
 		List<ResolveInfo> list = new ArrayList<ResolveInfo>(1);
-		for (Service s: Context.pkg.services) {
-			for (ServiceIntentInfo intentinfo: s.intents) {
+		for (Service s : Context.pkg.services) {
+			for (ServiceIntentInfo intentinfo : s.intents) {
 				if (s.getComponentName().equals(intent.getComponent()) || intentinfo.matchAction(intent.getAction())) {
 					ResolveInfo ri = new ResolveInfo();
 					ri.serviceInfo = s.info;
@@ -2465,7 +2491,7 @@ public class PackageManager {
 	 * @hide
 	 */
 	public List<ResolveInfo> queryIntentServicesAsUser(Intent intent,
-							   int flags, int userId) {
+	                                                   int flags, int userId) {
 		return null;
 	}
 
@@ -2971,9 +2997,9 @@ public class PackageManager {
 	 * @hide
 	 */
 	public void installPackageWithVerification(Uri packageURI,
-						   IPackageInstallObserver observer, int flags, String installerPackageName,
-						   Uri verificationURI, ManifestDigest manifestDigest,
-						   ContainerEncryptionParams encryptionParams) {
+	                                           IPackageInstallObserver observer, int flags, String installerPackageName,
+	                                           Uri verificationURI, ManifestDigest manifestDigest,
+	                                           ContainerEncryptionParams encryptionParams) {
 		return;
 	}
 
@@ -3004,9 +3030,9 @@ public class PackageManager {
 	 * @hide
 	 */
 	public void installPackageWithVerificationAndEncryption(Uri packageURI,
-								IPackageInstallObserver observer, int flags, String installerPackageName,
-								VerificationParams verificationParams,
-								ContainerEncryptionParams encryptionParams) {
+	                                                        IPackageInstallObserver observer, int flags, String installerPackageName,
+	                                                        VerificationParams verificationParams,
+	                                                        ContainerEncryptionParams encryptionParams) {
 		return;
 	}
 
@@ -3330,7 +3356,7 @@ public class PackageManager {
 	 * @hide
 	 */
 	public void addPreferredActivity(IntentFilter filter, int match,
-					 ComponentName[] set, ComponentName activity, int userId) {
+	                                 ComponentName[] set, ComponentName activity, int userId) {
 		throw new RuntimeException("Not implemented. Must override in a subclass.");
 	}
 

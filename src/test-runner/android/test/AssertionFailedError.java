@@ -24,13 +24,13 @@ package android.test;
 @Deprecated
 public class AssertionFailedError extends Error {
 
-    /**
+	/**
      * It is more typical to call {@link #AssertionFailedError(String)}.
      */
-    public AssertionFailedError() {
-    }
+	public AssertionFailedError() {
+	}
 
-    public AssertionFailedError(String errorMessage) {
-        super(errorMessage);
-    }
+	public AssertionFailedError(String errorMessage) {
+		super(errorMessage);
+	}
 }

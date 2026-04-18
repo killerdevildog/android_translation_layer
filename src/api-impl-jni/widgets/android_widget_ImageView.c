@@ -7,13 +7,13 @@
 
 #include "../generated_headers/android_widget_ImageView.h"
 
-#define SCALE_TYPE_MATRIX 0
-#define SCALE_TYPE_FIT_XY 1
-#define SCALE_TYPE_FIT_START 2
-#define SCALE_TYPE_FIT_CENTER 3
-#define SCALE_TYPE_FIT_END 4
-#define SCALE_TYPE_CENTER 5
-#define SCALE_TYPE_CENTER_CROP 6
+#define SCALE_TYPE_MATRIX        0
+#define SCALE_TYPE_FIT_XY        1
+#define SCALE_TYPE_FIT_START     2
+#define SCALE_TYPE_FIT_CENTER    3
+#define SCALE_TYPE_FIT_END       4
+#define SCALE_TYPE_CENTER        5
+#define SCALE_TYPE_CENTER_CROP   6
 #define SCALE_TYPE_CENTER_INSIDE 7
 
 JNIEXPORT jlong JNICALL Java_android_widget_ImageView_native_1constructor(JNIEnv *env, jobject this, jobject context, jobject attrs)

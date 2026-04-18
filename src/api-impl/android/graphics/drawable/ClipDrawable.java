@@ -123,7 +123,7 @@ public class ClipDrawable extends DrawableWrapper {
 		// If we're not waiting on a theme, verify required attributes.
 		if (getDrawable() == null && (mState.mThemeAttrs == null || mState.mThemeAttrs[R.styleable.ClipDrawable_drawable] == 0)) {
 			throw new XmlPullParserException(a.getPositionDescription() + ": <clip> tag requires a 'drawable' attribute or "
-							 + "child tag defining a drawable");
+			                                 + "child tag defining a drawable");
 		}
 	}
 

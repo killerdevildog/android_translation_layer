@@ -18,7 +18,6 @@
 ** sqlite-dev@sqlite.org.
 */
 
-
 package android.database.sqlite;
 
 import android.content.Context;
@@ -102,7 +101,7 @@ public abstract class SQLiteOpenHelper {
 	 * corruption, or null to use the default error handler.
 	 */
 	public SQLiteOpenHelper(Context context, String name, CursorFactory factory, int version,
-			DatabaseErrorHandler errorHandler) {
+	                        DatabaseErrorHandler errorHandler) {
 		this(context, name, factory, version, 0, errorHandler);
 	}
 
@@ -130,8 +129,9 @@ public abstract class SQLiteOpenHelper {
 	 * @hide
 	 */
 	public SQLiteOpenHelper(Context context, String name, CursorFactory factory, int version,
-			int minimumSupportedVersion, DatabaseErrorHandler errorHandler) {
-		if (version < 1) throw new IllegalArgumentException("Version must be >= 1, was " + version);
+	                        int minimumSupportedVersion, DatabaseErrorHandler errorHandler) {
+		if (version < 1)
+			throw new IllegalArgumentException("Version must be >= 1, was " + version);
 
 		mContext = context;
 		mName = name;
@@ -252,25 +252,23 @@ public abstract class SQLiteOpenHelper {
 			} else {
 				String path = mName;
 				if (!path.startsWith("file:")) {
-				  path = mContext.getDatabasePath(path).getPath();
+					path = mContext.getDatabasePath(path).getPath();
 				}
 				try {
 					if (DEBUG_STRICT_READONLY && !writable) {
 						db = SQLiteDatabase.openDatabase(path, mFactory,
-								SQLiteDatabase.OPEN_READONLY, mErrorHandler);
+						                                 SQLiteDatabase.OPEN_READONLY, mErrorHandler);
 					} else {
 						db = SQLiteDatabase.openOrCreateDatabase(
-							path, mFactory, mErrorHandler
-						);
+						    path, mFactory, mErrorHandler);
 					}
 				} catch (SQLiteException ex) {
 					if (writable) {
 						throw ex;
 					}
-					Log.e(TAG, "Couldn't open " + mName
-							+ " for writing (will try read-only):", ex);
+					Log.e(TAG, "Couldn't open " + mName + " for writing (will try read-only):", ex);
 					db = SQLiteDatabase.openDatabase(path, mFactory,
-							SQLiteDatabase.OPEN_READONLY, mErrorHandler);
+					                                 SQLiteDatabase.OPEN_READONLY, mErrorHandler);
 				}
 			}
 
@@ -279,8 +277,7 @@ public abstract class SQLiteOpenHelper {
 			final int version = db.getVersion();
 			if (version != mNewVersion) {
 				if (db.isReadOnly()) {
-					throw new SQLiteException("Can't upgrade read-only database from version " +
-							db.getVersion() + " to " + mNewVersion + ": " + mName);
+					throw new SQLiteException("Can't upgrade read-only database from version " + db.getVersion() + " to " + mNewVersion + ": " + mName);
 				}
 
 				if (version > 0 && version < mMinimumSupportedVersion) {
@@ -292,7 +289,7 @@ public abstract class SQLiteOpenHelper {
 						return getDatabaseLocked(writable);
 					} else {
 						throw new IllegalStateException("Unable to delete obsolete database "
-								+ mName + " with version " + version);
+						                                + mName + " with version " + version);
 					}
 				} else {
 					db.beginTransaction();
@@ -334,7 +331,8 @@ public abstract class SQLiteOpenHelper {
 	 * Close any open database object.
 	 */
 	public synchronized void close() {
-		if (mIsInitializing) throw new IllegalStateException("Closed during initialization");
+		if (mIsInitializing)
+			throw new IllegalStateException("Closed during initialization");
 
 		if (mDatabase != null && mDatabase.isOpen()) {
 			mDatabase.close();
@@ -422,8 +420,7 @@ public abstract class SQLiteOpenHelper {
 	 * @param newVersion The new database version.
 	 */
 	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		throw new SQLiteException("Can't downgrade database from version " +
-				oldVersion + " to " + newVersion);
+		throw new SQLiteException("Can't downgrade database from version " + oldVersion + " to " + newVersion);
 	}
 
 	/**

@@ -99,6 +99,11 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
 		mClassLoader = b.mClassLoader;
 	}
 
+	public Bundle(PersistableBundle b) {
+		mMap = new ArrayMap<String, Object>(b.mMap);
+		mClassLoader = getClass().getClassLoader();
+	}
+
 	/**
 	 * Make a Bundle for a single key/value pair.
 	 *
@@ -362,7 +367,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
 	 * @param value an ArrayList of Parcelable objects, or null
 	 */
 	public void putParcelableArrayList(String key,
-					   ArrayList<? extends Parcelable> value) {
+	                                   ArrayList<? extends Parcelable> value) {
 		mMap.put(key, value);
 		mFdsKnown = false;
 	}
@@ -384,7 +389,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
 	 * @param value a SparseArray of Parcelable objects, or null
 	 */
 	public void putSparseParcelableArray(String key,
-					     SparseArray<? extends Parcelable> value) {
+	                                     SparseArray<? extends Parcelable> value) {
 		mMap.put(key, value);
 		mFdsKnown = false;
 	}
@@ -474,17 +479,6 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
 	 * @param value a char array object, or null
 	 */
 	public void putCharArray(String key, char[] value) {
-		mMap.put(key, value);
-	}
-
-	/**
-	 * Inserts an int array value into the mapping of this Bundle, replacing
-	 * any existing value for the given key.  Either key or value may be null.
-	 *
-	 * @param key a String, or null
-	 * @param value an int array object, or null
-	 */
-	public void putIntArray(String key, int[] value) {
 		mMap.put(key, value);
 	}
 
@@ -1149,6 +1143,10 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
 			   mask |= Parcelable.CONTENTS_FILE_DESCRIPTOR;
 		       }*/
 		return mask;
+	}
+
+	public void readFromParcel(Parcel in) throws ReflectiveOperationException {
+		in.readMap(mMap, getClassLoader());
 	}
 
 	@Override

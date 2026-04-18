@@ -16,12 +16,12 @@
 
 package android.test;
 
+import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.net.Uri;
-import android.accounts.Account;
 
 /**
  * If you would like to test sync a single provider with an
@@ -35,51 +35,51 @@ import android.accounts.Account;
  */
 @Deprecated
 public class SyncBaseInstrumentation extends InstrumentationTestCase {
-    private Context mTargetContext;
-    ContentResolver mContentResolver;
-    private static final int MAX_TIME_FOR_SYNC_IN_MINS = 20;
+	private Context mTargetContext;
+	ContentResolver mContentResolver;
+	private static final int MAX_TIME_FOR_SYNC_IN_MINS = 20;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        mTargetContext = getInstrumentation().getTargetContext();
-        mContentResolver = mTargetContext.getContentResolver();
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		mTargetContext = getInstrumentation().getTargetContext();
+		mContentResolver = mTargetContext.getContentResolver();
+	}
 
-    /**
+	/**
      * Syncs the specified provider.
      * @throws Exception
      */
-    protected void syncProvider(Uri uri, String accountName, String authority) throws Exception {
-        Bundle extras = new Bundle();
-        extras.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_SETTINGS, true);
-        Account account = new Account(accountName, "com.google");
+	protected void syncProvider(Uri uri, String accountName, String authority) throws Exception {
+		Bundle extras = new Bundle();
+		extras.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_SETTINGS, true);
+		Account account = new Account(accountName, "com.google");
 
-        ContentResolver.requestSync(account, authority, extras);
-        long startTimeInMillis = SystemClock.elapsedRealtime();
-        long endTimeInMillis = startTimeInMillis + MAX_TIME_FOR_SYNC_IN_MINS * 60000;
+		ContentResolver.requestSync(account, authority, extras);
+		long startTimeInMillis = SystemClock.elapsedRealtime();
+		long endTimeInMillis = startTimeInMillis + MAX_TIME_FOR_SYNC_IN_MINS * 60000;
 
-        int counter = 0;
-        // Making sure race condition does not occur when en entry have been removed from pending
-        // and active tables and loaded in memory (therefore sync might be still in progress)
-        while (counter < 2) {
-            // Sleep for 1 second.
-            Thread.sleep(1000);
-            // Finish test if time to sync has exceeded max time.
-            if (SystemClock.elapsedRealtime() > endTimeInMillis) {
-                break;
-            }
+		int counter = 0;
+		// Making sure race condition does not occur when en entry have been removed from pending
+		// and active tables and loaded in memory (therefore sync might be still in progress)
+		while (counter < 2) {
+			// Sleep for 1 second.
+			Thread.sleep(1000);
+			// Finish test if time to sync has exceeded max time.
+			if (SystemClock.elapsedRealtime() > endTimeInMillis) {
+				break;
+			}
 
-            if (ContentResolver.isSyncActive(account, authority)) {
-                counter = 0;
-                continue;
-            }
-            counter++;
-        }
-    }
+			if (ContentResolver.isSyncActive(account, authority)) {
+				counter = 0;
+				continue;
+			}
+			counter++;
+		}
+	}
 
-    protected void cancelSyncsandDisableAutoSync() {
-        ContentResolver.setMasterSyncAutomatically(false);
-        ContentResolver.cancelSync(null /* all accounts */, null /* all authorities */);
-    }
+	protected void cancelSyncsandDisableAutoSync() {
+		ContentResolver.setMasterSyncAutomatically(false);
+		ContentResolver.cancelSync(null /* all accounts */, null /* all authorities */);
+	}
 }

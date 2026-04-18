@@ -187,10 +187,9 @@ public class Handler {
 	public Handler(Callback callback, boolean async) {
 		if (FIND_POTENTIAL_LEAKS) {
 			final Class<? extends Handler> klass = getClass();
-			if ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &&
-			    (klass.getModifiers() & Modifier.STATIC) == 0) {
-				Log.w(TAG, "The following Handler class should be static or leaks might occur: " +
-					       klass.getCanonicalName());
+			if ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass())
+			    && (klass.getModifiers() & Modifier.STATIC) == 0) {
+				Log.w(TAG, "The following Handler class should be static or leaks might occur: " + klass.getCanonicalName());
 			}
 		}
 

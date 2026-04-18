@@ -54,11 +54,11 @@ public final class ColorUtils {
 		int a = compositeAlpha(fgAlpha, bgAlpha);
 
 		int r = compositeComponent(Color.red(foreground), fgAlpha,
-					   Color.red(background), bgAlpha, a);
+		                           Color.red(background), bgAlpha, a);
 		int g = compositeComponent(Color.green(foreground), fgAlpha,
-					   Color.green(background), bgAlpha, a);
+		                           Color.green(background), bgAlpha, a);
 		int b = compositeComponent(Color.blue(foreground), fgAlpha,
-					   Color.blue(background), bgAlpha, a);
+		                           Color.blue(background), bgAlpha, a);
 
 		return Color.argb(a, r, g, b);
 	}
@@ -122,7 +122,7 @@ public final class ColorUtils {
 	 * @return the alpha value in the range 0-255, or -1 if no value could be calculated
 	 */
 	public static int calculateMinimumBackgroundAlpha(/*@ColorInt*/ int foreground,
-							  /*@ColorInt*/ int background, float minContrastRatio) {
+	                                                  /*@ColorInt*/ int background, float minContrastRatio) {
 		// Ignore initial alpha that the background might have since this is
 		// what we're trying to calculate.
 		background = setAlphaComponent(background, 255);
@@ -154,7 +154,7 @@ public final class ColorUtils {
 	 * @return the alpha value in the range 0-255, or -1 if no value could be calculated
 	 */
 	public static int calculateMinimumAlpha(/*@ColorInt*/ int foreground, /*@ColorInt*/ int background,
-						float minContrastRatio) {
+	                                        float minContrastRatio) {
 		if (Color.alpha(background) != 255) {
 			throw new IllegalArgumentException("background can not be translucent: #" + Integer.toHexString(background));
 		}
@@ -189,18 +189,18 @@ public final class ColorUtils {
 	 * @return the alpha value in the range 0-255, or -1 if no value could be calculated
 	 */
 	private static int binaryAlphaSearch(/*@ColorInt*/ int foreground, /*@ColorInt*/ int background,
-					     float minContrastRatio, ContrastCalculator calculator) {
+	                                     float minContrastRatio, ContrastCalculator calculator) {
 		// Binary search to find a value with the minimum value which provides sufficient contrast
 		int numIterations = 0;
 		int minAlpha = 0;
 		int maxAlpha = 255;
 
-		while (numIterations <= MIN_ALPHA_SEARCH_MAX_ITERATIONS &&
-		       (maxAlpha - minAlpha) > MIN_ALPHA_SEARCH_PRECISION) {
+		while (numIterations <= MIN_ALPHA_SEARCH_MAX_ITERATIONS
+		       && (maxAlpha - minAlpha) > MIN_ALPHA_SEARCH_PRECISION) {
 			final int testAlpha = (minAlpha + maxAlpha) / 2;
 
 			final double testRatio = calculator.calculateContrast(foreground, background,
-									      testAlpha);
+			                                                      testAlpha);
 			if (testRatio < minContrastRatio) {
 				minAlpha = testAlpha;
 			} else {
@@ -228,8 +228,8 @@ public final class ColorUtils {
 	 * @param outHsl 3-element array which holds the resulting HSL components
 	 */
 	public static void RGBToHSL(@IntRange(from = 0x0, to = 0xFF) int r,
-				    @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
-				    @NonNull float[] outHsl) {
+	                            @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
+	                            @NonNull float[] outHsl) {
 		final float rf = r / 255f;
 		final float gf = g / 255f;
 		final float bf = b / 255f;
@@ -382,7 +382,7 @@ public final class ColorUtils {
 	 */
 	/*@ColorInt*/
 	public static int setAlphaComponent(/*@ColorInt*/ int color,
-					    @IntRange(from = 0x0, to = 0xFF) int alpha) {
+	                                    @IntRange(from = 0x0, to = 0xFF) int alpha) {
 		if (alpha < 0 || alpha > 255) {
 			throw new IllegalArgumentException("alpha must be between 0 and 255.");
 		}
@@ -414,8 +414,8 @@ public final class ColorUtils {
 	 * @param outLab 3-element array which holds the resulting LAB components
 	 */
 	public static void RGBToLAB(@IntRange(from = 0x0, to = 0xFF) int r,
-				    @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
-				    @NonNull double[] outLab) {
+	                            @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
+	                            @NonNull double[] outLab) {
 		// First we convert RGB to XYZ
 		RGBToXYZ(r, g, b, outLab);
 		// outLab now contains XYZ
@@ -460,8 +460,8 @@ public final class ColorUtils {
 	 * @param outXyz 3-element array which holds the resulting XYZ components
 	 */
 	public static void RGBToXYZ(@IntRange(from = 0x0, to = 0xFF) int r,
-				    @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
-				    @NonNull double[] outXyz) {
+	                            @IntRange(from = 0x0, to = 0xFF) int g, @IntRange(from = 0x0, to = 0xFF) int b,
+	                            @NonNull double[] outXyz) {
 		if (outXyz.length != 3) {
 			throw new IllegalArgumentException("outXyz must have a length of 3.");
 		}
@@ -496,9 +496,9 @@ public final class ColorUtils {
 	 * @param outLab 3-element array which holds the resulting Lab components
 	 */
 	public static void XYZToLAB(@FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_X) double x,
-				    @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Y) double y,
-				    @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Z) double z,
-				    @NonNull double[] outLab) {
+	                            @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Y) double y,
+	                            @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Z) double z,
+	                            @NonNull double[] outLab) {
 		if (outLab.length != 3) {
 			throw new IllegalArgumentException("outLab must have a length of 3.");
 		}
@@ -528,9 +528,9 @@ public final class ColorUtils {
 	 * @param outXyz 3-element array which holds the resulting XYZ components
 	 */
 	public static void LABToXYZ(@FloatRange(from = 0f, to = 100) final double l,
-				    @FloatRange(from = -128, to = 127) final double a,
-				    @FloatRange(from = -128, to = 127) final double b,
-				    @NonNull double[] outXyz) {
+	                            @FloatRange(from = -128, to = 127) final double a,
+	                            @FloatRange(from = -128, to = 127) final double b,
+	                            @NonNull double[] outXyz) {
 		final double fy = (l + 16) / 116;
 		final double fx = a / 500 + fy;
 		final double fz = fy - b / 200;
@@ -560,8 +560,8 @@ public final class ColorUtils {
 	 */
 	/*@ColorInt*/
 	public static int XYZToColor(@FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_X) double x,
-				     @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Y) double y,
-				     @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Z) double z) {
+	                             @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Y) double y,
+	                             @FloatRange(from = 0f, to = XYZ_WHITE_REFERENCE_Z) double z) {
 		double r = (x * 3.2406 + y * -1.5372 + z * -0.4986) / 100;
 		double g = (x * -0.9689 + y * 1.8758 + z * 0.0415) / 100;
 		double b = (x * 0.0557 + y * -0.2040 + z * 1.0570) / 100;
@@ -586,8 +586,8 @@ public final class ColorUtils {
 	 */
 	/*@ColorInt*/
 	public static int LABToColor(@FloatRange(from = 0f, to = 100) final double l,
-				     @FloatRange(from = -128, to = 127) final double a,
-				     @FloatRange(from = -128, to = 127) final double b) {
+	                             @FloatRange(from = -128, to = 127) final double a,
+	                             @FloatRange(from = -128, to = 127) final double b) {
 		final double[] result = getTempDouble3Array();
 		LABToXYZ(l, a, b, result);
 		return XYZToColor(result[0], result[1], result[2]);
@@ -610,8 +610,8 @@ public final class ColorUtils {
 
 	private static double pivotXyzComponent(double component) {
 		return component > XYZ_EPSILON
-		    ? Math.pow(component, 1 / 3.0)
-		    : (XYZ_KAPPA * component + 16) / 116;
+		         ? Math.pow(component, 1 / 3.0)
+		         : (XYZ_KAPPA * component + 16) / 116;
 	}
 
 	/**
@@ -626,7 +626,7 @@ public final class ColorUtils {
 	 */
 	/*@ColorInt*/
 	public static int blendARGB(/*@ColorInt*/ int color1, /*@ColorInt*/ int color2,
-				    @FloatRange(from = 0.0, to = 1.0) float ratio) {
+	                            @FloatRange(from = 0.0, to = 1.0) float ratio) {
 		final float inverseRatio = 1 - ratio;
 		float a = Color.alpha(color1) * inverseRatio + Color.alpha(color2) * ratio;
 		float r = Color.red(color1) * inverseRatio + Color.red(color2) * ratio;
@@ -648,7 +648,7 @@ public final class ColorUtils {
 	 * @param outResult 3-element array which holds the resulting HSL components
 	 */
 	public static void blendHSL(@NonNull float[] hsl1, @NonNull float[] hsl2,
-				    @FloatRange(from = 0.0, to = 1.0) float ratio, @NonNull float[] outResult) {
+	                            @FloatRange(from = 0.0, to = 1.0) float ratio, @NonNull float[] outResult) {
 		if (outResult.length != 3) {
 			throw new IllegalArgumentException("result must have a length of 3.");
 		}
@@ -671,7 +671,7 @@ public final class ColorUtils {
 	 * @param outResult 3-element array which holds the resulting LAB components
 	 */
 	public static void blendLAB(@NonNull double[] lab1, @NonNull double[] lab2,
-				    @FloatRange(from = 0.0, to = 1.0) double ratio, @NonNull double[] outResult) {
+	                            @FloatRange(from = 0.0, to = 1.0) double ratio, @NonNull double[] outResult) {
 		if (outResult.length != 3) {
 			throw new IllegalArgumentException("outResult must have a length of 3.");
 		}

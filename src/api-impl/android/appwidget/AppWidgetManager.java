@@ -12,4 +12,8 @@ public class AppWidgetManager {
 	public int[] getAppWidgetIds(ComponentName provider) {
 		return new int[0];
 	}
+
+	public void notifyAppWidgetViewDataChanged(int appWidgetId, int viewId) {}
+
+	public void notifyAppWidgetViewDataChanged(int[] appWidgetIds, int viewId) {}
 }

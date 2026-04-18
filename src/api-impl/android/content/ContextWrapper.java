@@ -4,7 +4,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.Display;
-
 import java.lang.reflect.InvocationTargetException;
 
 public class ContextWrapper extends Context {
@@ -70,5 +69,10 @@ public class ContextWrapper extends Context {
 	@Override
 	public Context createDeviceProtectedStorageContext() {
 		return this.baseContext.createDeviceProtectedStorageContext();
+	}
+
+	@Override
+	public int getThemeResId() {
+		return this.baseContext.getThemeResId();
 	}
 }

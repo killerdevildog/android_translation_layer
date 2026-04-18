@@ -58,7 +58,7 @@ public class TextPaint extends Paint {
 	 * fields inherited from Paint.
 	 */
 	public void set(TextPaint tp) {
-		//        super.set(tp);
+		//super.set(tp);
 
 		bgColor = tp.bgColor;
 		baselineShift = tp.baselineShift;
@@ -68,6 +68,8 @@ public class TextPaint extends Paint {
 		underlineColor = tp.underlineColor;
 		underlineThickness = tp.underlineThickness;
 	}
+
+	public void reset() {}
 
 	/**
 	 * Defines a custom underline for this Paint.

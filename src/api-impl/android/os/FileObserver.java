@@ -9,5 +9,4 @@ public class FileObserver {
 	public void startWatching() {}
 
 	public void stopWatching() {}
-
 }

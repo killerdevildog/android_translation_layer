@@ -1,6 +1,9 @@
 package android.widget;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 
 public class Toast {
@@ -23,6 +26,15 @@ public class Toast {
 
 	public void show() {
 		System.out.println("showing toast: " + text);
+		Notification notification = new Notification.Builder(Context.this_application).setContentText(text).build();
+		NotificationManager manager = (NotificationManager)Context.this_application.getSystemService("notification");
+		int id = hashCode();
+		manager.notify(id, notification);
+		new Handler().postDelayed(new Runnable() {
+			public void run() {
+				manager.cancel(id);
+			}
+		}, 2000);
 	}
 
 	public void setView(View view) {}

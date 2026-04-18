@@ -22,10 +22,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteProgram;
 import android.database.sqlite.SQLiteStatement;
-
 import android.text.TextUtils;
 import android.util.Log;
-
 import java.io.File;
 import java.io.PrintStream;
 import java.text.Collator;
@@ -72,7 +70,7 @@ public class DatabaseUtils {
 	 * @param value the value to bind
 	 */
 	public static void bindObjectToProgram(SQLiteProgram prog, int index,
-			Object value) {
+	                                       Object value) {
 		if (value == null) {
 			prog.bindNull(index);
 		} else if (value instanceof Double || value instanceof Float) {
@@ -86,8 +84,8 @@ public class DatabaseUtils {
 			} else {
 				prog.bindLong(index, 0);
 			}
-		} else if (value instanceof byte[]){
-			prog.bindBlob(index, (byte[]) value);
+		} else if (value instanceof byte[]) {
+			prog.bindBlob(index, (byte[])value);
 		} else {
 			prog.bindString(index, value.toString());
 		}
@@ -118,7 +116,7 @@ public class DatabaseUtils {
 		} else if (obj instanceof Float || obj instanceof Double) {
 			return Cursor.FIELD_TYPE_FLOAT;
 		} else if (obj instanceof Long || obj instanceof Integer
-				|| obj instanceof Short || obj instanceof Byte) {
+		           || obj instanceof Short || obj instanceof Byte) {
 			return Cursor.FIELD_TYPE_INTEGER;
 		} else {
 			return Cursor.FIELD_TYPE_STRING;
@@ -138,7 +136,7 @@ public class DatabaseUtils {
 	 * @hide
 	 */
 	public static void cursorFillWindow(final Cursor cursor,
-			int position, final CursorWindow window) {
+	                                    int position, final CursorWindow window) {
 		if (position < 0 || position >= cursor.getCount()) {
 			return;
 		}
@@ -148,7 +146,8 @@ public class DatabaseUtils {
 		window.setStartPosition(position);
 		window.setNumColumns(numColumns);
 		if (cursor.moveToPosition(position)) {
-			rowloop: do {
+		rowloop:
+			do {
 				if (!window.allocRow()) {
 					break;
 				}
@@ -171,7 +170,7 @@ public class DatabaseUtils {
 						case Cursor.FIELD_TYPE_BLOB: {
 							final byte[] value = cursor.getBlob(i);
 							success = value != null ? window.putBlob(value, position, i)
-									: window.putNull(position, i);
+							                        : window.putNull(position, i);
 							break;
 						}
 
@@ -179,7 +178,7 @@ public class DatabaseUtils {
 						case Cursor.FIELD_TYPE_STRING: {
 							final String value = cursor.getString(i);
 							success = value != null ? window.putString(value, position, i)
-									: window.putNull(position, i);
+							                        : window.putNull(position, i);
 							break;
 						}
 					}
@@ -278,7 +277,7 @@ public class DatabaseUtils {
 	 * @return the collation key
 	 */
 	public static String getCollationKey(String name) {
-		byte [] arr = getCollationKeyInBytes(name);
+		byte[] arr = getCollationKeyInBytes(name);
 		try {
 			return new String(arr, 0, getKeyLen(arr), "ISO8859_1");
 		} catch (Exception ex) {
@@ -297,13 +296,12 @@ public class DatabaseUtils {
 		return new String(keys, 0, getKeyLen(arr) * 2);
 	}
 
-
 	/**
 	 * Used building output as Hex
 	 */
 	private static final char[] DIGITS = {
-			'0', '1', '2', '3', '4', '5', '6', '7',
-			'8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+		'0', '1', '2', '3', '4', '5', '6', '7',
+		'8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
 	};
 
 	private static char[] encodeHex(byte[] input) {
@@ -312,8 +310,8 @@ public class DatabaseUtils {
 
 		// two characters form the hex value.
 		for (int i = 0, j = 0; i < l; i++) {
-			out[j++] = DIGITS[(0xF0 & input[i]) >>> 4 ];
-			out[j++] = DIGITS[ 0x0F & input[i] ];
+			out[j++] = DIGITS[(0xF0 & input[i]) >>> 4];
+			out[j++] = DIGITS[0x0F & input[i]];
 		}
 
 		return out;
@@ -324,7 +322,7 @@ public class DatabaseUtils {
 			return arr.length;
 		} else {
 			// remove zero "termination"
-			return arr.length-1;
+			return arr.length - 1;
 		}
 	}
 
@@ -421,7 +419,7 @@ public class DatabaseUtils {
 		String[] cols = cursor.getColumnNames();
 		stream.println("" + cursor.getPosition() + " {");
 		int length = cols.length;
-		for (int i = 0; i< length; i++) {
+		for (int i = 0; i < length; i++) {
 			String value;
 			try {
 				value = cursor.getString(i);
@@ -479,7 +477,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into, with the field as the key
 	 */
 	public static void cursorStringToContentValues(Cursor cursor, String field,
-			ContentValues values) {
+	                                               ContentValues values) {
 		cursorStringToContentValues(cursor, field, values, field);
 	}
 
@@ -492,7 +490,7 @@ public class DatabaseUtils {
 	 * @param index the index of the bind entry in the InsertHelper
 	 */
 	public static void cursorStringToInsertHelper(Cursor cursor, String field,
-			InsertHelper inserter, int index) {
+	                                              InsertHelper inserter, int index) {
 		inserter.bind(index, cursor.getString(cursor.getColumnIndexOrThrow(field)));
 	}
 
@@ -505,7 +503,7 @@ public class DatabaseUtils {
 	 * @param key The key to store the value with in the map
 	 */
 	public static void cursorStringToContentValues(Cursor cursor, String field,
-			ContentValues values, String key) {
+	                                               ContentValues values, String key) {
 		values.put(key, cursor.getString(cursor.getColumnIndexOrThrow(field)));
 	}
 
@@ -529,12 +527,12 @@ public class DatabaseUtils {
 	 * @param key The key to store the value with in the map
 	 */
 	public static void cursorIntToContentValues(Cursor cursor, String field, ContentValues values,
-			String key) {
+	                                            String key) {
 		int colIndex = cursor.getColumnIndex(field);
 		if (!cursor.isNull(colIndex)) {
 			values.put(key, cursor.getInt(colIndex));
 		} else {
-			values.put(key, (Integer) null);
+			values.put(key, (Integer)null);
 		}
 	}
 
@@ -545,8 +543,7 @@ public class DatabaseUtils {
 	 * @param field The INTEGER field to read
 	 * @param values The {@link ContentValues} to put the value into, with the field as the key
 	 */
-	public static void cursorLongToContentValues(Cursor cursor, String field, ContentValues values)
-	{
+	public static void cursorLongToContentValues(Cursor cursor, String field, ContentValues values) {
 		cursorLongToContentValues(cursor, field, values, field);
 	}
 
@@ -559,13 +556,13 @@ public class DatabaseUtils {
 	 * @param key The key to store the value with in the map
 	 */
 	public static void cursorLongToContentValues(Cursor cursor, String field, ContentValues values,
-			String key) {
+	                                             String key) {
 		int colIndex = cursor.getColumnIndex(field);
 		if (!cursor.isNull(colIndex)) {
 			Long value = Long.valueOf(cursor.getLong(colIndex));
 			values.put(key, value);
 		} else {
-			values.put(key, (Long) null);
+			values.put(key, (Long)null);
 		}
 	}
 
@@ -576,8 +573,7 @@ public class DatabaseUtils {
 	 * @param field The REAL field to read
 	 * @param values The {@link ContentValues} to put the value into
 	 */
-	public static void cursorDoubleToCursorValues(Cursor cursor, String field, ContentValues values)
-	{
+	public static void cursorDoubleToCursorValues(Cursor cursor, String field, ContentValues values) {
 		cursorDoubleToContentValues(cursor, field, values, field);
 	}
 
@@ -590,12 +586,12 @@ public class DatabaseUtils {
 	 * @param key The key to store the value with in the map
 	 */
 	public static void cursorDoubleToContentValues(Cursor cursor, String field,
-			ContentValues values, String key) {
+	                                               ContentValues values, String key) {
 		int colIndex = cursor.getColumnIndex(field);
 		if (!cursor.isNull(colIndex)) {
 			values.put(key, cursor.getDouble(colIndex));
 		} else {
-			values.put(key, (Double) null);
+			values.put(key, (Double)null);
 		}
 	}
 
@@ -639,7 +635,7 @@ public class DatabaseUtils {
 	 * @hide
 	 */
 	public static int cursorPickFillWindowStartPosition(
-			int cursorPosition, int cursorWindowCapacity) {
+	    int cursorPosition, int cursorWindowCapacity) {
 		return Math.max(cursorPosition - cursorWindowCapacity / 3, 0);
 	}
 
@@ -680,10 +676,10 @@ public class DatabaseUtils {
 	 * @return the number of rows in the table filtered by the selection
 	 */
 	public static long queryNumEntries(SQLiteDatabase db, String table, String selection,
-			String[] selectionArgs) {
+	                                   String[] selectionArgs) {
 		String s = (!TextUtils.isEmpty(selection)) ? " where " + selection : "";
 		return longForQuery(db, "select count(*) from " + table + s,
-					selectionArgs);
+		                    selectionArgs);
 	}
 
 	/**
@@ -758,7 +754,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorStringToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                        String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getString(index));
@@ -774,7 +770,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorLongToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                      String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getLong(index));
@@ -790,7 +786,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorShortToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                       String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getShort(index));
@@ -806,7 +802,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorIntToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                     String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getInt(index));
@@ -822,7 +818,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorFloatToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                       String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getFloat(index));
@@ -838,7 +834,7 @@ public class DatabaseUtils {
 	 * @param values The {@link ContentValues} to put the value into
 	 */
 	public static void cursorDoubleToContentValuesIfPresent(Cursor cursor, ContentValues values,
-			String column) {
+	                                                        String column) {
 		final int index = cursor.getColumnIndex(column);
 		if (index != -1 && !cursor.isNull(index)) {
 			values.put(column, cursor.getDouble(index));
@@ -925,19 +921,22 @@ public class DatabaseUtils {
 					++i;
 				}
 			} finally {
-				if (cur != null) cur.close();
+				if (cur != null)
+					cur.close();
 			}
 
 			sb.append(sbv);
 
 			mInsertSQL = sb.toString();
-			if (DEBUG) Log.v(TAG, "insert statement is " + mInsertSQL);
+			if (DEBUG)
+				Log.v(TAG, "insert statement is " + mInsertSQL);
 		}
 
 		private SQLiteStatement getStatement(boolean allowReplace) throws SQLException {
 			if (allowReplace) {
 				if (mReplaceStatement == null) {
-					if (mInsertSQL == null) buildSQL();
+					if (mInsertSQL == null)
+						buildSQL();
 					// chop "INSERT" off the front and prepend "INSERT OR REPLACE" instead.
 					String replaceSQL = "INSERT OR REPLACE" + mInsertSQL.substring(6);
 					mReplaceStatement = mDb.compileStatement(replaceSQL);
@@ -945,7 +944,8 @@ public class DatabaseUtils {
 				return mReplaceStatement;
 			} else {
 				if (mInsertStatement == null) {
-					if (mInsertSQL == null) buildSQL();
+					if (mInsertSQL == null)
+						buildSQL();
 					mInsertStatement = mDb.compileStatement(mInsertSQL);
 				}
 				return mInsertStatement;
@@ -975,14 +975,14 @@ public class DatabaseUtils {
 			try {
 				SQLiteStatement stmt = getStatement(allowReplace);
 				stmt.clearBindings();
-				if (DEBUG) Log.v(TAG, "--- inserting in table " + mTableName);
-				for (Map.Entry<String, Object> e: values.valueSet()) {
+				if (DEBUG)
+					Log.v(TAG, "--- inserting in table " + mTableName);
+				for (Map.Entry<String, Object> e : values.valueSet()) {
 					final String key = e.getKey();
 					int i = getColumnIndex(key);
 					DatabaseUtils.bindObjectToProgram(stmt, i, e.getValue());
 					if (DEBUG) {
-						Log.v(TAG, "binding " + e.getValue() + " to column " +
-							  i + " (" + key + ")");
+						Log.v(TAG, "binding " + e.getValue() + " to column " + i + " (" + key + ")");
 					}
 				}
 				long result = stmt.executeInsert();
@@ -1126,10 +1126,11 @@ public class DatabaseUtils {
 		public long execute() {
 			if (mPreparedStatement == null) {
 				throw new IllegalStateException("you must prepare this inserter before calling "
-						+ "execute");
+				                                + "execute");
 			}
 			try {
-				if (DEBUG) Log.v(TAG, "--- doing insert or replace in table " + mTableName);
+				if (DEBUG)
+					Log.v(TAG, "--- doing insert or replace in table " + mTableName);
 				return mPreparedStatement.executeInsert();
 			} catch (SQLException e) {
 				Log.e(TAG, "Error executing InsertHelper with table " + mTableName, e);
@@ -1217,7 +1218,7 @@ public class DatabaseUtils {
 	 *   semicolons)
 	 */
 	static public void createDbFromSqlStatements(
-			Context context, String dbName, int dbVersion, String sqlStatements) {
+	    Context context, String dbName, int dbVersion, String sqlStatements) {
 
 		File f = context.getDatabasePath(dbName);
 		f.getParentFile().mkdirs();
@@ -1228,7 +1229,8 @@ public class DatabaseUtils {
 		// this if that turns out to be a problem.
 		String[] statements = TextUtils.split(sqlStatements, ";\n");
 		for (String statement : statements) {
-			if (TextUtils.isEmpty(statement)) continue;
+			if (TextUtils.isEmpty(statement))
+				continue;
 			db.execSQL(statement);
 		}
 		db.setVersion(dbVersion);
@@ -1257,10 +1259,10 @@ public class DatabaseUtils {
 		String prefixSql = sql.substring(0, 3).toUpperCase(Locale.ROOT);
 		if (prefixSql.equals("SEL")) {
 			return STATEMENT_SELECT;
-		} else if (prefixSql.equals("INS") ||
-				prefixSql.equals("UPD") ||
-				prefixSql.equals("REP") ||
-				prefixSql.equals("DEL")) {
+		} else if (prefixSql.equals("INS")
+		           || prefixSql.equals("UPD")
+		           || prefixSql.equals("REP")
+		           || prefixSql.equals("DEL")) {
 			return STATEMENT_UPDATE;
 		} else if (prefixSql.equals("ATT")) {
 			return STATEMENT_ATTACH;
@@ -1274,8 +1276,8 @@ public class DatabaseUtils {
 			return STATEMENT_BEGIN;
 		} else if (prefixSql.equals("PRA")) {
 			return STATEMENT_PRAGMA;
-		} else if (prefixSql.equals("CRE") || prefixSql.equals("DRO") ||
-				prefixSql.equals("ALT")) {
+		} else if (prefixSql.equals("CRE") || prefixSql.equals("DRO")
+		           || prefixSql.equals("ALT")) {
 			return STATEMENT_DDL;
 		} else if (prefixSql.equals("ANA") || prefixSql.equals("DET")) {
 			return STATEMENT_UNPREPARED;
@@ -1291,7 +1293,7 @@ public class DatabaseUtils {
 		if (originalValues == null || originalValues.length == 0) {
 			return newValues;
 		}
-		String[] result = new String[originalValues.length + newValues.length ];
+		String[] result = new String[originalValues.length + newValues.length];
 		System.arraycopy(originalValues, 0, result, 0, originalValues.length);
 		System.arraycopy(newValues, 0, result, originalValues.length, newValues.length);
 		return result;

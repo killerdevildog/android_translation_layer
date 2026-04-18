@@ -1,14 +1,14 @@
+#include <gio/gunixinputstream.h>
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
-#include <gio/gunixinputstream.h>
 
 #include <androidfw/androidfw_c_api.h>
 
 #include "../defines.h"
 #include "../util.h"
 
-#include "WrapperWidget.h"
 #include "../AssetInputStream.h"
+#include "WrapperWidget.h"
 
 #include "../generated_headers/android_view_View.h"
 #include "../generated_headers/android_webkit_WebView.h"
@@ -43,7 +43,7 @@ JNIEXPORT jlong JNICALL Java_android_webkit_WebView_native_1constructor(JNIEnv *
 	 * a waste of resources even if we deal with fingerprinting and ads in some other way
 	 * in the future.
 	 */
-	if(!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
+	if (!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
 		return Java_android_view_View_native_1constructor(env, this, context, attrs);
 
 	GtkWidget *wrapper = g_object_ref(wrapper_widget_new());
@@ -57,7 +57,7 @@ JNIEXPORT jlong JNICALL Java_android_webkit_WebView_native_1constructor(JNIEnv *
 
 JNIEXPORT void JNICALL Java_android_webkit_WebView_native_1loadUrl(JNIEnv *env, jobject this, jlong widget_ptr, jstring url)
 {
-	if(!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
+	if (!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
 		return;
 
 	WebKitWebView *webview = _PTR(widget_ptr);
@@ -66,7 +66,7 @@ JNIEXPORT void JNICALL Java_android_webkit_WebView_native_1loadUrl(JNIEnv *env, 
 
 JNIEXPORT void JNICALL Java_android_webkit_WebView_native_1loadDataWithBaseURL(JNIEnv *env, jobject this, jlong widget_ptr, jstring base_url, jstring data_jstr, jstring mime_type, jstring encoding)
 {
-	if(!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
+	if (!getenv("ATL_UGLY_ENABLE_WEBVIEW"))
 		return;
 
 	WebKitWebView *webview = _PTR(widget_ptr);

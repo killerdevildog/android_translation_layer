@@ -11,7 +11,7 @@ public class AudioTrack {
 	public static final int ERROR_BAD_VALUE = -2; // basically EINVAL
 
 	public static final int PLAYSTATE_STOPPED = 1;
-	public static final int PLAYSTATE_PAUSED  = 2;
+	public static final int PLAYSTATE_PAUSED = 2;
 	public static final int PLAYSTATE_PLAYING = 3;
 
 	int streamType;
@@ -23,6 +23,7 @@ public class AudioTrack {
 	private int sessionId;
 	private int playbackState = PLAYSTATE_STOPPED;
 	private int playbackHeadPosition = 0;
+	private float volume = 1.f;
 
 	// for native code's use
 	long pcm_handle;
@@ -43,23 +44,10 @@ public class AudioTrack {
 		this.mode = mode;
 
 		System.out.println("\n\n\nAudioTrack(" + streamType + ", " + sampleRateInHz + ", " + channelConfig + ", " + audioFormat + ", " + bufferSizeInBytes + ", " + mode + "); called\n\n\n\n");
-
-		int num_channels;
-		switch (channelConfig) {
-			case 2:
-				num_channels = 1;
-				break;
-			case 12:
-				num_channels = 2;
-				break;
-			default:
-				num_channels = 1;
-		}
-
-		native_constructor(streamType, sampleRateInHz, num_channels, audioFormat, bufferSizeInBytes, mode);
+		native_constructor(streamType, sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes, mode);
 	}
 
-	public AudioTrack(int streamType, int sampleRateInHz, int channelConfig, int audioFormat, int bufferSizeInBytes, int mode, int sessionId)  {
+	public AudioTrack(int streamType, int sampleRateInHz, int channelConfig, int audioFormat, int bufferSizeInBytes, int mode, int sessionId) {
 		this(streamType, sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes, mode);
 		this.sessionId = sessionId;
 	}
@@ -116,8 +104,8 @@ public class AudioTrack {
 			return ERROR_BAD_VALUE;
 		}
 
-		int framesToWrite = sizeInBytes / channels / 2;  // 2 means PCM16
-		int ret = native_write(audioData, offsetInBytes, framesToWrite);
+		int framesToWrite = sizeInBytes / channels / 2; // 2 means PCM16
+		int ret = native_write(audioData, offsetInBytes, framesToWrite, volume);
 		if (ret > 0) {
 			playbackHeadPosition += ret;
 		}
@@ -130,6 +118,23 @@ public class AudioTrack {
 		return ret;
 	}
 
+	public int write(short audioData[], int offsetInShorts, int sizeInShorts) {
+		/* sanity check the parameters before calling native_write */
+		if ((audioData == null)
+		    || (offsetInShorts < 0) || (sizeInShorts < 0)
+		    || (offsetInShorts + sizeInShorts < 0)
+		    || (offsetInShorts + sizeInShorts > audioData.length)) {
+			return ERROR_BAD_VALUE;
+		}
+
+		int framesToWrite = sizeInShorts / channels;
+		int ret = native_write(audioData, offsetInShorts, framesToWrite, volume);
+		if (ret > 0) {
+			playbackHeadPosition += ret;
+		}
+		return ret * channels;
+	}
+
 	public int getAudioSessionId() {
 		return sessionId;
 	}
@@ -139,6 +144,7 @@ public class AudioTrack {
 	}
 
 	public int setStereoVolume(float leftVolume, float rightVolume) {
+		this.volume = (leftVolume + rightVolume) / 2;
 		return 0;
 	}
 
@@ -157,6 +163,7 @@ public class AudioTrack {
 	}
 
 	public int setVolume(float volume) {
+		this.volume = volume;
 		return 0;
 	}
 
@@ -167,6 +174,49 @@ public class AudioTrack {
 	private native int native_getPlaybackHeadPosition();
 	public native void native_play();
 	public native void native_pause();
-	private native int native_write(byte[] audioData, int offsetInBytes, int sizeInBytes);
+	private native int native_write(byte[] audioData, int offsetInBytes, int framesToWrite, float volume);
+	private native int native_write(short[] audioData, int offsetInShorts, int framesToWrite, float volume);
 	public native void native_release();
+
+	public static int getNativeOutputSampleRate(int i) {
+		return -1;
+	}
+
+	// nested classes
+	public static class Builder {
+		private AudioAttributes mAttributes;
+		private AudioFormat mFormat;
+		private int mBufferSizeInBytes;
+		private int mTransferMode;
+
+		public Builder() {}
+
+		public AudioTrack build() {
+			return new AudioTrack(mAttributes, mFormat, mBufferSizeInBytes, mTransferMode, 0);
+		}
+
+		public Builder setAudioAttributes(AudioAttributes attributes) {
+			mAttributes = attributes;
+			return this;
+		}
+
+		public Builder setAudioFormat(AudioFormat format) {
+			mFormat = format;
+			return this;
+		}
+
+		public Builder setBufferSizeInBytes(int bufferSizeInBytes) {
+			mBufferSizeInBytes = bufferSizeInBytes;
+			return this;
+		}
+
+		public Builder setTransferMode(int mode) {
+			mTransferMode = mode;
+			return this;
+		}
+
+		public Builder setPerformanceMode(int performanceMode) {
+			return this;
+		}
+	}
 }

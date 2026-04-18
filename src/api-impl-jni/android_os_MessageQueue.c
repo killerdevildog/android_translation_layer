@@ -7,8 +7,8 @@
 
 #include <glib.h>
 
-#include "../libandroid/looper.h"
 #include "generated_headers/android_os_MessageQueue.h"
+#include "../libandroid/looper.h"
 
 struct native_message_queue {
 	ALooper *looper;
@@ -25,10 +25,10 @@ static gboolean dispatch_func(GSource *source, GSourceFunc callback, gpointer us
 {
 	JavaVM *jvm = user_data;
 	JNIEnv *env;
-	(*jvm)->GetEnv(jvm, (void**)&env, JNI_VERSION_1_6);
-	g_source_set_ready_time(source, -1);  // clear previous timeout
+	(*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
+	g_source_set_ready_time(source, -1); // clear previous timeout
 	(*env)->CallStaticVoidMethod(env, handle_cache.looper.class, handle_cache.looper.loop);
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 
 	return G_SOURCE_CONTINUE;
@@ -38,17 +38,18 @@ static GSourceFuncs source_funcs = {
 };
 static GSource *source = NULL;
 
-void prepare_main_looper(JNIEnv* env) {
+void prepare_main_looper(JNIEnv *env)
+{
 	main_thread_id = g_thread_self();
 
 	(*env)->CallStaticVoidMethod(env, handle_cache.looper.class, handle_cache.looper.prepareMainLooper);
-	if((*env)->ExceptionCheck(env))
+	if ((*env)->ExceptionCheck(env))
 		(*env)->ExceptionDescribe(env);
 	source = g_source_new(&source_funcs, sizeof(GSource));
 	JavaVM *jvm;
 	(*env)->GetJavaVM(env, &jvm);
-	g_source_set_callback(source, NULL, jvm, NULL);  // func can be NULL, as we handle everything in the dispatch_func
-	g_source_set_ready_time(source, 0);  // first call will be immediately
+	g_source_set_callback(source, NULL, jvm, NULL); // func can be NULL, as we handle everything in the dispatch_func
+	g_source_set_ready_time(source, 0);             // first call will be immediately
 	g_source_attach(source, NULL);
 }
 
@@ -74,21 +75,21 @@ JNIEXPORT jboolean JNICALL Java_android_os_MessageQueue_nativePollOnce(JNIEnv *e
 {
 	struct native_message_queue *message_queue = _PTR(ptr);
 
-	if (message_queue->is_main_thread) {  // thread loop is managed by glib
+	if (message_queue->is_main_thread) { // thread loop is managed by glib
 		if (timeout_millis) {
-			if (timeout_millis != -1)  // -1 means no more messages
-				g_source_set_ready_time(source, g_source_get_time(source) + timeout_millis*1000L);
-			return true;  // indicate that java side should return to block in glib managed loop
+			if (timeout_millis != -1) // -1 means no more messages
+				g_source_set_ready_time(source, g_source_get_time(source) + timeout_millis * 1000L);
+			return true; // indicate that java side should return to block in glib managed loop
 		} else {
 			return false;
 		}
 	}
 
-//	printf("Java_android_os_MessageQueue_nativePollOnce: entry (timeout: %d)\n", timeout_millis);
+	//printf("Java_android_os_MessageQueue_nativePollOnce: entry (timeout: %d)\n", timeout_millis);
 	message_queue->in_callback = true;
 	ALooper_pollOnce(timeout_millis, NULL, NULL, NULL);
 	message_queue->in_callback = false;
-//	printf("Java_android_os_MessageQueue_nativePollOnce: exit\n");
+	//printf("Java_android_os_MessageQueue_nativePollOnce: exit\n");
 
 	/* TODO: what's with the exception stuff */
 	return false;
@@ -98,8 +99,8 @@ JNIEXPORT void JNICALL Java_android_os_MessageQueue_nativeWake(JNIEnv *env, jcla
 {
 	struct native_message_queue *message_queue = _PTR(ptr);
 
-	if (message_queue->is_main_thread) {  // thread loop is managed by glib
-		g_source_set_ready_time(source, 0);  // immediately
+	if (message_queue->is_main_thread) {        // thread loop is managed by glib
+		g_source_set_ready_time(source, 0); // immediately
 		return;
 	}
 

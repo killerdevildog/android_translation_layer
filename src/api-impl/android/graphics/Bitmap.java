@@ -1,10 +1,9 @@
 package android.graphics;
 
+import android.util.DisplayMetrics;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.Buffer;
-
-import android.util.DisplayMetrics;
 
 /*
  * Bitmap is implemented as GdkTexture or GtkSnapshot. It can only be one of the two at a time.
@@ -13,14 +12,16 @@ import android.util.DisplayMetrics;
 public final class Bitmap {
 
 	public enum Config {
-		RGB_565(2, -1, /*ANDROID_BITMAP_FORMAT_RGB_565*/4),
-		ARGB_8888(4, /*GDK_MEMORY_R8G8B8A8*/5, /**ANDROID_BITMAP_FORMAT_RGBA_8888*/1),
-		ARGB_4444(2, -1, /*ANDROID_BITMAP_FORMAT_RGBA_4444*/7),
-		ALPHA_8(1, /*GDK_MEMORY_A8*/ 24, /*ANDROID_BITMAP_FORMAT_A_8*/8);
+		RGB_565(2, -1, /*ANDROID_BITMAP_FORMAT_RGB_565*/ 4),
+		ARGB_8888(4, /*GDK_MEMORY_R8G8B8A8*/ 5, /**ANDROID_BITMAP_FORMAT_RGBA_8888*/ 1),
+		ARGB_4444(2, -1, /*ANDROID_BITMAP_FORMAT_RGBA_4444*/ 7),
+		ALPHA_8(1, /*GDK_MEMORY_A8*/ 24, /*ANDROID_BITMAP_FORMAT_A_8*/ 8),
+		RGBA_F16(8, /*GDK_MEMORY_R16G16B16A16_FLOAT*/ 14, /*ANDROID_BITMAP_FORMAT_RGBA_F16*/ 9),
+		HARDWARE(4, /*GDK_MEMORY_R8G8B8A8*/ 5, /*ANDROID_BITMAP_FORMAT_RGBA_8888*/ 1);
 
 		private int bytes_per_pixel;
 		private int gdk_memory_format;
-		int android_memory_format;  // used by native function AndroidBitmap_getInfo()
+		int android_memory_format; // used by native function AndroidBitmap_getInfo()
 
 		private Config(int bytes_per_pixel, int gdk_memory_format, int android_memory_format) {
 			this.bytes_per_pixel = bytes_per_pixel;
@@ -44,7 +45,7 @@ public final class Bitmap {
 	private long snapshot;
 	private Config config = Config.ARGB_8888;
 	private boolean hasAlpha = true;
-	long bytes = 0;  // used by native function AndroidBitmap_lockPixels()
+	long bytes = 0; // used by native function AndroidBitmap_lockPixels()
 	private boolean recycled = false;
 	boolean mutable = true;
 
@@ -58,7 +59,7 @@ public final class Bitmap {
 		this.width = width;
 		this.height = height;
 		int stride = width * config.bytes_per_pixel;
-		this.stride = (stride + 3) & ~3;  // 4-byte alignment
+		this.stride = (stride + 3) & ~3; // 4-byte alignment
 	}
 
 	public static Bitmap createBitmap(int width, int height, Config config) {
@@ -87,6 +88,10 @@ public final class Bitmap {
 		canvas.concat(matrix);
 		canvas.drawBitmap(src, new Rect(x, y, x + width, y + height), new Rect(0, 0, width, height), null);
 		return dest;
+	}
+
+	public static Bitmap createBitmap(int[] colors, int width, int height, Config config) {
+		return createBitmap(width, height, config);
 	}
 
 	public static Bitmap createBitmap(Bitmap src) {
@@ -128,9 +133,15 @@ public final class Bitmap {
 	}
 
 	public void eraseColor(int color) {
-		Paint paint = new Paint();
-		paint.setColor(color);
-		new Canvas(this).drawRect(0, 0, width, height, paint);
+		if (color == Color.TRANSPARENT) {
+			native_recycle(texture, snapshot);
+			snapshot = native_erase_color(color, width, height);
+			texture = 0;
+		} else {
+			Paint paint = new Paint();
+			paint.setColor(color);
+			new Canvas(this).drawRect(0, 0, width, height, paint);
+		}
 	}
 
 	public void recycle() {
@@ -211,7 +222,9 @@ public final class Bitmap {
 		}
 	}
 
-	public void setPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {}
+	public void setPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
+		native_set_pixels(getSnapshot(), pixels, offset, stride, x, y, width, height);
+	}
 
 	public void reconfigure(int width, int height, Bitmap.Config config) {}
 
@@ -235,9 +248,11 @@ public final class Bitmap {
 	private static native long native_create_texture(long snapshot, int width, int height, int stride, int format);
 	private static native int native_get_width(long texture);
 	private static native int native_get_height(long texture);
+	private static native long native_erase_color(int color, int width, int height);
 	private static native void native_recycle(long texture, long snapshot);
 	private static native long native_ref_texture(long texture);
 	private static native void native_get_pixels(long texture, int[] pixels, int offset, int stride, int x, int y, int width, int height);
 	private static native void native_copy_to_buffer(long texture, Buffer buffer, int memory_format, int stride);
 	private static native byte[] native_save_to_png(long texture);
+	private static native void native_set_pixels(long snapshot, int[] pixels, int offset, int stride, int x, int y, int width, int height);
 }

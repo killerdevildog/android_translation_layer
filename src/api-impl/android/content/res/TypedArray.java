@@ -25,9 +25,8 @@ import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import dalvik.system.VMRuntime;
-
 import com.android.internal.util.XmlUtils;
+import dalvik.system.VMRuntime;
 import java.util.Arrays;
 
 /**
@@ -72,16 +71,15 @@ public class TypedArray {
 	/*package*/ int mLength;
 	/*package*/ TypedValue mValue = new TypedValue();
 
-
 	private void resize(int len) {
 		mLength = len;
 		final int dataLen = len * AssetManager.STYLE_NUM_ENTRIES;
 		final int indicesLen = len + 1;
 		final VMRuntime runtime = VMRuntime.getRuntime();
 		if (mData == null || mData.length < dataLen) {
-			mData = (int[]) runtime.newNonMovableArray(int.class, dataLen);
+			mData = (int[])runtime.newNonMovableArray(int.class, dataLen);
 			mDataAddress = runtime.addressOf(mData);
-			mIndices = (int[]) runtime.newNonMovableArray(int.class, indicesLen);
+			mIndices = (int[])runtime.newNonMovableArray(int.class, indicesLen);
 			mIndicesAddress = runtime.addressOf(mIndices);
 		}
 	}
@@ -243,9 +241,7 @@ public class TypedArray {
 		if (type == TypedValue.TYPE_STRING) {
 			final int cookie = data[index + AssetManager.STYLE_ASSET_COOKIE];
 			if (cookie < 0) {
-				return ((XmlBlock.Parser)mXml).getPooledString(
-					       data[index + AssetManager.STYLE_DATA])
-				    .toString();
+				return ((XmlBlock.Parser)mXml).getPooledString(data[index + AssetManager.STYLE_DATA]).toString();
 			}
 		}
 		return null;
@@ -965,7 +961,6 @@ public class TypedArray {
 		return mData[index + AssetManager.STYLE_TYPE];
 	}
 
-
 	/**
 	* Returns the resource ID of the style against which the specified attribute was resolved,
 	* otherwise returns defValue.
@@ -1204,8 +1199,7 @@ public class TypedArray {
 		final int cookie = data[index + AssetManager.STYLE_ASSET_COOKIE];
 		if (cookie < 0) {
 			if (mXml != null) {
-				return ((XmlBlock.Parser)mXml).getPooledString(
-				    data[index + AssetManager.STYLE_DATA]);
+				return ((XmlBlock.Parser)mXml).getPooledString(data[index + AssetManager.STYLE_DATA]);
 			}
 			return null;
 		}

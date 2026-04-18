@@ -63,7 +63,7 @@ public class Build {
 	/**
 	 * The manufacturer of the product/hardware.
 	 */
-	public static final String MANUFACTURER = "HTC"/* HTC picked at random; getString("ro.product.manufacturer")*/;
+	public static final String MANUFACTURER = "HTC" /* HTC picked at random; getString("ro.product.manufacturer")*/;
 
 	/**
 	 * The brand (e.g., carrier) the software is customized for, if any.
@@ -101,7 +101,7 @@ public class Build {
 	 */
 	public static final String SERIAL = getString("ro.serialno");
 
-	public static final String[] SUPPORTED_ABIS = {CPU_ABI, CPU_ABI2};
+	public static final String[] SUPPORTED_ABIS = getString("ro.product.cpu.abilist").split(",");
 
 	/**
 	 * Various version strings.
@@ -172,26 +172,34 @@ public class Build {
 		 * Magic version number for a current development build, which has
 		 * not yet turned into an official release.
 		 */
+		// This must match VMRuntime.SDK_VERSION_CUR_DEVELOPMENT.
 		public static final int CUR_DEVELOPMENT = 10000;
 
 		/**
-		 * October 2008: The original, first, version of Android.  Yay!
+		 * The original, first, version of Android.  Yay!
+		 *
+		 * <p>Released publicly as Android 1.0 in September 2008.
 		 */
 		public static final int BASE = 1;
 
 		/**
-		 * February 2009: First Android update, officially called 1.1.
+		 * First Android update.
+		 *
+		 * <p>Released publicly as Android 1.1 in February 2009.
 		 */
 		public static final int BASE_1_1 = 2;
 
 		/**
-		 * May 2009: Android 1.5.
+		 * C.
+		 *
+		 * <p>Released publicly as Android 1.5 in April 2009.
 		 */
 		public static final int CUPCAKE = 3;
 
 		/**
-		 * September 2009: Android 1.6.
+		 * D.
 		 *
+		 * <p>Released publicly as Android 1.6 in September 2009.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -215,8 +223,9 @@ public class Build {
 		public static final int DONUT = 4;
 
 		/**
-		 * November 2009: Android 2.0
+		 * E.
 		 *
+		 * <p>Released publicly as Android 2.0 in October 2009.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -235,23 +244,30 @@ public class Build {
 		public static final int ECLAIR = 5;
 
 		/**
-		 * December 2009: Android 2.0.1
+		 * E incremental update.
+		 *
+		 * <p>Released publicly as Android 2.0.1 in December 2009.
 		 */
 		public static final int ECLAIR_0_1 = 6;
 
 		/**
-		 * January 2010: Android 2.1
+		 * E MR1.
+		 *
+		 * <p>Released publicly as Android 2.1 in January 2010.
 		 */
 		public static final int ECLAIR_MR1 = 7;
 
 		/**
-		 * June 2010: Android 2.2
+		 * F.
+		 *
+		 * <p>Released publicly as Android 2.2 in May 2010.
 		 */
 		public static final int FROYO = 8;
 
 		/**
-		 * November 2010: Android 2.3
+		 * G.
 		 *
+		 * <p>Released publicly as Android 2.3 in December 2010.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -262,13 +278,16 @@ public class Build {
 		public static final int GINGERBREAD = 9;
 
 		/**
-		 * February 2011: Android 2.3.3.
+		 * G MR1.
+		 *
+		 * <p>Released publicly as Android 2.3.3 in February 2011.
 		 */
 		public static final int GINGERBREAD_MR1 = 10;
 
 		/**
-		 * February 2011: Android 3.0.
+		 * H.
 		 *
+		 * <p>Released publicly as Android 3.0 in February 2011.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -307,13 +326,16 @@ public class Build {
 		public static final int HONEYCOMB = 11;
 
 		/**
-		 * May 2011: Android 3.1.
+		 * H MR1.
+		 *
+		 * <p>Released publicly as Android 3.1 in May 2011.
 		 */
 		public static final int HONEYCOMB_MR1 = 12;
 
 		/**
-		 * June 2011: Android 3.2.
+		 * H MR2.
 		 *
+		 * <p>Released publicly as Android 3.2 in July 2011.
 		 * <p>Update to Honeycomb MR1 to support 7 inch tablets, improve
 		 * screen compatibility mode, etc.</p>
 		 *
@@ -360,8 +382,9 @@ public class Build {
 		public static final int HONEYCOMB_MR2 = 13;
 
 		/**
-		 * October 2011: Android 4.0.
+		 * I.
 		 *
+		 * <p>Released publicly as Android 4.0 in October 2011.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -406,13 +429,16 @@ public class Build {
 		public static final int ICE_CREAM_SANDWICH = 14;
 
 		/**
-		 * December 2011: Android 4.0.3.
+		 * I MR1.
+		 *
+		 * <p>Released publicly as Android 4.03 in December 2011.
 		 */
 		public static final int ICE_CREAM_SANDWICH_MR1 = 15;
 
 		/**
-		 * June 2012: Android 4.1.
+		 * J.
 		 *
+		 * <p>Released publicly as Android 4.1 in July 2012.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -436,12 +462,9 @@ public class Build {
 		 * PackageManager.setComponentEnabledSetting} will now throw an
 		 * IllegalArgumentException if the given component class name does not
 		 * exist in the application's manifest.
-		 * <li> {@link android.nfc.NfcAdapter#setNdefPushMessage
-		 * NfcAdapter.setNdefPushMessage},
-		 * {@link android.nfc.NfcAdapter#setNdefPushMessageCallback
-		 * NfcAdapter.setNdefPushMessageCallback} and
-		 * {@link android.nfc.NfcAdapter#setOnNdefPushCompleteCallback
-		 * NfcAdapter.setOnNdefPushCompleteCallback} will throw
+		 * <li> {@code NfcAdapter.setNdefPushMessage},
+		 * {@code NfcAdapter.setNdefPushMessageCallback} and
+		 * {@code NfcAdapter.setOnNdefPushCompleteCallback} will throw
 		 * IllegalStateException if called after the Activity has been destroyed.
 		 * <li> Accessibility services must require the new
 		 * {@link android.Manifest.permission#BIND_ACCESSIBILITY_SERVICE} permission or
@@ -454,8 +477,9 @@ public class Build {
 		public static final int JELLY_BEAN = 16;
 
 		/**
-		 * Android 4.2: Moar jelly beans!
+		 * J MR1.
 		 *
+		 * <p>Released publicly as Android 4.2 in November 2012.
 		 * <p>Applications targeting this or a later release will get these
 		 * new changes in behavior:</p>
 		 * <ul>
@@ -474,17 +498,22 @@ public class Build {
 		public static final int JELLY_BEAN_MR1 = 17;
 
 		/**
-		 * Android 4.3: Jelly Bean MR2, the revenge of the beans.
+		 * J MR2.
+		 *
+		 * <p>Released publicly as Android 4.3 in July 2013.
 		 */
 		public static final int JELLY_BEAN_MR2 = 18;
 
 		/**
-		 * Android 4.4: KitKat, another tasty treat.
+		 * K.
 		 *
+		 * <p>Released publicly as Android 4.4 in October 2013.
 		 * <p>Applications targeting this or a later release will get these
-		 * new changes in behavior:</p>
+		 * new changes in behavior. For more information about this release, see the
+		 * <a href="/about/versions/kitkat/">Android KitKat overview</a>.</p>
 		 * <ul>
-		 * <li> The default result of {android.preference.PreferenceActivity#isValidFragment
+		 * <li> The default result of
+		 * {@link android.preference.PreferenceActivity#isValidFragment(String)
 		 * PreferenceActivity.isValueFragment} becomes false instead of true.</li>
 		 * <li> In {@link android.webkit.WebView}, apps targeting earlier versions will have
 		 * JS URLs evaluated directly and any result of the evaluation will not replace
@@ -508,6 +537,353 @@ public class Build {
 		 * </ul>
 		 */
 		public static final int KITKAT = 19;
+
+		/**
+		 * K for watches.
+		 *
+		 * <p>Released publicly as Android 4.4W in June 2014.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior:</p>
+		 * <ul>
+		 * <li>{@link android.app.AlertDialog} might not have a default background if the theme does
+		 * not specify one.</li>
+		 * </ul>
+		 */
+		public static final int KITKAT_WATCH = 20;
+
+		/**
+		 * Temporary until we completely switch to {@link #LOLLIPOP}.
+		 * @hide
+		 */
+		public static final int L = 21;
+
+		/**
+		 * L.
+		 *
+		 * <p>Released publicly as Android 5.0 in November 2014.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior.  For more information about this release, see the
+		 * <a href="/about/versions/lollipop/">Android Lollipop overview</a>.</p>
+		 * <ul>
+		 * <li> {@link android.content.Context#bindService Context.bindService} now
+		 * requires an explicit Intent, and will throw an exception if given an implicit
+		 * Intent.</li>
+		 * <li> {@link android.app.Notification.Builder Notification.Builder} will
+		 * not have the colors of their various notification elements adjusted to better
+		 * match the new material design look.</li>
+		 * <li> {@link android.os.Message} will validate that a message is not currently
+		 * in use when it is recycled.</li>
+		 * <li> Hardware accelerated drawing in windows will be enabled automatically
+		 * in most places.</li>
+		 * <li> {@link android.widget.Spinner} throws an exception if attaching an
+		 * adapter with more than one item type.</li>
+		 * <li> If the app is a launcher, the launcher will be available to the user
+		 * even when they are using corporate profiles (which requires that the app
+		 * use {@link android.content.pm.LauncherApps} to correctly populate its
+		 * apps UI).</li>
+		 * <li> Calling {@link android.app.Service#stopForeground Service.stopForeground}
+		 * with removeNotification false will modify the still posted notification so that
+		 * it is no longer forced to be ongoing.</li>
+		 * <li> A {@link android.service.dreams.DreamService} must require the
+		 * {@link android.Manifest.permission#BIND_DREAM_SERVICE} permission to be usable.</li>
+		 * </ul>
+		 */
+		public static final int LOLLIPOP = 21;
+
+		/**
+		 * L MR1.
+		 *
+		 * <p>Released publicly as Android 5.1 in March 2015.
+		 * <p>For more information about this release, see the
+		 * <a href="/about/versions/android-5.1">Android 5.1 APIs</a>.
+		 */
+		public static final int LOLLIPOP_MR1 = 22;
+
+		/**
+		 * M.
+		 *
+		 * <p>Released publicly as Android 6.0 in October 2015.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior. For more information about this release, see the
+		 * <a href="/about/versions/marshmallow/">Android 6.0 Marshmallow overview</a>.</p>
+		 * <ul>
+		 * <li> Runtime permissions.  Dangerous permissions are no longer granted at
+		 * install time, but must be requested by the application at runtime through
+		 * {@link android.app.Activity#requestPermissions}.</li>
+		 * <li> Bluetooth and Wi-Fi scanning now requires holding the location permission.</li>
+		 * <li> {@link android.app.AlarmManager#setTimeZone AlarmManager.setTimeZone} will fail if
+		 * the given timezone is non-Olson.</li>
+		 * <li> Activity transitions will only return shared
+		 * elements mapped in the returned view hierarchy back to the calling activity.</li>
+		 * <li> {@link android.view.View} allows a number of behaviors that may break
+		 * existing apps: Canvas throws an exception if restore() is called too many times,
+		 * widgets may return a hint size when returning UNSPECIFIED measure specs, and it
+		 * will respect the attributes {@link android.R.attr#foreground},
+		 * {@link android.R.attr#foregroundGravity}, {@link android.R.attr#foregroundTint}, and
+		 * {@link android.R.attr#foregroundTintMode}.</li>
+		 * <li> {@link android.view.MotionEvent#getButtonState MotionEvent.getButtonState}
+		 * will no longer report {@link android.view.MotionEvent#BUTTON_PRIMARY}
+		 * and {@link android.view.MotionEvent#BUTTON_SECONDARY} as synonyms for
+		 * {@link android.view.MotionEvent#BUTTON_STYLUS_PRIMARY} and
+		 * {@link android.view.MotionEvent#BUTTON_STYLUS_SECONDARY}.</li>
+		 * <li> {@link android.widget.ScrollView} now respects the layout param margins
+		 * when measuring.</li>
+		 * </ul>
+		 */
+		public static final int M = 23;
+
+		/**
+		 * N.
+		 *
+		 * <p>Released publicly as Android 7.0 in August 2016.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior. For more information about this release, see
+		 * the <a href="/about/versions/nougat/">Android Nougat overview</a>.</p>
+		 * <ul>
+		 * <li> {@link android.app.DownloadManager.Request#setAllowedNetworkTypes
+		 * DownloadManager.Request.setAllowedNetworkTypes}
+		 * will disable "allow over metered" when specifying only
+		 * {@link android.app.DownloadManager.Request#NETWORK_WIFI}.</li>
+		 * <li> {@link android.app.DownloadManager} no longer allows access to raw
+		 * file paths.</li>
+		 * <li> {@link android.app.Notification.Builder#setShowWhen
+		 * Notification.Builder.setShowWhen}
+		 * must be called explicitly to have the time shown, and various other changes in
+		 * {@link android.app.Notification.Builder Notification.Builder} to how notifications
+		 * are shown.</li>
+		 * <li>{@link android.content.Context#MODE_WORLD_READABLE} and
+		 * {@link android.content.Context#MODE_WORLD_WRITEABLE} are no longer supported.</li>
+		 * <li>{@link android.os.FileUriExposedException} will be thrown to applications.</li>
+		 * <li>Applications will see global drag and drops as per
+		 * {@link android.view.View#DRAG_FLAG_GLOBAL}.</li>
+		 * <li>{@link android.webkit.WebView#evaluateJavascript WebView.evaluateJavascript}
+		 * will not persist state from an empty WebView.</li>
+		 * <li>{@link android.animation.AnimatorSet} will not ignore calls to end() before
+		 * start().</li>
+		 * <li>{@link android.app.AlarmManager#cancel(android.app.PendingIntent)
+		 * AlarmManager.cancel} will throw a NullPointerException if given a null operation.</li>
+		 * <li>{@link android.app.FragmentManager} will ensure fragments have been created
+		 * before being placed on the back stack.</li>
+		 * <li>{@link android.app.FragmentManager} restores fragments in
+		 * {@link android.app.Fragment#onCreate Fragment.onCreate} rather than after the
+		 * method returns.</li>
+		 * <li>{@link android.R.attr#resizeableActivity} defaults to true.</li>
+		 * <li>{@link android.graphics.drawable.AnimatedVectorDrawable} throws exceptions when
+		 * opening invalid VectorDrawable animations.</li>
+		 * <li>{@link android.view.ViewGroup.MarginLayoutParams} will no longer be dropped
+		 * when converting between some types of layout params (such as
+		 * {@link android.widget.LinearLayout.LayoutParams LinearLayout.LayoutParams} to
+		 * {@link android.widget.RelativeLayout.LayoutParams RelativeLayout.LayoutParams}).</li>
+		 * <li>Your application processes will not be killed when the device density changes.</li>
+		 * <li>Drag and drop. After a view receives the
+		 * {@link android.view.DragEvent#ACTION_DRAG_ENTERED} event, when the drag shadow moves into
+		 * a descendant view that can accept the data, the view receives the
+		 * {@link android.view.DragEvent#ACTION_DRAG_EXITED} event and won’t receive
+		 * {@link android.view.DragEvent#ACTION_DRAG_LOCATION} and
+		 * {@link android.view.DragEvent#ACTION_DROP} events while the drag shadow is within that
+		 * descendant view, even if the descendant view returns <code>false</code> from its handler
+		 * for these events.</li>
+		 * </ul>
+		 */
+		public static final int N = 24;
+
+		/**
+		 * N MR1.
+		 *
+		 * <p>Released publicly as Android 7.1 in October 2016.
+		 * <p>For more information about this release, see
+		 * <a href="/about/versions/nougat/android-7.1">Android 7.1 for
+		 * Developers</a>.
+		 */
+		public static final int N_MR1 = 25;
+
+		/**
+		 * O.
+		 *
+		 * <p>Released publicly as Android 8.0 in August 2017.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior. For more information about this release, see
+		 * the <a href="/about/versions/oreo/">Android Oreo overview</a>.</p>
+		 * <ul>
+		 * <li><a href="{@docRoot}about/versions/oreo/background.html">Background execution limits</a>
+		 * are applied to the application.</li>
+		 * <li>The behavior of AccountManager's
+		 * {@link android.accounts.AccountManager#getAccountsByType},
+		 * {@link android.accounts.AccountManager#getAccountsByTypeAndFeatures}, and
+		 * {@link android.accounts.AccountManager#hasFeatures} has changed as documented there.</li>
+		 * <li>{@link android.app.ActivityManager.RunningAppProcessInfo#IMPORTANCE_PERCEPTIBLE_PRE_26}
+		 * is now returned as
+		 * {@link android.app.ActivityManager.RunningAppProcessInfo#IMPORTANCE_PERCEPTIBLE}.</li>
+		 * <li>The {@link android.app.NotificationManager} now requires the use of notification
+		 * channels.</li>
+		 * <li>Changes to the strict mode that are set in
+		 * {@link Application#onCreate Application.onCreate} will no longer be clobbered after
+		 * that function returns.</li>
+		 * <li>A shared library apk with native code will have that native code included in
+		 * the library path of its clients.</li>
+		 * <li>{@link android.content.Context#getSharedPreferences Context.getSharedPreferences}
+		 * in credential encrypted storage will throw an exception before the user is unlocked.</li>
+		 * <li>Attempting to retrieve a {@link Context#FINGERPRINT_SERVICE} on a device that
+		 * does not support that feature will now throw a runtime exception.</li>
+		 * <li>{@link android.app.Fragment} will stop any active view animations when
+		 * the fragment is stopped.</li>
+		 * <li>Some compatibility code in Resources that attempts to use the default Theme
+		 * the app may be using will be turned off, requiring the app to explicitly request
+		 * resources with the right theme.</li>
+		 * <li>{@link android.content.ContentResolver#notifyChange ContentResolver.notifyChange} and
+		 * {@link android.content.ContentResolver#registerContentObserver
+		 * ContentResolver.registerContentObserver}
+		 * will throw a SecurityException if the caller does not have permission to access
+		 * the provider (or the provider doesn't exit); otherwise the call will be silently
+		 * ignored.</li>
+		 * <li>{@link android.hardware.camera2.CameraDevice#createCaptureRequest
+		 * CameraDevice.createCaptureRequest} will enable
+		 * {@link android.hardware.camera2.CaptureRequest#CONTROL_ENABLE_ZSL} by default for
+		 * still image capture.</li>
+		 * <li>WallpaperManager's {@link android.app.WallpaperManager#getWallpaperFile},
+		 * {@link android.app.WallpaperManager#getDrawable},
+		 * {@link android.app.WallpaperManager#getFastDrawable},
+		 * {@link android.app.WallpaperManager#peekDrawable}, and
+		 * {@link android.app.WallpaperManager#peekFastDrawable} will throw an exception
+		 * if you can not access the wallpaper.</li>
+		 * <li>The behavior of
+		 * {@link android.hardware.usb.UsbDeviceConnection#requestWait UsbDeviceConnection.requestWait}
+		 * is modified as per the documentation there.</li>
+		 * <li>{@link StrictMode.VmPolicy.Builder#detectAll StrictMode.VmPolicy.Builder.detectAll}
+		 * will also enable {@link StrictMode.VmPolicy.Builder#detectContentUriWithoutPermission}
+		 * and {@link StrictMode.VmPolicy.Builder#detectUntaggedSockets}.</li>
+		 * <li>{@link StrictMode.ThreadPolicy.Builder#detectAll StrictMode.ThreadPolicy.Builder.detectAll}
+		 * will also enable {@link StrictMode.ThreadPolicy.Builder#detectUnbufferedIo}.</li>
+		 * <li>{@link android.provider.DocumentsContract}'s various methods will throw failure
+		 * exceptions back to the caller instead of returning null.
+		 * <li>{@link View#hasFocusable() View.hasFocusable} now includes auto-focusable views.</li>
+		 * <li>{@link android.view.SurfaceView} will no longer always change the underlying
+		 * Surface object when something about it changes; apps need to look at the current
+		 * state of the object to determine which things they are interested in have changed.</li>
+		 * <li>{@link android.view.WindowManager.LayoutParams#TYPE_APPLICATION_OVERLAY} must be
+		 * used for overlay windows, other system overlay window types are not allowed.</li>
+		 * <li>{@link android.view.ViewTreeObserver#addOnDrawListener
+		 * ViewTreeObserver.addOnDrawListener} will throw an exception if called from within
+		 * onDraw.</li>
+		 * <li>{@link android.graphics.Canvas#setBitmap Canvas.setBitmap} will no longer preserve
+		 * the current matrix and clip stack of the canvas.</li>
+		 * <li>{@link android.widget.ListPopupWindow#setHeight ListPopupWindow.setHeight}
+		 * will throw an exception if a negative height is supplied.</li>
+		 * <li>{@link android.widget.TextView} will use internationalized input for numbers,
+		 * dates, and times.</li>
+		 * <li>{@link android.widget.Toast} must be used for showing toast windows; the toast
+		 * window type can not be directly used.</li>
+		 * <li>{@link android.net.wifi.WifiManager#getConnectionInfo WifiManager.getConnectionInfo}
+		 * requires that the caller hold the location permission to return BSSID/SSID</li>
+		 * <li>{@link android.net.wifi.p2p.WifiP2pManager#requestPeers WifiP2pManager.requestPeers}
+		 * requires the caller hold the location permission.</li>
+		 * <li>{@link android.R.attr#maxAspectRatio} defaults to 0, meaning there is no restriction
+		 * on the app's maximum aspect ratio (so it can be stretched to fill larger screens).</li>
+		 * <li>{@link android.R.attr#focusable} defaults to a new state ({@code auto}) where it will
+		 * inherit the value of {@link android.R.attr#clickable} unless explicitly overridden.</li>
+		 * <li>A default theme-appropriate focus-state highlight will be supplied to all Views
+		 * which don't provide a focus-state drawable themselves. This can be disabled by setting
+		 * {@link android.R.attr#defaultFocusHighlightEnabled} to false.</li>
+		 * </ul>
+		 */
+		public static final int O = 26;
+
+		/**
+		 * O MR1.
+		 *
+		 * <p>Released publicly as Android 8.1 in December 2017.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior. For more information about this release, see
+		 * <a href="/about/versions/oreo/android-8.1">Android 8.1 features and
+		 * APIs</a>.</p>
+		 * <ul>
+		 * <li>Apps exporting and linking to apk shared libraries must explicitly
+		 * enumerate all signing certificates in a consistent order.</li>
+		 * <li>{@link android.R.attr#screenOrientation} can not be used to request a fixed
+		 * orientation if the associated activity is not fullscreen and opaque.</li>
+		 * </ul>
+		 *
+		 */
+		public static final int O_MR1 = 27;
+
+		/**
+		 * P.
+		 *
+		 * <p>Released publicly as Android 9 in August 2018.
+		 * <p>Applications targeting this or a later release will get these
+		 * new changes in behavior. For more information about this release, see the
+		 * <a href="/about/versions/pie/">Android 9 Pie overview</a>.</p>
+		 * <ul>
+		 * <li>{@link android.app.Service#startForeground Service.startForeground} requires
+		 * that apps hold the permission
+		 * {@link android.Manifest.permission#FOREGROUND_SERVICE}.</li>
+		 * <li>{@link android.widget.LinearLayout} will always remeasure weighted children,
+		 * even if there is no excess space.</li>
+		 * </ul>
+		 *
+		 */
+		public static final int P = 28;
+
+		/**
+		 * Q.
+		 *
+		 * <p>Released publicly as Android 10 in September 2019.
+		 * <p>Applications targeting this or a later release will get these new changes in behavior.
+		 * For more information about this release, see the
+		 * <a href="/about/versions/10">Android 10 overview</a>.</p>
+		 * <ul>
+		 * <li><a href="/about/versions/10/behavior-changes-all">Behavior changes: all apps</a></li>
+		 * <li><a href="/about/versions/10/behavior-changes-10">Behavior changes: apps targeting API
+		 * 29+</a></li>
+		 * </ul>
+		 *
+		 */
+		public static final int Q = 29;
+
+		/**
+		 * R.
+		 *
+		 * <p>Released publicly as Android 11 in September 2020.
+		 * <p>Applications targeting this or a later release will get these new changes in behavior.
+		 * For more information about this release, see the
+		 * <a href="/about/versions/11">Android 11 overview</a>.</p>
+		 * <ul>
+		 * <li><a href="/about/versions/11/behavior-changes-all">Behavior changes: all apps</a></li>
+		 * <li><a href="/about/versions/11/behavior-changes-11">Behavior changes: Apps targeting
+		 * Android 11</a></li>
+		 * <li><a href="/about/versions/11/non-sdk-11">Updates to non-SDK interface restrictions
+		 * in Android 11</a></li>
+		 * </ul>
+		 *
+		 */
+		public static final int R = 30;
+
+		/**
+		 * S.
+		 */
+		public static final int S = 31;
+
+		/**
+		 * S V2.
+		 *
+		 * Once more unto the breach, dear friends, once more.
+		 */
+		public static final int S_V2 = 32;
+
+		/**
+		 * Tiramisu.
+		 */
+		public static final int TIRAMISU = 33;
+
+		/**
+		 * Upside Down Cake.
+		 */
+		public static final int UPSIDE_DOWN_CAKE = 34;
+
+		/**
+		 * Vanilla Ice Cream.
+		 */
+		public static final int VANILLA_ICE_CREAM = 35;
 	}
 
 	/**

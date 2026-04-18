@@ -21,11 +21,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ProviderInfo;
 import android.content.res.Resources;
-import android.test.mock.MockContentProvider;
-import android.test.mock.MockContext;
-import android.test.mock.MockContentResolver;
 import android.database.DatabaseUtils;
-
+import android.test.mock.MockContentProvider;
+import android.test.mock.MockContentResolver;
+import android.test.mock.MockContext;
 import java.io.File;
 
 /**
@@ -70,53 +69,53 @@ import java.io.File;
  */
 public abstract class ProviderTestCase2<T extends ContentProvider> extends AndroidTestCase {
 
-    Class<T> mProviderClass;
-    String mProviderAuthority;
+	Class<T> mProviderClass;
+	String mProviderAuthority;
 
-    private IsolatedContext mProviderContext;
-    private MockContentResolver mResolver;
+	private IsolatedContext mProviderContext;
+	private MockContentResolver mResolver;
 
-    private class MockContext2 extends MockContext {
+	private class MockContext2 extends MockContext {
 
-        @Override
-        public Resources getResources() {
-            return getContext().getResources();
-        }
+		@Override
+		public Resources getResources() {
+			return getContext().getResources();
+		}
 
-        @Override
-        public File getDir(String name, int mode) {
-            // name the directory so the directory will be separated from
-            // one created through the regular Context
-            return getContext().getDir("mockcontext2_" + name, mode);
-        }
+		@Override
+		public File getDir(String name, int mode) {
+			// name the directory so the directory will be separated from
+			// one created through the regular Context
+			return getContext().getDir("mockcontext2_" + name, mode);
+		}
 
-        @Override
-        public Context getApplicationContext() {
-            return this;
-        }
-    }
-    /**
+		@Override
+		public Context getApplicationContext() {
+			return this;
+		}
+	}
+	/**
      * Constructor.
      *
      * @param providerClass The class name of the provider under test
      * @param providerAuthority The provider's authority string
      */
-    public ProviderTestCase2(Class<T> providerClass, String providerAuthority) {
-        mProviderClass = providerClass;
-        mProviderAuthority = providerAuthority;
-    }
+	public ProviderTestCase2(Class<T> providerClass, String providerAuthority) {
+		mProviderClass = providerClass;
+		mProviderAuthority = providerAuthority;
+	}
 
-    private T mProvider;
+	private T mProvider;
 
-    /**
+	/**
      * Returns the content provider created by this class in the {@link #setUp()} method.
      * @return T An instance of the provider class given as a parameter to the test case class.
      */
-    public T getProvider() {
-        return mProvider;
-    }
+	public T getProvider() {
+		return mProvider;
+	}
 
-    /**
+	/**
      * Sets up the environment for the test fixture.
      * <p>
      * Creates a new
@@ -127,67 +126,66 @@ public abstract class ProviderTestCase2<T extends ContentProvider> extends Andro
      *
      * @throws Exception
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        mResolver = new MockContentResolver();
-        final String filenamePrefix = "test.";
-        RenamingDelegatingContext targetContextWrapper = new
-                RenamingDelegatingContext(
-                new MockContext2(), // The context that most methods are
-                                    //delegated to
-                getContext(), // The context that file methods are delegated to
-                filenamePrefix);
-        mProviderContext = new IsolatedContext(mResolver, targetContextWrapper);
-        mProvider = createProviderForTest(mProviderContext, mProviderClass, mProviderAuthority);
-        mResolver.addProvider(mProviderAuthority, getProvider());
-    }
+		mResolver = new MockContentResolver();
+		final String filenamePrefix = "test.";
+		RenamingDelegatingContext targetContextWrapper = new RenamingDelegatingContext(
+		    new MockContext2(), // The context that most methods are
+					//delegated to
+		    getContext(),       // The context that file methods are delegated to
+		    filenamePrefix);
+		mProviderContext = new IsolatedContext(mResolver, targetContextWrapper);
+		mProvider = createProviderForTest(mProviderContext, mProviderClass, mProviderAuthority);
+		mResolver.addProvider(mProviderAuthority, getProvider());
+	}
 
-    /**
+	/**
      * Creates and sets up a new instance of the provider.
      */
-    static <T extends ContentProvider> T createProviderForTest(
-            Context context, Class<T> providerClass, String authority)
-            throws IllegalAccessException, InstantiationException {
-        T instance = providerClass.newInstance();
-        ProviderInfo providerInfo = new ProviderInfo();
-        providerInfo.authority = authority;
-        MockContentProvider.attachInfoForTesting(instance, context, providerInfo);
-        return instance;
-    }
+	static <T extends ContentProvider> T createProviderForTest(
+	    Context context, Class<T> providerClass, String authority)
+	    throws IllegalAccessException, InstantiationException {
+		T instance = providerClass.newInstance();
+		ProviderInfo providerInfo = new ProviderInfo();
+		providerInfo.authority = authority;
+		MockContentProvider.attachInfoForTesting(instance, context, providerInfo);
+		return instance;
+	}
 
-    /**
+	/**
      * Tears down the environment for the test fixture.
      * <p>
      * Calls {@link android.content.ContentProvider#shutdown()} on the
      * {@link android.content.ContentProvider} represented by mProvider.
      */
-    @Override
-    protected void tearDown() throws Exception {
-        mProvider.shutdown();
-        super.tearDown();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		mProvider.shutdown();
+		super.tearDown();
+	}
 
-    /**
+	/**
      * Gets the {@link MockContentResolver} created by this class during initialization. You
      * must use the methods of this resolver to access the provider under test.
      *
      * @return A {@link MockContentResolver} instance.
      */
-    public MockContentResolver getMockContentResolver() {
-        return mResolver;
-    }
+	public MockContentResolver getMockContentResolver() {
+		return mResolver;
+	}
 
-    /**
+	/**
      * Gets the {@link IsolatedContext} created by this class during initialization.
      * @return The {@link IsolatedContext} instance
      */
-    public IsolatedContext getMockContext() {
-        return mProviderContext;
-    }
+	public IsolatedContext getMockContext() {
+		return mProviderContext;
+	}
 
-    /**
+	/**
      * <p>
      *      Creates a new content provider of the same type as that passed to the test case class,
      *      with an authority name set to the authority parameter, and using an SQLite database as
@@ -218,21 +216,21 @@ public abstract class ProviderTestCase2<T extends ContentProvider> extends Andro
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public static <T extends ContentProvider> ContentResolver newResolverWithContentProviderFromSql(
-            Context targetContext, String filenamePrefix, Class<T> providerClass, String authority,
-            String databaseName, int databaseVersion, String sql)
-            throws IllegalAccessException, InstantiationException {
-        MockContentResolver resolver = new MockContentResolver();
-        RenamingDelegatingContext targetContextWrapper = new RenamingDelegatingContext(
-                new MockContext(), // The context that most methods are delegated to
-                targetContext, // The context that file methods are delegated to
-                filenamePrefix);
-        Context context = new IsolatedContext(resolver, targetContextWrapper);
-        DatabaseUtils.createDbFromSqlStatements(context, databaseName, databaseVersion, sql);
+	public static <T extends ContentProvider> ContentResolver newResolverWithContentProviderFromSql(
+	    Context targetContext, String filenamePrefix, Class<T> providerClass, String authority,
+	    String databaseName, int databaseVersion, String sql)
+	    throws IllegalAccessException, InstantiationException {
+		MockContentResolver resolver = new MockContentResolver();
+		RenamingDelegatingContext targetContextWrapper = new RenamingDelegatingContext(
+		    new MockContext(), // The context that most methods are delegated to
+		    targetContext,     // The context that file methods are delegated to
+		    filenamePrefix);
+		Context context = new IsolatedContext(resolver, targetContextWrapper);
+		DatabaseUtils.createDbFromSqlStatements(context, databaseName, databaseVersion, sql);
 
-        T provider = createProviderForTest(context, providerClass, authority);
-        resolver.addProvider(authority, provider);
+		T provider = createProviderForTest(context, providerClass, authority);
+		resolver.addProvider(authority, provider);
 
-        return resolver;
-    }
+		return resolver;
+	}
 }

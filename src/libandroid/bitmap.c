@@ -4,18 +4,11 @@
 
 // FIXME: put the header in a common place
 #include "../api-impl-jni/defines.h"
+#include "bitmap.h"
 
 #define ANDROID_BITMAP_RESULT_SUCCESS 0
 
-struct AndroidBitmapInfo {
-	uint32_t width;
-	uint32_t height;
-	uint32_t stride;
-	int32_t  format;
-	uint32_t flags;
-};
-
-int AndroidBitmap_getInfo(JNIEnv* env, jobject bitmap, struct AndroidBitmapInfo *info)
+int AndroidBitmap_getInfo(JNIEnv *env, jobject bitmap, struct AndroidBitmapInfo *info)
 {
 	info->width = _GET_INT_FIELD(bitmap, "width");
 	info->height = _GET_INT_FIELD(bitmap, "height");
@@ -24,7 +17,7 @@ int AndroidBitmap_getInfo(JNIEnv* env, jobject bitmap, struct AndroidBitmapInfo 
 	return ANDROID_BITMAP_RESULT_SUCCESS;
 }
 
-int AndroidBitmap_lockPixels(JNIEnv* env, jobject bitmap, void** pixels)
+int AndroidBitmap_lockPixels(JNIEnv *env, jobject bitmap, void **pixels)
 {
 	printf("AndroidBitmap_lockPixels\n");
 	GdkTexture *texture = _PTR((*env)->CallLongMethod(env, bitmap, _METHOD(_CLASS(bitmap), "getTexture", "()J")));
@@ -40,7 +33,7 @@ int AndroidBitmap_lockPixels(JNIEnv* env, jobject bitmap, void** pixels)
 	if (GDK_IS_MEMORY_TEXTURE(texture)) { // try to get the bytes non-copying
 		gsize texture_stride;
 		bytes = gdk_texture_downloader_download_bytes(downloader, &texture_stride);
-		if (texture_stride != stride) {  // texture was not created by us, fall back to copy
+		if (texture_stride != stride) { // texture was not created by us, fall back to copy
 			g_bytes_unref(bytes);
 			bytes = NULL;
 		}
@@ -56,7 +49,7 @@ int AndroidBitmap_lockPixels(JNIEnv* env, jobject bitmap, void** pixels)
 	return ANDROID_BITMAP_RESULT_SUCCESS;
 }
 
-int AndroidBitmap_unlockPixels(JNIEnv* env, jobject bitmap)
+int AndroidBitmap_unlockPixels(JNIEnv *env, jobject bitmap)
 {
 	printf("AndroidBitmap_unlockPixels\n");
 	GBytes *bytes = _PTR(_GET_LONG_FIELD(bitmap, "bytes"));

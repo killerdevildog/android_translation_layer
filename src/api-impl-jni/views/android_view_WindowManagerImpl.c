@@ -1,12 +1,12 @@
 #include <gtk/gtk.h>
 
 #include "../defines.h"
+#include "../generated_headers/android_view_WindowManagerImpl.h"
 #include "gdk/gdk.h"
 #include "glib-object.h"
-#include "../generated_headers/android_view_WindowManagerImpl.h"
 
 #define FIRST_SUB_WINDOW 1000
-#define LAST_SUB_WINDOW 1999
+#define LAST_SUB_WINDOW  1999
 
 extern GtkWindow *window;
 
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_android_view_WindowManagerImpl_native_1addView(JNIEn
 	gtk_popover_set_child(popover, gtk_widget_get_parent(widget));
 	printf("::: x=%d, y=%d, width=%d, height=%d\n", x, y, width, height);
 	gtk_popover_set_autohide(popover, FALSE);
-	gtk_popover_set_pointing_to(popover, &(GdkRectangle){.x=x, .y=y});
+	gtk_popover_set_pointing_to(popover, &(GdkRectangle){.x = x, .y = y});
 	gtk_widget_insert_before(GTK_WIDGET(popover), gtk_window_get_child(window), NULL);
 	gtk_popover_present(popover);
 	gtk_popover_popup(popover);
@@ -32,7 +32,7 @@ JNIEXPORT void JNICALL Java_android_view_WindowManagerImpl_native_1updateViewLay
 {
 	GtkPopover *popover = GTK_POPOVER(gtk_widget_get_parent(gtk_widget_get_parent(gtk_widget_get_parent(GTK_WIDGET(_PTR(widget_ptr))))));
 	printf("updateViewLayout::: x=%d, y=%d, width=%d, height=%d\n", x, y, width, height);
-	gtk_popover_set_pointing_to(popover, &(GdkRectangle){.x=x, .y=y});
+	gtk_popover_set_pointing_to(popover, &(GdkRectangle){.x = x, .y = y});
 }
 
 JNIEXPORT void JNICALL Java_android_view_WindowManagerImpl_native_1removeView(JNIEnv *env, jclass clazz, jlong widget_ptr)

@@ -3,6 +3,7 @@
 
 	<target name="compile">
 		<mkdir dir="${build}"/>
+		<depend srcdir="${srcdir}" destdir="${build}" cache="${build}/.depend"/>
 		<javac srcdir="${srcdir}" includes="${includes}" destdir="${build}" includeantruntime="false" debug="true">
 			<compilerarg line="${javaargs}"/>
 		</javac>

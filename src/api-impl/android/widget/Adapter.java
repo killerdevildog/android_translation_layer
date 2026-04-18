@@ -137,11 +137,11 @@ public interface Adapter {
 
 	static final int NO_SELECTION = Integer.MIN_VALUE;
 
-	 /**
+	/**
 	  * @return true if this adapter doesn't contain any data.  This is used to determine
 	  * whether the empty view should be displayed.  A typical implementation will return
 	  * getCount() == 0 but since getCount() includes the headers and footers, specialized
 	  * adapters might want a different behavior.
 	  */
-	 boolean isEmpty();
+	boolean isEmpty();
 }

@@ -16,11 +16,15 @@
 
 package android.content.pm;
 
+import android.os.Parcelable;
+
 /**
  * Overall information about the contents of a package.  This corresponds
  * to all of the information collected from AndroidManifest.xml.
  */
-public class PackageInfo {
+public class PackageInfo implements Parcelable {
+
+	public static final Creator<PackageInfo> CREATOR = null;
 
 	/**
 	 * The name of this package.  From the &lt;manifest&gt; tag's "name"

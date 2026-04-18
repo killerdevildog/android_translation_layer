@@ -88,8 +88,8 @@ public class WebView {
 }
 ```
 
-This might be enough, but quite often, the returned Object's methods are called by the app. If that's the case, 
-simply create stub methods in that class same as we did above, and after a few iterations you should get to the 
+This might be enough, but quite often, the returned Object's methods are called by the app. If that's the case,
+simply create stub methods in that class same as we did above, and after a few iterations you should get to the
 end of the rabbit hole.
 
 __NOTE__: exceptions like `java.lang.NoSuchMethodException` may sometimes not provide information about what class
@@ -97,17 +97,19 @@ the method is supposed to be in (not even with the "or it's superclasses" discla
 again need to decompile the app's code and look around the place mentioned in the stack trace for calls to a method
 of the name mentioned.
 
-__NOTE__: in some cases, such as with enums and interfaces, you should be able to simply copy the APACHE-licensed 
-android code. With interfaces, you might want to comment out any methods not needed for the app you are trying 
-to get to work in order to cut down on the amount of stubbing you need to do.
+__NOTE__: in some cases, such as with enums and interfaces, you should be able to simply copy the APACHE-licensed
+android code. With interfaces, you might want to comment out any methods not needed for the app you are trying
+to get to work in order to cut down on the amount of stubbing you need to do. This also applies to simple
+utilty classes (e.g. `android.util.Rational`).
 
-Random Layout widgets can also mostly be copied from AOSP, with minor changes and maybe some commenting out 
+Random Layout widgets can also mostly be copied from AOSP, with minor changes and maybe some commenting out
 of things that make the code not compile (if they turn out to have been important, can always fix them properly later)
 
-__IMPORTANT__: run `clang-format --style="{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: true, ColumnLimit: 0}"`
-on any AOSP file that you are importing; manual code style changes are not required, but this simple automatic step is. 
-Make sure to run this before doing any changes to the code, since e.g commented out sections do not get reformatted 
-by `clang-format`.
+__IMPORTANT__: run `clang-format --style="{BasedOnStyle: InheritParentConfig, ReflowComments: IndentOnly}"`
+(see CodeStyle.md) on any AOSP file that you are importing; manual code style changes are not required, but this
+simple automatic step is. Make sure to run this before making any changes to the code, since e.g commented out
+sections do not get reformatted by `clang-format`. __NOTE__: it is strongly suggested that you move operators
+at the ends of lines to the next line, otherwise clang-format will collapse the whole line.
 
 If you added any classes, make sure to add them in `src/api-impl/meson.build` (sorted alphabetically).
 
@@ -123,6 +125,11 @@ To implement any other widget, copy a widget that is closest to what you're look
 a better approximation for your widget, then change to that as the backing Gtk widget. If Gtk doesn't have 
 anything close enough, you will need to implement your own widget. You might need to do that anyway, and wrap 
 the close-enough Gtk widget, since subclassing is mostly not possible in Gtk.
+
+__NOTE__: We now support widgets implemented fully in Java quite well, since that is necessary
+to support most modern apps, so you can also copy widgets from AOSP with varying level of success.
+If the the implementation details can in principle be relied upon by apps, this may in fact be necessary.
+(In that case, the following doesn't apply.)
 
 ###### case study: ImageView
 

@@ -58,7 +58,7 @@ import android.view.animation.Interpolator;
  *    ...
  * }</pre>
  */
-public class Scroller  {
+public class Scroller {
 	private final Interpolator mInterpolator;
 	private int mMode;
 	private int mStartX;
@@ -85,7 +85,7 @@ public class Scroller  {
 	private static final int DEFAULT_DURATION = 250;
 	private static final int SCROLL_MODE = 0;
 	private static final int FLING_MODE = 1;
-	private static float DECELERATION_RATE = (float) (Math.log(0.78) / Math.log(0.9));
+	private static float DECELERATION_RATE = (float)(Math.log(0.78) / Math.log(0.9));
 	private static final float INFLEXION = 0.35f; // Tension lines cross at (INFLEXION, 1)
 	private static final float START_TENSION = 0.5f;
 	private static final float END_TENSION = 1.0f;
@@ -103,16 +103,19 @@ public class Scroller  {
 		float x_min = 0.0f;
 		float y_min = 0.0f;
 		for (int i = 0; i < NB_SAMPLES; i++) {
-			final float alpha = (float) i / NB_SAMPLES;
+			final float alpha = (float)i / NB_SAMPLES;
 			float x_max = 1.0f;
 			float x, tx, coef;
 			while (true) {
 				x = x_min + (x_max - x_min) / 2.0f;
 				coef = 3.0f * x * (1.0f - x);
 				tx = coef * ((1.0f - x) * P1 + x * P2) + x * x * x;
-				if (Math.abs(tx - alpha) < 1E-5) break;
-				if (tx > alpha) x_max = x;
-				else x_min = x;
+				if (Math.abs(tx - alpha) < 1E-5)
+					break;
+				if (tx > alpha)
+					x_max = x;
+				else
+					x_min = x;
 			}
 			SPLINE_POSITION[i] = coef * ((1.0f - x) * START_TENSION + x) + x * x * x;
 			float y_max = 1.0f;
@@ -121,9 +124,12 @@ public class Scroller  {
 				y = y_min + (y_max - y_min) / 2.0f;
 				coef = 3.0f * y * (1.0f - y);
 				dy = coef * ((1.0f - y) * START_TENSION + y) + y * y * y;
-				if (Math.abs(dy - alpha) < 1E-5) break;
-				if (dy > alpha) y_max = y;
-				else y_min = y;
+				if (Math.abs(dy - alpha) < 1E-5)
+					break;
+				if (dy > alpha)
+					y_max = y;
+				else
+					y_min = y;
 			}
 			SPLINE_TIME[i] = coef * ((1.0f - y) * P1 + y * P2) + y * y * y;
 		}
@@ -144,7 +150,7 @@ public class Scroller  {
 	 */
 	public Scroller(Context context, Interpolator interpolator) {
 		this(context, interpolator,
-				context.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.HONEYCOMB);
+		     context.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.HONEYCOMB);
 	}
 
 	/**
@@ -178,10 +184,10 @@ public class Scroller  {
 	}
 
 	private float computeDeceleration(float friction) {
-		return SensorManager.GRAVITY_EARTH   // g (m/s^2)
-					  * 39.37f               // inch/meter
-					  * mPpi                 // pixels per inch
-					  * friction;
+		return SensorManager.GRAVITY_EARTH // g (m/s^2)
+		     * 39.37f                      // inch/meter
+		     * mPpi                        // pixels per inch
+		     * friction;
 	}
 
 	/**
@@ -237,8 +243,7 @@ public class Scroller  {
 	 * negative.
 	 */
 	public float getCurrVelocity() {
-		return mMode == FLING_MODE ?
-				mCurrVelocity : mVelocity - mDeceleration * timePassed() / 2000.0f;
+		return mMode == FLING_MODE ? mCurrVelocity : mVelocity - mDeceleration * timePassed() / 2000.0f;
 	}
 
 	/**
@@ -289,42 +294,41 @@ public class Scroller  {
 
 		if (timePassed < mDuration) {
 			switch (mMode) {
-			case SCROLL_MODE:
-				final float x = mInterpolator.getInterpolation(timePassed * mDurationReciprocal);
-				mCurrX = mStartX + Math.round(x * mDeltaX);
-				mCurrY = mStartY + Math.round(x * mDeltaY);
-				break;
-			case FLING_MODE:
-				final float t = (float) timePassed / mDuration;
-				final int index = (int) (NB_SAMPLES * t);
-				float distanceCoef = 1.f;
-				float velocityCoef = 0.f;
-				if (index < NB_SAMPLES) {
-					final float t_inf = (float) index / NB_SAMPLES;
-					final float t_sup = (float) (index + 1) / NB_SAMPLES;
-					final float d_inf = SPLINE_POSITION[index];
-					final float d_sup = SPLINE_POSITION[index + 1];
-					velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);
-					distanceCoef = d_inf + (t - t_inf) * velocityCoef;
-				}
-				mCurrVelocity = velocityCoef * mDistance / mDuration * 1000.0f;
+				case SCROLL_MODE:
+					final float x = mInterpolator.getInterpolation(timePassed * mDurationReciprocal);
+					mCurrX = mStartX + Math.round(x * mDeltaX);
+					mCurrY = mStartY + Math.round(x * mDeltaY);
+					break;
+				case FLING_MODE:
+					final float t = (float)timePassed / mDuration;
+					final int index = (int)(NB_SAMPLES * t);
+					float distanceCoef = 1.f;
+					float velocityCoef = 0.f;
+					if (index < NB_SAMPLES) {
+						final float t_inf = (float)index / NB_SAMPLES;
+						final float t_sup = (float)(index + 1) / NB_SAMPLES;
+						final float d_inf = SPLINE_POSITION[index];
+						final float d_sup = SPLINE_POSITION[index + 1];
+						velocityCoef = (d_sup - d_inf) / (t_sup - t_inf);
+						distanceCoef = d_inf + (t - t_inf) * velocityCoef;
+					}
+					mCurrVelocity = velocityCoef * mDistance / mDuration * 1000.0f;
 
-				mCurrX = mStartX + Math.round(distanceCoef * (mFinalX - mStartX));
-				// Pin to mMinX <= mCurrX <= mMaxX
-				mCurrX = Math.min(mCurrX, mMaxX);
-				mCurrX = Math.max(mCurrX, mMinX);
+					mCurrX = mStartX + Math.round(distanceCoef * (mFinalX - mStartX));
+					// Pin to mMinX <= mCurrX <= mMaxX
+					mCurrX = Math.min(mCurrX, mMaxX);
+					mCurrX = Math.max(mCurrX, mMinX);
 
-				mCurrY = mStartY + Math.round(distanceCoef * (mFinalY - mStartY));
-				// Pin to mMinY <= mCurrY <= mMaxY
-				mCurrY = Math.min(mCurrY, mMaxY);
-				mCurrY = Math.max(mCurrY, mMinY);
-				if (mCurrX == mFinalX && mCurrY == mFinalY) {
-					mFinished = true;
-				}
-				break;
+					mCurrY = mStartY + Math.round(distanceCoef * (mFinalY - mStartY));
+					// Pin to mMinY <= mCurrY <= mMaxY
+					mCurrY = Math.min(mCurrY, mMaxY);
+					mCurrY = Math.max(mCurrY, mMinY);
+					if (mCurrX == mFinalX && mCurrY == mFinalY) {
+						mFinished = true;
+					}
+					break;
 			}
-		}
-		else {
+		} else {
 			mCurrX = mFinalX;
 			mCurrY = mFinalY;
 			mFinished = true;
@@ -375,7 +379,7 @@ public class Scroller  {
 		mFinalY = startY + dy;
 		mDeltaX = dx;
 		mDeltaY = dy;
-		mDurationReciprocal = 1.0f / (float) mDuration;
+		mDurationReciprocal = 1.0f / (float)mDuration;
 	}
 
 	/**
@@ -398,26 +402,26 @@ public class Scroller  {
 	 *        point.
 	 */
 	public void fling(int startX, int startY, int velocityX, int velocityY,
-			int minX, int maxX, int minY, int maxY) {
+	                  int minX, int maxX, int minY, int maxY) {
 		// Continue a scroll or fling in progress
 		if (mFlywheel && !mFinished) {
 			float oldVel = getCurrVelocity();
-			float dx = (float) (mFinalX - mStartX);
-			float dy = (float) (mFinalY - mStartY);
-			float hyp = (float) Math.hypot(dx, dy);
+			float dx = (float)(mFinalX - mStartX);
+			float dy = (float)(mFinalY - mStartY);
+			float hyp = (float)Math.hypot(dx, dy);
 			float ndx = dx / hyp;
 			float ndy = dy / hyp;
 			float oldVelocityX = ndx * oldVel;
 			float oldVelocityY = ndy * oldVel;
-			if (Math.signum(velocityX) == Math.signum(oldVelocityX) &&
-					Math.signum(velocityY) == Math.signum(oldVelocityY)) {
+			if (Math.signum(velocityX) == Math.signum(oldVelocityX)
+			    && Math.signum(velocityY) == Math.signum(oldVelocityY)) {
 				velocityX += oldVelocityX;
 				velocityY += oldVelocityY;
 			}
 		}
 		mMode = FLING_MODE;
 		mFinished = false;
-		float velocity = (float) Math.hypot(velocityX, velocityY);
+		float velocity = (float)Math.hypot(velocityX, velocityY);
 
 		mVelocity = velocity;
 		mDuration = getSplineFlingDuration(velocity);
@@ -427,18 +431,18 @@ public class Scroller  {
 		float coeffX = velocity == 0 ? 1.0f : velocityX / velocity;
 		float coeffY = velocity == 0 ? 1.0f : velocityY / velocity;
 		double totalDistance = getSplineFlingDistance(velocity);
-		mDistance = (int) (totalDistance * Math.signum(velocity));
+		mDistance = (int)(totalDistance * Math.signum(velocity));
 
 		mMinX = minX;
 		mMaxX = maxX;
 		mMinY = minY;
 		mMaxY = maxY;
-		mFinalX = startX + (int) Math.round(totalDistance * coeffX);
+		mFinalX = startX + (int)Math.round(totalDistance * coeffX);
 		// Pin to mMinX <= mFinalX <= mMaxX
 		mFinalX = Math.min(mFinalX, mMaxX);
 		mFinalX = Math.max(mFinalX, mMinX);
 
-		mFinalY = startY + (int) Math.round(totalDistance * coeffY);
+		mFinalY = startY + (int)Math.round(totalDistance * coeffY);
 		// Pin to mMinY <= mFinalY <= mMaxY
 		mFinalY = Math.min(mFinalY, mMaxY);
 		mFinalY = Math.max(mFinalY, mMinY);
@@ -451,7 +455,7 @@ public class Scroller  {
 	private int getSplineFlingDuration(float velocity) {
 		final double l = getSplineDeceleration(velocity);
 		final double decelMinusOne = DECELERATION_RATE - 1.0;
-		return (int) (1000.0 * Math.exp(l / decelMinusOne));
+		return (int)(1000.0 * Math.exp(l / decelMinusOne));
 	}
 
 	private double getSplineFlingDistance(float velocity) {
@@ -527,8 +531,8 @@ public class Scroller  {
 	 * @hide
 	 */
 	public boolean isScrollingInDirection(float xvel, float yvel) {
-		return !mFinished && Math.signum(xvel) == Math.signum(mFinalX - mStartX) &&
-				Math.signum(yvel) == Math.signum(mFinalY - mStartY);
+		return !mFinished && Math.signum(xvel) == Math.signum(mFinalX - mStartX)
+		    && Math.signum(yvel) == Math.signum(mFinalY - mStartY);
 	}
 
 	static class ViscousFluidInterpolator implements Interpolator {
@@ -549,7 +553,7 @@ public class Scroller  {
 			if (x < 1.0f) {
 				x -= (1.0f - (float)Math.exp(-x));
 			} else {
-				float start = 0.36787944117f;   // 1/e == exp(-1)
+				float start = 0.36787944117f; // 1/e == exp(-1)
 				x = 1.0f - (float)Math.exp(1.0f - x);
 				x = start + x * (1.0f - start);
 			}

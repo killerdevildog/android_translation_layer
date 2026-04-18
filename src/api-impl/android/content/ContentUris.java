@@ -16,9 +16,8 @@
 
 package android.content;
 
-import java.util.List;
-
 import android.net.Uri;
+import java.util.List;
 
 /**
 * Utility methods useful for working with {@link android.net.Uri} objects

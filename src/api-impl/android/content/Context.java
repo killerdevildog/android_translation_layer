@@ -142,7 +142,7 @@ public abstract class Context {
 		provider.put("KeyGenerator.HmacSHA512", "android.security.keystore.KeyGenerator$HmacSHA512");
 		Security.addProvider(provider);
 
-		r.applyPackageQuirks(application_info.packageName);
+		r.applyPackageQuirks(application_info.minSdkVersion);
 
 		for (PackageParser.Activity receiver : pkg.receivers) {
 			for (PackageParser.ActivityIntentInfo intent : receiver.intents) {
@@ -157,6 +157,7 @@ public abstract class Context {
 	private static native String native_get_apk_path();
 	protected static native void native_updateConfig(Configuration config);
 	private static native void nativeOpenFile(int fd);
+	private static native void nativeShareFile(String text, int fd);
 	private static native void nativeExportUnifiedPush(String packageName);
 	private static native void nativeRegisterUnifiedPush(String token, String application);
 	private static native void nativeStartExternalService(Intent service);
@@ -187,7 +188,7 @@ public abstract class Context {
 	}
 
 	public int checkPermission(String permission, int pid, int uid) {
-		return getPackageManager().checkPermission(permission, "dummy");
+		return getPackageManager().checkPermission(permission, getPackageName());
 	}
 
 	public abstract Resources.Theme getTheme();
@@ -260,6 +261,10 @@ public abstract class Context {
 			data_dir = android.os.Environment.getExternalStorageDirectory();
 		}
 		return data_dir;
+	}
+
+	public File getDataDir() {
+		return getDataDirFile();
 	}
 
 	public File getFilesDir() {
@@ -407,8 +412,8 @@ public abstract class Context {
 		ComponentName component = intent.getComponent();
 		if (component == null) {
 			int priority = Integer.MIN_VALUE;
-			for (PackageParser.Service service: pkg.services) {
-				for (PackageParser.IntentInfo intentInfo: service.intents) {
+			for (PackageParser.Service service : pkg.services) {
+				for (PackageParser.IntentInfo intentInfo : service.intents) {
 					if (intentInfo.matchAction(intent.getAction()) && intentInfo.priority > priority) {
 						component = new ComponentName(pkg.packageName, service.className);
 						priority = intentInfo.priority;
@@ -479,9 +484,11 @@ public abstract class Context {
 	}
 
 	public int checkCallingOrSelfPermission(String permission) {
-		Slog.w(TAG, "!!! app wants to know if it has a permission: >" + permission + "< (returning PERMISSION_DENIED)");
+		return getPackageManager().checkPermission(permission, getPackageName());
+	}
 
-		return PackageManager.PERMISSION_DENIED;
+	public int checkSelfPermission(String permission) {
+		return checkCallingOrSelfPermission(permission);
 	}
 
 	public void registerComponentCallbacks(ComponentCallbacks callbacks) {}
@@ -500,7 +507,7 @@ public abstract class Context {
 			}
 		}
 		if (intent.getComponent() == null) {
-			Slog.w(TAG, "Context.bindService("+intent+", "+serviceConnection+", "+flags+"): intent.getComponent() is null");
+			Slog.w(TAG, "Context.bindService(" + intent + ", " + serviceConnection + ", " + flags + "): intent.getComponent() is null");
 			return false;
 		}
 
@@ -511,6 +518,7 @@ public abstract class Context {
 					Class<? extends Service> cls = Class.forName(intent.getComponent().getClassName()).asSubclass(Service.class);
 					if (!runningServices.containsKey(cls)) {
 						Service service = cls.getConstructor().newInstance();
+						service.attachBaseContext(new ContextImpl(getResources(), getApplicationInfo(), getTheme()));
 						service.onCreate();
 						runningServices.put(cls, service);
 					}
@@ -530,8 +538,8 @@ public abstract class Context {
 			className = intent.getComponent().getClassName();
 		} else {
 			int best_score = -5;
-			for (PackageParser.Activity activity: pkg.activities) {
-				for (PackageParser.IntentInfo intentInfo: activity.intents) {
+			for (PackageParser.Activity activity : pkg.activities) {
+				for (PackageParser.IntentInfo intentInfo : activity.intents) {
 					int score = intentInfo.match(intent.getAction(), intent.getType(), intent.getScheme(), intent.getData(), intent.getCategories(), "Context");
 					if (score > best_score && score > 0) {
 						className = activity.className;
@@ -557,29 +565,53 @@ public abstract class Context {
 			className = intent.getComponent().getClassName();
 		} else {
 			if (intent.getAction() != null && intent.getAction().equals("android.intent.action.SEND")) {
-				Slog.i(TAG, "starting extern activity with intent: " + intent);
+				Slog.i(TAG, "sharing intent via composeMail: " + intent);
 				String text = intent.getStringExtra("android.intent.extra.TEXT");
-				if (text == null)
-					text = String.valueOf(intent.getExtras().get("android.intent.extra.STREAM"));
-				if (text != null)
-					ClipboardManager.native_set_clipboard(text);
+				ParcelFileDescriptor fd = null;
+				if (intent.hasExtra(Intent.EXTRA_STREAM)) {
+					try {
+						fd = getContentResolver().openFileDescriptor((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM), "r");
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				final ParcelFileDescriptor fd_final = fd;
+				Runnable runnable = new Runnable() {
+					@Override
+					public void run() {
+						nativeShareFile(text, fd_final != null ? fd_final.getFd() : -1);
+						if (fd_final != null) {
+							try {
+								fd_final.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				};
+				if (Looper.myLooper() == Looper.getMainLooper()) {
+					runnable.run();
+				} else {
+					new Handler(Looper.getMainLooper()).post(runnable);
+				}
 				return;
 			} else if (intent.getData() != null) {
 				Slog.i(TAG, "starting extern activity with intent: " + intent);
 				if (intent.getData().getScheme().equals("content")) {
-					try {
-						ParcelFileDescriptor fd = getContentResolver().openFileDescriptor(intent.getData(), "r");
-						nativeOpenFile(fd.getFd());
-						return;
-					} catch (FileNotFoundException e) {
+					try (ParcelFileDescriptor fd = getContentResolver().openFileDescriptor(intent.getData(), "r")) {
+						if (fd != null) {
+							nativeOpenFile(fd.getFd());
+							return;
+						}
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 				Activity.nativeOpenURI(String.valueOf(intent.getData()));
 				return;
 			}
-			for (PackageParser.Activity activity: pkg.activities) {
-				for (PackageParser.IntentInfo intentInfo: activity.intents) {
+			for (PackageParser.Activity activity : pkg.activities) {
+				for (PackageParser.IntentInfo intentInfo : activity.intents) {
 					if (intentInfo.matchAction(intent.getAction())) {
 						className = activity.className;
 						break;
@@ -688,7 +720,8 @@ public abstract class Context {
 	public void unbindService(ServiceConnection serviceConnection) {}
 
 	public void unregisterReceiver(BroadcastReceiver receiver) {
-		while (receiverMap.values().remove(receiver));
+		while (receiverMap.values().remove(receiver))
+			;
 	}
 
 	public abstract Context createPackageContext(String packageName, int flags);
@@ -757,6 +790,15 @@ public abstract class Context {
 
 	public abstract Context createDeviceProtectedStorageContext();
 
+	public boolean moveSharedPreferencesFrom(Context sourceContext, String name) {
+		File sourceFile = sourceContext.getSharedPrefsFile(name);
+		if (!sourceFile.exists()) {
+			return true;
+		}
+		deleteSharedPreferences(name);
+		return sourceFile.renameTo(getSharedPrefsFile(name));
+	}
+
 	public boolean deleteSharedPreferences(String name) {
 		getSharedPrefsFile(name).delete();
 		sharedPrefs.remove(name);
@@ -766,4 +808,6 @@ public abstract class Context {
 	public String getPackageResourcePath() {
 		return native_get_apk_path();
 	}
+
+	public abstract int getThemeResId();
 }

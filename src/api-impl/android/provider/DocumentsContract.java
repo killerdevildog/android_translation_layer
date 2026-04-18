@@ -16,13 +16,12 @@
 
 package android.provider;
 
-import java.util.List;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import java.util.List;
 
 public final class DocumentsContract {
 	public static final String EXTRA_LOADING = "loading";
@@ -100,17 +99,26 @@ public final class DocumentsContract {
 	}
 
 	public static Uri buildChildDocumentsUriUsingTree(Uri treeUri, String parentDocumentId) {
-		return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-		                        .authority(treeUri.getAuthority()).appendPath(PATH_TREE)
-		                        .appendPath(getTreeDocumentId(treeUri)).appendPath(PATH_DOCUMENT)
-		                        .appendPath(parentDocumentId).appendPath(PATH_CHILDREN).build();
+		return new Uri.Builder()
+		    .scheme(ContentResolver.SCHEME_CONTENT)
+		    .authority(treeUri.getAuthority())
+		    .appendPath(PATH_TREE)
+		    .appendPath(getTreeDocumentId(treeUri))
+		    .appendPath(PATH_DOCUMENT)
+		    .appendPath(parentDocumentId)
+		    .appendPath(PATH_CHILDREN)
+		    .build();
 	}
 
 	public static Uri buildDocumentUriUsingTree(Uri treeUri, String documentId) {
-		return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-		                        .authority(treeUri.getAuthority()).appendPath(PATH_TREE)
-		                        .appendPath(getTreeDocumentId(treeUri)).appendPath(PATH_DOCUMENT)
-		                        .appendPath(documentId).build();
+		return new Uri.Builder()
+		    .scheme(ContentResolver.SCHEME_CONTENT)
+		    .authority(treeUri.getAuthority())
+		    .appendPath(PATH_TREE)
+		    .appendPath(getTreeDocumentId(treeUri))
+		    .appendPath(PATH_DOCUMENT)
+		    .appendPath(documentId)
+		    .build();
 	}
 
 	public static Uri copyDocument(ContentResolver content, Uri sourceDocumentUri, Uri targetParentDocumentUri) {
@@ -133,32 +141,36 @@ public final class DocumentsContract {
 		throw new RuntimeException("DocumentsContract.isChildDocument not implemented yet");
 	}
 
+	public static Uri buildDocumentUri(String authority, String documentId) {
+		return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(authority).appendPath(PATH_DOCUMENT).appendPath(documentId).build();
+	}
+
 	public final static class Document {
 		public static final String COLUMN_DOCUMENT_ID = "document_id";
-	public static final String COLUMN_MIME_TYPE = "mime_type";
-	public static final String COLUMN_DISPLAY_NAME = "_display_name";//OpenableColumns.DISPLAY_NAME;
-	public static final String COLUMN_SUMMARY = "summary";
-	public static final String COLUMN_LAST_MODIFIED = "last_modified";
-	public static final String COLUMN_ICON = "icon";
-	public static final String COLUMN_FLAGS = "flags";
-	public static final String COLUMN_SIZE = "_size";//OpenableColumns.SIZE;
-	public static final String MIME_TYPE_DIR = "vnd.android.document/directory";
+		public static final String COLUMN_MIME_TYPE = "mime_type";
+		public static final String COLUMN_DISPLAY_NAME = "_display_name"; //OpenableColumns.DISPLAY_NAME;
+		public static final String COLUMN_SUMMARY = "summary";
+		public static final String COLUMN_LAST_MODIFIED = "last_modified";
+		public static final String COLUMN_ICON = "icon";
+		public static final String COLUMN_FLAGS = "flags";
+		public static final String COLUMN_SIZE = "_size"; //OpenableColumns.SIZE;
+		public static final String MIME_TYPE_DIR = "vnd.android.document/directory";
 
-	public static final int FLAG_SUPPORTS_THUMBNAIL = 1;
-	public static final int FLAG_SUPPORTS_WRITE = 1 << 1;
-	public static final int FLAG_SUPPORTS_DELETE = 1 << 2;
-	public static final int FLAG_DIR_SUPPORTS_CREATE = 1 << 3;
-	public static final int FLAG_DIR_PREFERS_GRID = 1 << 4;
-	public static final int FLAG_DIR_PREFERS_LAST_MODIFIED = 1 << 5;
-	public static final int FLAG_SUPPORTS_RENAME = 1 << 6;
-	public static final int FLAG_SUPPORTS_COPY = 1 << 7;
-	public static final int FLAG_SUPPORTS_MOVE = 1 << 8;
-	public static final int FLAG_VIRTUAL_DOCUMENT = 1 << 9;
-	public static final int FLAG_SUPPORTS_REMOVE = 1 << 10;
-	public static final int FLAG_SUPPORTS_SETTINGS = 1 << 11;
-	public static final int FLAG_WEB_LINKABLE = 1 << 12;
-	public static final int FLAG_PARTIAL = 1 << 13;
-	public static final int FLAG_SUPPORTS_METADATA = 1 << 14;
-	public static final int FLAG_DIR_BLOCKS_OPEN_DOCUMENT_TREE = 1 << 15;
+		public static final int FLAG_SUPPORTS_THUMBNAIL = 1;
+		public static final int FLAG_SUPPORTS_WRITE = 1 << 1;
+		public static final int FLAG_SUPPORTS_DELETE = 1 << 2;
+		public static final int FLAG_DIR_SUPPORTS_CREATE = 1 << 3;
+		public static final int FLAG_DIR_PREFERS_GRID = 1 << 4;
+		public static final int FLAG_DIR_PREFERS_LAST_MODIFIED = 1 << 5;
+		public static final int FLAG_SUPPORTS_RENAME = 1 << 6;
+		public static final int FLAG_SUPPORTS_COPY = 1 << 7;
+		public static final int FLAG_SUPPORTS_MOVE = 1 << 8;
+		public static final int FLAG_VIRTUAL_DOCUMENT = 1 << 9;
+		public static final int FLAG_SUPPORTS_REMOVE = 1 << 10;
+		public static final int FLAG_SUPPORTS_SETTINGS = 1 << 11;
+		public static final int FLAG_WEB_LINKABLE = 1 << 12;
+		public static final int FLAG_PARTIAL = 1 << 13;
+		public static final int FLAG_SUPPORTS_METADATA = 1 << 14;
+		public static final int FLAG_DIR_BLOCKS_OPEN_DOCUMENT_TREE = 1 << 15;
 	}
 }

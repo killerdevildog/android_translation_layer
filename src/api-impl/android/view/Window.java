@@ -5,14 +5,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.transition.Transition;
-import android.view.SurfaceHolder;
 import android.widget.FrameLayout;
+import android.widget.Toolbar;
 
 public class Window {
 	public static final int FEATURE_OPTIONS_PANEL = 0;
 	public static final int FEATURE_NO_TITLE = 1;
 
 	public ViewTreeObserver view_tree_observer = null;
+	private WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, 0, 0, 0);
 
 	public static interface Callback {
 		public void onContentChanged();
@@ -38,21 +39,11 @@ public class Window {
 	private Window.Callback callback;
 	private Context context;
 
-	public boolean is_floating = false;
-
 	public Window(Context context, Window.Callback callback) {
 		this.callback = callback;
 		this.context = context;
 		decorView = new FrameLayout(context);
 		decorView.setId(android.R.id.content);
-
-		TypedArray a = context.obtainStyledAttributes(com.android.internal.R.styleable.Window);
-		/* windows are not floating by default - so a dialog without a dialog theme is not a dialog */
-		is_floating = a.getBoolean(R.styleable.Window_windowIsFloating, false);
-		Drawable background = a.getDrawable(R.styleable.Window_windowBackground);
-		if (background != null)
-			setBackgroundDrawable(background);
-		a.recycle();
 	}
 
 	public void set_native_window(long native_window) {
@@ -72,6 +63,12 @@ public class Window {
 	}
 
 	public void setContentView(View view) {
+		if (decorView.getBackground() == null) {
+			TypedArray ta = context.obtainStyledAttributes(new int[] {R.attr.windowBackground});
+			if (ta.hasValue(0))
+				setBackgroundDrawable(ta.getDrawable(0));
+			ta.recycle();
+		}
 		decorView.removeAllViews();
 		decorView.addView(view);
 		if (view != null) {
@@ -92,6 +89,8 @@ public class Window {
 	}
 
 	public View findViewById(int id) {
+		if (id == com.android.internal.R.id.action_bar)
+			return new Toolbar(context);
 		return decorView.findViewById(id);
 	}
 
@@ -100,14 +99,21 @@ public class Window {
 	}
 
 	public WindowManager.LayoutParams getAttributes() {
-		return new WindowManager.LayoutParams();
+		return params;
 	}
 
 	public void setBackgroundDrawable(Drawable drawable) {
+		// HACK: disable transparent background for WhatsApp dialogs
+		// For some unknown reason, the language picker in WhatsApp doesn't render the BottomSheet background currently.
+		if (!"com.whatsapp".equals(context.getPackageName()))
+			remove_gtk_background(native_window);
 		decorView.setBackgroundDrawable(drawable);
 	}
 
 	public void setAttributes(WindowManager.LayoutParams params) {
+		if (params.screenBrightness != -1)
+			set_screen_brightness(params.screenBrightness);
+		this.params = params;
 		setLayout(params.width, params.height);
 	}
 
@@ -120,8 +126,8 @@ public class Window {
 	public void setFormat(int format) {}
 
 	public void setLayout(int width, int height) {
-		if (height == 0)  // FIXME: remove this hack once measurement error with composeUI dialogs is fixed
-			height = 500;
+		params.width = width;
+		params.height = height;
 		set_layout(native_window, width, height);
 	}
 
@@ -132,10 +138,12 @@ public class Window {
 	public void setSoftInputMode(int dummy) {}
 
 	public int getNavigationBarColor() {
-		return 0xFF888888;  // gray
+		return 0xFF888888; // gray
 	}
 
-	public void setBackgroundDrawableResource(int resId) {}
+	public void setBackgroundDrawableResource(int resId) {
+		setBackgroundDrawable(context.getDrawable(resId));
+	}
 
 	public int getStatusBarColor() { return 0xFFFF0000; }
 
@@ -181,9 +189,15 @@ public class Window {
 		return new InsetsController();
 	}
 
+	public void setStatusBarContrastEnforced(boolean enforced) {}
+
+	public void setNavigationBarContrastEnforced(boolean enforced) {}
+
 	public native void set_widget_as_root(long native_window, long widget);
 	private native void set_title(long native_window, String title);
 	public native void take_input_queue(long native_window, InputQueue.Callback callback, InputQueue queue);
 	public native void set_layout(long native_window, int width, int height);
 	private static native void set_jobject(long ptr, Window obj);
+	private native void remove_gtk_background(long native_window);
+	private native void set_screen_brightness(float brightness);
 }

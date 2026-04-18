@@ -360,12 +360,12 @@ public class Process {
 	 * {@hide}
 	 */
 	public static final ProcessStartResult start(final String processClass,
-						     final String niceName,
-						     int uid, int gid, int[] gids,
-						     int debugFlags, int mountExternal,
-						     int targetSdkVersion,
-						     String seInfo,
-						     String[] zygoteArgs) {
+	                                             final String niceName,
+	                                             int uid, int gid, int[] gids,
+	                                             int debugFlags, int mountExternal,
+	                                             int targetSdkVersion,
+	                                             String seInfo,
+	                                             String[] zygoteArgs) {
 		System.out.println("NOT starting a process");
 
 		return null;
@@ -678,7 +678,7 @@ public class Process {
 	 * other's processes.
 	 */
 	public static final void killProcess(int pid) {
-		if(pid == Process.myPid()) {
+		if (pid == Process.myPid()) {
 			System.out.println("the app called killProcess on itself");
 			System.exit(0);
 		}
@@ -736,7 +736,7 @@ public class Process {
 	 * @hide
 	 */
 	public static final native void readProcLines(String path,
-						      String[] reqFields, long[] outSizes);
+	                                              String[] reqFields, long[] outSizes);
 
 	/**
 	 * @hide
@@ -788,7 +788,7 @@ public class Process {
 	 * @hide
 	 */
 	public static final /*native*/ boolean readProcFile(String file, int[] format,
-							String[] outStrings, long[] outLongs, float[] outFloats) {
+	                                                    String[] outStrings, long[] outLongs, float[] outFloats) {
 		System.out.println("readProcFile(" + file + ") called");
 		return false;
 	}
@@ -797,7 +797,7 @@ public class Process {
 	 * @hide
 	 */
 	public static final native boolean parseProcLine(byte[] buffer, int startIndex,
-							 int endIndex, int[] format, String[] outStrings, long[] outLongs, float[] outFloats);
+	                                                 int endIndex, int[] format, String[] outStrings, long[] outLongs, float[] outFloats);
 
 	/**
 	 * @hide

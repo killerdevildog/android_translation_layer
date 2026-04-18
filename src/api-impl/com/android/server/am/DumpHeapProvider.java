@@ -72,7 +72,7 @@ public class DumpHeapProvider extends ContentProvider {
 			final String tag = Uri.decode(path);
 			if (tag.equals("/java")) {
 				return ParcelFileDescriptor.open(sHeapDumpJavaFile,
-						ParcelFileDescriptor.MODE_READ_ONLY);
+				                                 ParcelFileDescriptor.MODE_READ_ONLY);
 			} else {
 				throw new FileNotFoundException("Invalid path for " + uri);
 			}

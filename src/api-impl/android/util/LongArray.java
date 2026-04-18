@@ -16,12 +16,10 @@
 
 package android.util;
 
-import java.util.Arrays;
-
-import com.android.internal.util.ArrayUtils;
-
 import android.annotation.Nullable;
 import android.os.Build;
+import com.android.internal.util.ArrayUtils;
+import java.util.Arrays;
 
 /**
  * Implements a growing array of long primitives.
@@ -34,7 +32,7 @@ public class LongArray implements Cloneable {
 	private long[] mValues;
 	private int mSize;
 
-	private  LongArray(long[] array, int size) {
+	private LongArray(long[] array, int size) {
 		mValues = array;
 		mSize = size; //Preconditions.checkArgumentInRange(size, 0, array.length, "size");
 	}
@@ -132,8 +130,7 @@ public class LongArray implements Cloneable {
 		final int currentSize = mSize;
 		final int minCapacity = currentSize + count;
 		if (minCapacity >= mValues.length) {
-			final int targetCap = currentSize + (currentSize < (MIN_CAPACITY_INCREMENT / 2) ?
-					MIN_CAPACITY_INCREMENT : currentSize >> 1);
+			final int targetCap = currentSize + (currentSize < (MIN_CAPACITY_INCREMENT / 2) ? MIN_CAPACITY_INCREMENT : currentSize >> 1);
 			final int newCapacity = targetCap > minCapacity ? targetCap : minCapacity;
 			final long[] newValues = ArrayUtils.newUnpaddedLongArray(newCapacity);
 			System.arraycopy(mValues, 0, newValues, 0, currentSize);
@@ -152,7 +149,7 @@ public class LongArray implements Cloneable {
 	public LongArray clone() {
 		LongArray clone = null;
 		try {
-			clone = (LongArray) super.clone();
+			clone = (LongArray)super.clone();
 			clone.mValues = mValues.clone();
 		} catch (CloneNotSupportedException cnse) {
 			/* ignore */
@@ -217,8 +214,10 @@ public class LongArray implements Cloneable {
 	 * Test if each element of {@code a} equals corresponding element from {@code b}
 	 */
 	public static boolean elementsEqual(@Nullable LongArray a, @Nullable LongArray b) {
-		if (a == null || b == null) return a == b;
-		if (a.mSize != b.mSize) return false;
+		if (a == null || b == null)
+			return a == b;
+		if (a.mSize != b.mSize)
+			return false;
 		for (int i = 0; i < a.mSize; i++) {
 			if (a.get(i) != b.get(i)) {
 				return false;

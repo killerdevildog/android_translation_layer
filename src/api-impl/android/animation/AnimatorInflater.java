@@ -107,9 +107,9 @@ public class AnimatorInflater {
 	 * @hide
 	 */
 	public static Animator loadAnimator(Resources resources, Theme theme, int id,
-					    float pathErrorScale) throws NotFoundException {
+	                                    float pathErrorScale) throws NotFoundException {
 		//final ConfigurationBoundResourceCache<Animator> animatorCache = resources.getAnimatorCache();
-		Animator animator = null;//animatorCache.getInstance(id, resources, theme);
+		Animator animator = null; //animatorCache.getInstance(id, resources, theme);
 		/*if (animator != null) {
 			if (DBG_ANIMATOR_INFLATER) {
 				Log.d(TAG, "loaded animator from cache, " + resources.getResourceName(id));
@@ -138,21 +138,18 @@ public class AnimatorInflater {
 			return animator;
 		} catch (XmlPullParserException ex) {
 			Resources.NotFoundException rnf =
-			    new Resources.NotFoundException("Can't load animation resource ID #0x" +
-							    Integer.toHexString(id));
+			    new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} catch (IOException ex) {
 			Resources.NotFoundException rnf =
-			    new Resources.NotFoundException("Can't load animation resource ID #0x" +
-							    Integer.toHexString(id));
+			    new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} catch (Exception ex) {
 			/* TODO: why is this necessary, the two exceptions above are enough in AOSP */
 			Resources.NotFoundException rnf =
-			    new Resources.NotFoundException("Can't load animation resource ID #0x" +
-							    Integer.toHexString(id));
+			    new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} finally {
@@ -163,11 +160,10 @@ public class AnimatorInflater {
 
 	public static StateListAnimator loadStateListAnimator(Context context, int id)
 	    throws NotFoundException {
-		return new StateListAnimator();
-		/*final Resources resources = context.getResources();
+		final Resources resources = context.getResources();
 		//final ConfigurationBoundResourceCache<StateListAnimator> cache = resources.getStateListAnimatorCache();
 		final Theme theme = context.getTheme();
-		StateListAnimator animator = null;//cache.getInstance(id, resources, theme);
+		StateListAnimator animator = null; //cache.getInstance(id, resources, theme);
 		if (animator != null) {
 			return animator;
 		}
@@ -178,6 +174,7 @@ public class AnimatorInflater {
 			animator =
 			    createStateListAnimatorFromXml(context, parser, Xml.asAttributeSet(parser));
 			if (animator != null) {
+				/*
 				animator.appendChangingConfigurations(getChangingConfigs(resources, id));
 				final ConstantState<StateListAnimator> constantState = animator.createConstantState();
 				if (constantState != null) {
@@ -185,31 +182,28 @@ public class AnimatorInflater {
 					// return a clone so that the animator in constant state is never used.
 					animator = constantState.newInstance(resources, theme);
 				}
+				*/
 			}
 			return animator;
 		} catch (XmlPullParserException ex) {
 			Resources.NotFoundException rnf =
-			    new Resources.NotFoundException(
-				"Can't load state list animator resource ID #0x" +
-				Integer.toHexString(id));
+			    new Resources.NotFoundException("Can't load state list animator resource ID #0x" + Integer.toHexString(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} catch (IOException ex) {
 			Resources.NotFoundException rnf =
-			    new Resources.NotFoundException(
-				"Can't load state list animator resource ID #0x" +
-				Integer.toHexString(id));
+			    new Resources.NotFoundException("Can't load state list animator resource ID #0x" + Integer.toHexString(id));
 			rnf.initCause(ex);
 			throw rnf;
 		} finally {
 			if (parser != null) {
 				parser.close();
 			}
-		}*/
+		}
 	}
 
 	private static StateListAnimator createStateListAnimatorFromXml(Context context,
-									XmlPullParser parser, AttributeSet attributeSet)
+	                                                                XmlPullParser parser, AttributeSet attributeSet)
 	    throws IOException, XmlPullParserException {
 		int type;
 		StateListAnimator stateListAnimator = new StateListAnimator();
@@ -240,7 +234,7 @@ public class AnimatorInflater {
 						}
 						if (animator == null) {
 							animator = createAnimatorFromXml(context.getResources(),
-											 context.getTheme(), parser, 1f);
+							                                 context.getTheme(), parser, 1f);
 						}
 
 						if (animator == null) {
@@ -274,8 +268,7 @@ public class AnimatorInflater {
 		}
 	}*/
 
-	/*private static PropertyValuesHolder getPVH(TypedArray styledAttributes, int valueType,
-						   int valueFromId, int valueToId, String propertyName) {
+	private static PropertyValuesHolder getPVH(TypedArray styledAttributes, int valueType, int valueFromId, int valueToId, String propertyName) {
 
 		TypedValue tvFrom = styledAttributes.peekValue(valueFromId);
 		boolean hasFrom = (tvFrom != null);
@@ -298,6 +291,7 @@ public class AnimatorInflater {
 		PropertyValuesHolder returnValue = null;
 
 		if (valueType == VALUE_TYPE_PATH) {
+			/*
 			String fromString = styledAttributes.getString(valueFromId);
 			String toString = styledAttributes.getString(valueToId);
 			PathParser.PathData nodesFrom = fromString == null
@@ -327,6 +321,7 @@ public class AnimatorInflater {
 										    (Object)nodesTo);
 				}
 			}
+			*/
 		} else {
 			TypeEvaluator evaluator = null;
 			// Integer and float value types are handled here.
@@ -349,8 +344,7 @@ public class AnimatorInflater {
 						} else {
 							valueTo = styledAttributes.getFloat(valueToId, 0f);
 						}
-						returnValue = PropertyValuesHolder.ofFloat(propertyName,
-											   valueFrom, valueTo);
+						returnValue = PropertyValuesHolder.ofFloat(propertyName, valueFrom, valueTo);
 					} else {
 						returnValue = PropertyValuesHolder.ofFloat(propertyName, valueFrom);
 					}
@@ -404,7 +398,7 @@ public class AnimatorInflater {
 		}
 
 		return returnValue;
-	}*/
+	}
 
 	/**
 	 * @param anim The animator, must not be null
@@ -415,7 +409,7 @@ public class AnimatorInflater {
 	 *                  maximum error for path animations.
 	 */
 	private static void parseAnimatorFromTypeArray(ValueAnimator anim,
-						       TypedArray arrayAnimator, TypedArray arrayObjectAnimator, float pixelSize) {
+	                                               TypedArray arrayAnimator, TypedArray arrayObjectAnimator, float pixelSize) {
 		long duration = arrayAnimator.getInt(R.styleable.Animator_duration, 300);
 
 		long startDelay = arrayAnimator.getInt(R.styleable.Animator_startOffset, 0);
@@ -424,13 +418,13 @@ public class AnimatorInflater {
 
 		if (valueType == VALUE_TYPE_UNDEFINED) {
 			valueType = inferValueTypeFromValues(arrayAnimator, R.styleable.Animator_valueFrom,
-							     R.styleable.Animator_valueTo);
+			                                     R.styleable.Animator_valueTo);
 		}
-		/*PropertyValuesHolder pvh = getPVH(arrayAnimator, valueType,
-						  R.styleable.Animator_valueFrom, R.styleable.Animator_valueTo, "");
+		PropertyValuesHolder pvh = getPVH(arrayAnimator, valueType, R.styleable.Animator_valueFrom,
+		                                  R.styleable.Animator_valueTo, "");
 		if (pvh != null) {
 			anim.setValues(pvh);
-		}*/
+		}
 
 		anim.setDuration(duration);
 		anim.setStartDelay(startDelay);
@@ -442,12 +436,12 @@ public class AnimatorInflater {
 		if (arrayAnimator.hasValue(R.styleable.Animator_repeatMode)) {
 			anim.setRepeatMode(
 			    arrayAnimator.getInt(R.styleable.Animator_repeatMode,
-						 ValueAnimator.RESTART));
+			                         ValueAnimator.RESTART));
 		}
 
-		/*if (arrayObjectAnimator != null) {
+		if (arrayObjectAnimator != null) {
 			setupObjectAnimator(anim, arrayObjectAnimator, valueType, pixelSize);
-		}*/
+		}
 	}
 
 	/**
@@ -500,8 +494,7 @@ public class AnimatorInflater {
 	 * @param pixelSize The relative pixel size, used to calculate the
 	 *                  maximum error for path animations.
 	 */
-	/*private static void setupObjectAnimator(ValueAnimator anim, TypedArray arrayObjectAnimator,
-						int valueType, float pixelSize) {
+	private static void setupObjectAnimator(ValueAnimator anim, TypedArray arrayObjectAnimator, int valueType, float pixelSize) {
 		ObjectAnimator oa = (ObjectAnimator)anim;
 		String pathData = arrayObjectAnimator.getString(R.styleable.PropertyAnimator_pathData);
 
@@ -514,6 +507,7 @@ public class AnimatorInflater {
 		// 3) PathInterpolator can also define a path (in pathData) for its interpolation curve.
 		// Here we are dealing with case 2:
 		if (pathData != null) {
+			/*
 			String propertyXName =
 			    arrayObjectAnimator.getString(R.styleable.PropertyAnimator_propertyXName);
 			String propertyYName =
@@ -555,12 +549,13 @@ public class AnimatorInflater {
 					oa.setValues(x, y);
 				}
 			}
+			*/
 		} else {
 			String propertyName =
 			    arrayObjectAnimator.getString(R.styleable.PropertyAnimator_propertyName);
 			oa.setPropertyName(propertyName);
 		}
-	}*/
+	}
 
 	/**
 	 * Setup ValueAnimator's values.
@@ -644,14 +639,14 @@ public class AnimatorInflater {
 	}*/
 
 	private static Animator createAnimatorFromXml(Resources res, Theme theme, XmlPullParser parser,
-						      float pixelSize)
+	                                              float pixelSize)
 	    throws XmlPullParserException, IOException {
 		return createAnimatorFromXml(res, theme, parser, Xml.asAttributeSet(parser), null, 0,
-					     pixelSize);
+		                             pixelSize);
 	}
 
 	private static Animator createAnimatorFromXml(Resources res, Theme theme, XmlPullParser parser,
-						      AttributeSet attrs, AnimatorSet parent, int sequenceOrdering, float pixelSize)
+	                                              AttributeSet attrs, AnimatorSet parent, int sequenceOrdering, float pixelSize)
 	    throws XmlPullParserException, IOException {
 		Animator anim = null;
 		ArrayList<Animator> childAnims = null;
@@ -684,11 +679,11 @@ public class AnimatorInflater {
 				anim.appendChangingConfigurations(a.getChangingConfigurations());
 				int ordering = a.getInt(R.styleable.AnimatorSet_ordering, TOGETHER);
 				createAnimatorFromXml(res, theme, parser, attrs, (AnimatorSet)anim, ordering,
-						      pixelSize);
+				                      pixelSize);
 				a.recycle();
 			} else if (name.equals("propertyValuesHolder")) {
 				PropertyValuesHolder[] values = loadValues(res, theme, parser,
-									   Xml.asAttributeSet(parser));
+				                                           Xml.asAttributeSet(parser));
 				if (values != null && anim != null && (anim instanceof ValueAnimator)) {
 					((ValueAnimator)anim).setValues(values);
 				}
@@ -720,12 +715,12 @@ public class AnimatorInflater {
 	}
 
 	private static PropertyValuesHolder[] loadValues(Resources res, Theme theme,
-							 XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
+	                                                 XmlPullParser parser, AttributeSet attrs) throws XmlPullParserException, IOException {
 		ArrayList<PropertyValuesHolder> values = null;
 
 		int type;
-		while ((type = parser.getEventType()) != XmlPullParser.END_TAG &&
-		       type != XmlPullParser.END_DOCUMENT) {
+		while ((type = parser.getEventType()) != XmlPullParser.END_TAG
+		       && type != XmlPullParser.END_DOCUMENT) {
 
 			if (type != XmlPullParser.START_TAG) {
 				parser.next();
@@ -743,7 +738,7 @@ public class AnimatorInflater {
 				}
 				String propertyName = a.getString(R.styleable.PropertyValuesHolder_propertyName);
 				int valueType = a.getInt(R.styleable.PropertyValuesHolder_valueType,
-							 VALUE_TYPE_UNDEFINED);
+				                         VALUE_TYPE_UNDEFINED);
 
 				/*PropertyValuesHolder pvh = loadPvh(res, theme, parser, propertyName, valueType);
 				if (pvh == null) {
@@ -800,7 +795,7 @@ public class AnimatorInflater {
 	}
 
 	private static int inferValueTypeFromValues(TypedArray styledAttributes, int valueFromId,
-						    int valueToId) {
+	                                            int valueToId) {
 		TypedValue tvFrom = styledAttributes.peekValue(valueFromId);
 		boolean hasFrom = (tvFrom != null);
 		int fromType = hasFrom ? tvFrom.type : 0;
@@ -842,8 +837,8 @@ public class AnimatorInflater {
 		ArrayList<Keyframe> keyframes = null;
 
 		int type;
-		while ((type = parser.next()) != XmlPullParser.END_TAG &&
-		       type != XmlPullParser.END_DOCUMENT) {
+		while ((type = parser.next()) != XmlPullParser.END_TAG
+		       && type != XmlPullParser.END_DOCUMENT) {
 			String name = parser.getName();
 			if (name.equals("keyframe")) {
 				if (valueType == VALUE_TYPE_UNDEFINED) {
@@ -1008,7 +1003,7 @@ public class AnimatorInflater {
 	}*/
 
 	private static ObjectAnimator loadObjectAnimator(Resources res, Theme theme, AttributeSet attrs,
-							 float pathErrorScale) throws NotFoundException {
+	                                                 float pathErrorScale) throws NotFoundException {
 		ObjectAnimator anim = new ObjectAnimator();
 
 		loadAnimator(res, theme, attrs, anim, pathErrorScale);
@@ -1026,7 +1021,7 @@ public class AnimatorInflater {
 	 *            ObjectAnimator
 	 */
 	private static ValueAnimator loadAnimator(Resources res, Theme theme,
-						  AttributeSet attrs, ValueAnimator anim, float pathErrorScale)
+	                                          AttributeSet attrs, ValueAnimator anim, float pathErrorScale)
 	    throws NotFoundException {
 		TypedArray arrayAnimator = null;
 		TypedArray arrayObjectAnimator = null;
@@ -1041,7 +1036,7 @@ public class AnimatorInflater {
 		if (anim != null) {
 			if (theme != null) {
 				arrayObjectAnimator = theme.obtainStyledAttributes(attrs,
-										   R.styleable.PropertyAnimator, 0, 0);
+				                                                   R.styleable.PropertyAnimator, 0, 0);
 			} else {
 				arrayObjectAnimator = res.obtainAttributes(attrs, R.styleable.PropertyAnimator);
 			}

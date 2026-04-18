@@ -1,9 +1,8 @@
 package android.os;
 
-import java.util.Set;
-
 import android.util.ArrayMap;
 import android.util.Log;
+import java.util.Set;
 
 public class BaseBundle {
 	protected static final String TAG = "Bundle";
@@ -18,10 +17,9 @@ public class BaseBundle {
 		mMap = new ArrayMap<String, Object>();
 	}
 
-
 	// Log a message if the value was non-null but not of the expected type
 	void typeWarning(String key, Object value, String className,
-				 Object defaultValue, ClassCastException e) {
+	                 Object defaultValue, ClassCastException e) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Key ");
 		sb.append(key);
@@ -37,7 +35,7 @@ public class BaseBundle {
 	}
 
 	void typeWarning(String key, Object value, String className,
-			ClassCastException e) {
+	                 ClassCastException e) {
 		typeWarning(key, value, className, "<null>", e);
 	}
 
@@ -185,6 +183,17 @@ public class BaseBundle {
 	}
 
 	/**
+	 * Inserts an int array value into the mapping of this Bundle, replacing
+	 * any existing value for the given key.  Either key or value may be null.
+	 *
+	 * @param key a String, or null
+	 * @param value an int array object, or null
+	 */
+	public void putIntArray(String key, int[] value) {
+		mMap.put(key, value);
+	}
+
+	/**
 	 * Inserts a long array value into the mapping of this Bundle, replacing
 	 * any existing value for the given key.  Either key or value may be null.
 	 *
@@ -227,7 +236,7 @@ public class BaseBundle {
 		Object o = mMap.get(key);
 		System.out.println("bundle.getBoolean(" + key + ", " + defaultValue + ") called");
 		/* the default for this is very scummy */
-		if(key.equals("com.facebook.sdk.AutoLogAppEventsEnabled")) {
+		if (key.equals("com.facebook.sdk.AutoLogAppEventsEnabled")) {
 			return false;
 		}
 		if (o == null) {
@@ -264,7 +273,6 @@ public class BaseBundle {
 	public void putBoolean(String key, boolean value) {
 		mMap.put(key, value);
 	}
-
 
 	/**
 	 * Returns the value associated with the given key, or defaultValue if

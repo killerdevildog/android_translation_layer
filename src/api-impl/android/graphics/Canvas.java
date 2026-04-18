@@ -1,8 +1,8 @@
 package android.graphics;
 
+import android.atl.GskCanvas;
 import android.content.res.Resources;
 import android.util.Log;
-import android.atl.GskCanvas;
 
 public class Canvas {
 
@@ -32,6 +32,11 @@ public class Canvas {
 	public void restore() {
 		gsk_canvas.snapshot = bitmap.getSnapshot();
 		gsk_canvas.restore();
+	}
+
+	public int getSaveCount() {
+		gsk_canvas.snapshot = bitmap.getSnapshot();
+		return gsk_canvas.getSaveCount();
 	}
 
 	// ---
@@ -70,7 +75,12 @@ public class Canvas {
 	 */
 	public void drawRect(float left, float top, float right, float bottom, Paint paint) {
 		if (paint != null && paint.getXfermode() instanceof PorterDuffXfermode && ((PorterDuffXfermode)paint.getXfermode()).porterDuffMode == PorterDuff.Mode.CLEAR.nativeInt) {
+			int oldSaveCount = gsk_canvas.getSaveCount();
+			gsk_canvas.restoreToCount(1);
 			bitmap.eraseColor(0);
+			gsk_canvas.snapshot = bitmap.getSnapshot();
+			while (gsk_canvas.getSaveCount() < oldSaveCount)
+				gsk_canvas.save();
 			return;
 		}
 		gsk_canvas.snapshot = bitmap.getSnapshot();
@@ -96,8 +106,9 @@ public class Canvas {
 	 * @param py The y-coord for the pivot point (unchanged by the rotation)
 	 */
 	public void rotate(float degrees, float px, float py) {
-		gsk_canvas.snapshot = bitmap.getSnapshot();
-		gsk_canvas.rotate(degrees, px, py);
+		translate(px, py);
+		rotate(degrees);
+		translate(-px, -py);
 	}
 	// ---
 	/**
@@ -126,8 +137,7 @@ public class Canvas {
 	 * @param paint The paint used for the text (e.g. color, size, style)
 	 */
 	public void drawText(String text, int start, int end, float x, float y, Paint paint) {
-		gsk_canvas.snapshot = bitmap.getSnapshot();
-		gsk_canvas.drawText(text, start, end, x, y, paint);
+		drawText(text.substring(start, end), x, y, paint);
 	}
 
 	/**
@@ -144,9 +154,9 @@ public class Canvas {
 	 * @param paint The paint used for the text (e.g. color, size, style)
 	 */
 	public void drawText(CharSequence text, int start, int end, float x, float y, Paint paint) {
-		drawText(text.toString(), start, end, x, y, paint);
-		/*if (text instanceof String || text instanceof SpannedString ||
-		    text instanceof SpannableString) {
+		drawText(text.toString().substring(start, end), x, y, paint);
+		/*if (text instanceof String || text instanceof SpannedString
+		      || text instanceof SpannableString) {
 		    native_drawText(mNativeCanvas, text.toString(), start, end, x, y,
 			    paint.mBidiFlags, paint.mNativePaint);
 		} else if (text instanceof GraphicsOperations) {
@@ -159,6 +169,10 @@ public class Canvas {
 			    paint.mBidiFlags, paint.mNativePaint);
 		    TemporaryBuffer.recycle(buf);
 		}*/
+	}
+
+	public void drawText(char text[], int start, int end, float x, float y, Paint paint) {
+		drawText(new String(text), start, end, x, y, paint);
 	}
 
 	public void drawTextOnPath(String text, Path path, float x_offset, float y_offset, Paint paint) {
@@ -190,13 +204,11 @@ public class Canvas {
 	 * @param paint      The paint used to draw the arc
 	 */
 	public void drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter,
-			    Paint paint) {
+	                    Paint paint) {
 		if (oval == null) {
 			throw new NullPointerException();
 		}
-		Log.w("Canvas", "STUB: drawArc");
-		/*native_drawArc(mNativeCanvas, oval, startAngle, sweepAngle,
-			useCenter, paint.mNativePaint);*/
+		drawArc(oval.left, oval.top, oval.right, oval.bottom, startAngle, sweepAngle, useCenter, paint);
 	}
 	// ---
 	/**
@@ -244,8 +256,8 @@ public class Canvas {
 	 * @param paint  The paint used to draw the bitmap (may be null)
 	 */
 	public void drawBitmap(Bitmap bitmap, float left, float top, Paint paint) {
-		gsk_canvas.snapshot = this.bitmap.getSnapshot();
-		gsk_canvas.drawBitmap(bitmap, left, top, paint);
+		Rect dst = new Rect((int)left, (int)top, (int)left + bitmap.getWidth(), (int)top + bitmap.getHeight());
+		drawBitmap(bitmap, null, dst, paint);
 	}
 
 	/**
@@ -271,8 +283,7 @@ public class Canvas {
 	 * @param paint  May be null. The paint used to draw the bitmap
 	 */
 	public void drawBitmap(Bitmap bitmap, Rect src, RectF dst, Paint paint) {
-		gsk_canvas.snapshot = this.bitmap.getSnapshot();
-		gsk_canvas.drawBitmap(bitmap, src, dst, paint);
+		drawBitmap(bitmap, src, new Rect((int)dst.left, (int)dst.top, (int)dst.right, (int)dst.bottom), paint);
 	}
 
 	/**
@@ -322,7 +333,7 @@ public class Canvas {
 	 * @param paint  May be null. The paint used to draw the bitmap
 	 */
 	public void drawBitmap(int[] colors, int offset, int stride, float x, float y,
-			       int width, int height, boolean hasAlpha, Paint paint) {
+	                       int width, int height, boolean hasAlpha, Paint paint) {
 		Log.w("Canvas", "STUB: drawBitmap(colors, offset, ...)");
 		/*        // check for valid input
 			if (width < 0) {
@@ -353,10 +364,10 @@ public class Canvas {
 	 * Legacy version of drawBitmap(int[] colors, ...) that took ints for x,y
 	 */
 	public void drawBitmap(int[] colors, int offset, int stride, int x, int y,
-			       int width, int height, boolean hasAlpha, Paint paint) {
+	                       int width, int height, boolean hasAlpha, Paint paint) {
 		// call through to the common float version
 		drawBitmap(colors, offset, stride, (float)x, (float)y, width, height,
-			   hasAlpha, paint);
+		           hasAlpha, paint);
 	}
 
 	/**
@@ -367,10 +378,10 @@ public class Canvas {
 	 * @param paint  May be null. The paint used to draw the bitmap
 	 */
 	public void drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint) {
-		gsk_canvas.snapshot = this.bitmap.getSnapshot();
-		gsk_canvas.drawBitmap(bitmap, matrix, paint);
-		/*       nativeDrawBitmapMatrix(mNativeCanvas, bitmap.ni(), matrix.ni(),
-			       paint != null ? paint.mNativePaint : 0);*/
+		save();
+		concat(matrix);
+		drawBitmap(bitmap, 0, 0, paint);
+		restore();
 	}
 	// ---
 	/**
@@ -413,14 +424,23 @@ public class Canvas {
 	}
 
 	public void restoreToCount(int count) {
-		gsk_canvas.snapshot = bitmap.getSnapshot();
-		gsk_canvas.restoreToCount(count);
+		if (count < 1)
+			throw new IllegalArgumentException("count must be >= 1");
+		while (getSaveCount() > count)
+			restore();
 	}
 
 	public void drawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint) {
 		if (paint.getShader() instanceof BitmapShader) {
 			BitmapShader shader = (BitmapShader)paint.getShader();
 			drawBitmap(shader.bitmap, 0, 0, paint);
+		} else if (paint.getXfermode() instanceof PorterDuffXfermode && ((PorterDuffXfermode)paint.getXfermode()).porterDuffMode == PorterDuff.Mode.CLEAR.nativeInt) {
+			int oldSaveCount = gsk_canvas.getSaveCount();
+			gsk_canvas.restoreToCount(1);
+			bitmap.eraseColor(0);
+			gsk_canvas.snapshot = bitmap.getSnapshot();
+			while (gsk_canvas.getSaveCount() < oldSaveCount)
+				gsk_canvas.save();
 		} else {
 			gsk_canvas.snapshot = bitmap.getSnapshot();
 			gsk_canvas.drawRoundRect(left, top, right, bottom, rx, ry, paint);
@@ -432,7 +452,14 @@ public class Canvas {
 	}
 
 	public void getMatrix(Matrix matrix) {
-		matrix.reset();
+		gsk_canvas.snapshot = bitmap.getSnapshot();
+		gsk_canvas.getMatrix(matrix);
+	}
+
+	public Matrix getMatrix() {
+		Matrix matrix = new Matrix();
+		getMatrix(matrix);
+		return matrix;
 	}
 
 	public void translate(float dx, float dy) {
@@ -443,6 +470,11 @@ public class Canvas {
 	public void drawCircle(float cx, float cy, float radius, Paint paint) {
 		gsk_canvas.snapshot = bitmap.getSnapshot();
 		gsk_canvas.drawCircle(cx, cy, radius, paint);
+	}
+
+	public void drawOval(float left, float top, float right, float bottom, Paint paint) {
+		gsk_canvas.snapshot = bitmap.getSnapshot();
+		gsk_canvas.drawOval(left, top, right, bottom, paint);
 	}
 
 	public Rect getClipBounds() {
@@ -456,6 +488,17 @@ public class Canvas {
 		gsk_canvas.concat(matrix);
 	}
 
+	public void setMatrix(Matrix matrix) {
+		Matrix transform = getMatrix();
+		if (transform.isIdentity()) {
+			transform = matrix;
+		} else {
+			getMatrix().invert(transform); // revert the current matrix
+			transform.preConcat(matrix);   // apply the new matrix
+		}
+		concat(transform);
+	}
+
 	public int getWidth() {
 		return (bitmap == null) ? 0 : bitmap.getWidth();
 	}
@@ -465,11 +508,13 @@ public class Canvas {
 	}
 
 	public void drawColor(int color) {
-		Log.w("Canvas", "STUB: drawColor("+String.format("0x%08x", color)+")");
+		Paint paint = new Paint();
+		paint.setColor(color);
+		drawRect(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, paint);
 	}
 
 	public void drawARGB(int a, int r, int g, int b) {
-		Log.w("Canvas", "STUB: drawARGB("+a+", "+r+", "+g+", "+b+")");
+		Log.w("Canvas", "STUB: drawARGB(" + a + ", " + r + ", " + g + ", " + b + ")");
 	}
 
 	public int saveLayer(RectF bounds, Paint paint, int flags) {
@@ -485,11 +530,11 @@ public class Canvas {
 	}
 
 	public void drawOval(RectF oval, Paint paint) {
-		drawRoundRect(oval, oval.width()/2, oval.height()/2, paint);
+		drawRoundRect(oval, oval.width() / 2, oval.height() / 2, paint);
 	}
 
 	public void drawColor(int color, PorterDuff.Mode mode) {
-		Log.w("Canvas", "STUB: drawColor("+String.format("0x%08x", color)+", "+mode+")");
+		Log.w("Canvas", "STUB: drawColor(" + String.format("0x%08x", color) + ", " + mode + ")");
 	}
 
 	public boolean clipRect(int left, int top, int right, int bottom) {
@@ -536,7 +581,10 @@ public class Canvas {
 	}
 
 	public void drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean includeCenter, Paint paint) {
-		Log.w("Canvas", "STUB: drawArc");
+		Path path = new Path();
+		path.addArc(left, top, right, bottom, startAngle, sweepAngle);
+		drawPath(path, paint);
+		path.reset();
 	}
 
 	public boolean getClipBounds(Rect outRect) {
@@ -545,7 +593,9 @@ public class Canvas {
 		return true;
 	}
 
-	public void drawPaint(Paint paint) {}
+	public void drawPaint(Paint paint) {
+		drawRect(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, paint);
+	}
 
 	public void drawPicture(Picture picture) {
 		Log.w("Canvas", "STUB: drawPicture");
@@ -553,6 +603,16 @@ public class Canvas {
 
 	public void drawPoint(float x, float y, Paint paint) {
 		Log.w("Canvas", "STUB: drawPoint");
+	}
+
+	public void drawPoints(float[] pts, Paint paint) {
+		drawPoints(pts, 0, pts.length / 2, paint);
+	}
+
+	public void drawPoints(float[] pts, int offset, int count, Paint paint) {
+		for (int i = offset; i < count; i++) {
+			drawPoint(pts[i * 2], pts[i * 2 + 1], paint);
+		}
 	}
 
 	public boolean quickReject(float left, float top, float right, float bottom, EdgeType edgeType) {

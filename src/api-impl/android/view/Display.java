@@ -20,7 +20,6 @@ public final class Display {
 		getMetrics(outMetrics); // probably?
 	}
 
-
 	public int getWidth() {
 		return window_width;
 	}

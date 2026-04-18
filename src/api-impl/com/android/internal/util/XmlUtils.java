@@ -303,7 +303,7 @@ public class XmlUtils {
 	 * @see #writeValueXml
 	 */
 	public static final void writeByteArrayXml(byte[] val, String name,
-						   XmlSerializer out)
+	                                           XmlSerializer out)
 	    throws XmlPullParserException, java.io.IOException {
 
 		if (val == null) {
@@ -348,7 +348,7 @@ public class XmlUtils {
 	 * @see #readThisIntArrayXml
 	 */
 	public static final void writeIntArrayXml(int[] val, String name,
-						  XmlSerializer out)
+	                                          XmlSerializer out)
 	    throws XmlPullParserException, java.io.IOException {
 
 		if (val == null) {
@@ -655,7 +655,7 @@ public class XmlUtils {
 	 * @see #readListXml
 	 */
 	public static final int[] readThisIntArrayXml(XmlPullParser parser,
-						      String endTag, String[] name)
+	                                              String endTag, String[] name)
 	    throws XmlPullParserException, java.io.IOException {
 
 		int num;
@@ -864,8 +864,7 @@ public class XmlUtils {
 		}
 
 		if (!parser.getName().equals(firstElementName)) {
-			throw new XmlPullParserException("Unexpected start tag: found " + parser.getName() +
-							 ", expected " + firstElementName);
+			throw new XmlPullParserException("Unexpected start tag: found " + parser.getName() + ", expected " + firstElementName);
 		}
 	}
 

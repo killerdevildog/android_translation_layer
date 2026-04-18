@@ -247,7 +247,7 @@ public final class JsonWriter implements Closeable {
 	 * given bracket.
 	 */
 	private JsonWriter close(JsonScope empty, JsonScope nonempty, String closeBracket)
-			throws IOException {
+	    throws IOException {
 		JsonScope context = peek();
 		if (context != nonempty && context != empty) {
 			throw new IllegalStateException("Nesting problem: " + stack);
@@ -367,8 +367,8 @@ public final class JsonWriter implements Closeable {
 		}
 
 		String string = value.toString();
-		if (!lenient &&
-				(string.equals("-Infinity") || string.equals("Infinity") || string.equals("NaN"))) {
+		if (!lenient
+		    && (string.equals("-Infinity") || string.equals("Infinity") || string.equals("NaN"))) {
 			throw new IllegalArgumentException("Numeric values must be finite, but was " + value);
 		}
 		beforeValue(false);
@@ -442,18 +442,17 @@ public final class JsonWriter implements Closeable {
 
 				case '\u2028':
 				case '\u2029':
-					out.write(String.format("\\u%04x", (int) c));
+					out.write(String.format("\\u%04x", (int)c));
 					break;
 
 				default:
 					if (c <= 0x1F) {
-						out.write(String.format("\\u%04x", (int) c));
+						out.write(String.format("\\u%04x", (int)c));
 					} else {
 						out.write(c);
 					}
 					break;
 			}
-
 		}
 		out.write("\"");
 	}
@@ -497,7 +496,7 @@ public final class JsonWriter implements Closeable {
 			case EMPTY_DOCUMENT: // first in document
 				if (!lenient && !root) {
 					throw new IllegalStateException(
-							"JSON must start with an array or an object.");
+					    "JSON must start with an array or an object.");
 				}
 				replaceTop(JsonScope.NONEMPTY_DOCUMENT);
 				break;
@@ -519,7 +518,7 @@ public final class JsonWriter implements Closeable {
 
 			case NONEMPTY_DOCUMENT:
 				throw new IllegalStateException(
-						"JSON must have only one top-level value.");
+				    "JSON must have only one top-level value.");
 
 			default:
 				throw new IllegalStateException("Nesting problem: " + stack);

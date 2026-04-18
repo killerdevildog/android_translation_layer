@@ -14,7 +14,7 @@ public class MediaDescription {
 
 		MediaDescription description = new MediaDescription();
 
-		public Builder setMediaId(String mediaId) {return this;}
+		public Builder setMediaId(String mediaId) { return this; }
 
 		public Builder setTitle(CharSequence title) {
 			description.title = title;
@@ -26,20 +26,19 @@ public class MediaDescription {
 			return this;
 		}
 
-		public Builder setDescription(CharSequence description) {return this;}
+		public Builder setDescription(CharSequence description) { return this; }
 
-		public Builder setIconBitmap(Bitmap iconBitmap) {return this;}
+		public Builder setIconBitmap(Bitmap iconBitmap) { return this; }
 
 		public Builder setIconUri(Uri iconUri) {
 			description.iconUri = iconUri;
 			return this;
 		}
 
-		public Builder setExtras(Bundle extras) {return this;}
+		public Builder setExtras(Bundle extras) { return this; }
 
 		public MediaDescription build() {
 			return description;
 		}
 	}
-
 }

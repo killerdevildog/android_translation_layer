@@ -4,21 +4,23 @@ import android.R;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 
 public class Dialog implements Window.Callback, DialogInterface {
 	protected long nativePtr;
 
-	protected native long nativeInit(boolean is_floating);
+	protected native long nativeInit();
 	private native void nativeSetTitle(long ptr, String title);
 	private native void nativeSetContentView(long ptr, long widget);
 	private native void nativeShow(long ptr);
@@ -33,7 +35,7 @@ public class Dialog implements Window.Callback, DialogInterface {
 	public Dialog(Context context, int themeResId) {
 		this.context = context;
 		window = new Window(context, this);
-		nativePtr = nativeInit(window.is_floating);
+		nativePtr = nativeInit();
 
 		window.set_native_window(nativePtr);
 	}
@@ -52,6 +54,10 @@ public class Dialog implements Window.Callback, DialogInterface {
 
 	public void setContentView(View view) {
 		getWindow().setContentView(view);
+	}
+
+	public void setContentView(int layoutResId) {
+		setContentView(LayoutInflater.from(context).inflate(layoutResId, null));
 	}
 
 	public void setTitle(CharSequence title) {
@@ -82,12 +88,37 @@ public class Dialog implements Window.Callback, DialogInterface {
 			@Override
 			public void run() {
 				onCreate(null);
+				// Read the size of the main window. Floating dialogs should be smaller as specified in the windowMinWidth* attributes.
+				// Non-floating are typically constructed with MATCH_PARENT layout params and thus get the exact size of the main window.
+				// Most non-floating dialogs are technically dialogs, but are expected to behave more like full size activities.
+				Rect displayFrame = new Rect();
+				getWindow().getDecorView().getWindowVisibleDisplayFrame(displayFrame);
+
+				TypedArray a = context.obtainStyledAttributes(R.styleable.Window);
+				float windowWidthFraction = 1;
+				if (a.getBoolean(R.styleable.Window_windowIsFloating, false)) {
+					if (displayFrame.width() > displayFrame.height())
+						windowWidthFraction = a.getFraction(R.styleable.Window_windowMinWidthMajor, 1, 1, 1);
+					else
+						windowWidthFraction = a.getFraction(R.styleable.Window_windowMinWidthMinor, 1, 1, 1);
+				}
+				a.recycle();
+
+				LayoutParams lp = getWindow().getAttributes();
+				int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(lp.width >= 0 ? lp.width : (int)(displayFrame.width() * windowWidthFraction),
+				                                                        lp.width == LayoutParams.WRAP_CONTENT ? View.MeasureSpec.AT_MOST : View.MeasureSpec.EXACTLY);
+
+				int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(lp.height >= 0 ? lp.height : (int)(displayFrame.height()),
+				                                                         lp.height == LayoutParams.WRAP_CONTENT ? View.MeasureSpec.AT_MOST : View.MeasureSpec.EXACTLY);
+
+				getWindow().getDecorView().internalSetDefaultMeasureSpec(widthMeasureSpec, heightMeasureSpec);
+
 				nativeShow(nativePtr);
 				if (onShowListener != null)
 					onShowListener.onShow(Dialog.this);
 			}
 		};
-		if(Looper.myLooper() == Looper.getMainLooper()) {
+		if (Looper.myLooper() == Looper.getMainLooper()) {
 			action.run();
 		} else {
 			new Handler(Looper.getMainLooper()).post(action);
@@ -161,7 +192,7 @@ public class Dialog implements Window.Callback, DialogInterface {
 		throw new UnsupportedOperationException("Unimplemented method 'onMenuOpened'");
 	}
 
-	protected void onCreate (Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("- onCreate - Dialog!");
 	}
 

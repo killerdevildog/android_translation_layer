@@ -82,11 +82,15 @@ public class PointF implements Parcelable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PointF pointF = (PointF) o;
-		if (Float.compare(pointF.x, x) != 0) return false;
-		if (Float.compare(pointF.y, y) != 0) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		PointF pointF = (PointF)o;
+		if (Float.compare(pointF.x, x) != 0)
+			return false;
+		if (Float.compare(pointF.y, y) != 0)
+			return false;
 		return true;
 	}
 
@@ -113,6 +117,6 @@ public class PointF implements Parcelable {
 	 * Returns the euclidian distance from (0,0) to (x,y)
 	 */
 	public static float length(float x, float y) {
-		return (float) Math.hypot(x, y);
+		return (float)Math.hypot(x, y);
 	}
 }

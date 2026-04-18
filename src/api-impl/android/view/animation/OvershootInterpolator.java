@@ -12,6 +12,6 @@ public class OvershootInterpolator implements TimeInterpolator {
 
 	@Override
 	public float getInterpolation(float input) {
-		return (input-1) * (input-1) * ((overshoot + 1) * (input-1) + overshoot) + 1;
+		return (input - 1) * (input - 1) * ((overshoot + 1) * (input - 1) + overshoot) + 1;
 	}
 }

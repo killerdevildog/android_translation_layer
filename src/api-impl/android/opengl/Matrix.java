@@ -114,7 +114,7 @@ public class Matrix {
 	 * resultOffset < 0 or lhsOffset < 0 or rhsOffset < 0
 	 */
 	public static void multiplyMM(float[] result, int resultOffset,
-				      float[] lhs, int lhsOffset, float[] rhs, int rhsOffset) {
+	                              float[] lhs, int lhsOffset, float[] rhs, int rhsOffset) {
 		// error checking
 		if (result == null) {
 			throw new IllegalArgumentException("result == null");
@@ -218,8 +218,8 @@ public class Matrix {
 	 * resultVecOffset < 0 or lhsMatOffset < 0 or rhsVecOffset < 0
 	 */
 	public static void multiplyMV(float[] resultVec,
-				      int resultVecOffset, float[] lhsMat, int lhsMatOffset,
-				      float[] rhsVec, int rhsVecOffset) {
+	                              int resultVecOffset, float[] lhsMat, int lhsMatOffset,
+	                              float[] rhsVec, int rhsVecOffset) {
 		// error checking
 		if (resultVec == null) {
 			throw new IllegalArgumentException("resultVec == null");
@@ -249,22 +249,10 @@ public class Matrix {
 			throw new IllegalArgumentException("rhsVec.length < rhsVecOffset + 4");
 		}
 
-		float tmp0 = lhsMat[0 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] +
-			     lhsMat[0 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] +
-			     lhsMat[0 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] +
-			     lhsMat[0 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
-		float tmp1 = lhsMat[1 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] +
-			     lhsMat[1 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] +
-			     lhsMat[1 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] +
-			     lhsMat[1 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
-		float tmp2 = lhsMat[2 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] +
-			     lhsMat[2 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] +
-			     lhsMat[2 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] +
-			     lhsMat[2 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
-		float tmp3 = lhsMat[3 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] +
-			     lhsMat[3 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] +
-			     lhsMat[3 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] +
-			     lhsMat[3 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
+		float tmp0 = lhsMat[0 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] + lhsMat[0 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] + lhsMat[0 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] + lhsMat[0 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
+		float tmp1 = lhsMat[1 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] + lhsMat[1 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] + lhsMat[1 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] + lhsMat[1 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
+		float tmp2 = lhsMat[2 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] + lhsMat[2 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] + lhsMat[2 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] + lhsMat[2 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
+		float tmp3 = lhsMat[3 + 4 * 0 + lhsMatOffset] * rhsVec[0 + rhsVecOffset] + lhsMat[3 + 4 * 1 + lhsMatOffset] * rhsVec[1 + rhsVecOffset] + lhsMat[3 + 4 * 2 + lhsMatOffset] * rhsVec[2 + rhsVecOffset] + lhsMat[3 + 4 * 3 + lhsMatOffset] * rhsVec[3 + rhsVecOffset];
 
 		resultVec[0 + resultVecOffset] = tmp0;
 		resultVec[1 + resultVecOffset] = tmp1;
@@ -284,7 +272,7 @@ public class Matrix {
 	 * @param mOffset an offset into m where the input matrix is stored.
 	 */
 	public static void transposeM(float[] mTrans, int mTransOffset, float[] m,
-				      int mOffset) {
+	                              int mOffset) {
 		for (int i = 0; i < 4; i++) {
 			int mBase = i * 4 + mOffset;
 			mTrans[i + mTransOffset] = m[mBase];
@@ -307,7 +295,7 @@ public class Matrix {
 	 * @return true if the matrix could be inverted, false if it could not.
 	 */
 	public static boolean invertM(float[] mInv, int mInvOffset, float[] m,
-				      int mOffset) {
+	                              int mOffset) {
 		// Invert a 4 x 4 matrix using Cramer's Rule
 
 		// transpose matrix
@@ -425,8 +413,8 @@ public class Matrix {
 	 * @param far
 	 */
 	public static void orthoM(float[] m, int mOffset,
-				  float left, float right, float bottom, float top,
-				  float near, float far) {
+	                          float left, float right, float bottom, float top,
+	                          float near, float far) {
 		if (left == right) {
 			throw new IllegalArgumentException("left == right");
 		}
@@ -478,8 +466,8 @@ public class Matrix {
 	 * @param far
 	 */
 	public static void frustumM(float[] m, int offset,
-				    float left, float right, float bottom, float top,
-				    float near, float far) {
+	                            float left, float right, float bottom, float top,
+	                            float near, float far) {
 		if (left == right) {
 			throw new IllegalArgumentException("left == right");
 		}
@@ -535,7 +523,7 @@ public class Matrix {
 	 * @param zFar
 	 */
 	public static void perspectiveM(float[] m, int offset,
-					float fovy, float aspect, float zNear, float zFar) {
+	                                float fovy, float aspect, float zNear, float zFar) {
 		float f = 1.0f / (float)Math.tan(fovy * (Math.PI / 360.0));
 		float rangeReciprocal = 1.0f / (zNear - zFar);
 
@@ -601,8 +589,8 @@ public class Matrix {
 	 * @param z scale factor z
 	 */
 	public static void scaleM(float[] sm, int smOffset,
-				  float[] m, int mOffset,
-				  float x, float y, float z) {
+	                          float[] m, int mOffset,
+	                          float x, float y, float z) {
 		for (int i = 0; i < 4; i++) {
 			int smi = smOffset + i;
 			int mi = mOffset + i;
@@ -623,7 +611,7 @@ public class Matrix {
 	 * @param z scale factor z
 	 */
 	public static void scaleM(float[] m, int mOffset,
-				  float x, float y, float z) {
+	                          float x, float y, float z) {
 		for (int i = 0; i < 4; i++) {
 			int mi = mOffset + i;
 			m[mi] *= x;
@@ -646,16 +634,15 @@ public class Matrix {
 	 * @param z translation factor z
 	 */
 	public static void translateM(float[] tm, int tmOffset,
-				      float[] m, int mOffset,
-				      float x, float y, float z) {
+	                              float[] m, int mOffset,
+	                              float x, float y, float z) {
 		for (int i = 0; i < 12; i++) {
 			tm[tmOffset + i] = m[mOffset + i];
 		}
 		for (int i = 0; i < 4; i++) {
 			int tmi = tmOffset + i;
 			int mi = mOffset + i;
-			tm[12 + tmi] = m[mi] * x + m[4 + mi] * y + m[8 + mi] * z +
-				       m[12 + mi];
+			tm[12 + tmi] = m[mi] * x + m[4 + mi] * y + m[8 + mi] * z + m[12 + mi];
 		}
 	}
 
@@ -692,8 +679,8 @@ public class Matrix {
 	 * @param z Z axis component
 	 */
 	public static void rotateM(float[] rm, int rmOffset,
-				   float[] m, int mOffset,
-				   float a, float x, float y, float z) {
+	                           float[] m, int mOffset,
+	                           float a, float x, float y, float z) {
 		float[] tmp = ThreadTmp.get();
 		setRotateM(tmp, 16, a, x, y, z);
 		multiplyMM(rm, rmOffset, m, mOffset, tmp, 16);
@@ -711,7 +698,7 @@ public class Matrix {
 	 * @param z Z axis component
 	 */
 	public static void rotateM(float[] m, int mOffset,
-				   float a, float x, float y, float z) {
+	                           float a, float x, float y, float z) {
 		rotateM(m, mOffset, m, mOffset, a, x, y, z);
 	}
 
@@ -730,7 +717,7 @@ public class Matrix {
 	 * @param z Z axis component
 	 */
 	public static void setRotateM(float[] rm, int rmOffset,
-				      float a, float x, float y, float z) {
+	                              float a, float x, float y, float z) {
 		rm[rmOffset + 3] = 0;
 		rm[rmOffset + 7] = 0;
 		rm[rmOffset + 11] = 0;
@@ -813,7 +800,7 @@ public class Matrix {
 	 */
 	@Deprecated
 	public static void setRotateEulerM(float[] rm, int rmOffset,
-					   float x, float y, float z) {
+	                                   float x, float y, float z) {
 		x *= (float)(Math.PI / 180.0f);
 		y *= (float)(Math.PI / 180.0f);
 		z *= (float)(Math.PI / 180.0f);
@@ -861,7 +848,7 @@ public class Matrix {
 	 * rmOffset < 0
 	 */
 	public static void setRotateEulerM2(float[] rm, int rmOffset,
-					    float x, float y, float z) {
+	                                    float x, float y, float z) {
 		if (rm == null) {
 			throw new IllegalArgumentException("rm == null");
 		}
@@ -922,9 +909,9 @@ public class Matrix {
 	 * @param upZ up vector Z
 	 */
 	public static void setLookAtM(float[] rm, int rmOffset,
-				      float eyeX, float eyeY, float eyeZ,
-				      float centerX, float centerY, float centerZ, float upX, float upY,
-				      float upZ) {
+	                              float eyeX, float eyeY, float eyeZ,
+	                              float centerX, float centerY, float centerZ, float upX, float upY,
+	                              float upZ) {
 
 		// See the OpenGL GLUT documentation for gluLookAt for a description
 		// of the algorithm. We implement it in a straightforward way:

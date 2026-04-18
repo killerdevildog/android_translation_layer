@@ -51,70 +51,74 @@ public class GeomagneticField {
 	// These coefficients and the formulae used below are from:
 	// NOAA Technical Report: The US/UK World Magnetic Model for 2020-2025
 	static private final float[][] G_COEFF = new float[][] {
-	    {0.0f},
-	    {-29404.5f, -1450.7f},
-	    {-2500.0f, 2982.0f, 1676.8f},
-	    {1363.9f, -2381.0f, 1236.2f, 525.7f},
-	    {903.1f, 809.4f, 86.2f, -309.4f, 47.9f},
-	    {-234.4f, 363.1f, 187.8f, -140.7f, -151.2f, 13.7f},
-	    {65.9f, 65.6f, 73.0f, -121.5f, -36.2f, 13.5f, -64.7f},
-	    {80.6f, -76.8f, -8.3f, 56.5f, 15.8f, 6.4f, -7.2f, 9.8f},
-	    {23.6f, 9.8f, -17.5f, -0.4f, -21.1f, 15.3f, 13.7f, -16.5f, -0.3f},
-	    {5.0f, 8.2f, 2.9f, -1.4f, -1.1f, -13.3f, 1.1f, 8.9f, -9.3f, -11.9f},
-	    {-1.9f, -6.2f, -0.1f, 1.7f, -0.9f, 0.6f, -0.9f, 1.9f, 1.4f, -2.4f, -3.9f},
-	    {3.0f, -1.4f, -2.5f, 2.4f, -0.9f, 0.3f, -0.7f, -0.1f, 1.4f, -0.6f, 0.2f, 3.1f},
-	    {-2.0f, -0.1f, 0.5f, 1.3f, -1.2f, 0.7f, 0.3f, 0.5f, -0.2f, -0.5f, 0.1f, -1.1f, -0.3f}};
+		{0.0f},
+		{-29404.5f, -1450.7f},
+		{-2500.0f, 2982.0f, 1676.8f},
+		{1363.9f, -2381.0f, 1236.2f, 525.7f},
+		{903.1f, 809.4f, 86.2f, -309.4f, 47.9f},
+		{-234.4f, 363.1f, 187.8f, -140.7f, -151.2f, 13.7f},
+		{65.9f, 65.6f, 73.0f, -121.5f, -36.2f, 13.5f, -64.7f},
+		{80.6f, -76.8f, -8.3f, 56.5f, 15.8f, 6.4f, -7.2f, 9.8f},
+		{23.6f, 9.8f, -17.5f, -0.4f, -21.1f, 15.3f, 13.7f, -16.5f, -0.3f},
+		{5.0f, 8.2f, 2.9f, -1.4f, -1.1f, -13.3f, 1.1f, 8.9f, -9.3f, -11.9f},
+		{-1.9f, -6.2f, -0.1f, 1.7f, -0.9f, 0.6f, -0.9f, 1.9f, 1.4f, -2.4f, -3.9f},
+		{3.0f, -1.4f, -2.5f, 2.4f, -0.9f, 0.3f, -0.7f, -0.1f, 1.4f, -0.6f, 0.2f, 3.1f},
+		{-2.0f, -0.1f, 0.5f, 1.3f, -1.2f, 0.7f, 0.3f, 0.5f, -0.2f, -0.5f, 0.1f, -1.1f, -0.3f}
+	};
 
 	static private final float[][] H_COEFF = new float[][] {
-	    {0.0f},
-	    {0.0f, 4652.9f},
-	    {0.0f, -2991.6f, -734.8f},
-	    {0.0f, -82.2f, 241.8f, -542.9f},
-	    {0.0f, 282.0f, -158.4f, 199.8f, -350.1f},
-	    {0.0f, 47.7f, 208.4f, -121.3f, 32.2f, 99.1f},
-	    {0.0f, -19.1f, 25.0f, 52.7f, -64.4f, 9.0f, 68.1f},
-	    {0.0f, -51.4f, -16.8f, 2.3f, 23.5f, -2.2f, -27.2f, -1.9f},
-	    {0.0f, 8.4f, -15.3f, 12.8f, -11.8f, 14.9f, 3.6f, -6.9f, 2.8f},
-	    {0.0f, -23.3f, 11.1f, 9.8f, -5.1f, -6.2f, 7.8f, 0.4f, -1.5f, 9.7f},
-	    {0.0f, 3.4f, -0.2f, 3.5f, 4.8f, -8.6f, -0.1f, -4.2f, -3.4f, -0.1f, -8.8f},
-	    {0.0f, 0.0f, 2.6f, -0.5f, -0.4f, 0.6f, -0.2f, -1.7f, -1.6f, -3.0f, -2.0f, -2.6f},
-	    {0.0f, -1.2f, 0.5f, 1.3f, -1.8f, 0.1f, 0.7f, -0.1f, 0.6f, 0.2f, -0.9f, 0.0f, 0.5f}};
+		{0.0f},
+		{0.0f, 4652.9f},
+		{0.0f, -2991.6f, -734.8f},
+		{0.0f, -82.2f, 241.8f, -542.9f},
+		{0.0f, 282.0f, -158.4f, 199.8f, -350.1f},
+		{0.0f, 47.7f, 208.4f, -121.3f, 32.2f, 99.1f},
+		{0.0f, -19.1f, 25.0f, 52.7f, -64.4f, 9.0f, 68.1f},
+		{0.0f, -51.4f, -16.8f, 2.3f, 23.5f, -2.2f, -27.2f, -1.9f},
+		{0.0f, 8.4f, -15.3f, 12.8f, -11.8f, 14.9f, 3.6f, -6.9f, 2.8f},
+		{0.0f, -23.3f, 11.1f, 9.8f, -5.1f, -6.2f, 7.8f, 0.4f, -1.5f, 9.7f},
+		{0.0f, 3.4f, -0.2f, 3.5f, 4.8f, -8.6f, -0.1f, -4.2f, -3.4f, -0.1f, -8.8f},
+		{0.0f, 0.0f, 2.6f, -0.5f, -0.4f, 0.6f, -0.2f, -1.7f, -1.6f, -3.0f, -2.0f, -2.6f},
+		{0.0f, -1.2f, 0.5f, 1.3f, -1.8f, 0.1f, 0.7f, -0.1f, 0.6f, 0.2f, -0.9f, 0.0f, 0.5f}
+	};
 
 	static private final float[][] DELTA_G = new float[][] {
-	    {0.0f},
-	    {6.7f, 7.7f},
-	    {-11.5f, -7.1f, -2.2f},
-	    {2.8f, -6.2f, 3.4f, -12.2f},
-	    {-1.1f, -1.6f, -6.0f, 5.4f, -5.5f},
-	    {-0.3f, 0.6f, -0.7f, 0.1f, 1.2f, 1.0f},
-	    {-0.6f, -0.4f, 0.5f, 1.4f, -1.4f, 0.0f, 0.8f},
-	    {-0.1f, -0.3f, -0.1f, 0.7f, 0.2f, -0.5f, -0.8f, 1.0f},
-	    {-0.1f, 0.1f, -0.1f, 0.5f, -0.1f, 0.4f, 0.5f, 0.0f, 0.4f},
-	    {-0.1f, -0.2f, 0.0f, 0.4f, -0.3f, 0.0f, 0.3f, 0.0f, 0.0f, -0.4f},
-	    {0.0f, 0.0f, 0.0f, 0.2f, -0.1f, -0.2f, 0.0f, -0.1f, -0.2f, -0.1f, 0.0f},
-	    {0.0f, -0.1f, 0.0f, 0.0f, 0.0f, -0.1f, 0.0f, 0.0f, -0.1f, -0.1f, -0.1f, -0.1f},
-	    {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.1f}};
+		{0.0f},
+		{6.7f, 7.7f},
+		{-11.5f, -7.1f, -2.2f},
+		{2.8f, -6.2f, 3.4f, -12.2f},
+		{-1.1f, -1.6f, -6.0f, 5.4f, -5.5f},
+		{-0.3f, 0.6f, -0.7f, 0.1f, 1.2f, 1.0f},
+		{-0.6f, -0.4f, 0.5f, 1.4f, -1.4f, 0.0f, 0.8f},
+		{-0.1f, -0.3f, -0.1f, 0.7f, 0.2f, -0.5f, -0.8f, 1.0f},
+		{-0.1f, 0.1f, -0.1f, 0.5f, -0.1f, 0.4f, 0.5f, 0.0f, 0.4f},
+		{-0.1f, -0.2f, 0.0f, 0.4f, -0.3f, 0.0f, 0.3f, 0.0f, 0.0f, -0.4f},
+		{0.0f, 0.0f, 0.0f, 0.2f, -0.1f, -0.2f, 0.0f, -0.1f, -0.2f, -0.1f, 0.0f},
+		{0.0f, -0.1f, 0.0f, 0.0f, 0.0f, -0.1f, 0.0f, 0.0f, -0.1f, -0.1f, -0.1f, -0.1f},
+		{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.1f}
+	};
 
 	static private final float[][] DELTA_H = new float[][] {
-	    {0.0f},
-	    {0.0f, -25.1f},
-	    {0.0f, -30.2f, -23.9f},
-	    {0.0f, 5.7f, -1.0f, 1.1f},
-	    {0.0f, 0.2f, 6.9f, 3.7f, -5.6f},
-	    {0.0f, 0.1f, 2.5f, -0.9f, 3.0f, 0.5f},
-	    {0.0f, 0.1f, -1.8f, -1.4f, 0.9f, 0.1f, 1.0f},
-	    {0.0f, 0.5f, 0.6f, -0.7f, -0.2f, -1.2f, 0.2f, 0.3f},
-	    {0.0f, -0.3f, 0.7f, -0.2f, 0.5f, -0.3f, -0.5f, 0.4f, 0.1f},
-	    {0.0f, -0.3f, 0.2f, -0.4f, 0.4f, 0.1f, 0.0f, -0.2f, 0.5f, 0.2f},
-	    {0.0f, 0.0f, 0.1f, -0.3f, 0.1f, -0.2f, 0.1f, 0.0f, -0.1f, 0.2f, 0.0f},
-	    {0.0f, 0.0f, 0.1f, 0.0f, 0.2f, 0.0f, 0.0f, 0.1f, 0.0f, -0.1f, 0.0f, 0.0f},
-	    {0.0f, 0.0f, 0.0f, -0.1f, 0.1f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, -0.1f}};
+		{0.0f},
+		{0.0f, -25.1f},
+		{0.0f, -30.2f, -23.9f},
+		{0.0f, 5.7f, -1.0f, 1.1f},
+		{0.0f, 0.2f, 6.9f, 3.7f, -5.6f},
+		{0.0f, 0.1f, 2.5f, -0.9f, 3.0f, 0.5f},
+		{0.0f, 0.1f, -1.8f, -1.4f, 0.9f, 0.1f, 1.0f},
+		{0.0f, 0.5f, 0.6f, -0.7f, -0.2f, -1.2f, 0.2f, 0.3f},
+		{0.0f, -0.3f, 0.7f, -0.2f, 0.5f, -0.3f, -0.5f, 0.4f, 0.1f},
+		{0.0f, -0.3f, 0.2f, -0.4f, 0.4f, 0.1f, 0.0f, -0.2f, 0.5f, 0.2f},
+		{0.0f, 0.0f, 0.1f, -0.3f, 0.1f, -0.2f, 0.1f, 0.0f, -0.1f, 0.2f, 0.0f},
+		{0.0f, 0.0f, 0.1f, 0.0f, 0.2f, 0.0f, 0.0f, 0.1f, 0.0f, -0.1f, 0.0f, 0.0f},
+		{0.0f, 0.0f, 0.0f, -0.1f, 0.1f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, -0.1f}
+	};
 
 	static private final long BASE_TIME = new Calendar.Builder()
-						  .setTimeZone(TimeZone.getTimeZone("UTC"))
-						  .setDate(2020, Calendar.JANUARY, 1)
-						  .build()
-						  .getTimeInMillis();
+	                                          .setTimeZone(TimeZone.getTimeZone("UTC"))
+	                                          .setDate(2020, Calendar.JANUARY, 1)
+	                                          .build()
+	                                          .getTimeInMillis();
 
 	// The ratio between the Gauss-normalized associated Legendre functions and
 	// the Schmid quasi-normalized ones. Compute these once staticly since they
@@ -137,18 +141,18 @@ public class GeomagneticField {
 	 *            changes very slowly).
 	 */
 	public GeomagneticField(float gdLatitudeDeg,
-				float gdLongitudeDeg,
-				float altitudeMeters,
-				long timeMillis) {
+	                        float gdLongitudeDeg,
+	                        float altitudeMeters,
+	                        long timeMillis) {
 		final int MAX_N = G_COEFF.length; // Maximum degree of the coefficients.
 
 		// We don't handle the north and south poles correctly -- pretend that
 		// we're not quite at them to avoid crashing.
 		gdLatitudeDeg = Math.min(90.0f - 1e-5f,
-					 Math.max(-90.0f + 1e-5f, gdLatitudeDeg));
+		                         Math.max(-90.0f + 1e-5f, gdLatitudeDeg));
 		computeGeocentricCoordinates(gdLatitudeDeg,
-					     gdLongitudeDeg,
-					     altitudeMeters);
+		                             gdLongitudeDeg,
+		                             altitudeMeters);
 
 		assert G_COEFF.length == H_COEFF.length;
 
@@ -158,7 +162,7 @@ public class GeomagneticField {
 		// derivate will be negated.
 		LegendreTable legendre =
 		    new LegendreTable(MAX_N - 1,
-				      (float)(Math.PI / 2.0 - mGcLatitudeRad));
+		                      (float)(Math.PI / 2.0 - mGcLatitudeRad));
 
 		// Compute a table of (EARTH_REFERENCE_RADIUS_KM / radius)^n for i in
 		// 0..MAX_N-2 (this is much faster than calling Math.pow MAX_N+1 times).
@@ -166,8 +170,7 @@ public class GeomagneticField {
 		relativeRadiusPower[0] = 1.0f;
 		relativeRadiusPower[1] = EARTH_REFERENCE_RADIUS_KM / mGcRadiusKm;
 		for (int i = 2; i < relativeRadiusPower.length; ++i) {
-			relativeRadiusPower[i] = relativeRadiusPower[i - 1] *
-						 relativeRadiusPower[1];
+			relativeRadiusPower[i] = relativeRadiusPower[i - 1] * relativeRadiusPower[1];
 		}
 
 		// Compute tables of sin(lon * m) and cos(lon * m) for m = 0..MAX_N --
@@ -266,7 +269,7 @@ public class GeomagneticField {
 	 */
 	public float getInclination() {
 		return (float)Math.toDegrees(Math.atan2(mZ,
-							getHorizontalStrength()));
+		                                        getHorizontalStrength()));
 	}
 
 	/**
@@ -294,8 +297,8 @@ public class GeomagneticField {
 	 *         equator and this point, at the center of the earth.
 	 */
 	private void computeGeocentricCoordinates(float gdLatitudeDeg,
-						  float gdLongitudeDeg,
-						  float altitudeMeters) {
+	                                          float gdLongitudeDeg,
+	                                          float altitudeMeters) {
 		float altitudeKm = altitudeMeters / 1000.0f;
 		float a2 = EARTH_SEMI_MAJOR_AXIS_KM * EARTH_SEMI_MAJOR_AXIS_KM;
 		float b2 = EARTH_SEMI_MINOR_AXIS_KM * EARTH_SEMI_MINOR_AXIS_KM;

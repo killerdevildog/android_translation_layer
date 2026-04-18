@@ -94,8 +94,8 @@ public class TextUtils {
 	public static int indexOf(CharSequence s, char ch, int start, int end) {
 		Class<? extends CharSequence> c = s.getClass();
 
-		if (s instanceof GetChars || c == StringBuffer.class ||
-		    c == StringBuilder.class || c == String.class) {
+		if (s instanceof GetChars || c == StringBuffer.class
+		    || c == StringBuilder.class || c == String.class) {
 			final int INDEX_INCREMENT = 500;
 			char[] temp = obtain(INDEX_INCREMENT);
 
@@ -142,7 +142,7 @@ public class TextUtils {
 	}
 
 	public static int lastIndexOf(CharSequence s, char ch,
-				      int start, int last) {
+	                              int start, int last) {
 		if (last < 0)
 			return -1;
 		if (last >= s.length())
@@ -152,8 +152,8 @@ public class TextUtils {
 
 		Class<? extends CharSequence> c = s.getClass();
 
-		if (s instanceof GetChars || c == StringBuffer.class ||
-		    c == StringBuilder.class || c == String.class) {
+		if (s instanceof GetChars || c == StringBuffer.class
+		    || c == StringBuilder.class || c == String.class) {
 			final int INDEX_INCREMENT = 500;
 			char[] temp = obtain(INDEX_INCREMENT);
 
@@ -195,7 +195,7 @@ public class TextUtils {
 	}
 
 	public static int indexOf(CharSequence s, CharSequence needle,
-				  int start, int end) {
+	                          int start, int end) {
 		int nlen = needle.length();
 		if (nlen == 0)
 			return start;
@@ -222,8 +222,8 @@ public class TextUtils {
 	}
 
 	public static boolean regionMatches(CharSequence one, int toffset,
-					    CharSequence two, int ooffset,
-					    int len) {
+	                                    CharSequence two, int ooffset,
+	                                    int len) {
 		int tempLen = 2 * len;
 		if (tempLen < len) {
 			// Integer overflow; len is unreasonably large

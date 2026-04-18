@@ -27,11 +27,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import java.lang.ref.WeakReference;
 
-public class PasswordTransformationMethod implements TransformationMethod, TextWatcher
-{
+public class PasswordTransformationMethod implements TransformationMethod, TextWatcher {
 	public CharSequence getTransformation(CharSequence source, View view) {
 		if (source instanceof Spannable) {
-			Spannable sp = (Spannable) source;
+			Spannable sp = (Spannable)source;
 			/*
 			 * Remove any references to other views that may still be
 			 * attached.  This will happen when you flip the screen
@@ -39,13 +38,13 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 			 * be references to the old EditText in the text.
 			 */
 			ViewReference[] vr = sp.getSpans(0, sp.length(),
-											 ViewReference.class);
+			                                 ViewReference.class);
 			for (int i = 0; i < vr.length; i++) {
 				sp.removeSpan(vr[i]);
 			}
 			removeVisibleSpans(sp);
 			sp.setSpan(new ViewReference(view), 0, 0,
-					   Spannable.SPAN_POINT_POINT);
+			           Spannable.SPAN_POINT_POINT);
 		}
 		return new PasswordCharSequence(source);
 	}
@@ -58,16 +57,16 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 	}
 
 	public void beforeTextChanged(CharSequence s, int start,
-								  int count, int after) {
+	                              int count, int after) {
 		// This callback isn't used.
 	}
 
 	public void onTextChanged(CharSequence s, int start,
-							  int before, int count) {
+	                          int before, int count) {
 		if (s instanceof Spannable) {
-			Spannable sp = (Spannable) s;
+			Spannable sp = (Spannable)s;
 			ViewReference[] vr = sp.getSpans(0, s.length(),
-											 ViewReference.class);
+			                                 ViewReference.class);
 			if (vr.length == 0) {
 				return;
 			}
@@ -89,11 +88,11 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 	}
 
 	public void onFocusChanged(View view, CharSequence sourceText,
-							   boolean focused, int direction,
-							   Rect previouslyFocusedRect) {
+	                           boolean focused, int direction,
+	                           Rect previouslyFocusedRect) {
 		if (!focused) {
 			if (sourceText instanceof Spannable) {
-				Spannable sp = (Spannable) sourceText;
+				Spannable sp = (Spannable)sourceText;
 				removeVisibleSpans(sp);
 			}
 		}
@@ -106,8 +105,7 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 		}
 	}
 
-	private static class PasswordCharSequence implements CharSequence, GetChars
-	{
+	private static class PasswordCharSequence implements CharSequence, GetChars {
 		public PasswordCharSequence(CharSequence source) {
 			mSource = source;
 		}
@@ -131,7 +129,7 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 			int nvisible = 0;
 			int[] starts = null, ends = null;
 			for (int i = start; i < end; i++) {
-				if (! (i >= st && i < en)) {
+				if (!(i >= st && i < en)) {
 					boolean visible = false;
 					for (int a = 0; a < nvisible; a++) {
 						if (i >= starts[a] && i < ends[a]) {
@@ -148,8 +146,7 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 		private CharSequence mSource;
 	}
 
-	private static class Visible extends Handler implements Runnable
-	{
+	private static class Visible extends Handler implements Runnable {
 		public Visible(Spannable sp, PasswordTransformationMethod ptm) {
 			mText = sp;
 			mTransformer = ptm;
@@ -166,7 +163,7 @@ public class PasswordTransformationMethod implements TransformationMethod, TextW
 	 * can use it to check the settings.
 	 */
 	private static class ViewReference extends WeakReference<View>
-			implements NoCopySpan {
+	    implements NoCopySpan {
 		public ViewReference(View v) {
 			super(v);
 		}

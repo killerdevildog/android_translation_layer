@@ -40,7 +40,6 @@ public class InputMethodService extends AbstractInputMethodService {
 		private native boolean nativeSetSelection(long ptr, int start, int end);
 		private native boolean nativeSendKeyEvent(long ptr, long time, long key, long state);
 
-
 		ATLInputConnection() {
 			super(null, false);
 			nativePtr = nativeInit();
@@ -68,7 +67,7 @@ public class InputMethodService extends AbstractInputMethodService {
 
 		@Override
 		public boolean deleteSurroundingText(int beforeLength, int afterLength) {
-			System.out.println("ATLKeyboardIMS: deleteSurroundingText("+ beforeLength + ", " + afterLength +")");
+			System.out.println("ATLKeyboardIMS: deleteSurroundingText(" + beforeLength + ", " + afterLength + ")");
 			return nativeDeleteSurroundingText(nativePtr, beforeLength, afterLength);
 		}
 
@@ -79,20 +78,20 @@ public class InputMethodService extends AbstractInputMethodService {
 
 		@Override
 		public boolean sendKeyEvent(KeyEvent event) {
-			System.out.println("softkeyboard preview: sendKeyEvent("+event+")");
+			System.out.println("softkeyboard preview: sendKeyEvent(" + event + ")");
 			return nativeSendKeyEvent(nativePtr, event.getEventTime(), event.getKeyCode(), event.getAction());
 		}
 
 		/* these functions are noop on AOSP by default, so we just add a print for debugging purposes and still return false */
 		@Override
 		public boolean commitCompletion(CompletionInfo completionInfo) {
-			System.out.println("softkeyboard preview: commitCompletion(\""+completionInfo+"\")");
+			System.out.println("softkeyboard preview: commitCompletion(\"" + completionInfo + "\")");
 			return false;
 		}
 
 		@Override
 		public boolean commitCorrection(CorrectionInfo correctionInfo) {
-			System.out.println("softkeyboard preview: commitCorrection(\""+correctionInfo+"\")");
+			System.out.println("softkeyboard preview: commitCorrection(\"" + correctionInfo + "\")");
 			return false;
 		}
 	}
@@ -142,11 +141,10 @@ public class InputMethodService extends AbstractInputMethodService {
 		onComputeInsets(new Insets());
 
 		onStartInputView(new EditorInfo(), false);
-
 	}
 
 	public void sendKeyChar(char c) {
-		System.out.println("softkeyboard preview: sendKeyChar('"+c+"')");
+		System.out.println("softkeyboard preview: sendKeyChar('" + c + "')");
 	}
 
 	public void setInputView(View view) {
@@ -203,7 +201,6 @@ public class InputMethodService extends AbstractInputMethodService {
 	public void requestHideSelf(int flags) {
 	}
 
-
 	public Dialog getWindow() {
 		return kb_dialog;
 	}
@@ -235,7 +232,7 @@ public class InputMethodService extends AbstractInputMethodService {
 	public void onComputeInsets(Insets insets) {
 	}
 
-	public void onStartInput(EditorInfo info,  boolean restarting) {
+	public void onStartInput(EditorInfo info, boolean restarting) {
 	}
 
 	public void onFinishInput() {

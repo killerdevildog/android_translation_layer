@@ -21,4 +21,9 @@ public class Binder implements IBinder {
 	public static int getCallingUid() { return Context.this_application.getApplicationInfo().uid; }
 
 	public static int getCallingPid() { return 0; }
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Binder;
+	}
 }

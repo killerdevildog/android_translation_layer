@@ -17,10 +17,9 @@
 package android.test;
 
 import android.app.Instrumentation;
-
-import junit.framework.TestSuite;
 import junit.framework.Test;
 import junit.framework.TestResult;
+import junit.framework.TestSuite;
 
 /**
  * A {@link junit.framework.TestSuite} that injects {@link android.app.Instrumentation} into
@@ -34,47 +33,44 @@ import junit.framework.TestResult;
 @Deprecated
 public class InstrumentationTestSuite extends TestSuite {
 
-    private final Instrumentation mInstrumentation;
+	private final Instrumentation mInstrumentation;
 
-    /**
+	/**
      * @param instr The instrumentation that will be injected into each
      *   test before running it.
      */
-    public InstrumentationTestSuite(Instrumentation instr) {
-        mInstrumentation = instr;
-    }
+	public InstrumentationTestSuite(Instrumentation instr) {
+		mInstrumentation = instr;
+	}
 
+	public InstrumentationTestSuite(String name, Instrumentation instr) {
+		super(name);
+		mInstrumentation = instr;
+	}
 
-    public InstrumentationTestSuite(String name, Instrumentation instr) {
-        super(name);
-        mInstrumentation = instr;
-    }
-
-    /**
+	/**
      * @param theClass Inspected for methods starting with 'test'
      * @param instr The instrumentation to inject into each test before
      *   running.
      */
-    public InstrumentationTestSuite(final Class theClass, Instrumentation instr) {
-        super(theClass);
-        mInstrumentation = instr;
-    }
+	public InstrumentationTestSuite(final Class theClass, Instrumentation instr) {
+		super(theClass);
+		mInstrumentation = instr;
+	}
 
+	@Override
+	public void addTestSuite(Class testClass) {
+		addTest(new InstrumentationTestSuite(testClass, mInstrumentation));
+	}
 
-    @Override
-    public void addTestSuite(Class testClass) {
-        addTest(new InstrumentationTestSuite(testClass, mInstrumentation));
-    }
+	@Override
+	public void runTest(Test test, TestResult result) {
 
+		if (test instanceof InstrumentationTestCase) {
+			((InstrumentationTestCase)test).injectInstrumentation(mInstrumentation);
+		}
 
-    @Override
-    public void runTest(Test test, TestResult result) {
-
-        if (test instanceof InstrumentationTestCase) {
-            ((InstrumentationTestCase) test).injectInstrumentation(mInstrumentation);
-        }
-
-        // run the test as usual
-        super.runTest(test, result);
-    }
+		// run the test as usual
+		super.runTest(test, result);
+	}
 }

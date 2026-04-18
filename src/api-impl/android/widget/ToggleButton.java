@@ -52,7 +52,7 @@ public class ToggleButton extends CompoundButton {
 		final TypedArray a = context.obtainStyledAttributes(
 		    attrs, com.android.internal.R.styleable.ToggleButton, defStyleAttr, defStyleRes);
 		saveAttributeDataForStyleable(context, com.android.internal.R.styleable.ToggleButton,
-					      attrs, a, defStyleAttr, defStyleRes);
+		                              attrs, a, defStyleAttr, defStyleRes);
 		mTextOn = a.getText(com.android.internal.R.styleable.ToggleButton_textOn);
 		mTextOff = a.getText(com.android.internal.R.styleable.ToggleButton_textOff);
 		mDisabledAlpha = a.getFloat(com.android.internal.R.styleable.ToggleButton_disabledAlpha, 0.5f);

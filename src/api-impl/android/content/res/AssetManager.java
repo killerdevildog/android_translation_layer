@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Slog;
 import android.util.TypedValue;
-
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -95,7 +94,6 @@ public final class AssetManager {
 
 	private ArrayList<String> asset_paths = new ArrayList<String>();
 
-
 	/**
 	 * Create a new AssetManager containing only the basic system assets.
 	 * Applications will not generally use this method, instead retrieving the
@@ -116,11 +114,11 @@ public final class AssetManager {
 			try {
 				Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources("AndroidManifest.xml");
 				ArrayList<String> paths = new ArrayList<String>();
-				paths.add(null);  // reserve first slot for framework-res.apk
+				paths.add(null); // reserve first slot for framework-res.apk
 				while (resources.hasMoreElements()) {
 					String path = resources.nextElement().getPath();
 					path = URLDecoder.decode(path, "UTF-8");
-					if (path.contains("framework-res.apk"))  // needs to be first, so it can be overridden
+					if (path.contains("framework-res.apk")) // needs to be first, so it can be overridden
 						paths.set(0, path);
 					else
 						paths.add(path);
@@ -135,7 +133,7 @@ public final class AssetManager {
 				Log.e(TAG, "failed to load resources.arsc" + e);
 			}
 			asset_paths.add(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/");
-			/*String*/Object[] asset_paths_arr = asset_paths.toArray();
+			/*String*/ Object[] asset_paths_arr = asset_paths.toArray();
 			native_setApkAssets(asset_paths_arr, asset_paths_arr.length);
 		}
 	}
@@ -194,7 +192,7 @@ public final class AssetManager {
 		if (id == 0)
 			return "";
 		TypedValue value = new TypedValue();
-		loadResourceValue(id, (short) 0, value, true);
+		loadResourceValue(id, (short)0, value, true);
 		return value.coerceToString();
 	}
 
@@ -221,10 +219,10 @@ public final class AssetManager {
 	}
 
 	/*package*/ final boolean getResourceValue(int ident,
-						   int density,
-						   TypedValue outValue,
-						   boolean resolveRefs) {
-		int block = loadResourceValue(ident, (short) density, outValue, resolveRefs);
+	                                           int density,
+	                                           TypedValue outValue,
+	                                           boolean resolveRefs) {
+		int block = loadResourceValue(ident, (short)density, outValue, resolveRefs);
 		return block >= 0;
 	}
 
@@ -240,9 +238,9 @@ public final class AssetManager {
 		CharSequence[] values = new String[n];
 		TypedValue value = new TypedValue();
 		for (int i = 0; i < n; i++) {
-			value.data = valueArray[i*STYLE_NUM_ENTRIES + STYLE_DATA];
-			value.type = valueArray[i*STYLE_NUM_ENTRIES + STYLE_TYPE];
-			value.assetCookie = valueArray[i*STYLE_NUM_ENTRIES + STYLE_ASSET_COOKIE];
+			value.data = valueArray[i * STYLE_NUM_ENTRIES + STYLE_DATA];
+			value.type = valueArray[i * STYLE_NUM_ENTRIES + STYLE_TYPE];
+			value.assetCookie = valueArray[i * STYLE_NUM_ENTRIES + STYLE_ASSET_COOKIE];
 			if (value.type == TypedValue.TYPE_STRING) {
 				values[i] = getPooledString(value.assetCookie, value.data);
 			} else {
@@ -253,7 +251,7 @@ public final class AssetManager {
 	}
 
 	/*package*/ final boolean getThemeValue(long style, int ident,
-						TypedValue outValue, boolean resolveRefs) {
+	                                        TypedValue outValue, boolean resolveRefs) {
 		int block = loadThemeAttributeValue(style, ident, outValue, resolveRefs);
 		return block >= 0;
 	}
@@ -319,7 +317,7 @@ public final class AssetManager {
 	 */
 	public final InputStream open(String fileName, int accessMode) throws IOException {
 		long asset = openAsset("assets/" + fileName, accessMode);
-		if(asset == 0)
+		if (asset == 0)
 			throw new FileNotFoundException("file: " + fileName);
 		return new AssetInputStream(asset);
 	}
@@ -392,7 +390,7 @@ public final class AssetManager {
 	 */
 	public final InputStream openNonAsset(int cookie, String fileName, int accessMode) throws IOException {
 		long asset = openAsset(fileName, accessMode);
-		if(asset == 0)
+		if (asset == 0)
 			throw new FileNotFoundException("file: " + fileName);
 		return new AssetInputStream(asset);
 	}
@@ -403,13 +401,12 @@ public final class AssetManager {
 	}
 
 	public final AssetFileDescriptor openNonAssetFd(int cookie,
-							String fileName) throws IOException {
+	                                                String fileName) throws IOException {
 		return openFd_internal(fileName, 0);
-
 	}
 
 	private final AssetFileDescriptor openFd_internal(String fileName, int accessMode)
-							  throws IOException {
+	    throws IOException {
 		int asset;
 		synchronized (this) {
 			if (!mOpen) {
@@ -450,7 +447,7 @@ public final class AssetManager {
 	 * @param fileName The name of the file to retrieve.
 	 */
 	public final XmlResourceParser openXmlResourceParser(int cookie,
-							     String fileName) throws IOException {
+	                                                     String fileName) throws IOException {
 		XmlBlock block = openXmlBlockAsset(cookie, fileName);
 		XmlResourceParser rp = block.newParser();
 		block.close();
@@ -591,9 +588,9 @@ public final class AssetManager {
 
 	private int readAsset_internal(long asset, byte[] b, long offset, long length) throws IOException {
 		int ret = readAsset(asset, b, offset, length);
-		if(ret < 0)
+		if (ret < 0)
 			throw new IOException();
-		if(ret == 0)
+		if (ret == 0)
 			ret = -1;
 		return ret;
 	}
@@ -606,9 +603,9 @@ public final class AssetManager {
 	 */
 	/* this is not particularly efficient, avoid if possible */
 	public final void addAssetPath(String path) {
-			asset_paths.add(path);
-			/*String*/Object[] asset_paths_arr = asset_paths.toArray();
-			native_setApkAssets(asset_paths_arr, asset_paths_arr.length);
+		asset_paths.add(path);
+		/*String*/ Object[] asset_paths_arr = asset_paths.toArray();
+		native_setApkAssets(asset_paths_arr, asset_paths_arr.length);
 	}
 
 	private native final int addAssetPathNative(String path);
@@ -663,10 +660,10 @@ public final class AssetManager {
 	 * {@hide}
 	 */
 	public native final void setConfiguration(int mcc, int mnc, String locale,
-						  int orientation, int touchscreen, int density, int keyboard,
-						  int keyboardHidden, int navigation, int screenWidth, int screenHeight,
-						  int smallestScreenWidthDp, int screenWidthDp, int screenHeightDp,
-						  int screenLayout, int uiMode, int majorVersion);
+	                                          int orientation, int touchscreen, int density, int keyboard,
+	                                          int keyboardHidden, int navigation, int screenWidth, int screenHeight,
+	                                          int smallestScreenWidthDp, int screenWidthDp, int screenHeightDp,
+	                                          int screenLayout, int uiMode, int majorVersion);
 
 	/**
 	 * Retrieve the resource identifier for the given resource name.
@@ -693,14 +690,14 @@ public final class AssetManager {
 	 *  mRetData.
 	 */
 	private native final int loadResourceValue(int ident, short density, TypedValue outValue,
-						   boolean resolve);
+	                                           boolean resolve);
 
 	/**
 	 * Returns true if the resource was found, filling in mRetStringBlock and
 	 *  mRetData.
 	 */
 	private native final int loadResourceBagValue(int ident, int bagEntryId, TypedValue outValue,
-						      boolean resolve);
+	                                              boolean resolve);
 	/*package*/ static final int STYLE_NUM_ENTRIES = 7;
 	/*package*/ static final int STYLE_TYPE = 0;
 	/*package*/ static final int STYLE_DATA = 1;
@@ -711,14 +708,14 @@ public final class AssetManager {
 	/*package*/ static final int STYLE_SOURCE_RESOURCE_ID = 6;
 
 	/*package*/ native final void applyStyle(long theme, long parser,
-	                                                int defStyleAttr, int defStyleRes,
-	                                                int[] inAttrs, int length,
-	                                                long outValuesAddress, long outIndicesAddress);
+	                                         int defStyleAttr, int defStyleRes,
+	                                         int[] inAttrs, int length,
+	                                         long outValuesAddress, long outIndicesAddress);
 
 	/*package*/ native final boolean resolveAttrs(long theme, int defStyleAttr,
-	                                                     int defStyleRes, int[] inValues,
-	                                                     int[] inAttrs, int[] outValues,
-	                                                     int[] outIndices);
+	                                              int defStyleRes, int[] inValues,
+	                                              int[] inAttrs, int[] outValues,
+	                                              int[] outIndices);
 	/*package*/ native final boolean retrieveAttributes(long xmlParser,
 	                                                    int[] inAttrs, int length,
 	                                                    long outValuesAddress, long outIndicesAddress);
@@ -753,8 +750,8 @@ public final class AssetManager {
 	/*package*/ native final void applyThemeStyle(long theme, int styleRes, boolean force);
 	/*package*/ native final void copyTheme(long dest, long source);
 	/*package*/ native final int loadThemeAttributeValue(long theme, int ident,
-								    TypedValue outValue,
-								    boolean resolve);
+	                                                     TypedValue outValue,
+	                                                     boolean resolve);
 	/*package*/ native static final void dumpTheme(long theme, int priority, String tag, String prefix);
 
 	private native final long openXmlAssetNative(int cookie, String fileName);
@@ -768,9 +765,9 @@ public final class AssetManager {
 		int[] values = new int[n];
 		TypedValue value = new TypedValue();
 		for (int i = 0; i < n; i++) {
-			value.data = valueArray[i*STYLE_NUM_ENTRIES + STYLE_DATA];
-			value.type = valueArray[i*STYLE_NUM_ENTRIES + STYLE_TYPE];
-			value.assetCookie = valueArray[i*STYLE_NUM_ENTRIES + STYLE_ASSET_COOKIE];
+			value.data = valueArray[i * STYLE_NUM_ENTRIES + STYLE_DATA];
+			value.type = valueArray[i * STYLE_NUM_ENTRIES + STYLE_TYPE];
+			value.assetCookie = valueArray[i * STYLE_NUM_ENTRIES + STYLE_ASSET_COOKIE];
 			values[i] = value.data;
 		}
 		return values;
@@ -805,5 +802,5 @@ public final class AssetManager {
 		}
 	}
 
-	private native final void native_setApkAssets(/*String*/Object[] paths, int num_assets);
+	private native final void native_setApkAssets(/*String*/ Object[] paths, int num_assets);
 }

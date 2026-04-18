@@ -49,18 +49,18 @@ public final class UriCodec {
 	}
 
 	private static URISyntaxException unexpectedCharacterException(
-			String uri, String name, char unexpected, int index) {
-		String nameString = (name == null) ? "" :  " in [" + name + "]";
+	    String uri, String name, char unexpected, int index) {
+		String nameString = (name == null) ? "" : " in [" + name + "]";
 		return new URISyntaxException(
-				uri, "Unexpected character" + nameString + ": " + unexpected, index);
+		    uri, "Unexpected character" + nameString + ": " + unexpected, index);
 	}
 
 	private static char getNextCharacter(String uri, int index, int end, String name)
-			 throws URISyntaxException {
+	    throws URISyntaxException {
 		if (index >= end) {
-			String nameString = (name == null) ? "" :  " in [" + name + "]";
+			String nameString = (name == null) ? "" : " in [" + name + "]";
 			throw new URISyntaxException(
-					uri, "Unexpected end of string" + nameString, index);
+			    uri, "Unexpected end of string" + nameString, index);
 		}
 		return uri.charAt(index);
 	}
@@ -74,7 +74,7 @@ public final class UriCodec {
 	 *   invalid inputs. Else, U+FFFd is emitted to the output in place of invalid input octets.
 	 */
 	public static String decode(
-			String s, boolean convertPlus, Charset charset, boolean throwOnFailure) {
+	    String s, boolean convertPlus, Charset charset, boolean throwOnFailure) {
 		StringBuilder builder = new StringBuilder(s.length());
 		appendDecoded(builder, s, convertPlus, charset, throwOnFailure);
 		return builder.toString();
@@ -86,15 +86,15 @@ public final class UriCodec {
 	private static final char INVALID_INPUT_CHARACTER = '\ufffd';
 
 	private static void appendDecoded(
-			StringBuilder builder,
-			String s,
-			boolean convertPlus,
-			Charset charset,
-			boolean throwOnFailure) {
+	    StringBuilder builder,
+	    String s,
+	    boolean convertPlus,
+	    Charset charset,
+	    boolean throwOnFailure) {
 		CharsetDecoder decoder = charset.newDecoder()
-				.onMalformedInput(CodingErrorAction.REPLACE)
-				.replaceWith("\ufffd")
-				.onUnmappableCharacter(CodingErrorAction.REPORT);
+		                             .onMalformedInput(CodingErrorAction.REPLACE)
+		                             .replaceWith("\ufffd")
+		                             .onUnmappableCharacter(CodingErrorAction.REPORT);
 		// Holds the bytes corresponding to the escaped chars being read (empty if the last char
 		// wasn't a escaped char).
 		ByteBuffer byteBuffer = ByteBuffer.allocate(s.length());
@@ -105,7 +105,7 @@ public final class UriCodec {
 			switch (c) {
 				case '+':
 					flushDecodingByteAccumulator(
-							builder, decoder, byteBuffer, throwOnFailure);
+					    builder, decoder, byteBuffer, throwOnFailure);
 					builder.append(convertPlus ? ' ' : '+');
 					break;
 				case '%':
@@ -120,7 +120,7 @@ public final class UriCodec {
 								throw new IllegalArgumentException(e);
 							} else {
 								flushDecodingByteAccumulator(
-										builder, decoder, byteBuffer, throwOnFailure);
+								    builder, decoder, byteBuffer, throwOnFailure);
 								builder.append(INVALID_INPUT_CHARACTER);
 								return;
 							}
@@ -130,15 +130,15 @@ public final class UriCodec {
 						if (newDigit < 0) {
 							if (throwOnFailure) {
 								throw new IllegalArgumentException(
-										unexpectedCharacterException(s, null /* name */, c, i - 1));
+								    unexpectedCharacterException(s, null /* name */, c, i - 1));
 							} else {
 								flushDecodingByteAccumulator(
-										builder, decoder, byteBuffer, throwOnFailure);
+								    builder, decoder, byteBuffer, throwOnFailure);
 								builder.append(INVALID_INPUT_CHARACTER);
 								break;
 							}
 						}
-						hexValue = (byte) (hexValue * 0x10 + newDigit);
+						hexValue = (byte)(hexValue * 0x10 + newDigit);
 					}
 					byteBuffer.put(hexValue);
 					break;
@@ -151,10 +151,10 @@ public final class UriCodec {
 	}
 
 	private static void flushDecodingByteAccumulator(
-			StringBuilder builder,
-			CharsetDecoder decoder,
-			ByteBuffer byteBuffer,
-			boolean throwOnFailure) {
+	    StringBuilder builder,
+	    CharsetDecoder decoder,
+	    ByteBuffer byteBuffer,
+	    boolean throwOnFailure) {
 		if (byteBuffer.position() == 0) {
 			return;
 		}
