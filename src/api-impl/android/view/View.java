@@ -2542,4 +2542,12 @@ public class View implements Drawable.Callback {
 	public void destroyDrawingCache() {}
 
 	public void setHovered(boolean isHovered) {}
+
+	public void setVerticalFadingEdgeEnabled(boolean verticalFadingEdgeEnabled) {}
+
+	public void setFadingEdgeLength(int length) {}
+
+	public int getAccessibilityLiveRegion() { return 0; }
+
+	public void setLabelFor(int id) {}
 }
