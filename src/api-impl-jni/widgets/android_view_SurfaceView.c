@@ -129,13 +129,20 @@ static void on_resize(GtkWidget *self, gint width, gint height, struct jni_callb
 	g_idle_add_full(G_PRIORITY_HIGH_IDLE + 20, G_SOURCE_FUNC(on_resize_delayed), d, NULL);
 }
 
-static void on_realize(GtkWidget *self, struct jni_callback_data *d)
+static gboolean on_realize_delayed(struct jni_callback_data *d)
 {
 	JNIEnv *env;
 	(*d->jvm)->GetEnv(d->jvm, (void **)&env, JNI_VERSION_1_6);
 
 	// NOTE: we want to call the private method of android.view.SurfaceView, not the related method with this name in the API
 	(*env)->CallVoidMethod(env, d->this, handle_cache.surface_view.surfaceCreated);
+
+	return G_SOURCE_REMOVE;
+}
+
+static void on_realize(GtkWidget *self, struct jni_callback_data *d)
+{
+	g_idle_add_full(G_PRIORITY_HIGH_IDLE + 20, G_SOURCE_FUNC(on_realize_delayed), d, NULL);
 }
 
 JNIEXPORT jlong JNICALL Java_android_view_SurfaceView_native_1constructor(JNIEnv *env, jobject this, jobject context, jobject attrs)
