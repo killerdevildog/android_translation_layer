@@ -70,7 +70,7 @@ public final class Configuration implements Comparable<Configuration> {
 	 * <a href="{@docRoot}guide/topics/resources/providing-resources.html#LocaleQualifier">locale</a>
 	 * resource qualifier.
 	 */
-	public Locale locale;
+	public Locale locale = Locale.getDefault();
 
 	/**
 	 * Locale should persist on setting.  This is hidden because it is really
