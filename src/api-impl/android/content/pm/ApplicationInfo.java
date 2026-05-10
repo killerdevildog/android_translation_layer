@@ -569,6 +569,11 @@ public class ApplicationInfo extends PackageItemInfo {
 	}
 
 	public ApplicationInfo() {
+		if (System.getProperty("os.arch").equals("aarch64")) {
+			primaryCpuAbi = "arm64-v8a";
+		} else if (System.getProperty("os.arch").equals("x86_64")) {
+			primaryCpuAbi = "x86_64";
+		}
 	}
 
 	public ApplicationInfo(ApplicationInfo orig) {
