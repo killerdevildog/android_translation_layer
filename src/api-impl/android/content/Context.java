@@ -14,6 +14,7 @@ import android.app.SharedPreferencesImpl;
 import android.app.StatusBarManager;
 import android.app.UiModeManager;
 import android.app.job.JobScheduler;
+import android.atl.ATLLoadedApp;
 import android.bluetooth.BluetoothManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -91,15 +92,13 @@ public abstract class Context {
 
 	public static Vibrator vibrator;
 
-	static AssetManager assets;
-	static DisplayMetrics dm;
-	public static Resources r;
-	static ApplicationInfo application_info;
-	private static Map<Class<? extends Service>, Service> runningServices = new HashMap<>();
-	public static PackageParser.Package pkg;
 	public static PackageManager package_manager;
+	public static Configuration sys_config;
 
-	public /*← FIXME?*/ static Application this_application;
+	// TODO: Migrate to ATLLoadedApp, cannot remove yet due to being called by native
+	// The current replacement is ATLLoadedApp.getPrimaryApplication().getApplication()
+	@Deprecated
+	private static Application this_application;
 
 	File data_dir = null;
 	File prefs_dir = null;
@@ -108,29 +107,14 @@ public abstract class Context {
 	File cache_dir = null;
 	File nobackup_dir = null;
 
-	private static Map<IntentFilter, BroadcastReceiver> receiverMap = new ConcurrentHashMap<IntentFilter, BroadcastReceiver>();
+	private static Map<IntentFilter, BroadcastReceiver> receiverMap = new ConcurrentHashMap<>();
 
 	static {
-		assets = new AssetManager();
-		dm = new DisplayMetrics();
-		Configuration config = new Configuration();
-		native_updateConfig(config);
-		r = new Resources(assets, dm, config);
-		application_info = new ApplicationInfo();
-		try (XmlResourceParser parser = assets.openXmlResourceParser("AndroidManifest.xml")) {
-			PackageParser packageParser = new PackageParser(native_get_apk_path());
-			String[] parseError = new String[1];
-			pkg = packageParser.parsePackage(r, parser, 0, parseError);
-			if (parseError[0] != null) {
-				Slog.e(TAG, parseError[0]);
-				System.exit(1);
-			}
+		sys_config = new Configuration();
+		native_updateConfig(sys_config);
+		ATLLoadedApp primary_application = ATLLoadedApp.getPrimaryApplication();
 
-			packageParser.collectCertificates(pkg, 0);
-			application_info = pkg.applicationInfo;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ApplicationInfo application_info = primary_application.pkg.applicationInfo;
 		application_info.dataDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 		application_info.nativeLibraryDir = (new File(Environment.getExternalStorageDirectory(), "lib")).getAbsolutePath();
 		application_info.sourceDir = native_get_apk_path();
@@ -142,9 +126,9 @@ public abstract class Context {
 		provider.put("KeyGenerator.HmacSHA512", "android.security.keystore.KeyGenerator$HmacSHA512");
 		Security.addProvider(provider);
 
-		r.applyPackageQuirks(application_info.minSdkVersion);
-
-		for (PackageParser.Activity receiver : pkg.receivers) {
+		for (PackageParser.Activity receiver : primary_application.pkg.receivers) {
+			if (receiver.intents == null)
+				continue;
 			for (PackageParser.ActivityIntentInfo intent : receiver.intents) {
 				if (intent.matchAction("org.unifiedpush.android.connector.MESSAGE")) {
 					nativeExportUnifiedPush(application_info.packageName);
@@ -156,30 +140,16 @@ public abstract class Context {
 
 	private static native String native_get_apk_path();
 	protected static native void native_updateConfig(Configuration config);
-	private static native void nativeOpenFile(int fd);
-	private static native void nativeShareFile(String text, int fd);
+	protected static native void nativeOpenFile(int fd);
+	protected static native void nativeShareFile(String text, int fd);
 	private static native void nativeExportUnifiedPush(String packageName);
 	private static native void nativeRegisterUnifiedPush(String token, String application);
-	private static native void nativeStartExternalService(Intent service);
+	protected static native void nativeStartExternalService(Intent service);
 
 	static Application createApplication(long native_window) throws Exception {
-		Application application;
-
-		if (pkg.applicationInfo.className != null) {
-			Class<? extends Application> cls = Class.forName(pkg.applicationInfo.className).asSubclass(Application.class);
-			Constructor<? extends Application> constructor = cls.getConstructor();
-			application = constructor.newInstance();
-		} else {
-			application = new Application();
-		}
+		Application application = ATLLoadedApp.getPrimaryApplication().getApplication();
 		application.native_window = native_window;
 		this_application = application;
-		application.attachBaseContext(new ContextImpl(r, application_info, pkg.applicationInfo.theme));
-		// HACK: Set WhatsApp's custom logging mechanism to verbose for easier debugging. Should be removed again once WhatsApp is fully supported
-		try {
-			Class.forName("com.whatsapp.util.Log").getField("level").setInt(null, 5);
-		} catch (Exception e) {
-		} // ignore for other apps
 		return application;
 	}
 
@@ -196,7 +166,7 @@ public abstract class Context {
 	public abstract ApplicationInfo getApplicationInfo();
 
 	public Context getApplicationContext() {
-		return (Context)this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 
 	public ContentResolver getContentResolver() {
@@ -227,15 +197,15 @@ public abstract class Context {
 	}
 
 	public int getColor(int resId) {
-		return r.getColor(resId);
+		return this.getResources().getColor(resId);
 	}
 
 	public final String getString(int resId) {
-		return r.getString(resId);
+		return this.getResources().getString(resId);
 	}
 
 	public final String getString(int resId, Object... formatArgs) {
-		return r.getString(resId, formatArgs);
+		return this.getResources().getString(resId, formatArgs);
 	}
 
 	public PackageManager getPackageManager() {
@@ -403,72 +373,9 @@ public abstract class Context {
 		}
 	}
 
-	public ClassLoader getClassLoader() {
-		// not perfect, but it's what we use for now as well, and it works
-		return ClassLoader.getSystemClassLoader();
-	}
+	public abstract ClassLoader getClassLoader();
 
-	public ComponentName startService(Intent intent) {
-		ComponentName component = intent.getComponent();
-		if (component == null) {
-			int priority = Integer.MIN_VALUE;
-			for (PackageParser.Service service : pkg.services) {
-				for (PackageParser.IntentInfo intentInfo : service.intents) {
-					if (intentInfo.matchAction(intent.getAction()) && intentInfo.priority > priority) {
-						component = new ComponentName(pkg.packageName, service.className);
-						priority = intentInfo.priority;
-						break;
-					}
-				}
-			}
-		}
-		// Newer applications use a Messenger instead of a BroadcastReceiver for the GCM token return Intent.
-		// To support new and old apps with a common interface, we wrap the Messenger in a BroadcastReceiver
-		if ("com.google.android.c2dm.intent.REGISTER".equals(intent.getAction()) && intent.getParcelableExtra("google.messenger") instanceof Messenger) {
-			final Messenger messenger = (Messenger)intent.getParcelableExtra("google.messenger");
-			receiverMap.put(new IntentFilter("com.google.android.c2dm.intent.REGISTRATION"), new BroadcastReceiver() {
-				@Override
-				public void onReceive(Context context, Intent resultIntent) {
-					try {
-						messenger.send(Message.obtain(null, 0, resultIntent));
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-		if (intent.getPackage() != null && !intent.getPackage().equals(getPackageName())) {
-			// External package. Try to start using DBus Action
-			nativeStartExternalService(intent);
-			return null;
-		}
-		if (component == null) {
-			Slog.w(TAG, "startService: no matching service found for intent: " + intent);
-			return null;
-		}
-		final String className = component.getClassName();
-
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Class<? extends Service> cls = Class.forName(className).asSubclass(Service.class);
-					if (!runningServices.containsKey(cls)) {
-						Service service = cls.getConstructor().newInstance();
-						service.attachBaseContext(new ContextImpl(getResources(), getApplicationInfo(), getTheme()));
-						service.onCreate();
-						runningServices.put(cls, service);
-					}
-
-					runningServices.get(cls).onStartCommand(intent, 0, 0);
-				} catch (ReflectiveOperationException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-		return component;
-	}
+	public abstract ComponentName startService(Intent intent);
 
 	// TODO: do these both work? make them look more alike
 	public FileInputStream openFileInput(String name) throws FileNotFoundException {
@@ -495,50 +402,17 @@ public abstract class Context {
 
 	public void unregisterComponentCallbacks(ComponentCallbacks callbacks) {}
 
-	public boolean bindService(final Intent intent, final ServiceConnection serviceConnection, int flags) {
-		if (intent.getComponent() == null) {
-			for (PackageParser.Service s : pkg.services) {
-				for (PackageParser.IntentInfo ii : s.intents) {
-					if (ii.matchAction(intent.getAction())) {
-						intent.setComponent(new ComponentName(pkg.packageName, s.className));
-						break;
-					}
-				}
-			}
-		}
-		if (intent.getComponent() == null) {
-			Slog.w(TAG, "Context.bindService(" + intent + ", " + serviceConnection + ", " + flags + "): intent.getComponent() is null");
-			return false;
-		}
-
-		new Handler(Looper.getMainLooper()).post(new Runnable() { // run this asynchron so the caller can finish its setup before onServiceConnected is called
-			@Override
-			public void run() {
-				try {
-					Class<? extends Service> cls = Class.forName(intent.getComponent().getClassName()).asSubclass(Service.class);
-					if (!runningServices.containsKey(cls)) {
-						Service service = cls.getConstructor().newInstance();
-						service.attachBaseContext(new ContextImpl(getResources(), getApplicationInfo(), getTheme()));
-						service.onCreate();
-						runningServices.put(cls, service);
-					}
-					serviceConnection.onServiceConnected(intent.getComponent(), runningServices.get(cls).onBind(intent));
-				} catch (ReflectiveOperationException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		return true;
-	}
+	public abstract boolean bindService(final Intent intent, final ServiceConnection serviceConnection, int flags);
 
 	/* For use from native code */
 	static Activity resolveActivityInternal(Intent intent) throws ReflectiveOperationException {
 		String className = null;
+		ATLLoadedApp primary = ATLLoadedApp.getPrimaryApplication();
 		if (intent.getComponent() != null) {
 			className = intent.getComponent().getClassName();
 		} else {
 			int best_score = -5;
-			for (PackageParser.Activity activity : pkg.activities) {
+			for (PackageParser.Activity activity : primary.pkg.activities) {
 				for (PackageParser.IntentInfo intentInfo : activity.intents) {
 					int score = intentInfo.match(intent.getAction(), intent.getType(), intent.getScheme(), intent.getData(), intent.getCategories(), "Context");
 					if (score > best_score && score > 0) {
@@ -549,99 +423,13 @@ public abstract class Context {
 			}
 		}
 		if (className != null) {
-			return Activity.internalCreateActivity(className, this_application.native_window, intent);
+			return Activity.internalCreateActivity(className, primary.getNativeWindow(), intent);
 		} else {
 			return null;
 		}
 	}
 
-	public void startActivity(Intent intent) {
-		Slog.i(TAG, "startActivity(" + intent + ") called");
-		if (intent.getAction() != null && intent.getAction().equals("android.intent.action.CHOOSER")) {
-			intent = (Intent)intent.getExtras().get("android.intent.extra.INTENT");
-		}
-		String className = null;
-		if (intent.getComponent() != null) {
-			className = intent.getComponent().getClassName();
-		} else {
-			if (intent.getAction() != null && intent.getAction().equals("android.intent.action.SEND")) {
-				Slog.i(TAG, "sharing intent via composeMail: " + intent);
-				String text = intent.getStringExtra("android.intent.extra.TEXT");
-				ParcelFileDescriptor fd = null;
-				if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-					try {
-						fd = getContentResolver().openFileDescriptor((Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM), "r");
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-				final ParcelFileDescriptor fd_final = fd;
-				Runnable runnable = new Runnable() {
-					@Override
-					public void run() {
-						nativeShareFile(text, fd_final != null ? fd_final.getFd() : -1);
-						if (fd_final != null) {
-							try {
-								fd_final.close();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				};
-				if (Looper.myLooper() == Looper.getMainLooper()) {
-					runnable.run();
-				} else {
-					new Handler(Looper.getMainLooper()).post(runnable);
-				}
-				return;
-			} else if (intent.getData() != null) {
-				Slog.i(TAG, "starting extern activity with intent: " + intent);
-				if (intent.getData().getScheme().equals("content")) {
-					try (ParcelFileDescriptor fd = getContentResolver().openFileDescriptor(intent.getData(), "r")) {
-						if (fd != null) {
-							nativeOpenFile(fd.getFd());
-							return;
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				Activity.nativeOpenURI(String.valueOf(intent.getData()));
-				return;
-			}
-			for (PackageParser.Activity activity : pkg.activities) {
-				for (PackageParser.IntentInfo intentInfo : activity.intents) {
-					if (intentInfo.matchAction(intent.getAction())) {
-						className = activity.className;
-						break;
-					}
-				}
-			}
-		}
-		if (className == null) {
-			Slog.w(TAG, "startActivity: intent could not be handled.");
-			return;
-		}
-		final String className_ = className;
-		final Intent intent_ = intent;
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					if ((intent_.getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TOP) != 0 && intent_.getComponent() != null) {
-						boolean found = Activity.nativeResumeActivity(Class.forName(intent_.getComponent().getClassName()).asSubclass(Activity.class), intent_);
-						if (found)
-							return;
-					}
-					Activity activity = Activity.internalCreateActivity(className_, this_application.native_window, intent_);
-					Activity.nativeStartActivity(activity);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	public abstract void startActivity(Intent intent);
 
 	public void startActivity(Intent intent, Bundle options) {
 		startActivity(intent);
@@ -692,30 +480,10 @@ public abstract class Context {
 				receiverMap.get(filter).onReceive(this, intent);
 			}
 		}
-		for (PackageParser.Activity receiver : pkg.receivers) {
-			for (PackageParser.IntentInfo intentInfo : receiver.intents) {
-				if (intentInfo.matchAction(intent.getAction())) {
-					try {
-						Class<? extends BroadcastReceiver> cls = Class.forName(receiver.className).asSubclass(BroadcastReceiver.class);
-						BroadcastReceiver receiverInstance = cls.newInstance();
-						receiverInstance.onReceive(this, intent);
-					} catch (ReflectiveOperationException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		ATLLoadedApp.getPrimaryApplication().receiveBroadcast(this, intent);
 	}
 
-	public boolean stopService(Intent intent) throws ClassNotFoundException {
-		Class<? extends Service> cls = Class.forName(intent.getComponent().getClassName()).asSubclass(Service.class);
-		Service service = runningServices.remove(cls);
-		if (service != null) {
-			service.onDestroy();
-			return true;
-		}
-		return false;
-	}
+	public abstract boolean stopService(Intent intent);
 
 	public void unbindService(ServiceConnection serviceConnection) {}
 
@@ -810,4 +578,6 @@ public abstract class Context {
 	}
 
 	public abstract int getThemeResId();
+
+	public abstract ATLLoadedApp get_atl_loaded_app();
 }

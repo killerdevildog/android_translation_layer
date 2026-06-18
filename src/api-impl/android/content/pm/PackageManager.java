@@ -19,6 +19,7 @@ package android.content.pm;
 import android.annotation.NonNull;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
+import android.atl.ATLLoadedApp;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -36,11 +37,7 @@ import android.util.AndroidException;
 import android.util.DisplayMetrics;
 import android.util.Slog;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 class IPackageInstallObserver {}
 class VerificationParams {}
@@ -1357,7 +1354,25 @@ public class PackageManager {
 	public static final String EXTRA_REQUEST_PERMISSION_PERMISSION_LIST = "android.content.pm.extra.PERMISSION_LIST";
 
 	public PackageManager() {
-		package_info = PackageParser.generatePackageInfo(Context.pkg, new int[0], PackageManager.GET_META_DATA, 0, 0, new HashSet<>(), new PackageUserState());
+		package_info = PackageParser.generatePackageInfo(ATLLoadedApp.getPrimaryApplication().pkg, new int[0], PackageManager.GET_META_DATA, 0, 0, new HashSet<>(), new PackageUserState());
+	}
+
+	private ATLLoadedApp atl_get_loaded_app(String packageName) {
+		ATLLoadedApp app = ATLLoadedApp.getPrimaryApplication();
+		if (app.pkg.packageName.equals(packageName)) {
+			return app;
+		}
+		if ("android".equals(packageName)) {
+			return ATLLoadedApp.getSystemApplication();
+		}
+		return null;
+	}
+
+	private ATLLoadedApp atl_get_loaded_app_or_primary(String packageName) {
+		ATLLoadedApp app = this.atl_get_loaded_app(packageName);
+		if (app == null)
+			app = ATLLoadedApp.getPrimaryApplication();
+		return app;
 	}
 
 	/**
@@ -1395,8 +1410,9 @@ public class PackageManager {
 	 * @see #GET_UNINSTALLED_PACKAGES
 	 */
 	public PackageInfo getPackageInfo(String packageName, int flags) throws NameNotFoundException {
-		if (packageName.equals(Context.pkg.packageName)) {
-			return PackageParser.generatePackageInfo(Context.pkg, new int[0], flags, 0, 0, new HashSet<>(), new PackageUserState());
+		ATLLoadedApp primary = ATLLoadedApp.getPrimaryApplication();
+		if (packageName.equals(primary.pkg.packageName)) {
+			return PackageParser.generatePackageInfo(primary.pkg, new int[0], flags, 0, 0, new HashSet<>(), new PackageUserState());
 		} else if (packageName.equals("atl") || packageName.equals("android")) {
 			PackageInfo info = new PackageInfo();
 			info.packageName = packageName;
@@ -1446,9 +1462,10 @@ public class PackageManager {
 	 * not contain such an activity.
 	 */
 	public Intent getLaunchIntentForPackage(String packageName) {
-		if (!Context.this_application.getPackageName().equals(packageName))
+		ATLLoadedApp primary = ATLLoadedApp.getPrimaryApplication();
+		if (!primary.pkg.packageName.equals(packageName))
 			return null;
-		for (PackageParser.Activity activity : Context.pkg.activities) {
+		for (PackageParser.Activity activity : primary.pkg.activities) {
 			for (PackageParser.IntentInfo intent : activity.intents) {
 				Slog.i(TAG, intent.toString());
 				if (intent.hasCategory("android.intent.category.LAUNCHER")) {
@@ -1684,7 +1701,7 @@ public class PackageManager {
 	 */
 	public ServiceInfo getServiceInfo(ComponentName component,
 	                                  int flags) throws NameNotFoundException {
-		for (PackageParser.Service s : Context.pkg.services) {
+		for (PackageParser.Service s : ATLLoadedApp.getPrimaryApplication().pkg.services) {
 			if (s.className.equals(component.getClassName())) {
 				return s.info;
 			}
@@ -1714,7 +1731,7 @@ public class PackageManager {
 	 */
 	public ProviderInfo getProviderInfo(ComponentName component,
 	                                    int flags) throws Exception {
-		for (PackageParser.Provider p : Context.pkg.providers) {
+		for (PackageParser.Provider p : ATLLoadedApp.getPrimaryApplication().pkg.providers) {
 			if (p.className.equals(component.getClassName())) {
 				return p.info;
 			}
@@ -2219,12 +2236,12 @@ public class PackageManager {
 		ActivityInfo activity_info = null;
 
 		if (intent.getComponent() != null) {
-			for (PackageParser.Activity activity : Context.pkg.activities) {
-				if (intent.getComponent().getClassName() == activity.className)
+			for (PackageParser.Activity activity : ATLLoadedApp.getPrimaryApplication().pkg.activities) {
+				if (Objects.equals(intent.getComponent().getClassName(), activity.className))
 					activity_info = activity.info;
 			}
 		} else {
-			for (PackageParser.Activity activity : Context.pkg.activities) {
+			for (PackageParser.Activity activity : ATLLoadedApp.getPrimaryApplication().pkg.activities) {
 				for (PackageParser.IntentInfo intentInfo : activity.intents) {
 					if (intentInfo.matchAction(intent.getAction())) {
 						activity_info = activity.info;
@@ -2460,7 +2477,7 @@ public class PackageManager {
 	public List<ResolveInfo> queryIntentServices(Intent intent,
 	                                             int flags) {
 		List<ResolveInfo> list = new ArrayList<ResolveInfo>(1);
-		for (Service s : Context.pkg.services) {
+		for (Service s : ATLLoadedApp.getPrimaryApplication().pkg.services) {
 			for (ServiceIntentInfo intentinfo : s.intents) {
 				if (s.getComponentName().equals(intent.getComponent()) || intentinfo.matchAction(intent.getAction())) {
 					ResolveInfo ri = new ResolveInfo();
@@ -2530,7 +2547,7 @@ public class PackageManager {
 	 * @throws Exception
 	 */
 	public ProviderInfo resolveContentProvider(String authority, int flags) {
-		for (PackageParser.Provider p : Context.pkg.providers) {
+		for (PackageParser.Provider p : ATLLoadedApp.getPrimaryApplication().pkg.providers) {
 			if (p.info.authority.equals(authority))
 				return p.info;
 		}
@@ -2619,7 +2636,10 @@ public class PackageManager {
 	 * an image could not be found for any reason.
 	 */
 	public Drawable getDrawable(String packageName, int resid, ApplicationInfo appInfo) {
-		return null;
+		ATLLoadedApp app = this.atl_get_loaded_app(packageName);
+		if (app == null)
+			return null;
+		return app.default_resources.getDrawable(resid, app.getDefaultTheme());
 	}
 
 	/**
@@ -2684,7 +2704,10 @@ public class PackageManager {
 	 * @see #getApplicationIcon(String)
 	 */
 	public Drawable getApplicationIcon(ApplicationInfo info) {
-		return Context.this_application.getDrawable(info.icon);
+		ATLLoadedApp app = this.atl_get_loaded_app(info.packageName);
+		if (app == null)
+			return null;
+		return app.default_resources.getDrawable(info.icon, app.getDefaultTheme());
 	}
 
 	/**
@@ -2704,7 +2727,10 @@ public class PackageManager {
 	 * @see #getApplicationIcon(ApplicationInfo)
 	 */
 	public Drawable getApplicationIcon(String packageName) throws NameNotFoundException {
-		return null;
+		ATLLoadedApp app = this.atl_get_loaded_app(packageName);
+		if (app == null)
+			return null;
+		return app.default_resources.getDrawable(app.pkg.applicationInfo.icon, app.getDefaultTheme());
 	}
 
 	/**
@@ -2803,7 +2829,10 @@ public class PackageManager {
 	 * if the text could not be found for any reason.
 	 */
 	public CharSequence getText(String packageName, int resid, ApplicationInfo appInfo) {
-		return null;
+		ATLLoadedApp app = this.atl_get_loaded_app(packageName);
+		if (app == null)
+			return null;
+		return app.default_resources.getText(resid);
 	}
 
 	/**
@@ -2823,7 +2852,10 @@ public class PackageManager {
 	 * reason.
 	 */
 	public XmlResourceParser getXml(String packageName, int resid, ApplicationInfo appInfo) throws Exception {
-		return Context.this_application.getResources().getXml(resid);
+		ATLLoadedApp app = this.atl_get_loaded_app(packageName);
+		if (app == null)
+			return null;
+		return app.default_resources.getXml(resid);
 	}
 
 	/**
@@ -2866,8 +2898,8 @@ public class PackageManager {
 	 * @throws NameNotFoundException Thrown if the resources for the given
 	 * application could not be loaded (most likely because it was uninstalled).
 	 */
-	public Resources getResourcesForApplication(ApplicationInfo app) throws NameNotFoundException {
-		return Context.this_application.getResources();
+	public Resources getResourcesForApplication(ApplicationInfo info) throws NameNotFoundException {
+		return this.getResourcesForApplication(info.packageName);
 	}
 
 	/**
@@ -2886,14 +2918,17 @@ public class PackageManager {
 	 * @see #getResourcesForApplication(ApplicationInfo)
 	 */
 	public Resources getResourcesForApplication(String appPackageName) throws NameNotFoundException {
-		return Context.this_application.getResources();
+		ATLLoadedApp app = this.atl_get_loaded_app(appPackageName);
+		if (app == null)
+			throw new NameNotFoundException();
+		return app.default_resources;
 	}
 
 	/**
 	 * @hide
 	 */
 	public Resources getResourcesForApplicationAsUser(String appPackageName, int userId) throws NameNotFoundException {
-		return Context.this_application.getResources();
+		return this.getResourcesForApplication(appPackageName);
 	}
 
 	/**

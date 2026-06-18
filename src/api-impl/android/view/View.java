@@ -1195,7 +1195,7 @@ public class View implements Drawable.Callback {
 	}
 
 	public Resources getResources() {
-		return Context.this_application.getResources();
+		return this.context.getResources();
 	}
 
 	public void setGravity(int gravity) {
@@ -2517,7 +2517,7 @@ public class View implements Drawable.Callback {
 			}
 
 			final int id = mHostView.getId();
-			final String idText = id == NO_ID ? "" : " with id '" + mHostView.getContext().getResources().getResourceEntryName(id) + "'";
+			final String idText = id == NO_ID ? "" : " with id '" + mHostView.getResources().getResourceEntryName(id) + "'";
 			throw new IllegalStateException("Could not find method " + mMethodName
 			                                + "(View) in a parent or ancestor Context for android:onClick "
 			                                + "attribute defined on view " + mHostView.getClass() + idText);

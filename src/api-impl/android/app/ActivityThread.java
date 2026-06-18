@@ -1,6 +1,7 @@
 package android.app;
 
 import android.app.Application;
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
@@ -11,19 +12,19 @@ public class ActivityThread {
 		return new ActivityThread();
 	}
 	public static String currentPackageName() {
-		return Context.this_application.getPackageName();
+		return ATLLoadedApp.getPrimaryApplication().pkg.packageName;
 	}
 	public static String currentProcessName() {
 		return Application.getProcessName();
 	}
 	public static Application currentApplication() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 	public Application getApplication() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 
 	public Configuration getConfiguration() {
-		return Context.this_application.getResources().getConfiguration();
+		return Context.sys_config;
 	}
 }

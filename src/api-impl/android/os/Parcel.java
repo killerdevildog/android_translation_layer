@@ -1,5 +1,6 @@
 package android.os;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.os.Parcelable.Creator;
 import android.util.SparseArray;
@@ -227,7 +228,8 @@ public class Parcel {
 		if (offset < 0 || length < 0 || offset + length > value.length)
 			throw new ArrayIndexOutOfBoundsException();
 		writeInt(length);
-		if (Context.pkg.applicationInfo.targetSdkVersion < 11) // Copy AOSP bug to pass CTS test
+		// Copy AOSP bug to pass CTS test
+		if (ATLLoadedApp.getPrimaryApplication().pkg.applicationInfo.targetSdkVersion < 11)
 			offset = 0;
 		for (int i = 0; i < length; i++)
 			writeByte(value[offset + i]);

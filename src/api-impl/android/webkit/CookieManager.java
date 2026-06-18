@@ -1,5 +1,6 @@
 package android.webkit;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.webkit.WebView;
 
@@ -7,11 +8,12 @@ public class CookieManager {
 
 	public static CookieManager getInstance() {
 		// HACK: disable NewPipe's WebView based PoToken generator for now
-		if (Context.this_application.getPackageName().equals("org.schabi.newpipe")) {
+		if (ATLLoadedApp.getPrimaryApplication().pkg.packageName.equals("org.schabi.newpipe")) {
 			throw new RuntimeException("CookieManager not yet fully implemented");
 		}
 		try { // also handle NewPipe forks which can have a different packagename
-			Class.forName("org.schabi.newpipe.util.potoken.PoTokenWebView");
+			ATLLoadedApp.getPrimaryApplication().loadClass(
+			    "org.schabi.newpipe.util.potoken.PoTokenWebView");
 			throw new RuntimeException("CookieManager not yet fully implemented");
 		} catch (ClassNotFoundException e) {
 		}

@@ -23,11 +23,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Slog;
 import android.util.TypedValue;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -102,6 +100,20 @@ public final class AssetManager {
 	 * {@hide}
 	 */
 	public AssetManager() {
+		this(null);
+	}
+
+	/**
+	 * Create a new AssetManager containing only the basic system assets.
+	 * Applications will not generally use this method, instead retrieving the
+	 * appropriate asset manager with {@link Resources#getAssets}.    Not for
+	 * use by applications.
+	 * {@hide}
+	 */
+	public AssetManager(ClassLoader classLoader) {
+		if (classLoader == null) {
+			classLoader = ClassLoader.getSystemClassLoader();
+		}
 		synchronized (this) {
 			if (DEBUG_REFS) {
 				mNumRefs = 0;
@@ -112,8 +124,8 @@ public final class AssetManager {
 				Log.v(TAG, "New asset manager: " + this);
 			//            ensureSystemAssets()
 			try {
-				Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources("AndroidManifest.xml");
-				ArrayList<String> paths = new ArrayList<String>();
+				Enumeration<URL> resources = classLoader.getResources("AndroidManifest.xml");
+				ArrayList<String> paths = new ArrayList<>();
 				paths.add(null); // reserve first slot for framework-res.apk
 				while (resources.hasMoreElements()) {
 					String path = resources.nextElement().getPath();
@@ -624,7 +636,8 @@ public final class AssetManager {
 		} else { // single file
 			Path file = Paths.get(android.os.Environment.getExternalStorageDirectory().getPath(), target);
 			if (!Files.exists(file) || Files.getLastModifiedTime(file).toMillis() < Files.getLastModifiedTime(Paths.get(apk_path)).toMillis()) {
-				try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(path)) {
+				try (JarFile apk = new JarFile(apk_path);
+				     InputStream inputStream = apk.getInputStream(apk.getEntry(path))) {
 					if (inputStream != null) {
 						Files.createDirectories(file.getParent());
 						Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);

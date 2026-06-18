@@ -1,5 +1,6 @@
 package android.content;
 
+import android.atl.ATLLoadedApp;
 import android.atl.ATLMediaContentProvider;
 import android.content.pm.PackageParser;
 import android.content.pm.ProviderInfo;
@@ -16,7 +17,8 @@ public abstract class ContentProvider {
 	static Map<String, ContentProvider> providers = new HashMap<String, ContentProvider>();
 
 	static void createContentProviders() {
-		for (PackageParser.Provider provider_parsed : Context.pkg.providers) {
+		ATLLoadedApp primary = ATLLoadedApp.getPrimaryApplication();
+		for (PackageParser.Provider provider_parsed : primary.pkg.providers) {
 			String process_name = provider_parsed.info.processName;
 			if (process_name != null && process_name.contains(":")) {
 				/* NOTE: even if it doesn't contain `:`, if it's not null we probably
@@ -28,9 +30,10 @@ public abstract class ContentProvider {
 			try {
 				String providerName = provider_parsed.className;
 				System.out.println("creating " + providerName);
-				Class<? extends ContentProvider> providerCls = Class.forName(providerName).asSubclass(ContentProvider.class);
+				Class<? extends ContentProvider> providerCls =
+				    primary.loadClass(providerName).asSubclass(ContentProvider.class);
 				ContentProvider provider = providerCls.getConstructor().newInstance();
-				provider.attachInfo(Context.this_application, provider_parsed.info);
+				provider.attachInfo(primary.getApplication(), provider_parsed.info);
 				provider.onCreate();
 				providers.put(provider_parsed.info.authority, provider);
 			} catch (Exception e) {
@@ -43,7 +46,7 @@ public abstract class ContentProvider {
 	public boolean onCreate() { return false; }
 
 	public Context getContext() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 
 	public abstract Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder);
@@ -66,6 +69,6 @@ public abstract class ContentProvider {
 	public void attachInfo(Context context, ProviderInfo provider) {}
 
 	public String getCallingPackage() {
-		return Context.pkg.packageName;
+		return ATLLoadedApp.getPrimaryApplication().pkg.packageName;
 	}
 }

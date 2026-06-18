@@ -87,7 +87,7 @@ public class LayoutInflater {
 		Slog.v(TAG, tabs(indent) + "createView(" + name + ", " + prefix + ", " + attrs + ");");
 
 		String view_class_name = prefix != null ? prefix + name : name;
-		Class view_class = Class.forName(view_class_name);
+		Class view_class = Class.forName(view_class_name, false, context.getClassLoader());
 
 		Constructor constructor = view_class.getConstructor(Context.class, AttributeSet.class);
 
@@ -159,8 +159,8 @@ public class LayoutInflater {
 
 	public View inflate(int layoutResID, ViewGroup root, boolean attachToRoot) {
 
-		Slog.v(TAG, "inflating view from layout id: " + String.format("%x", layoutResID) + ", id_str: " + Context.this_application.getResources().getResourceName(layoutResID));
-		XmlResourceParser xpp = context.getResources().getLayout(layoutResID);
+		Slog.v(TAG, "inflating view from layout id: " + String.format("%x", layoutResID) + ", id_str: " + this.context.getResources().getResourceName(layoutResID));
+		XmlResourceParser xpp = this.context.getResources().getLayout(layoutResID);
 
 		try {
 			return inflate(xpp, root, attachToRoot);

@@ -1,5 +1,6 @@
 package android.app;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -33,7 +34,7 @@ public class Instrumentation {
 		Thread.setUncaughtExceptionPreHandler(new ExceptionHandler());
 		try {
 			String target_package = null;
-			for (PackageParser.Instrumentation instrumentation : Context.pkg.instrumentation) {
+			for (PackageParser.Instrumentation instrumentation : ATLLoadedApp.getPrimaryApplication().pkg.instrumentation) {
 				if (className.equals(instrumentation.className)) {
 					target_package = instrumentation.info.targetPackage;
 					break;
@@ -44,11 +45,13 @@ public class Instrumentation {
 
 			String target_path = android.os.Environment.getExternalStorageDirectory() + "/../_installed_apks_/" + target_package + ".apk";
 
-			Context.this_application.getAssets().addAssetPath(target_path);
+			ATLLoadedApp.getPrimaryApplication().default_resources.getAssets().addAssetPath(target_path);
 
-			patchClassLoader(DexClassLoader.getSystemClassLoader(), new File(target_path));
+			patchClassLoader(ATLLoadedApp.getPrimaryApplication().class_loader, new File(target_path));
 
-			Class<? extends Instrumentation> cls = Class.forName(className).asSubclass(Instrumentation.class);
+			Class<? extends Instrumentation> cls = ATLLoadedApp.getPrimaryApplication()
+			                                           .loadClass(className)
+			                                           .asSubclass(Instrumentation.class);
 			Constructor<? extends Instrumentation> constructor = cls.getConstructor();
 			Instrumentation i = constructor.newInstance();
 			i.onCreate(arguments.getExtras());
@@ -85,11 +88,11 @@ public class Instrumentation {
 	}
 
 	public Context getContext() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 
 	public Context getTargetContext() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 
 	public void setAutomaticPerformanceSnapshots() {
@@ -129,14 +132,15 @@ public class Instrumentation {
 	}
 
 	static public Application newApplication(Class<?> clazz, Context context) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return Context.this_application; // we don't (currently?) support multiple applications in a single process
+		// we don't (currently?) support multiple applications in a single process
+		return (Application)context.getApplicationContext();
 	}
 
 	public Activity newActivity(Class<?> clazz, Context context, IBinder token, Application application,
 	                            Intent intent, ActivityInfo info, CharSequence title, Activity parent,
 	                            String id, Object lastNonConfigurationInstance) throws InstantiationException, IllegalAccessException {
 		Activity activity = (Activity)clazz.newInstance();
-		activity.getWindow().set_native_window(Context.this_application.native_window);
+		activity.getWindow().set_native_window(context.get_atl_loaded_app().getNativeWindow());
 		Slog.i(TAG, "activity.getWindow().native_window >" + activity.getWindow().native_window + "<");
 		return activity;
 	}
@@ -161,7 +165,10 @@ public class Instrumentation {
 		Slog.i(TAG, "startActivitySync(" + intent + ", " + options + ") called");
 		if (intent.getComponent() != null) {
 			try {
-				final Activity activity = Activity.internalCreateActivity(intent.getComponent().getClassName(), Context.this_application.native_window, intent);
+				final Activity activity = Activity.internalCreateActivity(
+				    intent.getComponent().getClassName(),
+				    ATLLoadedApp.getPrimaryApplication().getNativeWindow(),
+				    intent);
 				runOnMainSync(new Runnable() {
 					@Override
 					public void run() {
@@ -170,7 +177,7 @@ public class Instrumentation {
 				});
 
 				return activity;
-			} catch (ReflectiveOperationException e) {
+			} catch (Exception e) {
 				/* not sure what to do here */
 			}
 		} /*else if (FILE_CHOOSER_ACTIONS.contains(intent.getAction())) { // not sure what to do here either

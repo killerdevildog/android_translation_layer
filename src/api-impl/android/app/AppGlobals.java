@@ -1,10 +1,10 @@
 package android.app;
 
-import android.content.Context;
+import android.atl.ATLLoadedApp;
 
 public class AppGlobals {
 
 	public static Application getInitialApplication() {
-		return Context.this_application;
+		return ATLLoadedApp.getPrimaryApplication().getApplication();
 	}
 }

@@ -212,13 +212,13 @@ public final class AnimatorSet extends Animator implements AnimationHandler.Anim
 			mShouldIgnoreEndWithoutStart = true;
 			isPreO = true;
 		} else {
-			if (app.getApplicationInfo().targetSdkVersion < /*Build.VERSION_CODES.N*/ 24) {
+			if (app.get_atl_loaded_app().effective_sdk_compat < /*Build.VERSION_CODES.N*/ 24) {
 				mShouldIgnoreEndWithoutStart = true;
 			} else {
 				mShouldIgnoreEndWithoutStart = false;
 			}
 
-			isPreO = app.getApplicationInfo().targetSdkVersion < /*Build.VERSION_CODES.O*/ 26;
+			isPreO = app.get_atl_loaded_app().effective_sdk_compat < /*Build.VERSION_CODES.O*/ 26;
 		}
 		mShouldResetValuesAtStart = !isPreO;
 		mEndCanBeCalled = !isPreO;

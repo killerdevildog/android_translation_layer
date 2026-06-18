@@ -156,7 +156,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback,
 			throw new RuntimeException("Error getting activity info", e);
 		}*/
 
-		for (PackageParser.Activity activity : pkg.activities) {
+		for (PackageParser.Activity activity : this.get_atl_loaded_app().pkg.activities) {
 			if (getClass().getName().equals(activity.className)) {
 				if (activity.metaData != null) {
 					String ln = activity.metaData.getString(META_DATA_LIB_NAME);

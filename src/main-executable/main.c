@@ -86,7 +86,7 @@ JNIEnv *create_vm(char *api_impl_jar, char *apk_classpath, char *framework_res_a
 	JNIEnv *env;
 	JavaVMInitArgs args = {
 		.version = JNI_VERSION_1_6,
-		.nOptions = 3,
+		.nOptions = 5,
 	};
 	JavaVMOption *options;
 
@@ -111,8 +111,11 @@ JNIEnv *create_vm(char *api_impl_jar, char *apk_classpath, char *framework_res_a
 		options[0].optionString = construct_classpath("-Djava.library.path=", (char *[]){api_impl_natives_dir, app_lib_dir}, 2);
 	}
 
-	options[1].optionString = construct_classpath("-Djava.class.path=", (char *[]){api_impl_jar, apk_classpath, framework_res_apk, test_runner_jar}, 4);
-	options[2].optionString = "-Xcheck:jni";
+	options[1].optionString = construct_classpath("-Djava.class.path=", (char *[]){api_impl_jar, framework_res_apk, test_runner_jar}, 3);
+	// ATLLoadedApp relies on the first element in atl.app.class.path being the main apk
+	options[2].optionString = construct_classpath("-Datl.app.class.path=", (char *[]){apk_classpath}, 1);
+	options[3].optionString = construct_classpath("-Datl.app.library.path=", (char *[]){api_impl_natives_dir, app_lib_dir}, 2);
+	options[4].optionString = "-Xcheck:jni";
 	if (jdwp_port) {
 		strncat(jdwp_option_string, jdwp_port, 5); // 5 chars is enough for a port number, and won't overflow our array
 		options[option_counter++].optionString = "-XjdwpProvider:internal";
@@ -663,8 +666,7 @@ static void open(GtkApplication *app, GFile **files, gint nfiles, const gchar *h
 	GdkMonitor *monitor = gdk_display_get_monitor_at_surface(gdk_display_get_default(), GDK_SURFACE(toplevel));
 	GdkRectangle monitor_geometry;
 	gdk_monitor_get_geometry(monitor, &monitor_geometry);
-	jobject resources = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "r", "Landroid/content/res/Resources;");
-	jobject configuration = _GET_OBJ_FIELD(resources, "mConfiguration", "Landroid/content/res/Configuration;");
+	jobject configuration = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "sys_config", "Landroid/content/res/Configuration;");
 	if (monitor_geometry.width >= 800 && monitor_geometry.height >= 800)
 		_SET_INT_FIELD(configuration, "screenLayout", /*SCREENLAYOUT_SIZE_LARGE*/ 0x03);
 	else

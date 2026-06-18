@@ -44,7 +44,7 @@ public abstract class Service extends ContextWrapper {
 	}
 
 	public Application getApplication() {
-		return this_application;
+		return this.get_atl_loaded_app().getApplication();
 	}
 
 	public void stopSelf(int startId) {

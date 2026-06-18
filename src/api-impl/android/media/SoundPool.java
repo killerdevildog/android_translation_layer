@@ -1,8 +1,10 @@
 package android.media;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import java.io.IOException;
 
 public class SoundPool {
@@ -25,14 +27,15 @@ public class SoundPool {
 	}
 
 	public int load(AssetFileDescriptor afd, int priority) throws IOException {
-		AssetManager.extractFromAPK(Context.this_application.getPackageCodePath(), afd.fileName, afd.fileName);
-		return nativeLoad(nativePool, android.os.Environment.getExternalStorageDirectory().getPath() + "/" + afd.fileName);
+		String packageCodePath = ATLLoadedApp.getPrimaryApplication().pkg.applicationInfo.sourceDir;
+		AssetManager.extractFromAPK(packageCodePath, afd.fileName, afd.fileName);
+		return nativeLoad(nativePool, Environment.getExternalStorageDirectory().getPath() + "/" + afd.fileName);
 	}
 
 	public int load(Context context, int resId, int priority) throws IOException {
 		String fileName = context.getResources().getResourceEntryName(resId);
 		AssetManager.extractFromAPK(context.getPackageCodePath(), fileName, fileName);
-		return nativeLoad(nativePool, android.os.Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
+		return nativeLoad(nativePool, Environment.getExternalStorageDirectory().getPath() + "/" + fileName);
 	}
 
 	/**

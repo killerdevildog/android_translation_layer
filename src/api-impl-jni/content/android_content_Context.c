@@ -33,8 +33,7 @@ static void settings_changed_cb(XdpSettings *xdp_settings, gchar *namestpace, gc
 		g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", color_sheme == 1, NULL);
 		env = get_jni_env();
 		if (!configuration) {
-			jobject resources = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "r", "Landroid/content/res/Resources;");
-			configuration = _GET_OBJ_FIELD(resources, "mConfiguration", "Landroid/content/res/Configuration;");
+			configuration = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "sys_config", "Landroid/content/res/Configuration;");
 		}
 		if (color_sheme == 1) // Prefer dark appearance
 			_SET_INT_FIELD(configuration, "uiMode", /*UI_MODE_NIGHT_YES*/ 0x20);
