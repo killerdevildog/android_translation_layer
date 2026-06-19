@@ -16,6 +16,7 @@
 
 package android.content.res;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
@@ -622,22 +623,38 @@ public final class AssetManager {
 
 	private native final int addAssetPathNative(String path);
 
-	public static void extractFromAPK(String apk_path, String path, String target) throws IOException {
+	public static void extractFromAPK(String apk_resource_path, String path, String target) throws IOException {
+		String[] apk_paths = apk_resource_path.split(":");
 		if (path.endsWith("/")) { // directory
-			try (JarFile apk = new JarFile(apk_path)) {
-				Enumeration<JarEntry> entries = apk.entries();
-				while (entries.hasMoreElements()) {
-					JarEntry entry = entries.nextElement();
-					if (entry.getName().startsWith(path)) {
-						extractFromAPK(apk_path, entry.getName(), entry.getName().replace(path, target));
+			for (String apk_path : apk_paths) {
+				try (JarFile apk = new JarFile(apk_path)) {
+					Enumeration<JarEntry> entries = apk.entries();
+					while (entries.hasMoreElements()) {
+						JarEntry entry = entries.nextElement();
+						if (entry.getName().startsWith(path)) {
+							extractFromAPK(apk_path, entry.getName(), entry.getName().replace(path, target));
+						}
 					}
 				}
 			}
 		} else { // single file
 			Path file = Paths.get(android.os.Environment.getExternalStorageDirectory().getPath(), target);
-			if (!Files.exists(file) || Files.getLastModifiedTime(file).toMillis() < Files.getLastModifiedTime(Paths.get(apk_path)).toMillis()) {
-				try (JarFile apk = new JarFile(apk_path);
-				     InputStream inputStream = apk.getInputStream(apk.getEntry(path))) {
+			for (String apk_path : apk_paths) {
+				File apk_file = new File(apk_path);
+				if (!Files.exists(file) || Files.getLastModifiedTime(file).toMillis() < Files.getLastModifiedTime(apk_file.toPath()).toMillis()) {
+					try (JarFile apk = new JarFile(apk_file);
+					     InputStream inputStream = apk.getInputStream(apk.getEntry(path))) {
+						if (inputStream != null) {
+							Files.createDirectories(file.getParent());
+							Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
+							return;
+						}
+					}
+				}
+			}
+			/* TODO: we currently abuse extractFromApk in a few places for extracting stuff that may be in framework-res.apk, remove this once it has been fixed or migrated to using AssetManager.openAsset or AssetManager.openNonAsset */
+			if (!Files.exists(file)) {
+				try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(path)) {
 					if (inputStream != null) {
 						Files.createDirectories(file.getParent());
 						Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
