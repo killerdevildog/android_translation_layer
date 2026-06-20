@@ -43,7 +43,7 @@ JNIEXPORT void JNICALL Java_android_widget_CompoundButton_setOnCheckedChangeList
 {
 	GtkSwitch *switcher = GTK_SWITCH(gtk_widget_get_last_child(_PTR(_GET_LONG_FIELD(this, "widget"))));
 
-	g_signal_handlers_block_matched(switcher, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_state_set, NULL);
+	g_signal_handlers_disconnect_matched(switcher, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_state_set, NULL);
 
 	if (listener) {
 		g_signal_connect(switcher, "state-set", G_CALLBACK(on_state_set), _REF(listener));

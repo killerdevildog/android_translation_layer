@@ -40,9 +40,7 @@ static gboolean on_toggled(GtkCheckButton *self, jobject listener)
 JNIEXPORT void JNICALL Java_android_widget_RadioButton_setOnCheckedChangeListener(JNIEnv *env, jobject this, jobject listener)
 {
 	GtkCheckButton *button = GTK_CHECK_BUTTON(_PTR(_GET_LONG_FIELD(this, "widget")));
-
-	g_signal_handlers_block_matched(button, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_toggled, NULL);
-
+	g_signal_handlers_disconnect_matched(button, G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_toggled, NULL);
 	if (listener) {
 		g_signal_connect(button, "toggled", G_CALLBACK(on_toggled), _REF(listener));
 	}
