@@ -79,6 +79,65 @@ public final class Configuration implements Comparable<Configuration> {
 	 */
 	public boolean userSetLocale;
 
+	/** Constant for {@link #colorMode}: bits that encode whether the screen is wide gamut. */
+	public static final int COLOR_MODE_WIDE_COLOR_GAMUT_MASK = 0x3;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_WIDE_COLOR_GAMUT_MASK} value
+	 * indicating that it is unknown whether or not the screen is wide gamut.
+	 */
+	public static final int COLOR_MODE_WIDE_COLOR_GAMUT_UNDEFINED = 0x0;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_WIDE_COLOR_GAMUT_MASK} value
+	 * indicating that the screen is not wide gamut.
+	 * <p>Corresponds to the <code>-nowidecg</code> resource qualifier.</p>
+	 */
+	public static final int COLOR_MODE_WIDE_COLOR_GAMUT_NO = 0x1;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_WIDE_COLOR_GAMUT_MASK} value
+	 * indicating that the screen is wide gamut.
+	 * <p>Corresponds to the <code>-widecg</code> resource qualifier.</p>
+	 */
+	public static final int COLOR_MODE_WIDE_COLOR_GAMUT_YES = 0x2;
+
+	/** Constant for {@link #colorMode}: bits that encode the dynamic range of the screen. */
+	public static final int COLOR_MODE_HDR_MASK = 0xc;
+	/** Constant for {@link #colorMode}: bits shift to get the screen dynamic range. */
+	public static final int COLOR_MODE_HDR_SHIFT = 2;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_HDR_MASK} value
+	 * indicating that it is unknown whether or not the screen is HDR.
+	 */
+	public static final int COLOR_MODE_HDR_UNDEFINED = 0x0;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_HDR_MASK} value
+	 * indicating that the screen is not HDR (low/standard dynamic range).
+	 * <p>Corresponds to the <code>-lowdr</code> resource qualifier.</p>
+	 */
+	public static final int COLOR_MODE_HDR_NO = 0x1 << COLOR_MODE_HDR_SHIFT;
+	/**
+	 * Constant for {@link #colorMode}: a {@link #COLOR_MODE_HDR_MASK} value
+	 * indicating that the screen is HDR (dynamic range).
+	 * <p>Corresponds to the <code>-highdr</code> resource qualifier.</p>
+	 */
+	public static final int COLOR_MODE_HDR_YES = 0x2 << COLOR_MODE_HDR_SHIFT;
+
+	/** Constant for {@link #colorMode}: a value indicating that the color mode is undefined */
+	public static final int COLOR_MODE_UNDEFINED = COLOR_MODE_WIDE_COLOR_GAMUT_UNDEFINED | COLOR_MODE_HDR_UNDEFINED;
+
+	/**
+	 * Bit mask of color capabilities of the screen. Currently there are two fields:
+	 * <p>The {@link #COLOR_MODE_WIDE_COLOR_GAMUT_MASK} bits define the color gamut of
+	 * the screen. They may be one of
+	 * {@link #COLOR_MODE_WIDE_COLOR_GAMUT_NO} or {@link #COLOR_MODE_WIDE_COLOR_GAMUT_YES}.</p>
+	 *
+	 * <p>The {@link #COLOR_MODE_HDR_MASK} defines the dynamic range of the screen. They may be
+	 * one of {@link #COLOR_MODE_HDR_NO} or {@link #COLOR_MODE_HDR_YES}.</p>
+	 *
+	 * <p>See <a href="{@docRoot}guide/practices/screens_support.html">Supporting
+	 * Multiple Screens</a> for more information.</p>
+	 */
+	public int colorMode;
+
 	/**
 	 * Constant for {@link #screenLayout}: bits that encode the size.
 	 */
@@ -756,6 +815,7 @@ public final class Configuration implements Comparable<Configuration> {
 		navigation = o.navigation;
 		navigationHidden = o.navigationHidden;
 		orientation = o.orientation;
+		colorMode = o.colorMode;
 		screenLayout = o.screenLayout;
 		uiMode = o.uiMode;
 		screenWidthDp = o.screenWidthDp;
@@ -1050,6 +1110,7 @@ public final class Configuration implements Comparable<Configuration> {
 		navigation = NAVIGATION_UNDEFINED;
 		navigationHidden = NAVIGATIONHIDDEN_UNDEFINED;
 		orientation = ORIENTATION_UNDEFINED;
+		colorMode = COLOR_MODE_UNDEFINED;
 		screenLayout = SCREENLAYOUT_UNDEFINED;
 		uiMode = UI_MODE_TYPE_UNDEFINED;
 		screenWidthDp = compatScreenWidthDp = SCREEN_WIDTH_DP_UNDEFINED;
@@ -1147,6 +1208,13 @@ public final class Configuration implements Comparable<Configuration> {
 			} else {
 				screenLayout = delta.screenLayout;
 			}
+		}
+		if (((delta.colorMode & COLOR_MODE_HDR_MASK) != COLOR_MODE_HDR_UNDEFINED)
+		    && (delta.colorMode & COLOR_MODE_HDR_MASK)
+		       != (colorMode & COLOR_MODE_HDR_MASK)) {
+			changed |= ActivityInfo.CONFIG_COLOR_MODE;
+			colorMode = (colorMode & ~COLOR_MODE_HDR_MASK)
+			          | (delta.colorMode & COLOR_MODE_HDR_MASK);
 		}
 		if (delta.uiMode != (UI_MODE_TYPE_UNDEFINED | UI_MODE_NIGHT_UNDEFINED) && uiMode != delta.uiMode) {
 			changed |= ActivityInfo.CONFIG_UI_MODE;
@@ -1382,6 +1450,9 @@ public final class Configuration implements Comparable<Configuration> {
 		if (n != 0)
 			return n;
 		n = this.orientation - that.orientation;
+		if (n != 0)
+			return n;
+		n = this.colorMode - that.colorMode;
 		if (n != 0)
 			return n;
 		n = this.screenLayout - that.screenLayout;
