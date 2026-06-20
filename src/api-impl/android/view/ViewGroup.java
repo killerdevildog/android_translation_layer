@@ -204,7 +204,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 		if (index < 0)
 			index = children.size();
 		children.add(index, view);
-		view.native_setVisibility(view.widget, view.getVisibility(), view.getAlpha());
+		view.native_setVisibility(view.widget, view.getVisibility(), view.getAlpha(), view.isEnabled());
 	}
 
 	protected void removeDetachedView(View child, boolean animate) {
@@ -454,7 +454,7 @@ public class ViewGroup extends View implements ViewParent, ViewManager {
 				public void run() {
 					pendingHideDetachedChildren = false;
 					for (View child : detachedChildren)
-						child.native_setVisibility(child.widget, GONE, 0);
+						child.native_setVisibility(child.widget, GONE, 0, false);
 				}
 			});
 		}
