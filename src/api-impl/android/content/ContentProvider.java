@@ -2,6 +2,7 @@ package android.content;
 
 import android.atl.ATLLoadedApp;
 import android.atl.ATLMediaContentProvider;
+import android.atl.ATLProvider;
 import android.content.pm.PackageParser;
 import android.content.pm.ProviderInfo;
 import android.content.res.AssetFileDescriptor;
@@ -10,13 +11,16 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public abstract class ContentProvider {
 
-	static Map<String, ContentProvider> providers = new HashMap<String, ContentProvider>();
+	static final HashMap<String, ATLProvider> atl_providers = new HashMap<>();
 
 	static void createContentProviders() {
+		atl_providers.put("media", new ATLProvider(new ATLMediaContentProvider()));
 		ATLLoadedApp primary = ATLLoadedApp.getPrimaryApplication();
 		for (PackageParser.Provider provider_parsed : primary.pkg.providers) {
 			String process_name = provider_parsed.info.processName;
@@ -27,20 +31,22 @@ public abstract class ContentProvider {
 				System.out.println("not creating provider " + provider_parsed.className + ", it wants to be started in a new process (" + process_name + ")");
 				continue;
 			}
-			try {
-				String providerName = provider_parsed.className;
-				System.out.println("creating " + providerName);
-				Class<? extends ContentProvider> providerCls =
-				    primary.loadClass(providerName).asSubclass(ContentProvider.class);
-				ContentProvider provider = providerCls.getConstructor().newInstance();
-				provider.attachInfo(primary.getApplication(), provider_parsed.info);
-				provider.onCreate();
-				providers.put(provider_parsed.info.authority, provider);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			atl_providers.put(provider_parsed.info.authority,
+			                  new ATLProvider(primary, provider_parsed));
 		}
-		providers.put("media", new ATLMediaContentProvider());
+		// getContentProvider() initializes the content providers,
+		// we also opportunistically remove the ones that failed to load
+		atl_providers.values().removeIf(new Predicate<ATLProvider>() {
+			@Override
+			public boolean test(ATLProvider atlProvider) {
+				return atlProvider.getContentProvider() == null;
+			}
+		});
+	}
+
+	static ContentProvider atl_get_content_provider(String authority) {
+		ATLProvider atlProvider = atl_providers.get(authority);
+		return atlProvider == null ? null : atlProvider.getContentProvider();
 	}
 
 	public boolean onCreate() { return false; }
