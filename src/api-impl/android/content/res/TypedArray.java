@@ -38,7 +38,7 @@ import java.util.Arrays;
  * The indices used to retrieve values from this structure correspond to
  * the positions of the attributes given to obtainStyledAttributes.
  */
-public class TypedArray {
+public class TypedArray implements AutoCloseable {
 
 	static TypedArray obtain(Resources res, int len) {
 		TypedArray attrs = res.mTypedArrayPool.acquire();
@@ -1215,5 +1215,10 @@ public class TypedArray {
 	@Override
 	public String toString() {
 		return Arrays.toString(mData);
+	}
+
+	@Override
+	public void close() {
+		this.recycle();
 	}
 }
