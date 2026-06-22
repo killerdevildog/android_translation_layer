@@ -15,6 +15,10 @@ extern "C" {
 #define android_app_NativeActivity_CONTEXT_IGNORE_SECURITY 2L
 #undef android_app_NativeActivity_CONTEXT_RESTRICTED
 #define android_app_NativeActivity_CONTEXT_RESTRICTED 4L
+#undef android_app_NativeActivity_MODE_ENABLE_WRITE_AHEAD_LOGGING
+#define android_app_NativeActivity_MODE_ENABLE_WRITE_AHEAD_LOGGING 8L
+#undef android_app_NativeActivity_MODE_NO_LOCALIZED_COLLATORS
+#define android_app_NativeActivity_MODE_NO_LOCALIZED_COLLATORS 16L
 #undef android_app_NativeActivity_RESULT_CANCELED
 #define android_app_NativeActivity_RESULT_CANCELED 0L
 #undef android_app_NativeActivity_RESULT_OK

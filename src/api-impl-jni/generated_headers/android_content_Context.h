@@ -15,6 +15,10 @@ extern "C" {
 #define android_content_Context_CONTEXT_IGNORE_SECURITY 2L
 #undef android_content_Context_CONTEXT_RESTRICTED
 #define android_content_Context_CONTEXT_RESTRICTED 4L
+#undef android_content_Context_MODE_ENABLE_WRITE_AHEAD_LOGGING
+#define android_content_Context_MODE_ENABLE_WRITE_AHEAD_LOGGING 8L
+#undef android_content_Context_MODE_NO_LOCALIZED_COLLATORS
+#define android_content_Context_MODE_NO_LOCALIZED_COLLATORS 16L
 /*
  * Class:     android_content_Context
  * Method:    native_get_apk_path

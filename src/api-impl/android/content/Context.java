@@ -502,14 +502,20 @@ public abstract class Context {
 		System.out.println("grantUriPermission(" + dummy + ", " + dummy2 + ", " + dummy3 + ") called");
 	}
 
+	public static final int MODE_ENABLE_WRITE_AHEAD_LOGGING = 0x0008;
+	public static final int MODE_NO_LOCALIZED_COLLATORS = 0x0010;
+
 	public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory) {
 		return openOrCreateDatabase(name, mode, factory, null);
 	}
 
 	public SQLiteDatabase openOrCreateDatabase(String filename, int mode, SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
 		int flags = SQLiteDatabase.CREATE_IF_NECESSARY;
-		if ((mode & (1 << 3) /*MODE_ENABLE_WRITE_AHEAD_LOGGING*/) != 0) {
+		if ((mode & MODE_ENABLE_WRITE_AHEAD_LOGGING) != 0) {
 			flags |= SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING;
+		}
+		if ((mode & MODE_NO_LOCALIZED_COLLATORS) != 0) {
+			flags |= SQLiteDatabase.NO_LOCALIZED_COLLATORS;
 		}
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(filename, factory, flags, errorHandler);
 		return db;
