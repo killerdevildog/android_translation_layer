@@ -9,6 +9,12 @@ extern "C" {
 #endif
 #undef android_app_Activity_MODE_PRIVATE
 #define android_app_Activity_MODE_PRIVATE 0L
+#undef android_app_Activity_CONTEXT_INCLUDE_CODE
+#define android_app_Activity_CONTEXT_INCLUDE_CODE 1L
+#undef android_app_Activity_CONTEXT_IGNORE_SECURITY
+#define android_app_Activity_CONTEXT_IGNORE_SECURITY 2L
+#undef android_app_Activity_CONTEXT_RESTRICTED
+#define android_app_Activity_CONTEXT_RESTRICTED 4L
 #undef android_app_Activity_RESULT_CANCELED
 #define android_app_Activity_RESULT_CANCELED 0L
 #undef android_app_Activity_RESULT_OK

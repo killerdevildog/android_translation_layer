@@ -87,7 +87,10 @@ public class LayoutInflater {
 		Slog.v(TAG, tabs(indent) + "createView(" + name + ", " + prefix + ", " + attrs + ");");
 
 		String view_class_name = prefix != null ? prefix + name : name;
-		Class view_class = Class.forName(view_class_name, false, context.getClassLoader());
+		ClassLoader classLoader = context.getClassLoader();
+		if (classLoader == null)
+			classLoader = ClassLoader.getSystemClassLoader();
+		Class view_class = Class.forName(view_class_name, false, classLoader);
 
 		Constructor constructor = view_class.getConstructor(Context.class, AttributeSet.class);
 

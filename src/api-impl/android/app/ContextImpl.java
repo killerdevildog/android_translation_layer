@@ -5,6 +5,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.SearchManager;
 import android.app.job.JobScheduler;
 import android.atl.ATLLoadedApp;
+import android.atl.ATLLoadedAppManager;
 import android.bluetooth.BluetoothManager;
 import android.content.*;
 import android.content.pm.ApplicationInfo;
@@ -39,6 +40,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 public final class ContextImpl extends Context {
+	private static final int ATL_FLAG_NO_CODE = 0x00000001;
+	private static final int ATL_FLAG_RESTRICTED = 0x00000002;
+	private static final int ATL_FLAG_PROTECTED_STORAGE = 0x00000004;
 	private final static String TAG = "ContextImpl";
 	private final Resources resources;
 	private final ATLLoadedApp atl_loaded_app;
@@ -56,26 +60,38 @@ public final class ContextImpl extends Context {
 	private final LayoutInflater layout_inflater = new LayoutInflater(this);
 	private final JobScheduler job_scheduler = new JobScheduler(this);
 
+	private final int atl_flags;
+
 	public ContextImpl(Resources resources, ATLLoadedApp loadedApp, Resources.Theme theme) {
-		this(resources, loadedApp, 0);
+		this(resources, loadedApp, 0, 0);
+		getTheme().setTo(theme);
+	}
+
+	private ContextImpl(Resources resources, ATLLoadedApp loadedApp, Resources.Theme theme, int flags) {
+		this(resources, loadedApp, 0, flags);
 		getTheme().setTo(theme);
 	}
 
 	public ContextImpl(Resources resources, ATLLoadedApp loadedApp, int themeResource) {
+		this(resources, loadedApp, themeResource, 0);
+	}
+
+	private ContextImpl(Resources resources, ATLLoadedApp loadedApp, int themeResource, int flags) {
 		this.resources = resources;
 		this.atl_loaded_app = loadedApp;
 		mThemeResource = themeResource;
+		this.atl_flags = flags;
 	}
 
 	@Nullable
 	private ATLLoadedApp atl_get_intent_target(Intent intent) {
-		ATLLoadedApp targetApp = null;
+		ATLLoadedApp targetApp;
 		String targetPackage = intent.getComponent() != null ? intent.getComponent().getPackageName() : null;
 		if (targetPackage != null || (targetPackage = intent.getPackage()) != null) {
 			if (targetPackage.equals(this.atl_loaded_app.pkg.packageName)) {
 				targetApp = this.atl_loaded_app;
-			} else if (targetPackage.equals(ATLLoadedApp.getPrimaryApplication().pkg.packageName)) {
-				targetApp = ATLLoadedApp.getPrimaryApplication();
+			} else {
+				targetApp = ATLLoadedAppManager.getAppFromPackageName(targetPackage);
 			}
 		} else {
 			targetApp = this.atl_loaded_app;
@@ -94,6 +110,11 @@ public final class ContextImpl extends Context {
 		if (mTheme != null) {
 			mTheme.applyStyle(resId, true);
 		}
+	}
+
+	@Override
+	public boolean isRestricted() {
+		return (this.atl_flags & ATL_FLAG_RESTRICTED) != 0;
 	}
 
 	@Override
@@ -205,6 +226,9 @@ public final class ContextImpl extends Context {
 
 	@Override
 	public ClassLoader getClassLoader() {
+		if ((this.atl_flags & ATL_FLAG_NO_CODE) != 0) {
+			return null;
+		}
 		return this.atl_loaded_app.class_loader;
 	}
 
@@ -351,6 +375,19 @@ public final class ContextImpl extends Context {
 			return new ContextImpl(Resources.getSystem(), system,
 			                       Resources.selectDefaultTheme(0, Build.VERSION.SDK_INT));
 		}
+		ATLLoadedApp loadedApplication = ATLLoadedAppManager.getAppFromPackageName(packageName);
+		if (loadedApplication != null) {
+			int atl_flags = 0;
+			if ((flags & Context.CONTEXT_INCLUDE_CODE) == 0) {
+				atl_flags |= ATL_FLAG_NO_CODE;
+			}
+			if ((flags & Context.CONTEXT_RESTRICTED) != 0) {
+				atl_flags |= ATL_FLAG_RESTRICTED;
+			}
+			return new ContextImpl(loadedApplication.createDefaultResources(),
+			                       loadedApplication, loadedApplication.pkg.applicationInfo.theme,
+			                       atl_flags);
+		}
 		// Return the application context as a fallback
 		Log.e(TAG, "!!!!!!! createPackageContext: case >" + packageName + "< is not implemented yet");
 		return primaryApplication.getApplication();
@@ -363,12 +400,18 @@ public final class ContextImpl extends Context {
 
 	@Override
 	public Context createDisplayContext(Display display) {
-		return new ContextImpl(getResources(), this.atl_loaded_app, getTheme());
+		return new ContextImpl(getResources(), this.atl_loaded_app, getTheme(), this.atl_flags);
+	}
+
+	@Override
+	public boolean isDeviceProtectedStorage() {
+		return (this.atl_flags & ATL_FLAG_PROTECTED_STORAGE) != 0;
 	}
 
 	@Override
 	public Context createDeviceProtectedStorageContext() {
-		return this;
+		return new ContextImpl(getResources(), this.atl_loaded_app, getTheme(),
+		                       this.atl_flags | ATL_FLAG_PROTECTED_STORAGE);
 	}
 
 	@Override

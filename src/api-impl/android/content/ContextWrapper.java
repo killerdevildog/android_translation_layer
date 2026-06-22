@@ -82,6 +82,11 @@ public class ContextWrapper extends Context {
 	}
 
 	@Override
+	public boolean isRestricted() {
+		return this.baseContext.isRestricted();
+	}
+
+	@Override
 	public boolean stopService(Intent intent) {
 		return this.baseContext.stopService(intent);
 	}
@@ -99,6 +104,11 @@ public class ContextWrapper extends Context {
 	@Override
 	public Context createDisplayContext(Display display) {
 		return this.baseContext.createDisplayContext(display);
+	}
+
+	@Override
+	public boolean isDeviceProtectedStorage() {
+		return this.baseContext.isDeviceProtectedStorage();
 	}
 
 	@Override

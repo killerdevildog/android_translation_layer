@@ -1,5 +1,6 @@
 package android.atl;
 
+import android.annotation.NonNull;
 import android.app.Activity;
 import android.app.Application;
 import android.app.ContextImpl;
@@ -48,6 +49,7 @@ public final class ATLLoadedApp {
 		this.running_services = new HashMap<>();
 	}
 
+	@NonNull
 	public static ATLLoadedApp getSystemApplication() {
 		if (system_application != null) {
 			return system_application;
@@ -68,6 +70,7 @@ public final class ATLLoadedApp {
 		                                             ATLLoadedApp.class.getClassLoader(), pkg);
 	}
 
+	@NonNull
 	public static synchronized ATLLoadedApp getPrimaryApplication() {
 		if (primary_application != null) {
 			return primary_application;
@@ -90,6 +93,7 @@ public final class ATLLoadedApp {
 		}
 	}
 
+	@NonNull
 	public static ATLLoadedApp loadFromPath(String mainApk, String nativePath, String classLoaderPath) throws IOException {
 		BaseDexClassLoader classLoader = new PathClassLoader(
 		    classLoaderPath, nativePath, ATLLoadedApp.class.getClassLoader());
