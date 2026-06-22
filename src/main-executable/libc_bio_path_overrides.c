@@ -78,6 +78,8 @@ static char *fonts_overrides[] = {
 	"/etc/fonts.xml",
 	/* INSTALL_DATADIR will be something like /usr/local/share */
 	INSTALL_DATADIR "/atl/system/etc/fonts.xml",
+	/* Relative path when running from ./android_translation_layer/builddir */
+	"../res/fonts.xml",
 	NULL,
 };
 
