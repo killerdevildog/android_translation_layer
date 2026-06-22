@@ -124,6 +124,14 @@ public class TextView extends View {
 		setText(new String(text, start, len));
 	}
 
+	public final void append(CharSequence text) {
+		append(text, 0, text.length());
+	}
+
+	public void append(CharSequence text, int start, int end) {
+		setText(SpannableStringBuilder.valueOf(this.text).append(text, start, end));
+	}
+
 	private native final void native_set_markup(int bool);
 
 	public native final void native_setText(String text);
