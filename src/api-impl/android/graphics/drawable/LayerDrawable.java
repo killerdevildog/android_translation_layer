@@ -156,7 +156,7 @@ public class LayerDrawable extends Drawable implements Drawable.Callback {
 
 			Drawable dr;
 			if (drawableRes != 0) {
-				dr = r.getDrawable(drawableRes);
+				dr = r.getDrawable(drawableRes, theme);
 			} else {
 				while ((type = parser.next()) == XmlPullParser.TEXT) {
 				}
