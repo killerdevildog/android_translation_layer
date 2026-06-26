@@ -548,6 +548,7 @@ srcs = [
 	'android/util/MapCollections.java',
 	'android/util/MathUtils.java',
 	'android/util/Pair.java',
+	'android/util/Patterns.java',
 	'android/util/Pools.java',
 	'android/util/PrefixPrinter.java',
 	'android/util/Printer.java',
