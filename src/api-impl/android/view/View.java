@@ -2566,4 +2566,6 @@ public class View implements Drawable.Callback {
 	public int getAccessibilityLiveRegion() { return 0; }
 
 	public void setLabelFor(int id) {}
+
+	public ArrayList<View> getFocusables(int direction) { return new ArrayList<View>(); }
 }

@@ -484,6 +484,8 @@ public class TextView extends View {
 
 	public void setMarqueeRepeatLimit(int marqueeLimit) {}
 
+	public void setShowSoftInputOnFocus(boolean showSoftInputOnFocus) {}
+
 	@UnsupportedAppUsage /* androidx ACTVAutoSizeHelper seems to love this */
 	/* Copyright (C) 2006 The Android Open Source Project */
 	private Layout.Alignment getLayoutAlignment() {
