@@ -1414,7 +1414,7 @@ public class View implements Drawable.Callback {
 	public native void native_setPadding(long widget, int left, int top, int right, int bottom);
 
 	public void setBackgroundResource(int resid) {
-		setBackgroundDrawable(resid == 0 ? null : getResources().getDrawable(resid));
+		setBackgroundDrawable(resid == 0 ? null : getContext().getDrawable(resid));
 	}
 
 	public void getHitRect(Rect outRect) {
