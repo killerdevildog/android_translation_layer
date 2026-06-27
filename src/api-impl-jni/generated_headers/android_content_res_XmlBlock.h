@@ -12,9 +12,9 @@ extern "C" {
 /*
  * Class:     android_content_res_XmlBlock
  * Method:    nativeCreate
- * Signature: ([BII)I
+ * Signature: ([BII)J
  */
-JNIEXPORT jint JNICALL Java_android_content_res_XmlBlock_nativeCreate
+JNIEXPORT jlong JNICALL Java_android_content_res_XmlBlock_nativeCreate
   (JNIEnv *, jclass, jbyteArray, jint, jint);
 
 /*

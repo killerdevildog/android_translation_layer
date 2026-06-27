@@ -483,9 +483,9 @@ final class XmlBlock {
 	private boolean mOpen = true;
 	private int mOpenCount = 1;
 
-	private static final native int nativeCreate(byte[] data,
-	                                             int offset,
-	                                             int size);
+	private static final native long nativeCreate(byte[] data,
+	                                              int offset,
+	                                              int size);
 	private static final native int nativeGetStringBlock(long obj);
 
 	private static final native long nativeCreateParseState(long obj);
