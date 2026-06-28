@@ -89,6 +89,7 @@ srcs = [
 	'android/atl/ATLMediaContentProvider.java',
 	'android/atl/ATLPaths.java',
 	'android/atl/ATLProvider.java',
+	'android/atl/EarlyPackageParser.java',
 	'android/atl/GskCanvas.java',
 	'android/atl/GVariantBuilderParcel.java',
 	'android/atl/GVariantIterParcel.java',
