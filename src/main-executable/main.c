@@ -111,6 +111,7 @@ JNIEnv *create_vm(char *api_impl_jar, char *apk_classpath, char *framework_res_a
 		options[0].optionString = construct_classpath("-Djava.library.path=", (char *[]){api_impl_natives_dir, app_lib_dir}, 2);
 	}
 
+	// ATLPaths relies on the first element in java.class.path being api-impl.jar
 	options[1].optionString = construct_classpath("-Djava.class.path=", (char *[]){api_impl_jar, framework_res_apk, test_runner_jar}, 3);
 	// ATLLoadedApp relies on the first element in atl.app.class.path being the main apk
 	options[2].optionString = construct_classpath("-Datl.app.class.path=", (char *[]){apk_classpath}, 1);

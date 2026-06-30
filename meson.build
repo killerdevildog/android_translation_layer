@@ -224,6 +224,14 @@ custom_target('api-impl.jar', build_by_default: true, input: [hax_jar], output: 
               install_dir : get_option('libdir') / 'java/dex/android_translation_layer',
               command: ['dx', '--dex', '--incremental', '--output='+join_paths(builddir_base, 'api-impl.jar'), hax_jar.full_path()])
 
+# gstub.jar
+subdir('src/gstub')
+
+custom_target('gstub.jar', build_by_default: true, input: [gstub_jar], output: ['gstub.jar'],
+              install: true,
+              install_dir : get_option('libdir') / 'java/dex/android_translation_layer',
+              command: ['dx', '--dex', '--incremental', '--output='+join_paths(builddir_base, 'gstub.jar'), gstub_jar.full_path()])
+
 # test-runner.jar
 subdir('src/test-runner')
 
