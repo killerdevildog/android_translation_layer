@@ -43,8 +43,8 @@ public final class ATLLoadedApp {
 	private Application application;
 	private Resources.Theme default_theme;
 
-	private ATLLoadedApp(Resources resources, ClassLoader classLoader,
-	                     PackageParser.Package pkg) {
+	ATLLoadedApp(Resources resources, ClassLoader classLoader,
+	             PackageParser.Package pkg) {
 		this.default_resources = resources;
 		this.class_loader = classLoader;
 		this.pkg = pkg;
