@@ -15,12 +15,15 @@ public final class ATLLoadedAppManager {
 	private static final HashMap<String, ATLLoadedApp> loaded_apps = new HashMap<>();
 	private static final HashMap<String, PackageParser.Package> loaded_packages = new HashMap<>();
 	private static final Object load_lock = new Object();
-	private static final HashSet<String> always_visible_packages = new HashSet<>(Arrays.asList(
-	    // Always allow MicroG to be visible for application compatibility.
-	    "com.android.vending", "com.google.android.gms", "com.google.android.gsf"));
-	private static final HashSet<String> always_allow_query_all_packages = new HashSet<>(Arrays.asList(
-	    // Always allow MicroG to see all applications for compatibility.
-	    "com.android.vending", "com.google.android.gms", "com.google.android.gsf"));
+	private static final HashSet<String> always_visible_packages = new HashSet<>();
+	private static final HashSet<String> always_allow_query_all_packages = new HashSet<>();
+
+	static {
+		// Always allow MicroG to be visible for application compatibility.
+		always_visible_packages.addAll(ATLLoadedApp.play_services);
+		// Always allow MicroG to see all applications for compatibility.
+		always_allow_query_all_packages.addAll(ATLLoadedApp.play_services);
+	}
 
 	private ATLLoadedAppManager() {}
 
@@ -82,6 +85,9 @@ public final class ATLLoadedAppManager {
 			}
 			File installed_apk_location = new File(ATLPaths.installed_apks_dir, packageName + ".apk");
 			if (!installed_apk_location.isFile()) {
+				if (ATLLoadedApp.play_services.contains(packageName)) {
+					return loadGStub(packageName).pkg;
+				}
 				return null;
 			}
 			PackageParser packageParser = new PackageParser(installed_apk_location.getPath());
@@ -112,6 +118,9 @@ public final class ATLLoadedAppManager {
 			File installed_apk_location = new File(ATLPaths.installed_apks_dir, packageName + ".apk");
 			File installed_lib_location = new File(ATLPaths.app_data_dir_base, packageName + "_/lib");
 			if (!installed_apk_location.isFile()) {
+				if (ATLLoadedApp.play_services.contains(packageName)) {
+					return loadGStub(packageName);
+				}
 				return null;
 			}
 			String apk_path = installed_apk_location.getPath();
@@ -133,5 +142,13 @@ public final class ATLLoadedAppManager {
 
 	private static boolean isPackageVisible(String sourcePackageName, String targetPackageName) {
 		return always_visible_packages.contains(targetPackageName) || always_allow_query_all_packages.contains(sourcePackageName);
+	}
+
+	private static ATLLoadedApp loadGStub(String packageName) {
+		ATLLoadedApp app = ATLGStub.loadFakePlayServices(packageName);
+		Slog.i(TAG, "loadGStub(\"" + packageName + "\")");
+		loaded_packages.put(packageName, app.pkg);
+		loaded_apps.put(packageName, app);
+		return app;
 	}
 }
