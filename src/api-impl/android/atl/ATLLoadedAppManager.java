@@ -95,6 +95,9 @@ public final class ATLLoadedAppManager {
 			                                 installed_apk_location.getPath(), new DisplayMetrics(), 0);
 			if (pkg != null) {
 				packageParser.collectCertificates(pkg, 0);
+				if (ATLLoadedApp.play_services.contains(packageName)) {
+					ATLSigHelper.addGMSSignatures(pkg);
+				}
 				loaded_packages.put(packageName, pkg);
 			} else {
 				Slog.e(TAG, "Failed to load package " + packageName);
