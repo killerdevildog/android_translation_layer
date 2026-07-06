@@ -263,7 +263,7 @@ public final class ContextImpl extends Context {
 		if (targetApp == null) {
 			return false;
 		}
-		return targetApp.startOrBindService(intent, null) != null;
+		return targetApp.startOrBindService(intent, serviceConnection) != null;
 	}
 
 	@Override
