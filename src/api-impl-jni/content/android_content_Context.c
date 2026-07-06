@@ -17,11 +17,29 @@
 
 #include "../generated_headers/android_content_Context.h"
 
+#include "android_content_Context.h"
+
 extern char *apk_path;
 
 JNIEXPORT jstring JNICALL Java_android_content_Context_native_1get_1apk_1path(JNIEnv *env, jclass this)
 {
 	return _JSTRING(apk_path);
+}
+
+static void monitor_changed_cb(GdkSurface *surface, GdkMonitor *monitor, jobject configuration)
+{
+	JNIEnv *env = get_jni_env();
+	GdkRectangle geometry;
+	gdk_monitor_get_geometry(monitor, &geometry);
+	if (!configuration)
+		configuration = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "sys_config", "Landroid/content/res/Configuration;");
+
+	_SET_INT_FIELD(configuration, "screenWidthDp", geometry.width);
+	_SET_INT_FIELD(configuration, "screenHeightDp", geometry.height);
+	if (geometry.width >= 800 && geometry.height >= 800)
+		_SET_INT_FIELD(configuration, "screenLayout", /*SCREENLAYOUT_SIZE_LARGE*/ 0x03);
+	else
+		_SET_INT_FIELD(configuration, "screenLayout", /*SCREENLAYOUT_SIZE_NORMAL*/ 0x02);
 }
 
 #ifdef XDP_TYPE_INPUT_CAPTURE_SESSION // libportal >= 0.8
@@ -51,11 +69,8 @@ JNIEXPORT void JNICALL Java_android_content_Context_native_1updateConfig(JNIEnv 
 {
 	GdkDisplay *display = gdk_display_get_default();
 	GdkMonitor *monitor = g_list_model_get_item(gdk_display_get_monitors(display), 0);
-	GdkRectangle geometry;
-	gdk_monitor_get_geometry(monitor, &geometry);
+	monitor_changed_cb(NULL, monitor, config);
 
-	_SET_INT_FIELD(config, "screenWidthDp", geometry.width);
-	_SET_INT_FIELD(config, "screenHeightDp", geometry.height);
 #ifdef XDP_TYPE_INPUT_CAPTURE_SESSION // libportal >= 0.8
 	if (!xdp_settings) {
 		GError *error = NULL;
@@ -75,6 +90,13 @@ JNIEXPORT void JNICALL Java_android_content_Context_native_1updateConfig(JNIEnv 
 		g_variant_unref(color_sheme);
 	}
 #endif
+}
+
+void update_config_for_window(GtkWindow *window)
+{
+	GdkSurface *surface = gtk_native_get_surface(GTK_NATIVE(window));
+	monitor_changed_cb(surface, gdk_display_get_monitor_at_surface(gdk_display_get_default(), surface), NULL);
+	g_signal_connect(surface, "enter-monitor", G_CALLBACK(monitor_changed_cb), NULL);
 }
 
 JNIEXPORT void JNICALL Java_android_content_Context_nativeOpenFile(JNIEnv *env, jclass class, jint fd)
