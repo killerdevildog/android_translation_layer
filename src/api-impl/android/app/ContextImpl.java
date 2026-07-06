@@ -394,8 +394,12 @@ public final class ContextImpl extends Context {
 	}
 
 	@Override
-	public Context createConfigurationContext(Configuration configuration) {
-		return this.atl_loaded_app.createContext(null, configuration, getTheme());
+	public Context createConfigurationContext(Configuration config_override) {
+		Configuration config = new Configuration();
+		config.setTo(getResources().getConfiguration());
+		if (config_override != null)
+			config.updateFrom(config_override);
+		return this.atl_loaded_app.createContext(null, config, getTheme());
 	}
 
 	@Override
