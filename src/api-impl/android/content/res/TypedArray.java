@@ -447,9 +447,17 @@ public class TypedArray {
 			return defValue;
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type == TypedValue.TYPE_NULL) {
+					return defValue;
+				} else if (value.type >= TypedValue.TYPE_FIRST_INT && value.type <= TypedValue.TYPE_LAST_INT) {
+					return value.data;
+				} else if (value.type == TypedValue.TYPE_STRING) {
+					ColorStateList csl = mResources.loadColorStateList(value, value.resourceId, mTheme);
+					if (csl != null) return csl.getDefaultColor();
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to color: type=0x" + Integer.toHexString(type));
@@ -480,8 +488,12 @@ public class TypedArray {
 		final TypedValue value = mValue;
 		if (getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value)) {
 			if (value.type == TypedValue.TYPE_ATTRIBUTE) {
-				throw new UnsupportedOperationException(
-				    "Failed to resolve attribute at index " + index + ": " + value);
+				if (mTheme == null || !mTheme.resolveAttribute(value.data, value, true)) {
+					return null;
+				}
+				if (value.type == TypedValue.TYPE_NULL) {
+					return null;
+				}
 			}
 			return mResources.loadComplexColor(value, value.resourceId, mTheme);
 		}
@@ -515,8 +527,12 @@ public class TypedArray {
 		final TypedValue value = mValue;
 		if (getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value)) {
 			if (value.type == TypedValue.TYPE_ATTRIBUTE) {
-				throw new UnsupportedOperationException(
-				    "Failed to resolve attribute at index " + index + ": " + value);
+				if (mTheme == null || !mTheme.resolveAttribute(value.data, value, true)) {
+					return null;
+				}
+				if (value.type == TypedValue.TYPE_NULL) {
+					return null;
+				}
 			}
 			return mResources.loadColorStateList(value, value.resourceId, mTheme);
 		}
@@ -552,9 +568,12 @@ public class TypedArray {
 			return data[index + AssetManager.STYLE_DATA];
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type >= TypedValue.TYPE_FIRST_INT && value.type <= TypedValue.TYPE_LAST_INT) {
+					return value.data;
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to integer: type=0x" + Integer.toHexString(type));
@@ -597,9 +616,12 @@ public class TypedArray {
 			    data[index + AssetManager.STYLE_DATA], mMetrics);
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type == TypedValue.TYPE_DIMENSION) {
+					return TypedValue.complexToDimension(value.data, mMetrics);
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to dimension: type=0x" + Integer.toHexString(type));
@@ -643,9 +665,12 @@ public class TypedArray {
 			    data[index + AssetManager.STYLE_DATA], mMetrics);
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type == TypedValue.TYPE_DIMENSION) {
+					return TypedValue.complexToDimensionPixelOffset(value.data, mMetrics);
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to dimension: type=0x" + Integer.toHexString(type));
@@ -690,9 +715,12 @@ public class TypedArray {
 			    data[index + AssetManager.STYLE_DATA], mMetrics);
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type == TypedValue.TYPE_DIMENSION) {
+					return TypedValue.complexToDimensionPixelSize(value.data, mMetrics);
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to dimension: type=0x" + Integer.toHexString(type));
@@ -731,9 +759,14 @@ public class TypedArray {
 			    data[index + AssetManager.STYLE_DATA], mMetrics);
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type >= TypedValue.TYPE_FIRST_INT && value.type <= TypedValue.TYPE_LAST_INT) {
+					return value.data;
+				} else if (value.type == TypedValue.TYPE_DIMENSION) {
+					return TypedValue.complexToDimensionPixelSize(value.data, mMetrics);
+				}
+			}
+			return android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 		}
 
 		throw new UnsupportedOperationException(getPositionDescription() + ": You must supply a " + name + " attribute.");
@@ -804,9 +837,12 @@ public class TypedArray {
 			    data[index + AssetManager.STYLE_DATA], base, pbase);
 		} else if (type == TypedValue.TYPE_ATTRIBUTE) {
 			final TypedValue value = mValue;
-			getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value);
-			throw new UnsupportedOperationException(
-			    "Failed to resolve attribute at index " + index + ": " + value);
+			if (mTheme != null && mTheme.resolveAttribute(data[index + AssetManager.STYLE_DATA], value, true)) {
+				if (value.type == TypedValue.TYPE_FRACTION) {
+					return TypedValue.complexToFraction(value.data, base, pbase);
+				}
+			}
+			return defValue;
 		}
 
 		throw new UnsupportedOperationException("Can't convert to fraction: type=0x" + Integer.toHexString(type));
@@ -891,8 +927,12 @@ public class TypedArray {
 		final TypedValue value = mValue;
 		if (getValueAt(index * AssetManager.STYLE_NUM_ENTRIES, value)) {
 			if (value.type == TypedValue.TYPE_ATTRIBUTE) {
-				throw new UnsupportedOperationException(
-				    "Failed to resolve attribute at index " + index + ": " + value);
+				if (mTheme == null || !mTheme.resolveAttribute(value.data, value, true)) {
+					return null;
+				}
+				if (value.type == TypedValue.TYPE_NULL) {
+					return null;
+				}
 			}
 			return mResources.loadDrawable(value, value.resourceId, mTheme);
 		}

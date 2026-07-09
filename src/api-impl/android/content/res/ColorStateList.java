@@ -301,7 +301,7 @@ public class ColorStateList extends ComplexColor implements Parcelable {
 
 		final ColorStateList colorStateList = new ColorStateList();
 		colorStateList.inflate(r, parser, attrs, theme);
-		return colorStateList;
+		return colorStateList.obtainForTheme(theme);
 	}
 
 	/**
