@@ -58,8 +58,14 @@ JNIEXPORT jlong JNICALL Java_android_graphics_BitmapFactory_nativeDecodeStream(J
 {
 	GInputStream *stream = java_input_stream_new(env, is, storage);
 
-	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_stream(stream, NULL, NULL);
+	GError *error = NULL;
+	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_stream(stream, NULL, &error);
 	g_object_unref(stream);
+	if (!pixbuf) {
+		g_warning("BitmapFactory.decodeStream: %s", error ? error->message : "pixbuf load returned NULL");
+		g_clear_error(&error);
+		return 0;
+	}
 	GdkTexture *texture = gdk_texture_new_for_pixbuf(pixbuf);
 	g_object_unref(pixbuf);
 	return _INTPTR(texture);

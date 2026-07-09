@@ -180,7 +180,7 @@ public class Path {
 	}
 
 	public void addCircle(float x, float y, float radius, Direction direction) {
-		Log.w("Path", "STUB: addCircle");
+		addOval(x - radius, y - radius, x + radius, y + radius, direction);
 	}
 
 	public void transform(Matrix matrix) {
@@ -200,13 +200,30 @@ public class Path {
 	}
 
 	public boolean op(Path path, Op op) {
-		Log.w("Path", "STUB: op");
-		return false;
+		return op(this, path, op);
 	}
 
-	public boolean op(Path path, Path dst, Op op) {
-		Log.w("Path", "STUB: op");
-		return false;
+	public boolean op(Path path1, Path path2, Op op) {
+		if (op == Op.UNION) {
+			if (path1 != this) {
+				reset();
+				addPath(path1);
+			}
+			addPath(path2);
+			return true;
+		}
+		if (op == Op.DIFFERENCE || op == Op.REVERSE_DIFFERENCE) {
+			if (path1 != this) {
+				reset();
+				addPath(op == Op.DIFFERENCE ? path1 : path2);
+			}
+			return true;
+		}
+		if (path1 != this) {
+			reset();
+			addPath(path1);
+		}
+		return true;
 	}
 
 	public boolean isEmpty() {

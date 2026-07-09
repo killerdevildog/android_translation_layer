@@ -809,7 +809,7 @@ public class VectorDrawable extends Drawable {
 	private static final String LOGTAG = VectorDrawable.class.getSimpleName();
 
 	/* don't use an intermediary bitmap (for making an SVG) */
-	static boolean direct_draw_override = false;
+	static boolean direct_draw_override = true;
 
 	private static final String SHAPE_CLIP_PATH = "clip-path";
 	private static final String SHAPE_GROUP = "group";
