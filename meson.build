@@ -189,6 +189,7 @@ libtranslationlayer_so = shared_library('translation_layer_main', [
                                                                   ],
                                                                   c_args: [
                                                                   	'-D_LARGEFILE64_SOURCE',
+                                                                  	'-I' + libart_dep.get_variable(pkgconfig: 'includedir'),
                                                                   ])
 
 # atl.gresources.xml
