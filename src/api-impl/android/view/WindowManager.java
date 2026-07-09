@@ -29,6 +29,7 @@ public interface WindowManager {
 		public IBinder token;
 		public int format;
 		public int layoutInDisplayCutoutMode;
+		public String packageName;
 
 		public LayoutParams(int w, int h, int type, int flags, int format) {
 			super(w, h);

@@ -1,6 +1,7 @@
 package android.app;
 
 import android.app.ActionBar;
+import android.atl.ATLLoadedApp;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -55,35 +56,8 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	private boolean finishing = false;
 
 	public static Activity internalCreateActivity(String className, long native_window, Intent intent) throws ReflectiveOperationException {
-		int theme_res = 0;
-		int label_res = 0;
-		int app_label_res = 0;
-		for (PackageParser.Activity activity : pkg.activities) {
-			if (className.equals(activity.className)) {
-				label_res = activity.info.labelRes;
-				theme_res = activity.info.getThemeResource();
-				break;
-			}
-		}
-
-		app_label_res = pkg.applicationInfo.labelRes;
-		theme_res = Resources.selectDefaultTheme(theme_res,
-		                                         Math.min(pkg.applicationInfo.targetSdkVersion, Build.VERSION.SDK_INT));
-
-		Class<? extends Activity> cls = Class.forName(className).asSubclass(Activity.class);
-		Constructor<? extends Activity> constructor = cls.getConstructor();
-		Activity activity = constructor.newInstance();
-		intent.setComponent(new ComponentName(pkg.packageName, className));
-		activity.intent = intent;
-		activity.attachBaseContext(new ContextImpl(r, pkg.applicationInfo, theme_res));
-		// Setting up a window requires a context.
-		activity.window = new Window(activity, activity);
+		Activity activity = ATLLoadedApp.getPrimaryApplication().createActivity(className, intent);
 		activity.window.set_native_window(native_window);
-		if (label_res != 0) {
-			activity.setTitle(r.getText(label_res));
-		} else if (app_label_res != 0) {
-			activity.setTitle(r.getText(app_label_res));
-		}
 		return activity;
 	}
 
@@ -94,10 +68,10 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 	 * @return  instance of main activity class
 	 * @throws Exception
 	 */
-	private static Activity createMainActivity(String className, long native_window, String uriString) throws Exception {
+	private static Activity createMainActivity(String className, long native_window, String uriString) throws ReflectiveOperationException {
 		Uri uri = uriString != null ? Uri.parse(uriString) : null;
 		if (className == null) {
-			for (PackageParser.Activity activity : pkg.activities) {
+			for (PackageParser.Activity activity : ATLLoadedApp.getPrimaryApplication().pkg.activities) {
 				if (!activity.info.enabled)
 					continue;
 				boolean done = false;
@@ -641,7 +615,7 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 
 	public int getTaskId() {
 		/* we don't support multiple activity stacks, so this is probably fine? */
-		return System.identityHashCode(this_application);
+		return System.identityHashCode(this.getApplicationContext());
 	}
 
 	boolean moveTaskToBack(boolean nonroot) {
@@ -677,5 +651,11 @@ public class Activity extends ContextThemeWrapper implements Window.Callback, La
 
 	public ActionBar getActionBar() {
 		return null;
+	}
+
+	@Override
+	public void atl_attach_base_context(Context baseContext) {
+		super.atl_attach_base_context(baseContext);
+		this.window = new Window(this, this);
 	}
 }

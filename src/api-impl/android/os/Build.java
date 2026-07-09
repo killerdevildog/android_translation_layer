@@ -16,6 +16,12 @@
 
 package android.os;
 
+import android.atl.EarlyPackageParser;
+import android.content.pm.PackageParser;
+import android.util.DisplayMetrics;
+import java.io.File;
+import java.util.Objects;
+
 /**
  * Information about the current build, extracted from system properties.
  */
@@ -109,13 +115,33 @@ public class Build {
 	public static class VERSION {
 		static {
 			String SDK_INT_str = System.getProperty("Build.VERSION.SDK_INT");
-			int SDK_INT_tmp = (SDK_INT_str != null) ? Integer.parseInt(SDK_INT_str) : 23; // Android 6.0 Marshmallow - good compatibility
+			String mainApkPath;
+			int SDK_INT_tmp = Build.VERSION_CODES.GINGERBREAD;
+			if (SDK_INT_str != null) {
+				// Always force SDK_INT to be at least 1 as 0 is used to detect early accesses.
+				SDK_INT_tmp = Integer.parseInt(SDK_INT_str);
+			} else if ((mainApkPath = System.getProperty("atl.app.class.path")) != null) {
+				// We need to set the SDK int to at least the minSdk as the
+				// Android Gradle plugin strips the SDK_INT check below anyway.
+				// And applications may also expect the SDK_INT to be at least
+				// their minSdk, especially for resources.
+				int index = mainApkPath.indexOf(':');
+				if (index != -1) {
+					mainApkPath = mainApkPath.substring(0, index);
+				}
+				File mainApk = new File(mainApkPath);
+				if (mainApk.isFile()) {
+					SDK_INT_tmp = EarlyPackageParser.parseMinSdkInt(mainApk, SDK_INT_tmp);
+					// Always ensure the SDK int is at least gingerbread for older applications.
+					SDK_INT_tmp = Math.max(SDK_INT_tmp, Build.VERSION_CODES.GINGERBREAD);
+				}
+			}
 
 			/* !!! forcing a RESOURCES_SDK_INT value different from SDK_INT can cause issues, including crashes */
 			String RESOURCES_SDK_INT_str = System.getProperty("Build.VERSION.RESOURCES_SDK_INT");
 
 			SDK_INT = SDK_INT_tmp;
-			RESOURCES_SDK_INT = (RESOURCES_SDK_INT_str != null) ? Integer.parseInt(RESOURCES_SDK_INT_str) : SDK_INT_tmp;
+			RESOURCES_SDK_INT = (RESOURCES_SDK_INT_str != null) ? Math.max(Integer.parseInt(RESOURCES_SDK_INT_str), 1) : SDK_INT_tmp;
 		}
 
 		/**

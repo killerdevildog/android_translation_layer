@@ -104,3 +104,18 @@ JNIEXPORT void JNICALL Java_android_view_RenderNode_nativeUnref(JNIEnv *env, job
 	if (node_ptr != 0)
 		gsk_render_node_unref(_PTR(node_ptr));
 }
+
+JNIEXPORT jlong JNICALL Java_android_view_RenderNode_nativeAddStubNode(JNIEnv *env, jobject this, jlong snapshot_ptr)
+{
+	GtkSnapshot *snapshot = _PTR(snapshot_ptr);
+	GdkRGBA rgba = {
+		.red = 0.f,
+		.green = 0.f,
+		.blue = 0.f,
+		.alpha = 0.f,
+	};
+	GskRenderNode *stub_node = gsk_color_node_new(&rgba, &GRAPHENE_RECT_INIT(0.0f, 0.0f, 0.0f, 0.0f));
+	gtk_snapshot_append_node(snapshot, stub_node);
+	gsk_render_node_unref(stub_node);
+	return _INTPTR(stub_node);
+}

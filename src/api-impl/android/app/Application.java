@@ -1,6 +1,7 @@
 package android.app;
 
 import android.R;
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageParser;
@@ -13,7 +14,7 @@ public class Application extends ContextWrapper {
 	private String get_app_icon_path() {
 		String icon_path = null;
 		try {
-			icon_path = getString(pkg.applicationInfo.icon);
+			icon_path = getString(this.get_atl_loaded_app().pkg.applicationInfo.icon);
 		} catch (android.content.res.Resources.NotFoundException e) {
 			e.printStackTrace();
 		}
@@ -26,26 +27,28 @@ public class Application extends ContextWrapper {
 	}
 
 	private long get_app_icon_paintable() {
-		return getPackageManager().getApplicationIcon(pkg.applicationInfo).paintable;
+		return getPackageManager().getApplicationIcon(this.get_atl_loaded_app().pkg.applicationInfo).paintable;
 	}
 
 	String get_app_label() {
-		return getString(pkg.applicationInfo.labelRes);
+		return getString(this.get_atl_loaded_app().pkg.applicationInfo.labelRes);
 	}
 
 	String get_supported_mime_types() {
-		String mimeTypes = "";
-		for (PackageParser.Activity activity : pkg.activities) {
+		StringBuilder mimeTypes = new StringBuilder();
+		for (PackageParser.Activity activity : this.get_atl_loaded_app().pkg.activities) {
+			if (activity.intents == null)
+				continue;
 			for (PackageParser.IntentInfo intent : activity.intents) {
 				for (int i = 0; i < intent.countDataSchemes(); i++) {
 					String scheme = intent.getDataScheme(i);
 					// ignore http and https, as there is no way to only handle specific hosts in a .desktop file
 					if (!"http".equals(scheme) && !"https".equals(scheme))
-						mimeTypes += "x-scheme-handler/" + intent.getDataScheme(i) + ";";
+						mimeTypes.append("x-scheme-handler/").append(intent.getDataScheme(i)).append(";");
 				}
 			}
 		}
-		return "".equals(mimeTypes) ? null : mimeTypes;
+		return (mimeTypes.length() == 0) ? null : mimeTypes.toString();
 	}
 
 	public interface ActivityLifecycleCallbacks {
@@ -114,6 +117,6 @@ public class Application extends ContextWrapper {
 	}
 	public static String getProcessName() {
 		// note: we currently don't set the process name
-		return Context.this_application.getPackageName();
+		return ATLLoadedApp.getPrimaryApplication().pkg.packageName;
 	}
 }

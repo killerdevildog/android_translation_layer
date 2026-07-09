@@ -232,16 +232,20 @@ public class Resources {
 	 * on orientation, etc).
 	 */
 	public static Resources getSystem() {
-		return Context.this_application.getResources();
-		//synchronized (sSync) {
-		//	Resources ret = mSystem;
-		//	if (ret == null) {
-		//		ret = new Resources();
-		//		mSystem = ret;
-		//	}
-		//
-		//	return ret;
-		//}
+		Resources ret = mSystem;
+		if (ret != null) {
+			return ret;
+		}
+		synchronized (sSync) {
+			ret = mSystem;
+			if (ret == null) {
+				ret = new Resources(new AssetManager(Resources.class.getClassLoader()),
+				                    new DisplayMetrics(), Context.sys_config);
+				mSystem = ret;
+			}
+
+			return ret;
+		}
 	}
 
 	/**
@@ -1149,10 +1153,12 @@ public class Resources {
 	 */
 	public void getValue(int id, TypedValue outValue, boolean resolveRefs)
 	    throws NotFoundException {
-		boolean found = mAssets.getResourceValue(id, 0, outValue, resolveRefs);
+		boolean found = mAssets.getResourceValue(id, mCompatibilityInfo.applicationDensity, outValue, resolveRefs);
 		if (found) {
 			return;
 		}
+		if (mSystem != null && mSystem.mAssets == this.mAssets)
+			throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id) + " (System assets)");
 		throw new NotFoundException("Resource ID #0x" + Integer.toHexString(id));
 	}
 

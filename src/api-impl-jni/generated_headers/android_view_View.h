@@ -382,10 +382,10 @@ JNIEXPORT void JNICALL Java_android_view_View_native_1setBackgroundColor
 /*
  * Class:     android_view_View
  * Method:    native_setVisibility
- * Signature: (JIF)V
+ * Signature: (JIFZ)V
  */
 JNIEXPORT void JNICALL Java_android_view_View_native_1setVisibility
-  (JNIEnv *, jobject, jlong, jint, jfloat);
+  (JNIEnv *, jobject, jlong, jint, jfloat, jboolean);
 
 /*
  * Class:     android_view_View

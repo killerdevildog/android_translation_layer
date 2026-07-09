@@ -28,21 +28,32 @@ import org.xmlpull.v1.XmlPullParserException;
  *
  * {@hide}
  */
-final class XmlBlock {
+public final class XmlBlock implements AutoCloseable {
 	private static final boolean DEBUG = false;
 
 	public XmlBlock(byte[] data) {
 		mAssets = null;
 		mNative = nativeCreate(data, 0, data.length);
-		mStrings = new StringBlock(nativeGetStringBlock(mNative), false);
+		// mStrings = new StringBlock(nativeGetStringBlock(mNative), false);
+		mStrings = null;
 	}
 
 	public XmlBlock(byte[] data, int offset, int size) {
 		mAssets = null;
+		// We check for native to produce better error messages.
+		if (offset < 0 || size < 0) {
+			throw new ArrayIndexOutOfBoundsException(
+			    "The offset / read size must not be 0 but got " + offset + " / " + size);
+		}
+		if (data.length > offset + size) {
+			throw new ArrayIndexOutOfBoundsException("Array length is " + data.length + " but the offset + read size is " + offset + " + " + size);
+		}
 		mNative = nativeCreate(data, offset, size);
-		mStrings = new StringBlock(nativeGetStringBlock(mNative), false);
+		// mStrings = new StringBlock(nativeGetStringBlock(mNative), false);
+		mStrings = null;
 	}
 
+	@Override
 	public void close() {
 		synchronized (this) {
 			if (mOpen) {
@@ -483,9 +494,9 @@ final class XmlBlock {
 	private boolean mOpen = true;
 	private int mOpenCount = 1;
 
-	private static final native int nativeCreate(byte[] data,
-	                                             int offset,
-	                                             int size);
+	private static final native long nativeCreate(byte[] data,
+	                                              int offset,
+	                                              int size);
 	private static final native int nativeGetStringBlock(long obj);
 
 	private static final native long nativeCreateParseState(long obj);

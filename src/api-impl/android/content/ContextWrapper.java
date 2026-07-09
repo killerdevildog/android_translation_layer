@@ -1,10 +1,12 @@
 package android.content;
 
+import android.atl.ATLLoadedApp;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.view.Display;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 public class ContextWrapper extends Context {
 	private Context baseContext;
@@ -18,7 +20,15 @@ public class ContextWrapper extends Context {
 	}
 
 	protected void attachBaseContext(Context baseContext) {
+		if (this.baseContext != null) {
+			throw new IllegalStateException("Base context already set");
+		}
 		this.baseContext = baseContext;
+	}
+
+	public void atl_attach_base_context(Context baseContext) {
+		Objects.requireNonNull(baseContext, "baseContext must not be null");
+		this.attachBaseContext(baseContext);
 	}
 
 	@Override
@@ -47,8 +57,38 @@ public class ContextWrapper extends Context {
 	}
 
 	@Override
+	public ClassLoader getClassLoader() {
+		return this.baseContext.getClassLoader();
+	}
+
+	@Override
+	public ComponentName startService(Intent intent) {
+		return this.baseContext.startService(intent);
+	}
+
+	@Override
+	public boolean bindService(Intent intent, ServiceConnection serviceConnection, int flags) {
+		return this.baseContext.bindService(intent, serviceConnection, flags);
+	}
+
+	@Override
+	public void startActivity(Intent intent) {
+		this.baseContext.startActivity(intent);
+	}
+
+	@Override
 	public void setTheme(int resId) {
 		this.baseContext.setTheme(resId);
+	}
+
+	@Override
+	public boolean isRestricted() {
+		return this.baseContext.isRestricted();
+	}
+
+	@Override
+	public boolean stopService(Intent intent) {
+		return this.baseContext.stopService(intent);
 	}
 
 	@Override
@@ -67,6 +107,11 @@ public class ContextWrapper extends Context {
 	}
 
 	@Override
+	public boolean isDeviceProtectedStorage() {
+		return this.baseContext.isDeviceProtectedStorage();
+	}
+
+	@Override
 	public Context createDeviceProtectedStorageContext() {
 		return this.baseContext.createDeviceProtectedStorageContext();
 	}
@@ -74,5 +119,10 @@ public class ContextWrapper extends Context {
 	@Override
 	public int getThemeResId() {
 		return this.baseContext.getThemeResId();
+	}
+
+	@Override
+	public ATLLoadedApp get_atl_loaded_app() {
+		return this.baseContext.get_atl_loaded_app();
 	}
 }

@@ -9,6 +9,7 @@
 #include "../api-impl-jni/defines.h"
 #include "../api-impl-jni/util.h"
 #include "../api-impl-jni/app/android_app_Activity.h"
+#include "../api-impl-jni/content/android_content_Context.h"
 
 #include "actions.h"
 #include "back_button.h"
@@ -86,7 +87,7 @@ JNIEnv *create_vm(char *api_impl_jar, char *apk_classpath, char *framework_res_a
 	JNIEnv *env;
 	JavaVMInitArgs args = {
 		.version = JNI_VERSION_1_6,
-		.nOptions = 3,
+		.nOptions = 5,
 	};
 	JavaVMOption *options;
 
@@ -111,8 +112,12 @@ JNIEnv *create_vm(char *api_impl_jar, char *apk_classpath, char *framework_res_a
 		options[0].optionString = construct_classpath("-Djava.library.path=", (char *[]){api_impl_natives_dir, app_lib_dir}, 2);
 	}
 
-	options[1].optionString = construct_classpath("-Djava.class.path=", (char *[]){api_impl_jar, apk_classpath, framework_res_apk, test_runner_jar}, 4);
-	options[2].optionString = "-Xcheck:jni";
+	// ATLPaths relies on the first element in java.class.path being api-impl.jar
+	options[1].optionString = construct_classpath("-Djava.class.path=", (char *[]){api_impl_jar, framework_res_apk, test_runner_jar}, 3);
+	// ATLLoadedApp relies on the first element in atl.app.class.path being the main apk
+	options[2].optionString = construct_classpath("-Datl.app.class.path=", (char *[]){apk_classpath}, 1);
+	options[3].optionString = construct_classpath("-Datl.app.library.path=", (char *[]){api_impl_natives_dir, app_lib_dir}, 2);
+	options[4].optionString = "-Xcheck:jni";
 	if (jdwp_port) {
 		strncat(jdwp_option_string, jdwp_port, 5); // 5 chars is enough for a port number, and won't overflow our array
 		options[option_counter++].optionString = "-XjdwpProvider:internal";
@@ -343,7 +348,8 @@ static void open(GtkApplication *app, GFile **files, gint nfiles, const gchar *h
 	Dl_info libart_so_dl_info;
 	// JNI_CreateJavaVM chosen arbitrarily, what matters is that it's a symbol exported by by libart.so
 	// TODO: we shouldn't necessarily count on art being installed in the same prefix as we are
-	dladdr(JNI_CreateJavaVM, &libart_so_dl_info);
+	void *_JNI_CreateJavaVM = dlsym(RTLD_NEXT, "JNI_CreateJavaVM");
+	dladdr(_JNI_CreateJavaVM, &libart_so_dl_info);
 	// make sure we didn't get NULL
 	if (libart_so_dl_info.dli_fname) {
 		// it's simpler if we can modify the string, so strdup it
@@ -402,7 +408,9 @@ static void open(GtkApplication *app, GFile **files, gint nfiles, const gchar *h
 	// Apps which extract libraries on their own can place them anywhere in app_data_dir. Therefore, we add app_data_dir/** to the
 	// BIONIC_LD_LIBRARY_PATH. While app_data_dir/lib is already matched by the wildcard, it needs to be specified again to allow loading
 	// libraries by libname from app_data_dir/lib
-	char *ld_path = g_strdup_printf("%s:%s**", app_lib_dir, app_data_dir);
+	char *ld_path = getenv("BIONIC_LD_LIBRARY_PATH");
+	ld_path = (ld_path ? ld_path : "");
+	ld_path = g_strdup_printf("%s:%s**:%s", app_lib_dir, app_data_dir, ld_path);
 	// calling directly into the shim bionic linker to whitelist the app's lib dir as containing bionic-linked libraries
 	dl_parse_library_path(ld_path, ":");
 	g_free(ld_path);
@@ -659,15 +667,8 @@ static void open(GtkApplication *app, GFile **files, gint nfiles, const gchar *h
 	if (GDK_IS_WAYLAND_TOPLEVEL(toplevel) && !d->apk_instrumentation_class) {
 		gdk_wayland_toplevel_set_application_id(GDK_WAYLAND_TOPLEVEL(toplevel), package_name);
 	}
-	GdkMonitor *monitor = gdk_display_get_monitor_at_surface(gdk_display_get_default(), GDK_SURFACE(toplevel));
-	GdkRectangle monitor_geometry;
-	gdk_monitor_get_geometry(monitor, &monitor_geometry);
-	jobject resources = _GET_STATIC_OBJ_FIELD(handle_cache.context.class, "r", "Landroid/content/res/Resources;");
-	jobject configuration = _GET_OBJ_FIELD(resources, "mConfiguration", "Landroid/content/res/Configuration;");
-	if (monitor_geometry.width >= 800 && monitor_geometry.height >= 800)
-		_SET_INT_FIELD(configuration, "screenLayout", /*SCREENLAYOUT_SIZE_LARGE*/ 0x03);
-	else
-		_SET_INT_FIELD(configuration, "screenLayout", /*SCREENLAYOUT_SIZE_NORMAL*/ 0x02);
+
+	update_config_for_window(GTK_WINDOW(window));
 
 	if (!d->apk_instrumentation_class && app_icon_path) {
 		char *app_icon_path_full = malloc(strlen(app_data_dir) + 1 + strlen(app_icon_path) + 1); // +1 for /, +1 for NULL

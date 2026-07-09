@@ -1,5 +1,6 @@
 package android.app;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -29,7 +30,7 @@ public class PendingIntent implements Parcelable {
 	public void send(Context context, int code, Intent intent) {}
 
 	public void send() {
-		Context context = Context.this_application;
+		Context context = ATLLoadedApp.getPrimaryApplication().getApplication();
 		if (type == 0) { // type Activity
 			context.startActivity(intent);
 		} else if (type == 1) { // type Service
@@ -62,11 +63,11 @@ public class PendingIntent implements Parcelable {
 	}
 
 	public String getCreatorPackage() {
-		return Context.this_application.getPackageName();
+		return ATLLoadedApp.getPrimaryApplication().pkg.packageName;
 	}
 
 	public int getCreatorUid() {
-		return Context.this_application.getApplicationInfo().uid;
+		return ATLLoadedApp.getPrimaryApplication().pkg.applicationInfo.uid;
 	}
 
 	public static PendingIntent getForegroundService(Context context, int requestCode, Intent intent, int flags) {

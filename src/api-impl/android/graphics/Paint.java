@@ -378,6 +378,15 @@ public class Paint {
 		return false;
 	}
 
+	public void reset() {
+		native_recycle(paint);
+		paint = native_create();
+		xfermode = null;
+		shader = null;
+		align = Align.CENTER;
+		color_filter = null;
+	}
+
 	private static native long native_create();
 	private static native long native_clone(long paint);
 	private static native void native_recycle(long paint);

@@ -55,6 +55,14 @@ JNIEXPORT jlong JNICALL Java_android_view_RenderNode_nativeClip
 JNIEXPORT void JNICALL Java_android_view_RenderNode_nativeUnref
   (JNIEnv *, jobject, jlong);
 
+/*
+ * Class:     android_view_RenderNode
+ * Method:    nativeAddStubNode
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_android_view_RenderNode_nativeAddStubNode
+  (JNIEnv *, jobject, jlong);
+
 #ifdef __cplusplus
 }
 #endif

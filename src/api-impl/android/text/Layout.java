@@ -70,6 +70,10 @@ public class Layout {
 			native_draw_custom_canvas(layout, canvas, paint);
 	}
 
+	public void draw(Canvas canvas, Path selectionHighlight, Paint paint, int selectionOffset) {
+		draw(canvas);
+	}
+
 	public int getParagraphDirection(int line) {
 		if (line < 0 || line >= getLineCount())
 			throw new ArrayIndexOutOfBoundsException();

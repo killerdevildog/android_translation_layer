@@ -78,6 +78,11 @@ off64_t AAsset_getRemainingLength64(struct Asset *asset)
 	return Asset_getRemainingLength(asset);
 }
 
+int AAsset_isAllocated(struct Asset *asset)
+{
+	return true;
+}
+
 void AAsset_close(struct Asset *asset)
 {
 	Asset_delete(asset);

@@ -11,4 +11,8 @@ public class BoringLayout extends Layout {
 	public static Metrics isBoring(CharSequence source, TextPaint paint, Metrics metrics) {
 		return metrics;
 	}
+
+	public static Metrics isBoring(CharSequence source, TextPaint paint) {
+		return null;
+	}
 }

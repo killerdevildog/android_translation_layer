@@ -969,6 +969,9 @@ public class View implements Drawable.Callback {
 	protected int paddingRight = 0;
 	protected int paddingBottom = 0;
 
+	private boolean atl_enabled = true;
+	private boolean atl_focusable = true;
+
 	public static final Property<View, Float> TRANSLATION_X = new Property<View, Float>(Float.class, "translationX") {
 		@Override
 		public Float get(View view) {
@@ -1045,9 +1048,12 @@ public class View implements Drawable.Callback {
 				e.printStackTrace();
 			}
 		}
+		if (a.hasValue(com.android.internal.R.styleable.View_focusable)) {
+			atl_focusable = a.getBoolean(com.android.internal.R.styleable.View_focusable, true);
+		}
 		if (a.hasValue(com.android.internal.R.styleable.View_visibility)) {
 			visibility = VISIBILITY_FLAGS[a.getInt(com.android.internal.R.styleable.View_visibility, 0)];
-			native_setVisibility(widget, visibility, alpha);
+			native_setVisibility(widget, visibility, alpha, atl_enabled);
 		}
 
 		if (a.hasValue(com.android.internal.R.styleable.View_minWidth))
@@ -1195,7 +1201,7 @@ public class View implements Drawable.Callback {
 	}
 
 	public Resources getResources() {
-		return Context.this_application.getResources();
+		return this.context.getResources();
 	}
 
 	public void setGravity(int gravity) {
@@ -1278,7 +1284,9 @@ public class View implements Drawable.Callback {
 
 	public void setOnKeyListener(OnKeyListener l) {}
 
-	public void setFocusable(boolean focusable) {}
+	public void setFocusable(boolean focusable) {
+		atl_focusable = focusable;
+	}
 	public void setFocusable(int focusable) {}
 	public void setFocusableInTouchMode(boolean focusableInTouchMode) {}
 	public final boolean requestFocus() {
@@ -1288,8 +1296,11 @@ public class View implements Drawable.Callback {
 		return requestFocus(direction, null);
 	}
 	public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-		nativeRequestFocus(widget, direction);
-		return true;
+		if (atl_enabled && atl_focusable && visibility == VISIBLE) {
+			nativeRequestFocus(widget, direction);
+			return true;
+		}
+		return false;
 	}
 	public final boolean requestFocusFromTouch() {
 		// TODO: if (isInTouchMode()) leave touch mode
@@ -1373,7 +1384,7 @@ public class View implements Drawable.Callback {
 		native_setBackgroundColor(widget, color);
 	}
 
-	public native void native_setVisibility(long widget, int visibility, float alpha);
+	native void native_setVisibility(long widget, int visibility, float alpha, boolean sensitive);
 
 	protected void onVisibilityChanged(View changedView, int visibility) {
 	}
@@ -1383,11 +1394,13 @@ public class View implements Drawable.Callback {
 	}
 
 	public void setVisibility(int visibility) {
-		native_setVisibility(widget, visibility, alpha);
+		if (visibility == this.visibility)
+			return;
 		if ((visibility == View.GONE) != (this.visibility == View.GONE) && parent instanceof ViewGroup) {
 			((ViewGroup)parent).requestLayout();
 		}
 		this.visibility = visibility;
+		native_setVisibility(widget, visibility, alpha, atl_enabled);
 		dispatchVisibilityChanged(this, visibility);
 	}
 
@@ -1401,7 +1414,7 @@ public class View implements Drawable.Callback {
 	public native void native_setPadding(long widget, int left, int top, int right, int bottom);
 
 	public void setBackgroundResource(int resid) {
-		setBackgroundDrawable(resid == 0 ? null : getResources().getDrawable(resid));
+		setBackgroundDrawable(resid == 0 ? null : getContext().getDrawable(resid));
 	}
 
 	public void getHitRect(Rect outRect) {
@@ -1523,7 +1536,10 @@ public class View implements Drawable.Callback {
 
 	public void setClickable(boolean clickable) {}
 
-	public void setEnabled(boolean enabled) {}
+	public void setEnabled(boolean enabled) {
+		atl_enabled = enabled;
+		native_setVisibility(widget, visibility, alpha, atl_enabled);
+	}
 
 	public CharSequence getContentDescription() {
 		return null;
@@ -1802,7 +1818,7 @@ public class View implements Drawable.Callback {
 
 	public void bringToFront() {}
 
-	public boolean isEnabled() { return true; }
+	public boolean isEnabled() { return atl_enabled; }
 	public boolean hasFocus() { return false; }
 	public boolean isLayoutRequested() { return layoutRequested; }
 	public int getBaseline() { return -1; }
@@ -1850,7 +1866,7 @@ public class View implements Drawable.Callback {
 	}
 
 	public void setAlpha(float alpha) {
-		native_setVisibility(widget, visibility, alpha);
+		native_setVisibility(widget, visibility, alpha, atl_enabled);
 		this.alpha = alpha;
 	}
 
@@ -1969,7 +1985,7 @@ public class View implements Drawable.Callback {
 
 	public void setOnApplyWindowInsetsListener(View.OnApplyWindowInsetsListener l) {}
 
-	public final boolean isFocusable() { return true; }
+	public final boolean isFocusable() { return atl_focusable; }
 	public boolean isClickable() { return true; }
 	public boolean isLongClickable() { return true; }
 
@@ -2515,7 +2531,7 @@ public class View implements Drawable.Callback {
 			}
 
 			final int id = mHostView.getId();
-			final String idText = id == NO_ID ? "" : " with id '" + mHostView.getContext().getResources().getResourceEntryName(id) + "'";
+			final String idText = id == NO_ID ? "" : " with id '" + mHostView.getResources().getResourceEntryName(id) + "'";
 			throw new IllegalStateException("Could not find method " + mMethodName
 			                                + "(View) in a parent or ancestor Context for android:onClick "
 			                                + "attribute defined on view " + mHostView.getClass() + idText);
@@ -2542,4 +2558,14 @@ public class View implements Drawable.Callback {
 	public void destroyDrawingCache() {}
 
 	public void setHovered(boolean isHovered) {}
+
+	public void setVerticalFadingEdgeEnabled(boolean verticalFadingEdgeEnabled) {}
+
+	public void setFadingEdgeLength(int length) {}
+
+	public int getAccessibilityLiveRegion() { return 0; }
+
+	public void setLabelFor(int id) {}
+
+	public ArrayList<View> getFocusables(int direction) { return new ArrayList<View>(); }
 }

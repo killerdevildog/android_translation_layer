@@ -150,6 +150,13 @@ void activity_close_all(void)
 	g_list_free(activities);
 }
 
+static gboolean delayed_close_window(gpointer window)
+{
+	if (activity_backlog == NULL && GTK_IS_WINDOW(window))
+		gtk_window_close(GTK_WINDOW(window));
+	return G_SOURCE_REMOVE;
+}
+
 void activity_start(JNIEnv *env, jobject activity_object)
 {
 	if (activity_current)
@@ -190,7 +197,7 @@ JNIEXPORT void JNICALL Java_android_app_Activity_nativeFinish(JNIEnv *env, jobje
 		_UNREF(removed_activity);
 	}
 	if (activity_backlog == NULL && window)
-		gtk_window_close(GTK_WINDOW(_PTR(window)));
+		g_idle_add(delayed_close_window, _PTR(window));
 }
 
 JNIEXPORT void JNICALL Java_android_app_Activity_nativeStartActivity(JNIEnv *env, jclass class, jobject activity)

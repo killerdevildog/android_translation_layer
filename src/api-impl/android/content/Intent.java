@@ -2,11 +2,13 @@ package android.content;
 
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import com.android.internal.R;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -852,7 +854,23 @@ public class Intent implements Parcelable {
 	}
 
 	public static Intent parseIntent(Resources res, XmlPullParser parser, AttributeSet attrs) {
-		return new Intent();
+		Intent intent = new Intent();
+		try (TypedArray typedArray = res.obtainAttributes(attrs, R.styleable.Intent)) {
+
+			intent.setAction(typedArray.getString(R.styleable.Intent_action));
+
+			String data = typedArray.getString(R.styleable.Intent_data);
+			String mimeType = typedArray.getString(R.styleable.Intent_mimeType);
+			intent.setDataAndType(data != null ? Uri.parse(data) : null, mimeType);
+
+			String packageName = typedArray.getString(R.styleable.Intent_targetPackage);
+			String className = typedArray.getString(R.styleable.Intent_targetClass);
+			if (packageName != null && className != null) {
+				intent.setComponent(new ComponentName(packageName, className));
+			}
+		}
+
+		return intent;
 	}
 
 	public ComponentName resolveActivity(PackageManager pm) {

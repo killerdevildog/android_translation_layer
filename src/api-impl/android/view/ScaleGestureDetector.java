@@ -13,6 +13,7 @@ public class ScaleGestureDetector {
 	public ScaleGestureDetector(Context context, OnScaleGestureListener listener) {}
 
 	public void setQuickScaleEnabled(boolean enabled) {}
+	public void setStylusScaleEnabled(boolean enabled) {}
 
 	public boolean onTouchEvent(MotionEvent event) {
 		return false;

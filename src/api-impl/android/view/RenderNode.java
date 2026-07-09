@@ -40,6 +40,7 @@ public class RenderNode {
 	private native long nativeTransform(long node, float scaleX, float scaleY, float translationX, float translationY, float rotation, float pivotX, float pivotY);
 	private native long nativeClip(long node, float left, float top, float right, float bottom);
 	private native void nativeUnref(long node);
+	private native long nativeAddStubNode(long snapshot);
 
 	public static RenderNode create(String name, View view) {
 		return new RenderNode();
@@ -295,9 +296,11 @@ public class RenderNode {
 		return new GskCanvas(nativeCreateSnapshot()) {
 			@Override
 			public void drawRenderNode(RenderNode node) {
-				super.drawRenderNode(node);
+				/* gtk_snapshot_append_node() may unpack container nodes since GTK 4.22 https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9488
+				 * We prevent this using stub nodes, because we need the container nodes as handles in nativePatchNode() */
+				long stub_node = nativeAddStubNode(snapshot);
 				children.add(node);
-				children_nodes.add(node.transformed_node);
+				children_nodes.add(stub_node);
 			}
 		};
 	}

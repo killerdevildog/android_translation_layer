@@ -53,11 +53,11 @@ public class ImageView extends View {
 	}
 
 	public void setImageResource(final int resid) {
-		if (Context.this_application.getResources().getString(resid).endsWith(".xml")) {
-			setImageDrawable(getResources().getDrawable(resid));
+		if (this.getResources().getString(resid).endsWith(".xml")) {
+			setImageDrawable(getContext().getDrawable(resid));
 			return;
 		}
-		bitmap = BitmapFactory.decodeResource(Context.this_application.getResources(), resid);
+		bitmap = BitmapFactory.decodeResource(this.getResources(), resid);
 		native_setDrawable(widget, bitmap != null ? bitmap.getTexture() : 0);
 	}
 	public void setAdjustViewBounds(boolean adjustViewBounds) {}

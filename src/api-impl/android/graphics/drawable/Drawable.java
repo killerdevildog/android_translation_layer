@@ -327,7 +327,7 @@ public class Drawable {
 		}
 		Path path = Paths.get(android.os.Environment.getExternalStorageDirectory().getPath(), file);
 		if (!Files.exists(path)) {
-			try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(file)) {
+			try (InputStream inputStream = resources.getAssets().openNonAsset(file)) {
 				if (inputStream != null) {
 					Files.createDirectories(path.getParent());
 					Files.copy(inputStream, path);

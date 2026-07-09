@@ -4,6 +4,15 @@
 
 #include "../defines.h"
 
+JNIEXPORT jlong JNICALL Java_android_content_res_XmlBlock_nativeCreate(JNIEnv *env, jclass this, jbyteArray data, jint offset, jint length)
+{
+	struct ResXMLTree *tree = ResXMLTree_new();
+	jbyte *xml_buf = (*env)->GetByteArrayElements(env, data, NULL);
+	ResXMLTree_setTo(tree, xml_buf, length, true);
+	(*env)->ReleaseByteArrayElements(env, data, xml_buf, JNI_ABORT);
+	return _INTPTR(tree);
+}
+
 JNIEXPORT jlong JNICALL Java_android_content_res_XmlBlock_nativeCreateParseState(JNIEnv *env, jobject this, jlong block)
 {
 	struct ResXMLTree *tree = (struct ResXMLTree *)_PTR(block);

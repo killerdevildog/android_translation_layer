@@ -20,8 +20,10 @@
 
 package android.database.sqlite;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.os.StatFs;
+import java.io.File;
 
 /**
  * Provides access to SQLite functions that affect all database connection,
@@ -64,9 +66,10 @@ public final class SQLiteGlobal {
 	public static int getDefaultPageSize() {
 		synchronized (sLock) {
 			if (sDefaultPageSize == 0) {
+				File filesDir = ATLLoadedApp.getPrimaryApplication().getApplication().getFilesDir();
 				// If there is an issue accessing /data, something is so seriously
 				// wrong that we just let the IllegalArgumentException propagate.
-				sDefaultPageSize = new StatFs(Context.this_application.getFilesDir().getPath()).getBlockSize();
+				sDefaultPageSize = new StatFs(filesDir.getPath()).getBlockSize();
 			}
 			return 1024;
 		}

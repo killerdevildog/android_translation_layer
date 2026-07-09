@@ -317,6 +317,11 @@ ANativeWindow *ANativeWindow_fromSurface(JNIEnv *env, jobject surface)
 		wl_subsurface_set_desync(subsurface);
 		wl_subsurface_set_position(subsurface, pos.x, pos.y);
 
+#if (GTK_MAJOR_VERSION >= 4 && GTK_MINOR_VERSION >= 22)
+		/* in Gtk 4.22+ we are able to do hole punching */
+		wl_subsurface_place_below(subsurface, toplevel_surface);
+#endif
+
 		struct wl_region *empty_region = wl_compositor_create_region(wl_compositor);
 		wl_surface_set_input_region(wayland_surface, empty_region);
 		wl_region_destroy(empty_region);
@@ -327,7 +332,7 @@ ANativeWindow *ANativeWindow_fromSurface(JNIEnv *env, jobject surface)
 		native_window->wayland_surface = wayland_surface;
 		printf("EGL::: wayland_surface: %p\n", wayland_surface);
 	} else if (GDK_IS_X11_DISPLAY(display)) {
-		/* X11 support is deprecated, which means that if we decide to switch to Gtk 5 we will loose the ability to run ATL on X11.
+		/* X11 support is deprecated, which means that if we decide to switch to Gtk 5 we will lose the ability to run ATL on X11.
 		 * for now, silence the warnings */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -360,7 +365,7 @@ ANativeWindow *ANativeWindow_fromSurface(JNIEnv *env, jobject surface)
 		 * NVIDIA's implementation of EGL for some reason.
 		 */
 		Window x11_window = XCreateSimpleWindow(x11_display, DefaultRootWindow(x11_display), 0, 0, width, height, 0, 0, 0xffffffff);
-		XReparentWindow(x11_display, x11_window, toplevel_window, 0, 0);
+		XReparentWindow(x11_display, x11_window, toplevel_window, pos.x, pos.y);
 
 		XMapWindow(x11_display, x11_window);
 

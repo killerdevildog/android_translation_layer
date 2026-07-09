@@ -422,6 +422,12 @@ public class ActivityInfo extends ComponentInfo {
 	public static final int CONFIG_LAYOUT_DIRECTION = 0x2000;
 	/**
 	 * Bit in {@link #configChanges} that indicates that the activity
+	 * can itself handle the change to the display color gamut or dynamic
+	 * range. Set from the {@link android.R.attr#configChanges} attribute.
+	 */
+	public static final int CONFIG_COLOR_MODE = 0x4000;
+	/**
+	 * Bit in {@link #configChanges} that indicates that the activity
 	 * can itself handle changes to the font scaling factor.  Set from the
 	 * {@link android.R.attr#configChanges} attribute.  This is
 	 * not a core resource configuration, but a higher-level value, so its

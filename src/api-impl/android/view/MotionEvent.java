@@ -1354,12 +1354,6 @@ public final class MotionEvent extends InputEvent {
 	private static native float nativeGetRawAxisValue(int nativePtr,
 	                                                  int axis, int pointerIndex, int historyPos);
 	private static /*native*/ float nativeGetAxisValue(int nativePtr, int axis, int pointerIndex, int historyPos) {
-		try {
-			throw new Exception();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(69);
-		}
 		return 0;
 	}
 	private static native void nativeGetPointerCoords(int nativePtr,

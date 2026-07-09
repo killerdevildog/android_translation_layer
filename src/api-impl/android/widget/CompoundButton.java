@@ -2,9 +2,11 @@ package android.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import com.android.internal.R;
 
 public abstract class CompoundButton extends Button implements Checkable {
 	Drawable button_drawable = null;
@@ -24,6 +26,12 @@ public abstract class CompoundButton extends Button implements Checkable {
 
 	public CompoundButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 		super(context, attrs, defStyleAttr, defStyleRes);
+		TypedArray typedArray = context.obtainStyledAttributes(
+		    attrs, R.styleable.CompoundButton, defStyleAttr, defStyleRes);
+		if (typedArray.hasValue(R.styleable.CompoundButton_checked)) {
+			this.setChecked(typedArray.getBoolean(R.styleable.CompoundButton_checked, false));
+		}
+		typedArray.recycle();
 	}
 
 	@Override

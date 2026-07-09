@@ -16,18 +16,18 @@
 
 package android.content.res;
 
+import android.atl.ATLLoadedApp;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Slog;
 import android.util.TypedValue;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,6 +48,13 @@ import java.util.jar.JarFile;
  * bytes.
  */
 public final class AssetManager {
+	static {
+		if (Build.VERSION.RESOURCES_SDK_INT == 0) {
+			// If we reach there, continuing execution will only result in a corrupted state
+			throw new IllegalStateException("AssetManager initialized before SDK_INT is set.");
+		}
+	}
+
 	/* modes used when opening an asset */
 
 	/**
@@ -102,6 +109,20 @@ public final class AssetManager {
 	 * {@hide}
 	 */
 	public AssetManager() {
+		this(null);
+	}
+
+	/**
+	 * Create a new AssetManager containing only the basic system assets.
+	 * Applications will not generally use this method, instead retrieving the
+	 * appropriate asset manager with {@link Resources#getAssets}.    Not for
+	 * use by applications.
+	 * {@hide}
+	 */
+	public AssetManager(ClassLoader classLoader) {
+		if (classLoader == null) {
+			classLoader = ClassLoader.getSystemClassLoader();
+		}
 		synchronized (this) {
 			if (DEBUG_REFS) {
 				mNumRefs = 0;
@@ -112,8 +133,8 @@ public final class AssetManager {
 				Log.v(TAG, "New asset manager: " + this);
 			//            ensureSystemAssets()
 			try {
-				Enumeration<URL> resources = ClassLoader.getSystemClassLoader().getResources("AndroidManifest.xml");
-				ArrayList<String> paths = new ArrayList<String>();
+				Enumeration<URL> resources = classLoader.getResources("AndroidManifest.xml");
+				ArrayList<String> paths = new ArrayList<>();
 				paths.add(null); // reserve first slot for framework-res.apk
 				while (resources.hasMoreElements()) {
 					String path = resources.nextElement().getPath();
@@ -610,20 +631,37 @@ public final class AssetManager {
 
 	private native final int addAssetPathNative(String path);
 
-	public static void extractFromAPK(String apk_path, String path, String target) throws IOException {
+	public static void extractFromAPK(String apk_resource_path, String path, String target) throws IOException {
+		String[] apk_paths = apk_resource_path.split(":");
 		if (path.endsWith("/")) { // directory
-			try (JarFile apk = new JarFile(apk_path)) {
-				Enumeration<JarEntry> entries = apk.entries();
-				while (entries.hasMoreElements()) {
-					JarEntry entry = entries.nextElement();
-					if (entry.getName().startsWith(path)) {
-						extractFromAPK(apk_path, entry.getName(), entry.getName().replace(path, target));
+			for (String apk_path : apk_paths) {
+				try (JarFile apk = new JarFile(apk_path)) {
+					Enumeration<JarEntry> entries = apk.entries();
+					while (entries.hasMoreElements()) {
+						JarEntry entry = entries.nextElement();
+						if (entry.getName().startsWith(path)) {
+							extractFromAPK(apk_path, entry.getName(), entry.getName().replace(path, target));
+						}
 					}
 				}
 			}
 		} else { // single file
 			Path file = Paths.get(android.os.Environment.getExternalStorageDirectory().getPath(), target);
-			if (!Files.exists(file) || Files.getLastModifiedTime(file).toMillis() < Files.getLastModifiedTime(Paths.get(apk_path)).toMillis()) {
+			for (String apk_path : apk_paths) {
+				File apk_file = new File(apk_path);
+				if (!Files.exists(file) || Files.getLastModifiedTime(file).toMillis() < Files.getLastModifiedTime(apk_file.toPath()).toMillis()) {
+					try (JarFile apk = new JarFile(apk_file);
+					     InputStream inputStream = apk.getInputStream(apk.getEntry(path))) {
+						if (inputStream != null) {
+							Files.createDirectories(file.getParent());
+							Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
+							return;
+						}
+					}
+				}
+			}
+			/* TODO: we currently abuse extractFromApk in a few places for extracting stuff that may be in framework-res.apk, remove this once it has been fixed or migrated to using AssetManager.openAsset or AssetManager.openNonAsset */
+			if (!Files.exists(file)) {
 				try (InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(path)) {
 					if (inputStream != null) {
 						Files.createDirectories(file.getParent());

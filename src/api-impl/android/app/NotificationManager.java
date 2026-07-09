@@ -1,6 +1,7 @@
 package android.app;
 
 import android.app.Notification.MediaStyle;
+import android.atl.ATLLoadedApp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -18,7 +19,8 @@ public class NotificationManager {
 	public void notify(String tag, int id, Notification notification) {
 		if (notification.style instanceof MediaStyle) { // MPRIS content is handled by MediaSession implementation
 			if (mpris_notification_id == -1) {
-				nativeShowMPRIS(Context.this_application.getPackageName(), Context.this_application.get_app_label());
+				Application application = ATLLoadedApp.getPrimaryApplication().getApplication();
+				nativeShowMPRIS(application.getPackageName(), application.get_app_label());
 				mpris_notification_id = id;
 			}
 			return;

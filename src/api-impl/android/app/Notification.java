@@ -69,9 +69,11 @@ public class Notification implements Parcelable {
 	public String getGroup() { return null; }
 
 	public static class Builder {
+		private final Context mContext;
 		private Notification notification;
 
 		public Builder(Context context) {
+			mContext = context;
 			notification = new Notification();
 		}
 
@@ -82,7 +84,7 @@ public class Notification implements Parcelable {
 		public Builder setWhen(long when) { return this; }
 
 		public Builder setSmallIcon(int icon, int level) {
-			notification.iconPath = Context.this_application.getString(icon);
+			notification.iconPath = mContext.getString(icon);
 			return this;
 		}
 
@@ -189,7 +191,7 @@ public class Notification implements Parcelable {
 
 		public Builder setSound(Uri sound) { return this; }
 
-		public Builder setSmallIcon(int icon) { return this; }
+		public Builder setSmallIcon(int icon) { return this.setSmallIcon(icon, -1); }
 
 		public Builder setTicker(CharSequence tickerText) { return this; }
 

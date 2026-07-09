@@ -7,12 +7,12 @@ import android.os.Handler;
 import android.view.View;
 
 public class Toast {
+	private final Context mContext;
+	private String text;
 
 	public Toast(Context context) {
-		/* TODO */
+		mContext = context;
 	}
-
-	private String text;
 
 	public static Toast makeText(Context context, int resId, int duration) {
 		return makeText(context, context.getString(resId), duration);
@@ -26,8 +26,8 @@ public class Toast {
 
 	public void show() {
 		System.out.println("showing toast: " + text);
-		Notification notification = new Notification.Builder(Context.this_application).setContentText(text).build();
-		NotificationManager manager = (NotificationManager)Context.this_application.getSystemService("notification");
+		Notification notification = new Notification.Builder(mContext).setContentText(text).build();
+		NotificationManager manager = (NotificationManager)mContext.getSystemService("notification");
 		int id = hashCode();
 		manager.notify(id, notification);
 		new Handler().postDelayed(new Runnable() {

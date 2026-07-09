@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 public class PreferenceManager {
 	public static SharedPreferences getDefaultSharedPreferences(Context context) {
-		return Context.this_application.getSharedPreferences(context.getPackageName() + "_preferences", 0);
+		return context.getSharedPreferences(context.getPackageName() + "_preferences", 0);
 	}
 
 	public static void setDefaultValues(Context context, int i, boolean b) {

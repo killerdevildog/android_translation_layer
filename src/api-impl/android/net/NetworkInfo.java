@@ -34,6 +34,10 @@ public class NetworkInfo {
 		return state == State.CONNECTED || state == State.CONNECTING;
 	}
 
+	public boolean isFailover() {
+		return false;
+	}
+
 	public int getSubtype() {
 		return 0; // NETWORK_TYPE_UNKNOWN
 	}
