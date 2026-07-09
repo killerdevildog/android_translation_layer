@@ -64,6 +64,28 @@ JNIEXPORT void JNICALL Java_android_view_Window_remove_1gtk_1background(JNIEnv *
 	gtk_widget_add_css_class(GTK_WIDGET(_PTR(window)), "ATL-no-background");
 }
 
+JNIEXPORT void JNICALL Java_android_view_Window_native_1install_1theme_1css(JNIEnv *env, jobject this, jlong window_ptr, jstring css_jstr)
+{
+	GtkWidget *window = GTK_WIDGET(_PTR(window_ptr));
+	const char *css = (*env)->GetStringUTFChars(env, css_jstr, NULL);
+
+	fprintf(stderr, "[ATL theme bridge] installing %zu bytes of CSS:\n%s\n", strlen(css), css);
+
+	GdkDisplay *display = gtk_widget_get_display(window);
+	GtkCssProvider *old = g_object_get_data(G_OBJECT(window), "atl_theme_css_provider");
+	if (old) {
+		gtk_style_context_remove_provider_for_display(display, GTK_STYLE_PROVIDER(old));
+		g_object_unref(old);
+	}
+
+	GtkCssProvider *provider = gtk_css_provider_new();
+	gtk_css_provider_load_from_string(provider, css);
+	gtk_style_context_add_provider_for_display(display, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+	g_object_set_data(G_OBJECT(window), "atl_theme_css_provider", provider);
+
+	(*env)->ReleaseStringUTFChars(env, css_jstr, css);
+}
+
 #define FLOAT_TO_POINTER(f) GINT_TO_POINTER(*(uint32_t *)(&f))
 #define POINTER_TO_FLOAT(p) (*((float *)(&p)))
 

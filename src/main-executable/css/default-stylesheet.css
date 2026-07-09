@@ -1,3 +1,22 @@
+/* Fallback Material color palette. Each app's Window.applyThemeColors()
+ * overrides these via a higher-priority provider. These values exist so
+ * that CSS referring to @colorPrimary etc. parses even before the app's
+ * theme is applied. Palette mirrors Material Light defaults. */
+@define-color colorPrimary #6200ee;
+@define-color colorPrimaryDark #3700b3;
+@define-color colorAccent #03dac6;
+@define-color colorBackground #fafafa;
+@define-color colorBackgroundFloating #ffffff;
+@define-color colorSurface #ffffff;
+@define-color textColorPrimary #212121;
+@define-color textColorSecondary #757575;
+@define-color textColorPrimaryInverse #ffffff;
+@define-color windowBackground #fafafa;
+@define-color colorControlNormal #757575;
+@define-color colorControlActivated @colorAccent;
+@define-color colorControlHighlight rgba(0,0,0,0.12);
+@define-color colorButtonNormal #e0e0e0;
+
 /* Border Styling */
 .ATL-no-border {
 	border: unset;
@@ -32,4 +51,431 @@
 .ATL-no-background {
 	background-color: rgba(0,0,0,0);
 	background-image: none;
+}
+
+/* Baseline Material/Android widget rules. These use theme colors so each
+ * app gets its own palette applied automatically. Per-widget overrides from
+ * setBackgroundColor / setTextColor still win because they are installed as
+ * separate providers at the same application priority and target individual
+ * widgets. Goal: feel like an Android app, not a desktop GTK app. */
+
+* {
+	font-family: "Roboto", "Noto Sans", "Cantarell", "Ubuntu", sans-serif;
+	-gtk-dpi: 96;
+	outline: none;
+	-gtk-outline-color: transparent;
+}
+
+window {
+	background-color: @windowBackground;
+	color: @textColorPrimary;
+	font-size: 14px;
+}
+
+/* Headerbars / toolbars are the Android app bar — colored, flat, with
+ * shadow below. Title text is white and medium-weight. */
+headerbar,
+.titlebar,
+toolbar,
+actionbar {
+	background-color: @colorPrimary;
+	background-image: none;
+	color: @textColorPrimaryInverse;
+	min-height: 56px;
+	padding: 0 8px;
+	border: none;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.24);
+}
+
+headerbar label,
+.titlebar label,
+toolbar label,
+actionbar label {
+	color: @textColorPrimaryInverse;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+headerbar button,
+.titlebar button,
+toolbar button,
+actionbar button {
+	background-color: transparent;
+	color: @textColorPrimaryInverse;
+	box-shadow: none;
+	min-width: 40px;
+	padding: 6px 8px;
+}
+
+headerbar button:hover,
+.titlebar button:hover,
+toolbar button:hover,
+actionbar button:hover {
+	background-color: alpha(@textColorPrimaryInverse, 0.12);
+	box-shadow: none;
+}
+
+headerbar button:active,
+.titlebar button:active,
+toolbar button:active,
+actionbar button:active {
+	background-color: alpha(@textColorPrimaryInverse, 0.24);
+	box-shadow: none;
+}
+
+label {
+	color: @textColorPrimary;
+}
+
+/* Plain text views default to 16px (Android body1). */
+textview, textview text {
+	background-color: transparent;
+	color: @textColorPrimary;
+	font-size: 16px;
+}
+
+/* Material contained button: rounded, subtle shadow, uppercase label,
+ * 48dp touch target, bold. */
+button {
+	background-image: none;
+	background-color: @colorButtonNormal;
+	color: @textColorPrimary;
+	border: none;
+	border-radius: 4px;
+	padding: 0 16px;
+	min-height: 40px;
+	min-width: 72px;
+	font-weight: bold;
+	font-size: 14px;
+	text-transform: uppercase;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),
+	            0 3px 1px -2px rgba(0,0,0,0.12),
+	            0 1px 5px 0 rgba(0,0,0,0.20);
+	transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+button:hover {
+	background-color: shade(@colorButtonNormal, 0.95);
+	box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),
+	            0 1px 10px 0 rgba(0,0,0,0.12),
+	            0 2px 4px -1px rgba(0,0,0,0.20);
+}
+
+button:active {
+	background-color: shade(@colorButtonNormal, 0.85);
+	box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),
+	            0 3px 14px 2px rgba(0,0,0,0.12),
+	            0 5px 5px -3px rgba(0,0,0,0.20);
+}
+
+button:disabled {
+	opacity: 0.38;
+	box-shadow: none;
+}
+
+/* Flat / text buttons — used when button has no-background class. */
+button.flat,
+button.link,
+.ATL-no-background button {
+	background-color: transparent;
+	box-shadow: none;
+	color: @colorAccent;
+}
+
+button.flat:hover,
+button.link:hover,
+.ATL-no-background button:hover {
+	background-color: alpha(@colorAccent, 0.08);
+	box-shadow: none;
+}
+
+button.flat:active,
+button.link:active,
+.ATL-no-background button:active {
+	background-color: alpha(@colorAccent, 0.16);
+	box-shadow: none;
+}
+
+/* Suggested / primary action button. */
+button.suggested-action {
+	background-color: @colorPrimary;
+	color: @textColorPrimaryInverse;
+}
+
+button.suggested-action:hover {
+	background-color: shade(@colorPrimary, 1.08);
+}
+
+button.suggested-action:active {
+	background-color: shade(@colorPrimary, 0.92);
+}
+
+/* EditText / entry: Material outlined — flat with single underline that
+ * thickens and colors on focus. */
+entry {
+	background-color: transparent;
+	background-image: none;
+	color: @textColorPrimary;
+	border: none;
+	border-bottom: 1px solid @colorControlNormal;
+	border-radius: 0;
+	padding: 8px 0;
+	min-height: 40px;
+	box-shadow: none;
+}
+
+entry:focus,
+entry:focus-within {
+	border-bottom: 2px solid @colorAccent;
+	box-shadow: none;
+}
+
+entry:disabled {
+	opacity: 0.38;
+}
+
+entry selection {
+	background-color: alpha(@colorAccent, 0.35);
+	color: @textColorPrimary;
+}
+
+/* Images (ImageView) — no inherited background from surrounding widgets. */
+image {
+	background-color: transparent;
+}
+
+checkbutton check,
+checkbutton radio {
+	min-width: 20px;
+	min-height: 20px;
+	color: @colorControlNormal;
+}
+
+checkbutton:checked check,
+checkbutton:checked radio {
+	color: @colorControlActivated;
+}
+
+progressbar {
+	padding: 0;
+}
+
+progressbar trough {
+	background-color: alpha(@colorAccent, 0.24);
+	border-radius: 2px;
+	min-height: 4px;
+}
+
+progressbar progress {
+	background-color: @colorAccent;
+	border-radius: 2px;
+	min-height: 4px;
+}
+
+scale trough {
+	background-color: alpha(@colorControlNormal, 0.38);
+	border-radius: 2px;
+	min-height: 2px;
+}
+
+scale highlight {
+	background-color: @colorAccent;
+	border-radius: 2px;
+}
+
+scale slider {
+	background-color: @colorAccent;
+	border-radius: 999px;
+	min-width: 16px;
+	min-height: 16px;
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+}
+
+switch {
+	background-color: alpha(@colorControlNormal, 0.38);
+	border-radius: 999px;
+	min-height: 14px;
+	min-width: 36px;
+	padding: 2px;
+}
+
+switch:checked {
+	background-color: alpha(@colorAccent, 0.54);
+}
+
+switch slider {
+	background-color: @colorSurface;
+	border-radius: 999px;
+	box-shadow: 0 1px 3px 0 rgba(0,0,0,0.3);
+	min-width: 20px;
+	min-height: 20px;
+}
+
+switch:checked slider {
+	background-color: @colorAccent;
+}
+
+/* List rows and cells — Android list item density (48dp minimum). */
+list,
+listbox,
+treeview {
+	background-color: @colorBackground;
+	border: none;
+}
+
+list > row,
+listbox > row,
+treeview.view {
+	background-color: transparent;
+	color: @textColorPrimary;
+	padding: 12px 16px;
+	min-height: 48px;
+	border: none;
+}
+
+list > row:hover,
+listbox > row:hover,
+treeview.view:hover {
+	background-color: alpha(@colorControlHighlight, 1);
+}
+
+list > row:selected,
+listbox > row:selected,
+treeview.view:selected {
+	background-color: alpha(@colorAccent, 0.16);
+	color: @textColorPrimary;
+}
+
+separator {
+	background-color: alpha(@colorControlNormal, 0.24);
+	min-height: 1px;
+	min-width: 1px;
+}
+
+/* Frames, scrolled-windows, notebooks — strip GTK chrome so content
+ * sits directly on the activity background. */
+frame,
+frame > border {
+	border: none;
+	background-color: transparent;
+}
+
+scrolledwindow,
+scrolledwindow > viewport,
+viewport {
+	border: none;
+	background-color: transparent;
+}
+
+scrollbar,
+scrollbar trough {
+	background-color: transparent;
+	border: none;
+}
+
+scrollbar slider {
+	background-color: alpha(@colorControlNormal, 0.5);
+	border-radius: 999px;
+	min-width: 4px;
+	min-height: 4px;
+}
+
+scrollbar slider:hover {
+	background-color: alpha(@colorControlNormal, 0.75);
+}
+
+notebook,
+notebook > header {
+	background-color: @colorPrimary;
+	color: @textColorPrimaryInverse;
+	border: none;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.24);
+}
+
+notebook > header > tabs > tab {
+	background-color: transparent;
+	color: alpha(@textColorPrimaryInverse, 0.7);
+	padding: 12px 16px;
+	min-height: 48px;
+	border: none;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+notebook > header > tabs > tab:checked {
+	color: @textColorPrimaryInverse;
+	box-shadow: inset 0 -2px 0 0 @textColorPrimaryInverse;
+}
+
+/* Popovers and menus — Material card styling. */
+popover,
+popover > contents,
+menu,
+.menu {
+	background-color: @colorBackgroundFloating;
+	color: @textColorPrimary;
+	border-radius: 4px;
+	border: none;
+	padding: 8px 0;
+	box-shadow: 0 5px 5px -3px rgba(0,0,0,0.20),
+	            0 8px 10px 1px rgba(0,0,0,0.14),
+	            0 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+popover modelbutton,
+popover button,
+menuitem {
+	background-color: transparent;
+	color: @textColorPrimary;
+	padding: 8px 16px;
+	min-height: 48px;
+	border-radius: 0;
+	box-shadow: none;
+	font-weight: normal;
+	text-transform: none;
+}
+
+popover modelbutton:hover,
+popover button:hover,
+menuitem:hover {
+	background-color: alpha(@textColorPrimary, 0.08);
+	box-shadow: none;
+}
+
+/* Dialogs and cards — floating surface with elevation. */
+dialog,
+messagedialog,
+.ATL-card {
+	background-color: @colorBackgroundFloating;
+	color: @textColorPrimary;
+	border-radius: 4px;
+	border: none;
+	box-shadow: 0 11px 15px -7px rgba(0,0,0,0.20),
+	            0 24px 38px 3px rgba(0,0,0,0.14),
+	            0 9px 46px 8px rgba(0,0,0,0.12);
+}
+
+/* Spinner / combobox. */
+combobox,
+combobox > button {
+	background-color: transparent;
+	color: @textColorPrimary;
+	border: none;
+	border-bottom: 1px solid @colorControlNormal;
+	border-radius: 0;
+	box-shadow: none;
+	min-height: 40px;
+	padding: 8px 0;
+	text-transform: none;
+	font-weight: normal;
+}
+
+/* Tooltip — Material tooltip: dark surface, white text. */
+tooltip {
+	background-color: rgba(0,0,0,0.9);
+	color: #ffffff;
+	border-radius: 4px;
+	padding: 6px 10px;
+	border: none;
+	font-size: 12px;
 }

@@ -13,6 +13,14 @@ extern "C" {
 #define android_view_Window_FEATURE_NO_TITLE 1L
 /*
  * Class:     android_view_Window
+ * Method:    native_install_theme_css
+ * Signature: (JLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_android_view_Window_native_1install_1theme_1css
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     android_view_Window
  * Method:    set_widget_as_root
  * Signature: (JJ)V
  */

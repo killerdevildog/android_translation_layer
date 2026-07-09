@@ -2,9 +2,11 @@ package android.view;
 
 import android.R;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.transition.Transition;
+import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.Toolbar;
 
@@ -49,7 +51,81 @@ public class Window {
 	public void set_native_window(long native_window) {
 		this.native_window = native_window;
 		set_jobject(native_window, this);
+		applyThemeColors();
 	}
+
+	private static final int[] THEME_COLOR_ATTRS = {
+		0x01010433, // colorPrimary
+		0x01010434, // colorPrimaryDark
+		0x01010435, // colorAccent
+		0x01010031, // colorBackground
+		0x010104e2, // colorBackgroundFloating
+		0x01160047, // colorSurface
+		0x01010036, // textColorPrimary
+		0x01010038, // textColorSecondary
+		0x01010039, // textColorPrimaryInverse
+		0x01010054, // windowBackground
+		0x010103f6, // colorControlNormal
+		0x010103f7, // colorControlActivated
+		0x010103fc, // colorControlHighlight
+		0x010103f9, // colorButtonNormal
+	};
+
+	private static final String[] THEME_COLOR_NAMES = {
+		"colorPrimary",
+		"colorPrimaryDark",
+		"colorAccent",
+		"colorBackground",
+		"colorBackgroundFloating",
+		"colorSurface",
+		"textColorPrimary",
+		"textColorSecondary",
+		"textColorPrimaryInverse",
+		"windowBackground",
+		"colorControlNormal",
+		"colorControlActivated",
+		"colorControlHighlight",
+		"colorButtonNormal",
+	};
+
+	private void applyThemeColors() {
+		if (context == null) return;
+		Resources.Theme theme = context.getTheme();
+		if (theme == null) return;
+		Resources res = context.getResources();
+		TypedValue value = new TypedValue();
+		StringBuilder css = new StringBuilder();
+
+		for (int i = 0; i < THEME_COLOR_ATTRS.length; i++) {
+			if (!theme.resolveAttribute(THEME_COLOR_ATTRS[i], value, true)) continue;
+			int color;
+			if (value.type >= TypedValue.TYPE_FIRST_COLOR_INT && value.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+				color = value.data;
+			} else if (value.resourceId != 0) {
+				try {
+					color = res.getColor(value.resourceId, theme);
+				} catch (Exception e) {
+					continue;
+				}
+			} else {
+				continue;
+			}
+			int a = (color >>> 24) & 0xFF;
+			int r = (color >>> 16) & 0xFF;
+			int g = (color >>> 8) & 0xFF;
+			int b = color & 0xFF;
+			css.append("@define-color ").append(THEME_COLOR_NAMES[i])
+			   .append(" rgba(").append(r).append(',').append(g).append(',').append(b)
+			   .append(',').append(String.format(java.util.Locale.ROOT, "%.3f", a / 255.0))
+			   .append(");\n");
+		}
+
+		if (css.length() > 0) {
+			native_install_theme_css(native_window, css.toString());
+		}
+	}
+
+	private native void native_install_theme_css(long native_window, String css);
 
 	public void addFlags(int flags) {}
 	public void setFlags(int flags, int mask) {}
