@@ -237,13 +237,15 @@ public class WolfSSLTrustManager extends TrustManagerFactorySpi {
                             "$JAVA_HOME not set, unable to load system certs");
                     }
 
-                    if (androidRoot != null) {
+                    if (systemCertsFound == false && androidRoot != null) {
 
                         /* first try to use AndroidCAStore KeyStore, this is
                          * pre-loaded with Android system CA certs */
                         try {
-                            certs = KeyStore.getInstance("AndroidCAStore");
-                            certs.load(null, null);
+                            KeyStore androidCerts =
+                                KeyStore.getInstance("AndroidCAStore");
+                            androidCerts.load(null, null);
+                            certs = androidCerts;
                             systemCertsFound = true;
                             WolfSSLDebug.log(getClass(), WolfSSLDebug.INFO,
                                 "Using AndroidCAStore KeyStore for default " +
@@ -276,6 +278,12 @@ public class WolfSSLTrustManager extends TrustManagerFactorySpi {
                                     "Permission error when trying to read " +
                                     "system CA certificates");
                                 throw new KeyStoreException(e);
+                            }
+                            if (cafiles == null) {
+                                WolfSSLDebug.log(getClass(), WolfSSLDebug.INFO,
+                                    caStoreDir + ": not found or not a " +
+                                    "directory, skipping Android CA load");
+                                cafiles = new String[0];
                             }
                             WolfSSLDebug.log(getClass(), WolfSSLDebug.INFO,
                                 "Found " + cafiles.length + " CA files to load " +
@@ -335,7 +343,9 @@ public class WolfSSLTrustManager extends TrustManagerFactorySpi {
                                 /* increment alias counter for unique aliases */
                                 aliasCnt++;
                             }
-                            systemCertsFound = true;
+                            if (aliasCnt > 0) {
+                                systemCertsFound = true;
+                            }
 
                         } /* end Android manual load */
                     }

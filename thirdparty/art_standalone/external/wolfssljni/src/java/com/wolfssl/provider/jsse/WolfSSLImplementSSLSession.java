@@ -304,6 +304,8 @@ public class WolfSSLImplementSSLSession implements SSLSession {
         X509Certificate exportCert;
 
         if (ssl == null) {
+            System.err.println("[ATL-SSL] getPeerCertificates: ssl==null host=" + host + " port=" + port);
+            new Throwable("[ATL-SSL] getPeerCertificates ssl==null stack").printStackTrace();
             throw new SSLPeerUnverifiedException("handshake not complete");
         }
 
@@ -311,6 +313,8 @@ public class WolfSSLImplementSSLSession implements SSLSession {
         try {
             numCerts = this.ssl.getPeerCertificateNum();
         } catch (IllegalStateException | WolfSSLJNIException ex) {
+            System.err.println("[ATL-SSL] getPeerCertificates: getPeerCertificateNum threw " + ex);
+            ex.printStackTrace();
             Logger.getLogger(
                     WolfSSLImplementSSLSession.class.getName()).log(
                         Level.SEVERE, null, ex);
@@ -318,6 +322,8 @@ public class WolfSSLImplementSSLSession implements SSLSession {
         }
         /* if no peer cert, throw SSLPeerUnverifiedException */
         if (numCerts == 0) {
+            System.err.println("[ATL-SSL] getPeerCertificates: numCerts==0 host=" + host);
+            new Throwable("[ATL-SSL] getPeerCertificates numCerts==0 stack").printStackTrace();
             throw new SSLPeerUnverifiedException("No peer certificate");
         }
         Certificate[] certs = new Certificate[numCerts];
@@ -390,6 +396,8 @@ public class WolfSSLImplementSSLSession implements SSLSession {
         WolfSSLX509X x509;
 
         if (ssl == null) {
+            System.err.println("[ATL-SSL] getPeerCertificateChain: ssl==null host=" + host + " port=" + port);
+            new Throwable("[ATL-SSL] getPeerCertificateChain stack").printStackTrace();
             throw new SSLPeerUnverifiedException("handshake not done");
         }
 
@@ -415,6 +423,8 @@ public class WolfSSLImplementSSLSession implements SSLSession {
     public synchronized Principal getPeerPrincipal()
         throws SSLPeerUnverifiedException {
         if (ssl == null) {
+            System.err.println("[ATL-SSL] getPeerPrincipal: ssl==null host=" + host + " port=" + port);
+            new Throwable("[ATL-SSL] getPeerPrincipal stack").printStackTrace();
             throw new SSLPeerUnverifiedException("handshake not done");
         }
 
@@ -550,7 +560,17 @@ public class WolfSSLImplementSSLSession implements SSLSession {
      * @param in timeout in seconds
      */
     protected void setNativeTimeout(long in) {
-        ssl.setSessTimeout(in);
+        if (ssl == null) {
+            return;
+        }
+        try {
+            ssl.setSessTimeout(in);
+        } catch (IllegalStateException e) {
+            /* Underlying native WOLFSSL has already been freed. Cached
+             * session is stale; skip timeout update instead of propagating
+             * the exception up through SSLSessionContext.setSessionTimeout
+             * callers that iterate the whole session store. */
+        }
     }
 
 

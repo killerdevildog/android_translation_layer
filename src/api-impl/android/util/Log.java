@@ -315,19 +315,34 @@ public final class Log {
 			return "";
 		}
 
-		// This is to reduce the amount of log spew that apps do in the non-error
-		// condition of the network being unavailable.
-		Throwable t = tr;
-		while (t != null) {
-			if (t instanceof UnknownHostException) {
-				return "";
-			}
-			t = t.getCause();
-		}
-
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, false);
 		tr.printStackTrace(pw);
+		// GlideException stores additional causes in a private List<Throwable>
+		// (separate from Throwable.getCause()) and its overridden printStackTrace
+		// only recurses into that list - it is often empty when the real failure
+		// happened in a custom DataFetcher. Reflectively pull getRootCauses() so
+		// we surface the real network/TLS/decode exceptions instead of a bare
+		// "Failed to load resource" line.
+		try {
+			java.lang.reflect.Method getRootCauses =
+				tr.getClass().getMethod("getRootCauses");
+			Object result = getRootCauses.invoke(tr);
+			if (result instanceof java.util.List) {
+				java.util.List<?> rootCauses = (java.util.List<?>) result;
+				int idx = 1;
+				int total = rootCauses.size();
+				for (Object cause : rootCauses) {
+					if (cause instanceof Throwable && cause != tr) {
+						pw.println("Root cause (" + idx + " of " + total + "):");
+						((Throwable) cause).printStackTrace(pw);
+						idx++;
+					}
+				}
+			}
+		} catch (Throwable ignored) {
+			// Not a GlideException or reflective access failed - no-op.
+		}
 		pw.flush();
 		return sw.toString();
 	}

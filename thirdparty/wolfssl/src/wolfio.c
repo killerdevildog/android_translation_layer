@@ -37,6 +37,7 @@
     #include <errno.h>
 #endif
 
+#include <stdio.h>
 #include <wolfssl/internal.h>
 #include <wolfssl/error-ssl.h>
 #include <wolfssl/wolfio.h>
@@ -258,6 +259,8 @@ static int TranslateIoReturnCode(int err, SOCKET_T sd, int direction)
 #else
     WOLFSSL_MSG_EX("\tGeneral error: %d", err);
 #endif
+    fprintf(stderr, "[wolfio] TranslateIoReturnCode GENERAL fd=%d dir=%d errno=%d\n",
+            (int)sd, direction, err);
     return WOLFSSL_CBIO_ERR_GENERAL;
 }
 #endif /* USE_WOLFSSL_IO || HAVE_HTTP_CLIENT */
